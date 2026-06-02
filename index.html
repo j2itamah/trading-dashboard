@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Analyst — Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spline+Sans+Mono:wght@400;500;600&family=Spline+Sans:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #f4f3ee; --panel: #ffffff; --ink: #1a1d1a; --ink-soft: #6b7269;
+    --line: #e4e2d8; --green: #1d9d6b; --green-bg: #e6f5ee; --red: #d6485a;
+    --red-bg: #fbeaec; --accent: #3a5a78; --accent-bg: #eaf0f5; --gold: #c08a2d;
+    --shadow: 0 1px 2px rgba(26,29,26,.04), 0 8px 24px rgba(26,29,26,.05);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Spline Sans', sans-serif; background: var(--bg); color: var(--ink);
+    padding: 32px 24px 60px; min-height: 100vh;
+    background-image: radial-gradient(circle at 1px 1px, rgba(26,29,26,.025) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+  .title-block h1 { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 600; letter-spacing: -.5px; display: flex; align-items: center; gap: 12px; }
+  .title-block .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px var(--green-bg); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .title-block p { color: var(--ink-soft); font-size: 13px; margin-top: 4px; font-family: 'Spline Sans Mono', monospace; }
+  .updated { text-align: right; font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
+  .updated strong { color: var(--ink); display: block; font-size: 13px; }
+  .refresh-btn { margin-top: 6px; font-family: 'Spline Sans Mono', monospace; font-size: 11px; background: var(--panel); border: 1px solid var(--line); color: var(--accent); padding: 5px 12px; border-radius: 7px; cursor: pointer; transition: all .15s; }
+  .refresh-btn:hover { background: var(--accent-bg); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+  .kpi { background: var(--panel); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); border: 1px solid var(--line); position: relative; overflow: hidden; }
+  .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-soft); font-weight: 600; }
+  .kpi .value { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 600; margin-top: 8px; letter-spacing: -1px; line-height: 1; }
+  .kpi .sub { font-size: 12px; color: var(--ink-soft); margin-top: 8px; font-family: 'Spline Sans Mono', monospace; }
+  .kpi .bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+  .kpi.pos .value { color: var(--green); } .kpi.pos .bar { background: var(--green); }
+  .kpi.neg .value { color: var(--red); } .kpi.neg .bar { background: var(--red); }
+  .kpi.neutral .bar { background: var(--accent); }
+  .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-top: 14px; }
+  .panel { background: var(--panel); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+  .panel h2 { font-family: 'Spline Sans Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .panel h2::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: none; }
+  .row .name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+  .row .name .tag { font-family: 'Spline Sans Mono', monospace; font-size: 10px; background: var(--accent-bg); color: var(--accent); padding: 2px 7px; border-radius: 5px; font-weight: 600; }
+  .row .metrics { display: flex; gap: 18px; align-items: center; }
+  .row .metric { text-align: right; }
+  .row .metric .m-val { font-family: 'Spline Sans Mono', monospace; font-weight: 600; font-size: 14px; }
+  .row .metric .m-lab { font-size: 10px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .5px; }
+  .pos-text { color: var(--green); } .neg-text { color: var(--red); } .zero-text { color: var(--ink-soft); }
+  .wr-bar { width: 54px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .wr-bar span { display: block; height: 100%; border-radius: 3px; }
+  .daily-row { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: center; padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; }
+  .daily-row.pos { background: var(--green-bg); } .daily-row.neg { background: var(--red-bg); }
+  .daily-row .date { font-weight: 600; font-size: 14px; }
+  .daily-row .date small { display: block; font-size: 11px; color: var(--ink-soft); font-weight: 400; }
+  .daily-row .trades { font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
+  .daily-row .pnl { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; }
+  .conf-row { display: grid; grid-template-columns: 80px 1fr 30px; gap: 12px; align-items: center; padding: 8px 0; }
+  .conf-row .band { font-family: 'Spline Sans Mono', monospace; font-size: 12px; color: var(--ink-soft); }
+  .conf-bar { height: 22px; background: var(--bg); border-radius: 6px; overflow: hidden; position: relative; }
+  .conf-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #5b7e9e); border-radius: 6px; transition: width 1s ease; }
+  .conf-row .cnt { font-weight: 600; font-family: 'Spline Sans Mono', monospace; text-align: right; }
+  .footnote { margin-top: 22px; padding: 16px 20px; background: var(--accent-bg); border-radius: 12px; font-size: 13px; color: var(--accent); line-height: 1.55; border-left: 3px solid var(--accent); }
+  .footnote strong { font-weight: 700; }
+  .status { text-align: center; padding: 40px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; font-size: 13px; }
+  .status.err { color: var(--red); }
+  @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-block">
+      <h1><span class="dot"></span>Trading Analyst</h1>
+      <p>paper portfolio · live performance</p>
+    </div>
+    <div class="updated">
+      <strong id="upd-date">loading…</strong>
+      data source: Performance tab
+      <br><button class="refresh-btn" onclick="loadData()">&#8635; refresh</button>
+    </div>
+  </header>
+  <div id="content"><div class="status">Fetching live data…</div></div>
+  <div class="footnote">
+    <strong>Reading this honestly:</strong> a handful of closed trades is far too few to mean anything — early gains can be driven almost entirely by one lucky position. You need 30–50+ clean trades before the win rate is a real signal. This dashboard is for <strong>observing</strong>, not reacting day-to-day.
+  </div>
+</div>
+<script>
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTrhi45sVHnEc0kZhP6HijWnFJywKOllWfcjHtkKV9j2B7lG3Uqppj11x1j9twALw6JrAJqRwiTufUM/pub?gid=901994882&single=true&output=csv";
+  const fmtPct = v => (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+  const fmtPctR = v => (v > 0 ? "+" : "") + Math.round(v) + "%";
+  const fmtUsd = v => (v < 0 ? "-$" : "$") + Math.abs(v).toFixed(2);
+  const cls = v => v > 0 ? "pos-text" : v < 0 ? "neg-text" : "zero-text";
+  const num = v => { const n = parseFloat(String(v).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; };
+  function parseCSV(text) {
+    const rows = text.split(/\r?\n/).map(r => r.split(",").map(c => c.replace(/^"|"$/g, "").trim()));
+    const map = {};
+    for (const r of rows) { if (r.length >= 3 && r[1]) map[r[1]] = r[2]; }
+    return map;
+  }
+  function render(m) {
+    const winRate = num(m.win_rate_pct);
+    const pnlPct = num(m.total_pnl_pct);
+    const pnlUsd = num(m.total_pnl_dollars);
+    const rr = num(m.reward_risk_ratio);
+    const avgWin = num(m.avg_win_pct);
+    const avgLoss = num(m.avg_loss_pct);
+    const closed = num(m.total_closed);
+    const wins = num(m.wins);
+    const losses = num(m.losses);
+    const assetNames = Object.keys(m).filter(k => /_count$/.test(k) && !/^(BUY|SELL)_/.test(k) && !/^UNKNOWN/.test(k) && !/^\d/.test(k) && !/^(stop|target)_/.test(k)).map(k => k.replace(/_count$/, ""));
+    const assets = [...new Set(assetNames)].map(a => ({
+      name: a, count: num(m[a + "_count"]), win_rate: num(m[a + "_win_rate_pct"]), pnl_pct: num(m[a + "_total_pnl_pct"])
+    })).filter(a => a.count > 0).sort((x,y)=>y.pnl_pct-x.pnl_pct);
+    const confBands = [
+      { band: "0.90–1.0", key: "0.90-1.00_count" },
+      { band: "0.80–0.89", key: "0.80-0.89_count" },
+      { band: "0.70–0.79", key: "0.70-0.79_count" },
+      { band: "0.60–0.69", key: "0.60-0.69_count" }
+    ].map(c => ({ band: c.band, count: num(m[c.key]) }));
+    const maxC = Math.max(...confBands.map(c => c.count), 1);
+    const exits = [
+      { reason: "Target hit", count: num(m.target_count), win_rate: num(m.target_win_rate_pct) },
+      { reason: "Stop loss", count: num(m.stop_count), win_rate: num(m.stop_win_rate_pct) }
+    ].filter(e => e.count > 0);
+    document.getElementById("upd-date").textContent = (m.__generated || "updated");
+    document.getElementById("content").innerHTML = `
+      <div class="kpis">
+        <div class="kpi neutral"><div class="bar"></div><div class="label">Win Rate</div><div class="value">${Math.round(winRate)}%</div><div class="sub">${wins}W · ${losses}L · ${closed} closed</div></div>
+        <div class="kpi ${pnlPct>=0?'pos':'neg'}"><div class="bar"></div><div class="label">Total P/L %</div><div class="value">${fmtPct(pnlPct)}</div><div class="sub">realized, closed trades</div></div>
+        <div class="kpi ${pnlUsd>=0?'pos':'neg'}"><div class="bar"></div><div class="label">Total P/L $</div><div class="value">${fmtUsd(pnlUsd)}</div><div class="sub">paper dollars</div></div>
+        <div class="kpi neutral"><div class="bar"></div><div class="label">Reward / Risk</div><div class="value">${rr.toFixed(2)}</div><div class="sub">avg win ${fmtPctR(avgWin)} / loss ${fmtPctR(avgLoss)}</div></div>
+      </div>
+      <div class="grid">
+        <div class="panel"><h2>By Asset</h2>${
+          assets.length ? assets.map(a =>
+            `<div class="row">
+              <div class="name">${a.name} <span class="tag">${a.count} trade${a.count>1?'s':''}</span></div>
+              <div class="metrics">
+                <div class="metric"><div class="m-val">${Math.round(a.win_rate)}%</div><div class="m-lab">win</div></div>
+                <div class="metric"><div class="m-val ${cls(a.pnl_pct)}">${fmtPct(a.pnl_pct)}</div><div class="m-lab">P/L</div></div>
+              </div>
+            </div>`).join("") : '<div class="row"><div class="name zero-text">— no closed trades yet</div></div>'
+        }</div>
+        <div class="panel"><h2>By Direction &amp; Source</h2>
+          <div class="row">
+            <div class="name">BUY <span class="tag">direction</span></div>
+            <div class="metrics">
+              <div class="metric"><div class="m-val">${num(m.BUY_count)}</div><div class="m-lab">trades</div></div>
+              <div class="metric" style="display:flex;align-items:center;gap:8px"><div class="wr-bar"><span style="width:${num(m.BUY_win_rate_pct)}%;background:${num(m.BUY_win_rate_pct)>=50?'var(--green)':'var(--red)'}"></span></div><div class="m-val">${Math.round(num(m.BUY_win_rate_pct))}%</div></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="name">UNKNOWN <span class="tag">source</span></div>
+            <div class="metrics">
+              <div class="metric"><div class="m-val">${num(m.UNKNOWN_count)}</div><div class="m-lab">trades</div></div>
+              <div class="metric"><div class="m-val">${Math.round(num(m.UNKNOWN_win_rate_pct))}%</div><div class="m-lab">win</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="panel"><h2>Daily P/L</h2>
+          <div class="daily-row ${pnlUsd>=0?'pos':'neg'}">
+            <div class="date">Latest<small>${closed} closed · ${wins}W / ${losses}L</small></div>
+            <div class="trades">cumulative</div>
+            <div class="pnl ${cls(pnlUsd)}">${fmtUsd(pnlUsd)}</div>
+          </div>
+          <div class="row"><div class="name zero-text" style="font-weight:400;font-size:12px">Per-day breakdown fills in as more trading days close.</div></div>
+        </div>
+        <div class="panel"><h2>By Confidence</h2>${
+          confBands.map(c =>
+            `<div class="conf-row">
+              <div class="band">${c.band}</div>
+              <div class="conf-bar"><span style="width:${c.count===0?0:(c.count/maxC*100)}%"></span></div>
+              <div class="cnt">${c.count}</div>
+            </div>`).join("")
+        }
+          <h2 style="margin-top:20px">By Exit Reason</h2>${
+          exits.length ? exits.map(e =>
+            `<div class="row">
+              <div class="name">${e.reason}</div>
+              <div class="metrics">
+                <div class="metric"><div class="m-val">${e.count}</div><div class="m-lab">trades</div></div>
+                <div class="metric"><div class="m-val ${e.win_rate>=50?'pos-text':'neg-text'}">${Math.round(e.win_rate)}%</div><div class="m-lab">win</div></div>
+              </div>
+            </div>`).join("") : '<div class="row"><div class="name zero-text">—</div></div>'
+        }</div>
+      </div>`;
+  }
+  async function loadData() {
+    document.getElementById("content").innerHTML = '<div class="status">Fetching live data…</div>';
+    try {
+      const res = await fetch(CSV_URL + "&t=" + Date.now());
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const text = await res.text();
+      const m = parseCSV(text);
+      m.__generated = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+      if (!m.total_closed && !m.win_rate_pct) throw new Error("No data parsed");
+      render(m);
+    } catch (e) {
+      document.getElementById("content").innerHTML =
+        '<div class="status err">Couldn\'t load live data: ' + e.message + '</div>';
+      document.getElementById("upd-date").textContent = "error";
+    }
+  }
+  loadData();
+</script>
+</body>
+</html>
