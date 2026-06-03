@@ -112,7 +112,7 @@
     const closed = num(m.total_closed);
     const wins = num(m.wins);
     const losses = num(m.losses);
-    const assetNames = Object.keys(m).filter(k => /^[A-Z]+_count$/.test(k)).map(k => k.replace(/_count$/, ""));
+    const assetNames = Object.keys(m).filter(k => /^[A-Z]+_count$/.test(k) && !/^(BUY|SELL|UNKNOWN)_/.test(k)).map(k => k.replace(/_count$/, ""));
     const assets = [...new Set(assetNames)].map(a => ({
       name: a, count: num(m[a + "_count"]), win_rate: num(m[a + "_win_rate_pct"]), pnl_pct: num(m[a + "_total_pnl_pct"])
     })).filter(a => a.count > 0).sort((x,y)=>y.pnl_pct-x.pnl_pct);
