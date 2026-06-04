@@ -281,6 +281,7 @@ content.appendChild(grid);
 
 function setActive(key) {
   active = key;
+  try { localStorage.setItem('selectedPortfolio', key); } catch(e){}
   document.querySelectorAll('.toggle-btn').forEach(b => { b.classList.toggle('on', b.dataset.key === key); });
   render();
 }
@@ -299,7 +300,12 @@ async function loadData() {
 
 function __init(){
   document.querySelectorAll('.toggle-btn').forEach(b => { b.addEventListener('click', () => setActive(b.dataset.key)); });
-  setActive('news_only');
+  let __initial = 'news_only';
+  try {
+    const __saved = localStorage.getItem('selectedPortfolio');
+    if (__saved === 'news_only' || __saved === 'news_plus_ta') __initial = __saved;
+  } catch(e){}
+  setActive(__initial);
   loadData();
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',__init);}else{__init();}
