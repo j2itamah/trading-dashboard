@@ -166,22 +166,7 @@ function renderExtraPanels(port, activeKey){
     groupPanel('BY RSI BAND', port.BY_RSI_BAND);
     groupPanel('BY TREND', port.BY_TREND);
   }
-  var h=port.AVG_HOLD_TIME||{};
-  function hm(v){ if(v==null) return null; var hh=Math.floor(v/60), mm=Math.round(v%60); return (hh>0?hh+'h ':'')+mm+'m'; }
-  var hp=panelEl('AVG HOLD TIME');
-  if(h.n){
-    function holdRow(label, val, cls){ var r=document.createElement('div'); r.className='row'; var v=hm(val); r.innerHTML='<div class="name">'+label+'</div><div class="metrics"><div class="metric"><div class="m-val '+(cls||'neutral')+'">'+(v==null?'\u2013':v)+'</div><div class="m-lab">avg hold</div></div></div>'; hp.appendChild(r); }
-    holdRow('All ('+h.n+')', h.avg_minutes, 'neutral');
-    holdRow('Winners', h.avg_win_minutes, 'pos-text');
-    holdRow('Losers', h.avg_loss_minutes, 'neg-text');
-  } else { muted(hp, 'No closed trades yet'); }
-  c.appendChild(hp);
-  var hourArr=(port.BY_HOUR||[]).filter(function(g){return g.key!=='no_data';});
-  var hourP=panelEl('BY HOUR (MT)');
-  if(!hourArr.length){ muted(hourP, 'No closed trades yet'); }
-  else { hourArr.forEach(function(g){ wrRow(hourP, g.key, (g.count==null?0:g.count), g.win_rate_pct); }); }
-  c.appendChild(hourP);
-}
+  }
 
 function render() {
   const content = $('#content');
@@ -203,14 +188,14 @@ function render() {
   const kpis = el('div', 'kpis');
   const kpiDef = [
     { lab: 'WIN RATE', val: fmtNum(ov.win_rate_pct, 1) + '%', cls: 'neutral', sub: ov.wins + 'W / ' + ov.losses + 'L' },
-    { lab: 'TOTAL P/L %', val: (ov.total_pnl_pct > 0 ? '+' : '') + fmtNum(ov.total_pnl_pct, 2) + '%', cls: signClass(ov.total_pnl_pct), sub: '' },
-    { lab: 'TOTAL P/L $', val: (ov.total_pnl_dollars > 0 ? '+$' : (ov.total_pnl_dollars < 0 ? '-$' : '$')) + fmtNum(Math.abs(ov.total_pnl_dollars), 2), cls: signClass(ov.total_pnl_dollars), sub: '' },
+    { lab: 'TOTAL P/L %', val: (ov.total_pnl_pct > 0 ? '+' : '') + fmtNum(ov.total_pnl_pct, 2) + '%', cls: signClass(ov.total_pnl_pct), color: true, sub: '' },
+    { lab: 'TOTAL P/L $', val: (ov.total_pnl_dollars > 0 ? '+$' : (ov.total_pnl_dollars < 0 ? '-$' : '$')) + fmtNum(Math.abs(ov.total_pnl_dollars), 2), cls: signClass(ov.total_pnl_dollars), color: true, sub: '' },
     { lab: 'REWARD / RISK', val: fmtNum(ov.reward_risk_ratio, 2), cls: 'neutral', sub: 'avg ' + fmtNum(ov.avg_win_pct, 1) + '% / ' + fmtNum(ov.avg_loss_pct, 1) + '%' }
   ];
   kpiDef.forEach(k => {
-    const c = el('div', 'kpi');
+    const c = el('div', 'kpi ' + (k.color ? k.cls : 'neutral'));
     c.appendChild(el('div', 'label', k.lab));
-    c.appendChild(el('div', 'value ' + k.cls, k.val));
+    c.appendChild(el('div', 'value', k.val));
     if (k.sub) c.appendChild(el('div', 'sub', k.sub));
     kpis.appendChild(c);
   });
@@ -265,7 +250,19 @@ function render() {
     });
   }));
 
-  content.appendChild(grid);
+  grid.appendChild(panel('AVG HOLD TIME', (p) => {
+const h = port.AVG_HOLD_TIME || {};
+const hm = (v) => { if (v == null) return '\u2013'; const hh = Math.floor(v/60), mm = Math.round(v%60); return (hh>0?hh+'h ':'')+mm+'m'; };
+if (h.n) {
+p.appendChild(metricRow('All', h.n + ' trade' + (h.n===1?'':'s'), [ { val: hm(h.avg_minutes), lab: 'avg hold', cls: 'neutral' } ]));
+p.appendChild(metricRow('Winners', '', [ { val: hm(h.avg_win_minutes), lab: 'avg hold', cls: 'pos-text' } ]));
+p.appendChild(metricRow('Losers', '', [ { val: hm(h.avg_loss_minutes), lab: 'avg hold', cls: 'neg-text' } ]));
+} else {
+const r = el('div', 'row'); r.appendChild(el('div', 'name', 'No closed trades yet')); r.firstChild.style.fontWeight='500'; r.firstChild.style.color='var(--ink-soft)'; p.appendChild(r);
+}
+}));
+
+content.appendChild(grid);
 
   try{ renderExtraPanels(port, active); }catch(e){}
 }
