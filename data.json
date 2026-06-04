@@ -1,63 +1,316 @@
 {
-  "generated_at": "2026-06-04T14:00:05.845Z",
+  "generated_at": "2026-06-04T14:30:06.000Z",
   "portfolios": {
     "news_only": {
       "OVERALL": {
-        "total_closed": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": 0,
-        "avg_win_pct": 0,
-        "avg_loss_pct": 0,
-        "reward_risk_ratio": 0,
-        "total_pnl_pct": 0,
-        "total_pnl_dollars": 0
+        "total_closed": 5,
+        "wins": 2,
+        "losses": 3,
+        "win_rate_pct": 40,
+        "avg_win_pct": 43.14,
+        "avg_loss_pct": 0.63,
+        "reward_risk_ratio": 68.14,
+        "total_pnl_pct": 88.18,
+        "total_pnl_dollars": -53.43
       },
-      "BY_ASSET": [],
-      "BY_SOURCE": [],
-      "BY_CONFIDENCE": [],
-      "BY_EXIT_REASON": [],
-      "BY_DIRECTION": [],
-      "BY_ALIGNMENT": [],
-      "BY_RSI_BAND": [],
-      "BY_TREND": [],
-      "BY_HOUR": [],
+      "BY_ASSET": [
+        {
+          "key": "AVGO",
+          "count": 1,
+          "win_rate_pct": 100,
+          "total_pnl_pct": 15.67,
+          "total_pnl_dollars": 3.92
+        },
+        {
+          "key": "HCAT",
+          "count": 1,
+          "win_rate_pct": 0,
+          "total_pnl_pct": -5.98,
+          "total_pnl_dollars": -25
+        },
+        {
+          "key": "RDW",
+          "count": 1,
+          "win_rate_pct": 0,
+          "total_pnl_pct": 13.53,
+          "total_pnl_dollars": -25
+        },
+        {
+          "key": "SNBR",
+          "count": 1,
+          "win_rate_pct": 100,
+          "total_pnl_pct": 70.61,
+          "total_pnl_dollars": 17.65
+        },
+        {
+          "key": "STM",
+          "count": 1,
+          "win_rate_pct": 0,
+          "total_pnl_pct": -5.66,
+          "total_pnl_dollars": -25
+        }
+      ],
+      "BY_SOURCE": [
+        {
+          "key": "Seeking Alpha RSS",
+          "count": 3,
+          "win_rate_pct": 33.33,
+          "avg_pnl_pct": 26.06
+        },
+        {
+          "key": "Yahoo Finance RSS",
+          "count": 2,
+          "win_rate_pct": 50,
+          "avg_pnl_pct": 5.01
+        }
+      ],
+      "BY_CONFIDENCE": [
+        {
+          "key": "0.60-0.69",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "0.70-0.79",
+          "count": 3,
+          "win_rate_pct": 33.33
+        },
+        {
+          "key": "0.80-0.89",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_EXIT_REASON": [
+        {
+          "key": "stop",
+          "count": 2,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "target",
+          "count": 3,
+          "win_rate_pct": 66.67
+        }
+      ],
+      "BY_DIRECTION": [
+        {
+          "key": "BUY",
+          "count": 3,
+          "win_rate_pct": 0,
+          "avg_win_pct": 0,
+          "avg_loss_pct": 0.63
+        },
+        {
+          "key": "SELL",
+          "count": 2,
+          "win_rate_pct": 100,
+          "avg_win_pct": 43.14,
+          "avg_loss_pct": 0
+        }
+      ],
+      "BY_ALIGNMENT": [
+        {
+          "key": "aligned",
+          "count": 3,
+          "win_rate_pct": 33.33
+        },
+        {
+          "key": "conflict",
+          "count": 1,
+          "win_rate_pct": 100
+        },
+        {
+          "key": "neutral",
+          "count": 1,
+          "win_rate_pct": 0
+        }
+      ],
+      "BY_RSI_BAND": [
+        {
+          "key": "neutral (30-70)",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "overbought (>70)",
+          "count": 3,
+          "win_rate_pct": 33.33
+        },
+        {
+          "key": "oversold (<30)",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_TREND": [
+        {
+          "key": "above_ma20 (uptrend)",
+          "count": 4,
+          "win_rate_pct": 25
+        },
+        {
+          "key": "below_ma20 (downtrend)",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_HOUR": [
+        {
+          "key": "03:00 MT",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "05:00 MT",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "06:00 MT",
+          "count": 2,
+          "win_rate_pct": 100
+        },
+        {
+          "key": "07:00 MT",
+          "count": 1,
+          "win_rate_pct": 0
+        }
+      ],
       "AVG_HOLD_TIME": {
-        "avg_minutes": null,
-        "avg_win_minutes": null,
-        "avg_loss_minutes": null,
-        "n": 0
+        "avg_minutes": 131.66,
+        "avg_win_minutes": 119.73,
+        "avg_loss_minutes": 149.54,
+        "n": 5
       },
-      "open_count": 15
+      "open_count": 11
     },
     "news_plus_ta": {
       "OVERALL": {
-        "total_closed": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": 0,
-        "avg_win_pct": 0,
-        "avg_loss_pct": 0,
-        "reward_risk_ratio": 0,
-        "total_pnl_pct": 0,
-        "total_pnl_dollars": 0
+        "total_closed": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate_pct": 50,
+        "avg_win_pct": 70.61,
+        "avg_loss_pct": 13.68,
+        "reward_risk_ratio": 5.16,
+        "total_pnl_pct": 84.29,
+        "total_pnl_dollars": -7.35
       },
-      "BY_ASSET": [],
-      "BY_SOURCE": [],
-      "BY_CONFIDENCE": [],
-      "BY_EXIT_REASON": [],
-      "BY_DIRECTION": [],
-      "BY_ALIGNMENT": [],
-      "BY_RSI_BAND": [],
-      "BY_TREND": [],
-      "BY_HOUR": [],
+      "BY_ASSET": [
+        {
+          "key": "RDW",
+          "count": 1,
+          "win_rate_pct": 0,
+          "total_pnl_pct": 13.68,
+          "total_pnl_dollars": -25
+        },
+        {
+          "key": "SNBR",
+          "count": 1,
+          "win_rate_pct": 100,
+          "total_pnl_pct": 70.61,
+          "total_pnl_dollars": 17.65
+        }
+      ],
+      "BY_SOURCE": [
+        {
+          "key": "Seeking Alpha RSS",
+          "count": 2,
+          "win_rate_pct": 50,
+          "avg_pnl_pct": 42.14
+        }
+      ],
+      "BY_CONFIDENCE": [
+        {
+          "key": "0.60-0.69",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "0.80-0.89",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_EXIT_REASON": [
+        {
+          "key": "target",
+          "count": 2,
+          "win_rate_pct": 50
+        }
+      ],
+      "BY_DIRECTION": [
+        {
+          "key": "BUY",
+          "count": 1,
+          "win_rate_pct": 0,
+          "avg_win_pct": 0,
+          "avg_loss_pct": 13.68
+        },
+        {
+          "key": "SELL",
+          "count": 1,
+          "win_rate_pct": 100,
+          "avg_win_pct": 70.61,
+          "avg_loss_pct": 0
+        }
+      ],
+      "BY_ALIGNMENT": [
+        {
+          "key": "aligned",
+          "count": 1,
+          "win_rate_pct": 100
+        },
+        {
+          "key": "neutral",
+          "count": 1,
+          "win_rate_pct": 0
+        }
+      ],
+      "BY_RSI_BAND": [
+        {
+          "key": "neutral (30-70)",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "oversold (<30)",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_TREND": [
+        {
+          "key": "above_ma20 (uptrend)",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "below_ma20 (downtrend)",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_HOUR": [
+        {
+          "key": "05:00 MT",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "06:00 MT",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
       "AVG_HOLD_TIME": {
-        "avg_minutes": null,
-        "avg_win_minutes": null,
+        "avg_minutes": 134.72,
+        "avg_win_minutes": 134.72,
         "avg_loss_minutes": null,
-        "n": 0
+        "n": 2
       },
-      "open_count": 7
+      "open_count": 6
     },
     "mean_reversion": {
       "OVERALL": {
@@ -90,32 +343,148 @@
     },
     "trend_strict": {
       "OVERALL": {
-        "total_closed": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": 0,
-        "avg_win_pct": 0,
-        "avg_loss_pct": 0,
-        "reward_risk_ratio": 0,
-        "total_pnl_pct": 0,
-        "total_pnl_dollars": 0
+        "total_closed": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate_pct": 33.33,
+        "avg_win_pct": 70.61,
+        "avg_loss_pct": -5.8,
+        "reward_risk_ratio": 12.18,
+        "total_pnl_pct": 59.01,
+        "total_pnl_dollars": -32.35
       },
-      "BY_ASSET": [],
-      "BY_SOURCE": [],
-      "BY_CONFIDENCE": [],
-      "BY_EXIT_REASON": [],
-      "BY_DIRECTION": [],
-      "BY_ALIGNMENT": [],
-      "BY_RSI_BAND": [],
-      "BY_TREND": [],
-      "BY_HOUR": [],
+      "BY_ASSET": [
+        {
+          "key": "HCAT",
+          "count": 1,
+          "win_rate_pct": 0,
+          "total_pnl_pct": -5.98,
+          "total_pnl_dollars": -25
+        },
+        {
+          "key": "SNBR",
+          "count": 1,
+          "win_rate_pct": 100,
+          "total_pnl_pct": 70.61,
+          "total_pnl_dollars": 17.65
+        },
+        {
+          "key": "STM",
+          "count": 1,
+          "win_rate_pct": 0,
+          "total_pnl_pct": -5.62,
+          "total_pnl_dollars": -25
+        }
+      ],
+      "BY_SOURCE": [
+        {
+          "key": "Seeking Alpha RSS",
+          "count": 2,
+          "win_rate_pct": 50,
+          "avg_pnl_pct": 32.32
+        },
+        {
+          "key": "Yahoo Finance RSS",
+          "count": 1,
+          "win_rate_pct": 0,
+          "avg_pnl_pct": -5.62
+        }
+      ],
+      "BY_CONFIDENCE": [
+        {
+          "key": "0.70-0.79",
+          "count": 2,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "0.80-0.89",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_EXIT_REASON": [
+        {
+          "key": "stop",
+          "count": 2,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "target",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_DIRECTION": [
+        {
+          "key": "BUY",
+          "count": 2,
+          "win_rate_pct": 0,
+          "avg_win_pct": 0,
+          "avg_loss_pct": -5.8
+        },
+        {
+          "key": "SELL",
+          "count": 1,
+          "win_rate_pct": 100,
+          "avg_win_pct": 70.61,
+          "avg_loss_pct": 0
+        }
+      ],
+      "BY_ALIGNMENT": [
+        {
+          "key": "aligned",
+          "count": 3,
+          "win_rate_pct": 33.33
+        }
+      ],
+      "BY_RSI_BAND": [
+        {
+          "key": "overbought (>70)",
+          "count": 2,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "oversold (<30)",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_TREND": [
+        {
+          "key": "above_ma20 (uptrend)",
+          "count": 2,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "below_ma20 (downtrend)",
+          "count": 1,
+          "win_rate_pct": 100
+        }
+      ],
+      "BY_HOUR": [
+        {
+          "key": "03:00 MT",
+          "count": 1,
+          "win_rate_pct": 0
+        },
+        {
+          "key": "06:00 MT",
+          "count": 1,
+          "win_rate_pct": 100
+        },
+        {
+          "key": "07:00 MT",
+          "count": 1,
+          "win_rate_pct": 0
+        }
+      ],
       "AVG_HOLD_TIME": {
-        "avg_minutes": null,
-        "avg_win_minutes": null,
-        "avg_loss_minutes": null,
-        "n": 0
+        "avg_minutes": 139.62,
+        "avg_win_minutes": 119.79,
+        "avg_loss_minutes": 149.54,
+        "n": 3
       },
-      "open_count": 5
+      "open_count": 2
     },
     "strict": {
       "OVERALL": {
