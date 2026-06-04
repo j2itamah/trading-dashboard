@@ -76,7 +76,7 @@
 .toggle-btn:hover{color:var(--ink);}
 .toggle-btn.on{background:var(--accent-bg);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:18px 0 22px;}
-#active-label{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:.02em;}
+#active-label{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:.02em;}#book-tech{font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.4;}#book-plain{font-size:10.5px;font-style:italic;color:var(--ink-soft);opacity:.85;margin-top:2px;line-height:1.4;}
 
 </style>
 </head>
@@ -95,12 +95,14 @@
 <div class="toggle-row">
   <div class="portfolio-toggle" role="tablist" aria-label="Portfolio">
     <button class="toggle-btn on" data-key="news_only" role="tab">News Only</button>
-    <button class="toggle-btn" data-key="news_plus_ta" role="tab">News + TA</button>
-    <button class="toggle-btn" data-key="mean_reversion" role="tab">Mean Reversion</button>
+    <button class="toggle-btn" data-key="news_plus_ta" role="tab">Trend Gate</button>
+    <button class="toggle-btn" data-key="mean_reversion" role="tab">Mean Revert</button>
     <button class="toggle-btn" data-key="trend_strict" role="tab">Trend Strict</button>
-    <button class="toggle-btn" data-key="strict" role="tab">Strict</button>
+    <button class="toggle-btn" data-key="strict" role="tab">All Signals</button>
   </div>
   <div id="active-label">News Only · 0 closed trades</div>
+    <div id="book-tech"></div>
+    <div id="book-plain"></div>
 </div>
 
 <div id="content"><div class="status">Fetching live data…</div></div>
@@ -111,11 +113,19 @@
 const DATA_URL = 'data.json?cb=' + Date.now();
 const PORTS = [
 { key: 'news_only', label: 'News Only', short: 'News Only' },
-{ key: 'news_plus_ta', label: 'News + Technical Analysis', short: 'News + TA' },
-{ key: 'mean_reversion', label: 'Mean Reversion', short: 'Mean Reversion' },
+{ key: 'news_plus_ta', label: 'Trend Gate', short: 'Trend Gate' },
+{ key: 'mean_reversion', label: 'Mean Revert', short: 'Mean Revert' },
 { key: 'trend_strict', label: 'Trend Strict', short: 'Trend Strict' },
-{ key: 'strict', label: 'Strict', short: 'Strict' }
+{ key: 'strict', label: 'All Signals', short: 'All Signals' }
 ]
+
+const DESC = {
+  news_only: { tech: 'News-driven signals, confidence ≥ 0.6 — no technical filter', plain: 'Takes all high-confidence news events — no chart check' },
+  news_plus_ta: { tech: 'Blocks only if below 20-MA with negative momentum, or RSI > 75', plain: 'Lets most through; skips only clear losers or wildly overbought ones' },
+  mean_reversion: { tech: 'Vetoes RSI > 65 & momentum > 10; buys 40–65 RSI above trend', plain: 'Buys steady risers at a fair price — avoids chasing hot stocks' },
+  trend_strict: { tech: 'Requires above 20-MA and positive 5-day momentum', plain: 'Only buys stocks already trending up' },
+  strict: { tech: 'Above 20-MA + momentum 0–10 + RSI 45–65 + volume > 1.2× avg', plain: 'Only the cleanest setups — everything has to line up' }
+};
 let DATA = null;
 let active = 'news_only';
 
@@ -190,6 +200,9 @@ function render() {
   const lbl = $('#active-label');
   const openCount = (port && port.open_count) || 0;
 if (lbl) lbl.textContent = meta.short + ' · ' + closed + ' closed · ' + openCount + ' open';
+  const d = DESC[active] || {tech:'',plain:''};
+  const tEl = $('#book-tech'); if (tEl) tEl.textContent = d.tech;
+  const pEl = $('#book-plain'); if (pEl) pEl.textContent = d.plain;
 
   if (!port || closed === 0) { renderEmpty(content, meta.label); return; }
 
