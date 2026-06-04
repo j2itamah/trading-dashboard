@@ -181,7 +181,8 @@ function render() {
   const closed = ov.total_closed || 0;
 
   const lbl = $('#active-label');
-  if (lbl) lbl.textContent = meta.short + ' · ' + closed + ' closed trade' + (closed === 1 ? '' : 's');
+  const openCount = (port && port.open_count) || 0;
+if (lbl) lbl.textContent = meta.short + ' · ' + closed + ' closed · ' + openCount + ' open';
 
   if (!port || closed === 0) { renderEmpty(content, meta.label); return; }
 
@@ -257,6 +258,17 @@ if (h.n) {
 p.appendChild(metricRow('All', h.n + ' trade' + (h.n===1?'':'s'), [ { val: hm(h.avg_minutes), lab: 'avg hold', cls: 'neutral' } ]));
 p.appendChild(metricRow('Winners', '', [ { val: hm(h.avg_win_minutes), lab: 'avg hold', cls: 'pos-text' } ]));
 p.appendChild(metricRow('Losers', '', [ { val: hm(h.avg_loss_minutes), lab: 'avg hold', cls: 'neg-text' } ]));
+} else {
+const r = el('div', 'row'); r.appendChild(el('div', 'name', 'No closed trades yet')); r.firstChild.style.fontWeight='500'; r.firstChild.style.color='var(--ink-soft)'; p.appendChild(r);
+}
+}));
+
+grid.appendChild(panel('BY HOUR (MT)', (p) => {
+const arr = (port.BY_HOUR || []).filter(h => h.key !== 'no_data');
+if (arr.length) {
+arr.forEach(h => {
+p.appendChild(metricRow(h.key, h.count + ' trade' + (h.count === 1 ? '' : 's'), [ { val: fmtNum(h.win_rate_pct, 0) + '%', lab: 'win rate', cls: 'neutral' } ]));
+});
 } else {
 const r = el('div', 'row'); r.appendChild(el('div', 'name', 'No closed trades yet')); r.firstChild.style.fontWeight='500'; r.firstChild.style.color='var(--ink-soft)'; p.appendChild(r);
 }
