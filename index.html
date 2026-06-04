@@ -147,33 +147,40 @@ function renderEmpty(content, label) {
     'The <strong>' + label + '</strong> portfolio fills as trades log and close.'));
 }
 
-function renderExtraPanels(port){
+function renderExtraPanels(port, activeKey){
   var c = document.getElementById('content'); if(!c||!port) return;
-  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
-  function wrColor(w){ if(w>=50) return 'var(--green)'; if(w>=25) return 'var(--gold)'; return 'var(--red)'; }
-  function rows(arr){ if(!arr||!arr.length){ return '<div class="row"><div class="name" style="color:var(--ink-soft);font-weight:500">No data for this split yet</div></div>'; }
-    return arr.map(function(g){ var w=Number(g.win_rate_pct)||0;
-      return '<div class="row"><div class="name">'+esc(g.key)+'</div>'+
-        '<div class="metrics">'+
-          '<div class="metric"><div class="m-val">'+(g.count==null?'-':g.count)+'</div><div class="m-lab">trades</div></div>'+
-          '<div class="metric"><div class="m-val">'+w.toFixed(1)+'%</div><div class="m-lab">win rate</div></div>'+
-          '<div class="wr-bar"><span style="width:'+Math.max(0,Math.min(100,w))+'%;background:'+wrColor(w)+'"></span></div>'+
-        '</div></div>'; }).join(''); }
-  function panelHTML(title, inner, highlight){
-    var hl = highlight ? ' style="border:1px solid var(--accent);box-shadow:0 0 0 1px var(--accent)"' : '';
-    return '<div class="panel"'+hl+'><h2>'+esc(title)+'</h2>'+inner+'</div>'; }
-  var html='';
-  html += panelHTML('BY ALIGNMENT', rows(port.BY_ALIGNMENT), true);
-  html += panelHTML('BY RSI BAND', rows(port.BY_RSI_BAND), false);
-  html += panelHTML('BY TREND', rows(port.BY_TREND), false);
+  function esc(s){return String(s==null?'':s).replace(/[&<>\"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m];});}
+  function panelEl(title){ var p=document.createElement('div'); p.className='panel'; var l=document.createElement('div'); l.className='label'; l.textContent=title; p.appendChild(l); return p; }
+  function muted(p, msg){ var r=document.createElement('div'); r.className='row'; var n=document.createElement('div'); n.className='name'; n.style.fontWeight='500'; n.style.color='var(--ink-soft)'; n.textContent=msg; r.appendChild(n); p.appendChild(r); }
+  function wrRow(p, label, count, wr){ var r=document.createElement('div'); r.className='row';
+    r.innerHTML = '<div class="name">'+esc(label)+' <span class="tag">'+count+' trades</span></div>'+
+      '<div class="metrics"><div class="metric"><div class="m-val neutral">'+Math.round(Number(wr)||0)+'%</div><div class="m-lab">win rate</div></div></div>';
+    p.appendChild(r); }
+  function groupPanel(title, arr){ var p=panelEl(title);
+    var real=(arr||[]).filter(function(g){return g.key!=='no_data';});
+    if(!real.length){ muted(p, 'Technical data starts with new trades'); }
+    else { real.forEach(function(g){ wrRow(p, g.key, (g.count==null?0:g.count), g.win_rate_pct); }); }
+    c.appendChild(p); }
+  if(activeKey==='news_plus_ta'){
+    groupPanel('BY ALIGNMENT', port.BY_ALIGNMENT);
+    groupPanel('BY RSI BAND', port.BY_RSI_BAND);
+    groupPanel('BY TREND', port.BY_TREND);
+  }
   var h=port.AVG_HOLD_TIME||{};
-  function hm(v){ if(v==null) return '<span style="color:var(--ink-soft)">n/a</span>'; var hh=Math.floor(v/60), mm=Math.round(v%60); return (hh>0?hh+'h ':'')+mm+'m'; }
-  var holdInner = h.n ? ('<div class="row"><div class="name">Average hold</div><div class="metrics"><div class="metric"><div class="m-val">'+hm(h.avg_minutes)+'</div><div class="m-lab">all ('+h.n+')</div></div></div></div>'+
-    '<div class="row"><div class="name">Winners</div><div class="metrics"><div class="metric"><div class="m-val pos-text">'+hm(h.avg_win_minutes)+'</div><div class="m-lab">avg hold</div></div></div></div>'+
-    '<div class="row"><div class="name">Losers</div><div class="metrics"><div class="metric"><div class="m-val neg-text">'+hm(h.avg_loss_minutes)+'</div><div class="m-lab">avg hold</div></div></div></div>') : rows([]);
-  html += panelHTML('AVG HOLD TIME', holdInner, false);
-  html += panelHTML('BY HOUR (MT)', rows(port.BY_HOUR), false);
-  c.insertAdjacentHTML('beforeend', html);
+  function hm(v){ if(v==null) return null; var hh=Math.floor(v/60), mm=Math.round(v%60); return (hh>0?hh+'h ':'')+mm+'m'; }
+  var hp=panelEl('AVG HOLD TIME');
+  if(h.n){
+    function holdRow(label, val, cls){ var r=document.createElement('div'); r.className='row'; var v=hm(val); r.innerHTML='<div class="name">'+label+'</div><div class="metrics"><div class="metric"><div class="m-val '+(cls||'neutral')+'">'+(v==null?'\u2013':v)+'</div><div class="m-lab">avg hold</div></div></div>'; hp.appendChild(r); }
+    holdRow('All ('+h.n+')', h.avg_minutes, 'neutral');
+    holdRow('Winners', h.avg_win_minutes, 'pos-text');
+    holdRow('Losers', h.avg_loss_minutes, 'neg-text');
+  } else { muted(hp, 'No closed trades yet'); }
+  c.appendChild(hp);
+  var hourArr=(port.BY_HOUR||[]).filter(function(g){return g.key!=='no_data';});
+  var hourP=panelEl('BY HOUR (MT)');
+  if(!hourArr.length){ muted(hourP, 'No closed trades yet'); }
+  else { hourArr.forEach(function(g){ wrRow(hourP, g.key, (g.count==null?0:g.count), g.win_rate_pct); }); }
+  c.appendChild(hourP);
 }
 
 function render() {
@@ -260,7 +267,7 @@ function render() {
 
   content.appendChild(grid);
 
-  try{ renderExtraPanels(port); }catch(e){}
+  try{ renderExtraPanels(port, active); }catch(e){}
 }
 
 function setActive(key) {
