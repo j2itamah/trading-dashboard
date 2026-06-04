@@ -266,7 +266,7 @@ if (lbl) lbl.textContent = meta.short + ' · ' + closed + ' closed · ' + openCo
   grid.appendChild(panel('BY EXIT REASON', (p) => {
     (port.BY_EXIT_REASON || []).forEach(e => {
       p.appendChild(metricRow(e.key, e.count + 'x', [
-        { val: (closed > 0 ? Math.round((e.count / closed) * 100) : 0) + '%', lab: '% of exits', cls: 'neutral' }
+        { val: fmtNum((e.count / port.OVERALL.total_closed) * 100, 0) + '%', lab: '% of exits', cls: 'neutral' }
       ]));
     });
   }));
