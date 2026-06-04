@@ -69,6 +69,14 @@
   .status { text-align: center; padding: 40px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; font-size: 13px; }
   .status.err { color: var(--red); }
   @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+
+.portfolio-toggle{display:inline-flex;gap:0;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow);margin:0;}
+.toggle-btn{font-family:'Spline Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ink-soft);background:transparent;border:none;border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .15s ease;white-space:nowrap;}
+.toggle-btn:hover{color:var(--ink);}
+.toggle-btn.on{background:var(--accent-bg);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:18px 0 22px;}
+#active-label{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--ink-soft);letter-spacing:.02em;}
+
 </style>
 </head>
 <body>
@@ -84,130 +92,175 @@
       <br><button class="refresh-btn" onclick="loadData()">&#8635; refresh</button>
     </div>
   </header>
-  <div id="content"><div class="status">Fetching live data…</div></div>
+  
+<div class="toggle-row">
+  <div class="portfolio-toggle" role="tablist" aria-label="Portfolio">
+    <button class="toggle-btn on" data-key="news_only" role="tab">News Only</button>
+    <button class="toggle-btn" data-key="news_plus_ta" role="tab">News + Technical Analysis</button>
+  </div>
+  <div id="active-label">News Only · 0 closed trades</div>
+</div>
+
+<div id="content"><div class="status">Fetching live data…</div></div>
   <div class="footnote">
     <strong>Reading this honestly:</strong> a handful of closed trades is far too few to mean anything — early gains can be driven almost entirely by one lucky position. You need 30–50+ clean trades before the win rate is a real signal. This dashboard is for <strong>observing</strong>, not reacting day-to-day.
   </div>
 </div>
 <script>
-  const DATA_URL = './data.json';
-  const fmtPct = v => (v > 0 ? "+" : "") + v.toFixed(2) + "%";
-  const fmtPctR = v => (v > 0 ? "+" : "") + Math.round(v) + "%";
-  const fmtUsd = v => (v < 0 ? "-$" : "$") + Math.abs(v).toFixed(2);
-  const cls = v => v > 0 ? "pos-text" : v < 0 ? "neg-text" : "zero-text";
-  const num = v => { const n = parseFloat(String(v).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; };
-  function parseCSV(text) {
-    const rows = text.split(/\r?\n/).map(r => r.split(",").map(c => c.replace(/^"|"$/g, "").trim()));
-    const map = {};
-    for (const r of rows) { if (r.length >= 3 && r[1]) map[r[1]] = r[2]; }
-    return map;
+
+const DATA_URL = 'data.json?cb=' + Date.now();
+const PORTS = [
+  { key: 'news_only', label: 'News Only', short: 'News Only' },
+  { key: 'news_plus_ta', label: 'News + Technical Analysis', short: 'News + TA' }
+];
+let DATA = null;
+let active = 'news_only';
+
+const $ = (s) => document.querySelector(s);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+
+function fmtNum(n, dp) { if (n == null || isNaN(n)) return '–'; return Number(n).toFixed(dp == null ? 2 : dp); }
+function signClass(n) { if (n == null || isNaN(n) || n === 0) return 'neutral'; return n > 0 ? 'pos' : 'neg'; }
+function signText(n) { if (n == null || isNaN(n) || n === 0) return 'zero-text'; return n > 0 ? 'pos-text' : 'neg-text'; }
+
+function metricRow(name, tag, metrics) {
+  const row = el('div', 'row');
+  const head = el('div', 'name', name + (tag ? ' <span class="tag">' + tag + '</span>' : ''));
+  row.appendChild(head);
+  const mwrap = el('div', 'metrics');
+  metrics.forEach(m => {
+    const cell = el('div', 'metric');
+    cell.appendChild(el('div', 'm-val ' + (m.cls || ''), m.val));
+    cell.appendChild(el('div', 'm-lab', m.lab));
+    mwrap.appendChild(cell);
+  });
+  row.appendChild(mwrap);
+  return row;
+}
+
+function panel(title, builder) {
+  const p = el('div', 'panel');
+  p.appendChild(el('div', 'label', title));
+  builder(p);
+  return p;
+}
+
+function renderEmpty(content, label) {
+  content.appendChild(el('div', 'status',
+    '<strong>No trades yet</strong><br>' +
+    'The <strong>' + label + '</strong> portfolio fills as trades log and close.'));
+}
+
+function render() {
+  const content = $('#content');
+  content.innerHTML = '';
+  if (!DATA || !DATA.portfolios) {
+    content.appendChild(el('div', 'err', 'Could not load data.'));
+    return;
   }
-  function render(m) {
-    const winRate = num(m.win_rate_pct);
-    const pnlPct = num(m.total_pnl_pct);
-    const pnlUsd = num(m.total_pnl_dollars);
-    const rr = num(m.reward_risk_ratio);
-    const avgWin = num(m.avg_win_pct);
-    const avgLoss = num(m.avg_loss_pct);
-    const closed = num(m.total_closed);
-    const wins = num(m.wins);
-    const losses = num(m.losses);
-    const assetNames = Object.keys(m).filter(k => /^[A-Z]+_count$/.test(k) && !/^(BUY|SELL|UNKNOWN)_/.test(k)).map(k => k.replace(/_count$/, ""));
-    const assets = [...new Set(assetNames)].map(a => ({
-      name: a, count: num(m[a + "_count"]), win_rate: num(m[a + "_win_rate_pct"]), pnl_pct: num(m[a + "_total_pnl_pct"])
-    })).filter(a => a.count > 0).sort((x,y)=>y.pnl_pct-x.pnl_pct);
-    const confBands = [
-      { band: "0.90–1.0", key: "0.90-1.00_count" },
-      { band: "0.80–0.89", key: "0.80-0.89_count" },
-      { band: "0.70–0.79", key: "0.70-0.79_count" },
-      { band: "0.60–0.69", key: "0.60-0.69_count" }
-    ].map(c => ({ band: c.band, count: num(m[c.key]) }));
-    const maxC = Math.max(...confBands.map(c => c.count), 1);
-    const exits = [
-      { reason: "Target hit", count: num(m.target_count), win_rate: num(m.target_win_rate_pct) },
-      { reason: "Stop loss", count: num(m.stop_count), win_rate: num(m.stop_win_rate_pct) }
-    ].filter(e => e.count > 0);
-    document.getElementById("upd-date").textContent = (m.__generated || "updated");
-    document.getElementById("content").innerHTML = `
-      <div class="kpis">
-        <div class="kpi neutral"><div class="bar"></div><div class="label">Win Rate</div><div class="value">${Math.round(winRate)}%</div><div class="sub">${wins}W · ${losses}L · ${closed} closed</div></div>
-        <div class="kpi ${pnlPct>=0?'pos':'neg'}"><div class="bar"></div><div class="label">Total P/L %</div><div class="value">${fmtPct(pnlPct)}</div><div class="sub">realized, closed trades</div></div>
-        <div class="kpi ${pnlUsd>=0?'pos':'neg'}"><div class="bar"></div><div class="label">Total P/L $</div><div class="value">${fmtUsd(pnlUsd)}</div><div class="sub">paper dollars</div></div>
-        <div class="kpi neutral"><div class="bar"></div><div class="label">Reward / Risk</div><div class="value">${rr.toFixed(2)}</div><div class="sub">avg win ${fmtPctR(avgWin)} / loss ${fmtPctR(avgLoss)}</div></div>
-      </div>
-      <div class="grid">
-        <div class="panel"><h2>By Asset</h2>${
-          assets.length ? assets.map(a =>
-            `<div class="row">
-              <div class="name">${a.name} <span class="tag">${a.count} trade${a.count>1?'s':''}</span></div>
-              <div class="metrics">
-                <div class="metric"><div class="m-val">${Math.round(a.win_rate)}%</div><div class="m-lab">win</div></div>
-                <div class="metric"><div class="m-val ${cls(a.pnl_pct)}">${fmtPct(a.pnl_pct)}</div><div class="m-lab">P/L</div></div>
-              </div>
-            </div>`).join("") : '<div class="row"><div class="name zero-text">— no closed trades yet</div></div>'
-        }</div>
-        <div class="panel"><h2>By Direction &amp; Source</h2>
-          <div class="row">
-            <div class="name">BUY <span class="tag">direction</span></div>
-            <div class="metrics">
-              <div class="metric"><div class="m-val">${num(m.BUY_count)}</div><div class="m-lab">trades</div></div>
-              <div class="metric" style="display:flex;align-items:center;gap:8px"><div class="wr-bar"><span style="width:${num(m.BUY_win_rate_pct)}%;background:${num(m.BUY_win_rate_pct)>=50?'var(--green)':'var(--red)'}"></span></div><div class="m-val">${Math.round(num(m.BUY_win_rate_pct))}%</div></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="name">UNKNOWN <span class="tag">source</span></div>
-            <div class="metrics">
-              <div class="metric"><div class="m-val">${num(m.UNKNOWN_count)}</div><div class="m-lab">trades</div></div>
-              <div class="metric"><div class="m-val">${Math.round(num(m.UNKNOWN_win_rate_pct))}%</div><div class="m-lab">win</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="grid">
-        <div class="panel"><h2>Daily P/L</h2>
-          <div class="daily-row ${pnlUsd>=0?'pos':'neg'}">
-            <div class="date">Latest<small>${closed} closed · ${wins}W / ${losses}L</small></div>
-            <div class="trades">cumulative</div>
-            <div class="pnl ${cls(pnlUsd)}">${fmtUsd(pnlUsd)}</div>
-          </div>
-          <div class="row"><div class="name zero-text" style="font-weight:400;font-size:12px">Per-day breakdown fills in as more trading days close.</div></div>
-        </div>
-        <div class="panel"><h2>By Confidence</h2>${
-          confBands.map(c =>
-            `<div class="conf-row">
-              <div class="band">${c.band}</div>
-              <div class="conf-bar"><span style="width:${c.count===0?0:(c.count/maxC*100)}%"></span></div>
-              <div class="cnt">${c.count}</div>
-            </div>`).join("")
-        }
-          <h2 style="margin-top:20px">By Exit Reason</h2>${
-          exits.length ? exits.map(e =>
-            `<div class="row">
-              <div class="name">${e.reason}</div>
-              <div class="metrics">
-                <div class="metric"><div class="m-val">${e.count}</div><div class="m-lab">trades</div></div>
-                <div class="metric"><div class="m-val ${e.win_rate>=50?'pos-text':'neg-text'}">${Math.round(e.win_rate)}%</div><div class="m-lab">win</div></div>
-              </div>
-            </div>`).join("") : '<div class="row"><div class="name zero-text">—</div></div>'
-        }</div>
-      </div>`;
+  const port = DATA.portfolios[active] || null;
+  const meta = PORTS.find(p => p.key === active);
+  const ov = port && port.OVERALL ? port.OVERALL : {};
+  const closed = ov.total_closed || 0;
+
+  const lbl = $('#active-label');
+  if (lbl) lbl.textContent = meta.short + ' · ' + closed + ' closed trade' + (closed === 1 ? '' : 's');
+
+  if (!port || closed === 0) { renderEmpty(content, meta.label); return; }
+
+  const kpis = el('div', 'kpis');
+  const kpiDef = [
+    { lab: 'WIN RATE', val: fmtNum(ov.win_rate_pct, 1) + '%', cls: 'neutral', sub: ov.wins + 'W / ' + ov.losses + 'L' },
+    { lab: 'TOTAL P/L %', val: (ov.total_pnl_pct > 0 ? '+' : '') + fmtNum(ov.total_pnl_pct, 2) + '%', cls: signClass(ov.total_pnl_pct), sub: '' },
+    { lab: 'TOTAL P/L $', val: (ov.total_pnl_dollars > 0 ? '+$' : (ov.total_pnl_dollars < 0 ? '-$' : '$')) + fmtNum(Math.abs(ov.total_pnl_dollars), 2), cls: signClass(ov.total_pnl_dollars), sub: '' },
+    { lab: 'REWARD / RISK', val: fmtNum(ov.reward_risk_ratio, 2), cls: 'neutral', sub: 'avg ' + fmtNum(ov.avg_win_pct, 1) + '% / ' + fmtNum(ov.avg_loss_pct, 1) + '%' }
+  ];
+  kpiDef.forEach(k => {
+    const c = el('div', 'kpi');
+    c.appendChild(el('div', 'label', k.lab));
+    c.appendChild(el('div', 'value ' + k.cls, k.val));
+    if (k.sub) c.appendChild(el('div', 'sub', k.sub));
+    kpis.appendChild(c);
+  });
+  content.appendChild(kpis);
+
+  const grid = el('div', 'grid');
+
+  grid.appendChild(panel('BY ASSET', (p) => {
+    (port.BY_ASSET || []).forEach(a => {
+      p.appendChild(metricRow(a.key, a.count + ' trade' + (a.count === 1 ? '' : 's'), [
+        { val: fmtNum(a.win_rate_pct, 0) + '%', lab: 'win rate', cls: 'neutral' },
+        { val: (a.total_pnl_pct > 0 ? '+' : '') + fmtNum(a.total_pnl_pct, 1) + '%', lab: 'P/L %', cls: signText(a.total_pnl_pct) },
+        { val: (a.total_pnl_dollars > 0 ? '+' : '') + fmtNum(a.total_pnl_dollars, 2), lab: 'P/L $', cls: signText(a.total_pnl_dollars) }
+      ]));
+    });
+  }));
+
+  grid.appendChild(panel('BY DIRECTION', (p) => {
+    (port.BY_DIRECTION || []).forEach(d => {
+      p.appendChild(metricRow(d.key, d.count + ' trade' + (d.count === 1 ? '' : 's'), [
+        { val: fmtNum(d.win_rate_pct, 0) + '%', lab: 'win rate', cls: 'neutral' },
+        { val: fmtNum(d.avg_win_pct, 1) + '%', lab: 'avg win', cls: 'pos-text' },
+        { val: fmtNum(d.avg_loss_pct, 1) + '%', lab: 'avg loss', cls: 'neg-text' }
+      ]));
+    });
+  }));
+
+  grid.appendChild(panel('BY SOURCE', (p) => {
+    (port.BY_SOURCE || []).forEach(s => {
+      p.appendChild(metricRow(s.key, s.count + ' trade' + (s.count === 1 ? '' : 's'), [
+        { val: fmtNum(s.win_rate_pct, 0) + '%', lab: 'win rate', cls: 'neutral' },
+        { val: (s.avg_pnl_pct > 0 ? '+' : '') + fmtNum(s.avg_pnl_pct, 1) + '%', lab: 'avg P/L %', cls: signText(s.avg_pnl_pct) }
+      ]));
+    });
+  }));
+
+  grid.appendChild(panel('BY CONFIDENCE', (p) => {
+    (port.BY_CONFIDENCE || []).forEach(c => {
+      const cr = el('div', 'conf-row');
+      cr.appendChild(el('div', 'band', c.key));
+      cr.appendChild(el('div', 'cnt', c.count + 'x'));
+      cr.appendChild(el('div', 'm-val neutral', fmtNum(c.win_rate_pct, 0) + '% win'));
+      p.appendChild(cr);
+    });
+  }));
+
+  grid.appendChild(panel('BY EXIT REASON', (p) => {
+    (port.BY_EXIT_REASON || []).forEach(e => {
+      p.appendChild(metricRow(e.key, e.count + 'x', [
+        { val: fmtNum(e.win_rate_pct, 0) + '%', lab: 'win rate', cls: 'neutral' }
+      ]));
+    });
+  }));
+
+  content.appendChild(grid);
+}
+
+function setActive(key) {
+  active = key;
+  document.querySelectorAll('.toggle-btn').forEach(b => { b.classList.toggle('on', b.dataset.key === key); });
+  render();
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL);
+    DATA = await res.json();
+    const d = $('#upd-date');
+    if (d && DATA.generated_at) d.textContent = new Date(DATA.generated_at).toLocaleString();
+    render();
+  } catch (e) {
+    $('#content').innerHTML = '<div class="err">Could not load data.json — ' + e.message + '</div>';
   }
-  async function loadData() {
-    document.getElementById("content").innerHTML = '<div class="status">Fetching live data…</div>';
-    try {
-      const res = await fetch(DATA_URL + '?t=' + Date.now());
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const m = await res.json();
-      m.__generated = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-      if (!m.total_closed && !m.win_rate_pct) throw new Error("No data parsed");
-      render(m);
-    } catch (e) {
-      document.getElementById("content").innerHTML =
-        '<div class="status err">Couldn\'t load live data: ' + e.message + '</div>';
-      document.getElementById("upd-date").textContent = "error";
-    }
-  }
+}
+
+function __init(){
+  document.querySelectorAll('.toggle-btn').forEach(b => { b.addEventListener('click', () => setActive(b.dataset.key)); });
+  setActive('news_only');
   loadData();
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',__init);}else{__init();}
+
 </script>
 </body>
 </html>
