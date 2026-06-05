@@ -28,8 +28,6 @@
   .title-block p { color: var(--ink-soft); font-size: 13px; margin-top: 4px; font-family: 'Spline Sans Mono', monospace; }
   .updated { text-align: right; font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
   .updated strong { color: var(--ink); display: block; font-size: 13px; }
-  .refresh-btn { margin-top: 6px; font-family: 'Spline Sans Mono', monospace; font-size: 11px; background: var(--panel); border: 1px solid var(--line); color: var(--accent); padding: 5px 12px; border-radius: 7px; cursor: pointer; transition: all .15s; }
-  .refresh-btn:hover { background: var(--accent-bg); }
   .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
   .kpi { background: var(--panel); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); border: 1px solid var(--line); position: relative; overflow: hidden; }
   .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-soft); font-weight: 600; }
@@ -101,7 +99,7 @@
 .eq-card .eq-label { font-family:'Spline Sans Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-soft); font-weight:600; }
 .eq-card .eq-equity { font-family:'Fraunces',serif; font-size:clamp(28px,5vw,42px); font-weight:600; letter-spacing:-1px; margin-top:6px; line-height:1.05; }
 .eq-card .eq-growth { font-family:'Spline Sans Mono',monospace; font-size:14px; font-weight:600; margin-top:8px; }
-.eq-card .eq-start { font-size:12px; color:var(--ink-soft); margin-top:2px; }
+.eq-card
 .split-card .split-bar { display:flex; height:14px; border-radius:7px; overflow:hidden; margin:14px 0 12px; background:var(--bg); }
 .split-bar .cash { background:linear-gradient(90deg,var(--green),#3bbd8a); }
 .split-bar .inv { background:linear-gradient(90deg,var(--accent),#5b7e9e); }
@@ -122,10 +120,6 @@
 .badge.short { background:var(--red-bg); color:var(--red); }
 .pos-row .pos-meta { font-family:'Spline Sans Mono',monospace; font-size:12px; color:var(--ink-soft); }
 
-/* --- small refresh icon --- */
-.refresh-icon { background:var(--panel); border:1px solid var(--line); width:34px; height:34px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color:var(--accent); transition:all .15s; box-shadow:var(--shadow); }
-.refresh-icon:hover { background:var(--accent-bg); transform:rotate(40deg); }
-.refresh-icon.spin svg { animation:spin .7s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .ptr-hint { text-align:center; font-family:'Spline Sans Mono',monospace; font-size:11px; color:var(--ink-soft); height:0; overflow:hidden; transition:height .2s; }
 .ptr-hint.show { height:22px; }
@@ -160,9 +154,6 @@
     <div class="updated">
       <span>Last updated</span>
       <strong id="upd-date">—</strong>
-      <span id="refresh-icon" class="refresh-icon" title="Refresh">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
-      </span>
     </div>
   </header>
 
@@ -258,7 +249,7 @@ function render(){
         '<div class="eq-label">Total Equity</div>'+
         '<div class="eq-equity">'+fmtMoney(b.total_equity)+'</div>'+
         '<div class="eq-growth '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+' · '+fmtPct(b.growth_pct)+'</div>'+
-        '<div class="eq-start">vs '+fmtMoney(b.starting_balance)+' starting</div>'+
+        ''+
       '</div>'+
       '<div class="eq-card split-card">'+
         '<div class="eq-label">Cash / Invested</div>'+
@@ -326,7 +317,6 @@ function wireSwitch(){
 function setUpdated(){ const d=DATA&&DATA.generated_at?new Date(DATA.generated_at):new Date(); document.getElementById('upd-date').textContent = d.toLocaleString(); }
 
 async function loadData(){
-  const icon=document.getElementById('refresh-icon'); if(icon) icon.classList.add('spin');
   try{
     const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});
     DATA=await r.json();
@@ -334,7 +324,7 @@ async function loadData(){
     buildPills(); setUpdated(); render();
   }catch(e){
     document.getElementById('content').innerHTML='<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
-  }finally{ setTimeout(()=>{if(icon)icon.classList.remove('spin');},500); }
+  }finally{  }
 }
 
 let touchStartY=0, pulling=false;
@@ -342,7 +332,6 @@ window.addEventListener('touchstart',e=>{ if(window.scrollY===0){ touchStartY=e.
 window.addEventListener('touchmove',e=>{ if(!pulling) return; const dy=e.touches[0].clientY-touchStartY; const h=document.getElementById('ptr-hint'); if(dy>40&&window.scrollY===0) h.classList.add('show'); else h.classList.remove('show'); },{passive:true});
 window.addEventListener('touchend',e=>{ const h=document.getElementById('ptr-hint'); if(pulling&&h.classList.contains('show')){ h.classList.remove('show'); loadData(); } pulling=false; },{passive:true});
 
-document.getElementById('refresh-icon').addEventListener('click',loadData);
 wireSwitch();
 loadData();
 
