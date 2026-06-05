@@ -1,548 +1,479 @@
 {
-  "generated_at": "2026-06-05T09:00:06.099Z",
-  "portfolios": {
+  "generated_at": "2026-06-05T12:02:20.446Z",
+  "model": "10-account (5 strategies x 2 exit rules)",
+  "totals": {
+    "equity": 100000,
+    "starting": 100000,
+    "pnl_dollars": 0,
+    "pnl_pct": 0,
+    "open_positions": 0,
+    "book_count": 10
+  },
+  "strategies": [
+    "news_only",
+    "news_plus_ta",
+    "mean_reversion",
+    "trend_strict",
+    "strict"
+  ],
+  "exit_rules": [
+    "hold_24hr",
+    "sell_eod"
+  ],
+  "books": [
+    {
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "book_key": "news_only__hold_24hr",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "book_key": "news_only__sell_eod",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "news_plus_ta",
+      "exit_rule": "hold_24hr",
+      "book_key": "news_plus_ta__hold_24hr",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "book_key": "news_plus_ta__sell_eod",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "mean_reversion",
+      "exit_rule": "hold_24hr",
+      "book_key": "mean_reversion__hold_24hr",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "mean_reversion",
+      "exit_rule": "sell_eod",
+      "book_key": "mean_reversion__sell_eod",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "trend_strict",
+      "exit_rule": "hold_24hr",
+      "book_key": "trend_strict__hold_24hr",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "book_key": "trend_strict__sell_eod",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "strict",
+      "exit_rule": "hold_24hr",
+      "book_key": "strict__hold_24hr",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    },
+    {
+      "portfolio": "strict",
+      "exit_rule": "sell_eod",
+      "book_key": "strict__sell_eod",
+      "starting_balance": 10000,
+      "total_equity": 10000,
+      "growth_dollars": 0,
+      "growth_pct": 0,
+      "free_cash": 10000,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
+      "closed": {
+        "count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate_pct": null,
+        "total_pnl_dollars": 0,
+        "low_sample": true
+      }
+    }
+  ],
+  "grid": {
     "news_only": {
-      "OVERALL": {
-        "total_closed": 6,
-        "wins": 3,
-        "losses": 3,
-        "win_rate_pct": 50,
-        "avg_win_pct": 33.27,
-        "avg_loss_pct": -5.79,
-        "reward_risk_ratio": 5.75,
-        "total_pnl_pct": 82.46,
-        "total_pnl_dollars": 20.61
+      "hold_24hr": {
+        "portfolio": "news_only",
+        "exit_rule": "hold_24hr",
+        "book_key": "news_only__hold_24hr",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
       },
-      "BY_ASSET": [
-        {
-          "key": "AVGO",
-          "count": 1,
-          "win_rate_pct": 100,
-          "total_pnl_pct": 15.67,
-          "total_pnl_dollars": 3.92
-        },
-        {
-          "key": "HCAT",
-          "count": 1,
-          "win_rate_pct": 0,
-          "total_pnl_pct": -5.98,
-          "total_pnl_dollars": -1.49
-        },
-        {
-          "key": "RDW",
-          "count": 1,
-          "win_rate_pct": 100,
-          "total_pnl_pct": 13.53,
-          "total_pnl_dollars": 3.38
-        },
-        {
-          "key": "RUM",
-          "count": 1,
-          "win_rate_pct": 0,
-          "total_pnl_pct": -5.73,
-          "total_pnl_dollars": -1.43
-        },
-        {
-          "key": "SNBR",
-          "count": 1,
-          "win_rate_pct": 100,
-          "total_pnl_pct": 70.61,
-          "total_pnl_dollars": 17.65
-        },
-        {
-          "key": "STM",
-          "count": 1,
-          "win_rate_pct": 0,
-          "total_pnl_pct": -5.66,
-          "total_pnl_dollars": -1.41
+      "sell_eod": {
+        "portfolio": "news_only",
+        "exit_rule": "sell_eod",
+        "book_key": "news_only__sell_eod",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
         }
-      ],
-      "BY_SOURCE": [
-        {
-          "key": "Seeking Alpha RSS",
-          "count": 4,
-          "win_rate_pct": 50,
-          "avg_pnl_pct": 18.11
-        },
-        {
-          "key": "Yahoo Finance RSS",
-          "count": 2,
-          "win_rate_pct": 50,
-          "avg_pnl_pct": 5.01
-        }
-      ],
-      "BY_CONFIDENCE": [
-        {
-          "key": "0.60-0.69",
-          "count": 2,
-          "win_rate_pct": 50
-        },
-        {
-          "key": "0.70-0.79",
-          "count": 3,
-          "win_rate_pct": 33.33
-        },
-        {
-          "key": "0.80-0.89",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_EXIT_REASON": [
-        {
-          "key": "stop",
-          "count": 3,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "target",
-          "count": 3,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_DIRECTION": [
-        {
-          "key": "BUY",
-          "count": 4,
-          "win_rate_pct": 25,
-          "avg_win_pct": 13.53,
-          "avg_loss_pct": -5.79
-        },
-        {
-          "key": "SELL",
-          "count": 2,
-          "win_rate_pct": 100,
-          "avg_win_pct": 43.14,
-          "avg_loss_pct": 0
-        }
-      ],
-      "BY_ALIGNMENT": [
-        {
-          "key": "aligned",
-          "count": 3,
-          "win_rate_pct": 33.33
-        },
-        {
-          "key": "conflict",
-          "count": 1,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "neutral",
-          "count": 2,
-          "win_rate_pct": 50
-        }
-      ],
-      "BY_RSI_BAND": [
-        {
-          "key": "neutral (30-70)",
-          "count": 2,
-          "win_rate_pct": 50
-        },
-        {
-          "key": "overbought (>70)",
-          "count": 3,
-          "win_rate_pct": 33.33
-        },
-        {
-          "key": "oversold (<30)",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_TREND": [
-        {
-          "key": "above_ma20 (uptrend)",
-          "count": 5,
-          "win_rate_pct": 40
-        },
-        {
-          "key": "below_ma20 (downtrend)",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_HOUR": [
-        {
-          "key": "03:00 MT",
-          "count": 1,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "05:00 MT",
-          "count": 1,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "06:00 MT",
-          "count": 2,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "07:00 MT",
-          "count": 1,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "08:00 MT",
-          "count": 1,
-          "win_rate_pct": 0
-        }
-      ],
-      "AVG_HOLD_TIME": {
-        "avg_minutes": 119.5,
-        "avg_win_minutes": 119.73,
-        "avg_loss_minutes": 119.27,
-        "n": 6
-      },
-      "open_count": 35
+      }
     },
     "news_plus_ta": {
-      "OVERALL": {
-        "total_closed": 3,
-        "wins": 2,
-        "losses": 1,
-        "win_rate_pct": 66.67,
-        "avg_win_pct": 42.14,
-        "avg_loss_pct": -5.73,
-        "reward_risk_ratio": 7.36,
-        "total_pnl_pct": 78.56,
-        "total_pnl_dollars": 19.64
+      "hold_24hr": {
+        "portfolio": "news_plus_ta",
+        "exit_rule": "hold_24hr",
+        "book_key": "news_plus_ta__hold_24hr",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
       },
-      "BY_ASSET": [
-        {
-          "key": "RDW",
-          "count": 1,
-          "win_rate_pct": 100,
-          "total_pnl_pct": 13.68,
-          "total_pnl_dollars": 3.42
-        },
-        {
-          "key": "RUM",
-          "count": 1,
-          "win_rate_pct": 0,
-          "total_pnl_pct": -5.73,
-          "total_pnl_dollars": -1.43
-        },
-        {
-          "key": "SNBR",
-          "count": 1,
-          "win_rate_pct": 100,
-          "total_pnl_pct": 70.61,
-          "total_pnl_dollars": 17.65
+      "sell_eod": {
+        "portfolio": "news_plus_ta",
+        "exit_rule": "sell_eod",
+        "book_key": "news_plus_ta__sell_eod",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
         }
-      ],
-      "BY_SOURCE": [
-        {
-          "key": "Seeking Alpha RSS",
-          "count": 3,
-          "win_rate_pct": 66.67,
-          "avg_pnl_pct": 26.19
-        }
-      ],
-      "BY_CONFIDENCE": [
-        {
-          "key": "0.60-0.69",
-          "count": 2,
-          "win_rate_pct": 50
-        },
-        {
-          "key": "0.80-0.89",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_EXIT_REASON": [
-        {
-          "key": "stop",
-          "count": 1,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "target",
-          "count": 2,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_DIRECTION": [
-        {
-          "key": "BUY",
-          "count": 2,
-          "win_rate_pct": 50,
-          "avg_win_pct": 13.68,
-          "avg_loss_pct": -5.73
-        },
-        {
-          "key": "SELL",
-          "count": 1,
-          "win_rate_pct": 100,
-          "avg_win_pct": 70.61,
-          "avg_loss_pct": 0
-        }
-      ],
-      "BY_ALIGNMENT": [
-        {
-          "key": "aligned",
-          "count": 1,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "neutral",
-          "count": 2,
-          "win_rate_pct": 50
-        }
-      ],
-      "BY_RSI_BAND": [
-        {
-          "key": "neutral (30-70)",
-          "count": 2,
-          "win_rate_pct": 50
-        },
-        {
-          "key": "oversold (<30)",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_TREND": [
-        {
-          "key": "above_ma20 (uptrend)",
-          "count": 2,
-          "win_rate_pct": 50
-        },
-        {
-          "key": "below_ma20 (downtrend)",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_HOUR": [
-        {
-          "key": "05:00 MT",
-          "count": 1,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "06:00 MT",
-          "count": 1,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "08:00 MT",
-          "count": 1,
-          "win_rate_pct": 0
-        }
-      ],
-      "AVG_HOLD_TIME": {
-        "avg_minutes": 109.39,
-        "avg_win_minutes": 134.72,
-        "avg_loss_minutes": 58.73,
-        "n": 3
-      },
-      "open_count": 20
+      }
     },
     "mean_reversion": {
-      "OVERALL": {
-        "total_closed": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": 0,
-        "avg_win_pct": 0,
-        "avg_loss_pct": 0,
-        "reward_risk_ratio": 0,
-        "total_pnl_pct": 0,
-        "total_pnl_dollars": 0
+      "hold_24hr": {
+        "portfolio": "mean_reversion",
+        "exit_rule": "hold_24hr",
+        "book_key": "mean_reversion__hold_24hr",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
       },
-      "BY_ASSET": [],
-      "BY_SOURCE": [],
-      "BY_CONFIDENCE": [],
-      "BY_EXIT_REASON": [],
-      "BY_DIRECTION": [],
-      "BY_ALIGNMENT": [],
-      "BY_RSI_BAND": [],
-      "BY_TREND": [],
-      "BY_HOUR": [],
-      "AVG_HOLD_TIME": {
-        "avg_minutes": null,
-        "avg_win_minutes": null,
-        "avg_loss_minutes": null,
-        "n": 0
-      },
-      "open_count": 8
+      "sell_eod": {
+        "portfolio": "mean_reversion",
+        "exit_rule": "sell_eod",
+        "book_key": "mean_reversion__sell_eod",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
+      }
     },
     "trend_strict": {
-      "OVERALL": {
-        "total_closed": 3,
-        "wins": 1,
-        "losses": 2,
-        "win_rate_pct": 33.33,
-        "avg_win_pct": 70.61,
-        "avg_loss_pct": -5.8,
-        "reward_risk_ratio": 12.18,
-        "total_pnl_pct": 59.01,
-        "total_pnl_dollars": 14.75
+      "hold_24hr": {
+        "portfolio": "trend_strict",
+        "exit_rule": "hold_24hr",
+        "book_key": "trend_strict__hold_24hr",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
       },
-      "BY_ASSET": [
-        {
-          "key": "HCAT",
-          "count": 1,
-          "win_rate_pct": 0,
-          "total_pnl_pct": -5.98,
-          "total_pnl_dollars": -1.49
-        },
-        {
-          "key": "SNBR",
-          "count": 1,
-          "win_rate_pct": 100,
-          "total_pnl_pct": 70.61,
-          "total_pnl_dollars": 17.65
-        },
-        {
-          "key": "STM",
-          "count": 1,
-          "win_rate_pct": 0,
-          "total_pnl_pct": -5.62,
-          "total_pnl_dollars": -1.41
+      "sell_eod": {
+        "portfolio": "trend_strict",
+        "exit_rule": "sell_eod",
+        "book_key": "trend_strict__sell_eod",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
         }
-      ],
-      "BY_SOURCE": [
-        {
-          "key": "Seeking Alpha RSS",
-          "count": 2,
-          "win_rate_pct": 50,
-          "avg_pnl_pct": 32.32
-        },
-        {
-          "key": "Yahoo Finance RSS",
-          "count": 1,
-          "win_rate_pct": 0,
-          "avg_pnl_pct": -5.62
-        }
-      ],
-      "BY_CONFIDENCE": [
-        {
-          "key": "0.70-0.79",
-          "count": 2,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "0.80-0.89",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_EXIT_REASON": [
-        {
-          "key": "stop",
-          "count": 2,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "target",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_DIRECTION": [
-        {
-          "key": "BUY",
-          "count": 2,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
-          "avg_loss_pct": -5.8
-        },
-        {
-          "key": "SELL",
-          "count": 1,
-          "win_rate_pct": 100,
-          "avg_win_pct": 70.61,
-          "avg_loss_pct": 0
-        }
-      ],
-      "BY_ALIGNMENT": [
-        {
-          "key": "aligned",
-          "count": 3,
-          "win_rate_pct": 33.33
-        }
-      ],
-      "BY_RSI_BAND": [
-        {
-          "key": "overbought (>70)",
-          "count": 2,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "oversold (<30)",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_TREND": [
-        {
-          "key": "above_ma20 (uptrend)",
-          "count": 2,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "below_ma20 (downtrend)",
-          "count": 1,
-          "win_rate_pct": 100
-        }
-      ],
-      "BY_HOUR": [
-        {
-          "key": "03:00 MT",
-          "count": 1,
-          "win_rate_pct": 0
-        },
-        {
-          "key": "06:00 MT",
-          "count": 1,
-          "win_rate_pct": 100
-        },
-        {
-          "key": "07:00 MT",
-          "count": 1,
-          "win_rate_pct": 0
-        }
-      ],
-      "AVG_HOLD_TIME": {
-        "avg_minutes": 139.62,
-        "avg_win_minutes": 119.79,
-        "avg_loss_minutes": 149.54,
-        "n": 3
-      },
-      "open_count": 16
+      }
     },
     "strict": {
-      "OVERALL": {
-        "total_closed": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": 0,
-        "avg_win_pct": 0,
-        "avg_loss_pct": 0,
-        "reward_risk_ratio": 0,
-        "total_pnl_pct": 0,
-        "total_pnl_dollars": 0
+      "hold_24hr": {
+        "portfolio": "strict",
+        "exit_rule": "hold_24hr",
+        "book_key": "strict__hold_24hr",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
       },
-      "BY_ASSET": [],
-      "BY_SOURCE": [],
-      "BY_CONFIDENCE": [],
-      "BY_EXIT_REASON": [],
-      "BY_DIRECTION": [],
-      "BY_ALIGNMENT": [],
-      "BY_RSI_BAND": [],
-      "BY_TREND": [],
-      "BY_HOUR": [],
-      "AVG_HOLD_TIME": {
-        "avg_minutes": null,
-        "avg_win_minutes": null,
-        "avg_loss_minutes": null,
-        "n": 0
-      },
-      "open_count": 3
+      "sell_eod": {
+        "portfolio": "strict",
+        "exit_rule": "sell_eod",
+        "book_key": "strict__sell_eod",
+        "starting_balance": 10000,
+        "total_equity": 10000,
+        "growth_dollars": 0,
+        "growth_pct": 0,
+        "free_cash": 10000,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
+        "closed": {
+          "count": 0,
+          "wins": 0,
+          "losses": 0,
+          "win_rate_pct": null,
+          "total_pnl_dollars": 0,
+          "low_sample": true
+        }
+      }
     }
-  }
+  },
+  "open_positions": [],
+  "low_sample_threshold": 20
 }
