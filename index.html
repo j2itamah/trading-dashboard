@@ -284,10 +284,10 @@ function render(){
       posPanel+
       groupPanel('By Asset', a.BY_ASSET, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
       groupPanel('By Direction', a.BY_DIRECTION, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_win_pct',lab:'avg win',fmt:'pct',sign:1}])+
-      groupPanel('By Source', a.BY_SOURCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
+      groupPanel('By Source', a.BY_SOURCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
       groupPanel('By Confidence', a.BY_CONFIDENCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
-      groupPanel('By Exit Reason', a.BY_EXIT_REASON, [{k:'count',lab:'n'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
-      groupPanel('By Hour', a.BY_HOUR, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
+      groupPanel('By Exit Reason', a.BY_EXIT_REASON, [{k:'count',lab:'n'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
+      groupPanel('By Hour', a.BY_HOUR, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
     '</div>';
 
   const ht = a.AVG_HOLD_TIME || {};
