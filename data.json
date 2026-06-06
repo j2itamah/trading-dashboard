@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-06T15:00:12.250Z",
+  "generated_at": "2026-06-06T15:30:12.576Z",
   "model": "10-account (5 strategies x 2 exit rules)",
   "totals": {
-    "equity": 100137.51,
+    "equity": 101415.38,
     "starting": 100000,
-    "pnl_dollars": 137.51,
-    "pnl_pct": 0.14,
-    "open_positions": 23,
+    "pnl_dollars": 1415.38,
+    "pnl_pct": 1.42,
+    "open_positions": 21,
     "book_count": 10
   },
   "strategies": [
@@ -244,25 +244,25 @@
       "exit_rule": "hold_24hr",
       "book_key": "news_only__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10048.19,
-      "growth_dollars": 48.19,
-      "growth_pct": 0.48,
-      "free_cash": 4782.97,
-      "deployed_capital": 5265.22,
-      "cash_pct": 47.6,
-      "invested_pct": 52.4,
-      "open_count": 7,
+      "total_equity": 10649.47,
+      "growth_dollars": 649.47,
+      "growth_pct": 6.49,
+      "free_cash": 5364.59,
+      "deployed_capital": 5284.88,
+      "cash_pct": 50.37,
+      "invested_pct": 49.63,
+      "open_count": 6,
       "analytics": {
         "OVERALL": {
-          "total_closed": 8,
-          "wins": 0,
+          "total_closed": 9,
+          "wins": 1,
           "losses": 8,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 11.11,
+          "avg_win_pct": 9.44,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 9.44,
+          "total_pnl_dollars": 50.18
         },
         "BY_ASSET": [
           {
@@ -320,6 +320,13 @@
             "win_rate_pct": 0,
             "total_pnl_pct": 0,
             "total_pnl_dollars": 0
+          },
+          {
+            "key": "ZEC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 9.44,
+            "total_pnl_dollars": 50.18
           }
         ],
         "BY_SOURCE": [
@@ -328,6 +335,12 @@
             "count": 1,
             "win_rate_pct": 0,
             "avg_pnl_pct": 0
+          },
+          {
+            "key": "CryptoPotato",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 9.44
           },
           {
             "key": "Seeking Alpha RSS",
@@ -350,11 +363,16 @@
           },
           {
             "key": "0.70-0.79",
-            "count": 5,
-            "win_rate_pct": 0
+            "count": 6,
+            "win_rate_pct": 16.67
           }
         ],
         "BY_EXIT_REASON": [
+          {
+            "key": "target",
+            "count": 1,
+            "win_rate_pct": 100
+          },
           {
             "key": "voided_pre_gate_bug",
             "count": 8,
@@ -371,9 +389,9 @@
           },
           {
             "key": "SELL",
-            "count": 3,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "count": 4,
+            "win_rate_pct": 25,
+            "avg_win_pct": 9.44,
             "avg_loss_pct": 0
           }
         ],
@@ -392,6 +410,11 @@
             "key": "neutral",
             "count": 1,
             "win_rate_pct": 0
+          },
+          {
+            "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_RSI_BAND": [
@@ -399,6 +422,11 @@
             "key": "neutral (30-70)",
             "count": 6,
             "win_rate_pct": 0
+          },
+          {
+            "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
           },
           {
             "key": "oversold (<30)",
@@ -416,6 +444,11 @@
             "key": "below_ma20 (downtrend)",
             "count": 7,
             "win_rate_pct": 0
+          },
+          {
+            "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_HOUR": [
@@ -433,21 +466,26 @@
             "key": "16:00 MT",
             "count": 3,
             "win_rate_pct": 0
+          },
+          {
+            "key": "20:00 MT",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 211.47,
-          "avg_win_minutes": null,
+          "avg_minutes": 269.83,
+          "avg_win_minutes": 736.71,
           "avg_loss_minutes": null,
-          "n": 8
+          "n": 9
         }
       },
       "closed": {
-        "count": 8,
-        "wins": 0,
+        "count": 9,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": 0,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 11.11,
+        "total_pnl_dollars": 50.18,
         "low_sample": true
       }
     },
@@ -456,25 +494,25 @@
       "exit_rule": "sell_eod",
       "book_key": "news_only__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10053.93,
-      "growth_dollars": 53.93,
-      "growth_pct": 0.54,
-      "free_cash": 5382.09,
-      "deployed_capital": 4671.85,
-      "cash_pct": 53.53,
-      "invested_pct": 46.47,
-      "open_count": 6,
+      "total_equity": 10730.53,
+      "growth_dollars": 730.53,
+      "growth_pct": 7.31,
+      "free_cash": 6036.56,
+      "deployed_capital": 4693.97,
+      "cash_pct": 56.26,
+      "invested_pct": 43.74,
+      "open_count": 5,
       "analytics": {
         "OVERALL": {
-          "total_closed": 9,
-          "wins": 1,
+          "total_closed": 10,
+          "wins": 2,
           "losses": 8,
-          "win_rate_pct": 11.11,
-          "avg_win_pct": 1.46,
+          "win_rate_pct": 20,
+          "avg_win_pct": 5.45,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 1.46,
-          "total_pnl_dollars": 9.59
+          "total_pnl_pct": 10.9,
+          "total_pnl_dollars": 66.05
         },
         "BY_ASSET": [
           {
@@ -539,6 +577,13 @@
             "win_rate_pct": 0,
             "total_pnl_pct": 0,
             "total_pnl_dollars": 0
+          },
+          {
+            "key": "ZEC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 9.44,
+            "total_pnl_dollars": 56.46
           }
         ],
         "BY_SOURCE": [
@@ -547,6 +592,12 @@
             "count": 1,
             "win_rate_pct": 0,
             "avg_pnl_pct": 0
+          },
+          {
+            "key": "CryptoPotato",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 9.44
           },
           {
             "key": "Seeking Alpha RSS",
@@ -569,13 +620,18 @@
           },
           {
             "key": "0.70-0.79",
-            "count": 6,
-            "win_rate_pct": 16.67
+            "count": 7,
+            "win_rate_pct": 28.57
           }
         ],
         "BY_EXIT_REASON": [
           {
             "key": "eod",
+            "count": 1,
+            "win_rate_pct": 100
+          },
+          {
+            "key": "target",
             "count": 1,
             "win_rate_pct": 100
           },
@@ -595,9 +651,9 @@
           },
           {
             "key": "SELL",
-            "count": 3,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "count": 4,
+            "win_rate_pct": 25,
+            "avg_win_pct": 9.44,
             "avg_loss_pct": 0
           }
         ],
@@ -616,6 +672,11 @@
             "key": "neutral",
             "count": 1,
             "win_rate_pct": 0
+          },
+          {
+            "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_RSI_BAND": [
@@ -623,6 +684,11 @@
             "key": "neutral (30-70)",
             "count": 7,
             "win_rate_pct": 14.29
+          },
+          {
+            "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
           },
           {
             "key": "oversold (<30)",
@@ -640,6 +706,11 @@
             "key": "below_ma20 (downtrend)",
             "count": 8,
             "win_rate_pct": 12.5
+          },
+          {
+            "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_HOUR": [
@@ -662,21 +733,26 @@
             "key": "16:00 MT",
             "count": 3,
             "win_rate_pct": 0
+          },
+          {
+            "key": "20:00 MT",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 196.18,
-          "avg_win_minutes": 73.86,
+          "avg_minutes": 250.23,
+          "avg_win_minutes": 405.29,
           "avg_loss_minutes": null,
-          "n": 9
+          "n": 10
         }
       },
       "closed": {
-        "count": 9,
-        "wins": 1,
+        "count": 10,
+        "wins": 2,
         "losses": 0,
-        "win_rate_pct": 11.11,
-        "total_pnl_dollars": 9.59,
+        "win_rate_pct": 20,
+        "total_pnl_dollars": 66.05,
         "low_sample": true
       }
     },
@@ -1350,25 +1426,25 @@
         "exit_rule": "hold_24hr",
         "book_key": "news_only__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10048.19,
-        "growth_dollars": 48.19,
-        "growth_pct": 0.48,
-        "free_cash": 4782.97,
-        "deployed_capital": 5265.22,
-        "cash_pct": 47.6,
-        "invested_pct": 52.4,
-        "open_count": 7,
+        "total_equity": 10649.47,
+        "growth_dollars": 649.47,
+        "growth_pct": 6.49,
+        "free_cash": 5364.59,
+        "deployed_capital": 5284.88,
+        "cash_pct": 50.37,
+        "invested_pct": 49.63,
+        "open_count": 6,
         "analytics": {
           "OVERALL": {
-            "total_closed": 8,
-            "wins": 0,
+            "total_closed": 9,
+            "wins": 1,
             "losses": 8,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 11.11,
+            "avg_win_pct": 9.44,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 9.44,
+            "total_pnl_dollars": 50.18
           },
           "BY_ASSET": [
             {
@@ -1426,6 +1502,13 @@
               "win_rate_pct": 0,
               "total_pnl_pct": 0,
               "total_pnl_dollars": 0
+            },
+            {
+              "key": "ZEC",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 9.44,
+              "total_pnl_dollars": 50.18
             }
           ],
           "BY_SOURCE": [
@@ -1434,6 +1517,12 @@
               "count": 1,
               "win_rate_pct": 0,
               "avg_pnl_pct": 0
+            },
+            {
+              "key": "CryptoPotato",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 9.44
             },
             {
               "key": "Seeking Alpha RSS",
@@ -1456,11 +1545,16 @@
             },
             {
               "key": "0.70-0.79",
-              "count": 5,
-              "win_rate_pct": 0
+              "count": 6,
+              "win_rate_pct": 16.67
             }
           ],
           "BY_EXIT_REASON": [
+            {
+              "key": "target",
+              "count": 1,
+              "win_rate_pct": 100
+            },
             {
               "key": "voided_pre_gate_bug",
               "count": 8,
@@ -1477,9 +1571,9 @@
             },
             {
               "key": "SELL",
-              "count": 3,
-              "win_rate_pct": 0,
-              "avg_win_pct": 0,
+              "count": 4,
+              "win_rate_pct": 25,
+              "avg_win_pct": 9.44,
               "avg_loss_pct": 0
             }
           ],
@@ -1498,6 +1592,11 @@
               "key": "neutral",
               "count": 1,
               "win_rate_pct": 0
+            },
+            {
+              "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_RSI_BAND": [
@@ -1505,6 +1604,11 @@
               "key": "neutral (30-70)",
               "count": 6,
               "win_rate_pct": 0
+            },
+            {
+              "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
             },
             {
               "key": "oversold (<30)",
@@ -1522,6 +1626,11 @@
               "key": "below_ma20 (downtrend)",
               "count": 7,
               "win_rate_pct": 0
+            },
+            {
+              "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_HOUR": [
@@ -1539,21 +1648,26 @@
               "key": "16:00 MT",
               "count": 3,
               "win_rate_pct": 0
+            },
+            {
+              "key": "20:00 MT",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 211.47,
-            "avg_win_minutes": null,
+            "avg_minutes": 269.83,
+            "avg_win_minutes": 736.71,
             "avg_loss_minutes": null,
-            "n": 8
+            "n": 9
           }
         },
         "closed": {
-          "count": 8,
-          "wins": 0,
+          "count": 9,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 11.11,
+          "total_pnl_dollars": 50.18,
           "low_sample": true
         }
       },
@@ -1562,25 +1676,25 @@
         "exit_rule": "sell_eod",
         "book_key": "news_only__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10053.93,
-        "growth_dollars": 53.93,
-        "growth_pct": 0.54,
-        "free_cash": 5382.09,
-        "deployed_capital": 4671.85,
-        "cash_pct": 53.53,
-        "invested_pct": 46.47,
-        "open_count": 6,
+        "total_equity": 10730.53,
+        "growth_dollars": 730.53,
+        "growth_pct": 7.31,
+        "free_cash": 6036.56,
+        "deployed_capital": 4693.97,
+        "cash_pct": 56.26,
+        "invested_pct": 43.74,
+        "open_count": 5,
         "analytics": {
           "OVERALL": {
-            "total_closed": 9,
-            "wins": 1,
+            "total_closed": 10,
+            "wins": 2,
             "losses": 8,
-            "win_rate_pct": 11.11,
-            "avg_win_pct": 1.46,
+            "win_rate_pct": 20,
+            "avg_win_pct": 5.45,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 1.46,
-            "total_pnl_dollars": 9.59
+            "total_pnl_pct": 10.9,
+            "total_pnl_dollars": 66.05
           },
           "BY_ASSET": [
             {
@@ -1645,6 +1759,13 @@
               "win_rate_pct": 0,
               "total_pnl_pct": 0,
               "total_pnl_dollars": 0
+            },
+            {
+              "key": "ZEC",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 9.44,
+              "total_pnl_dollars": 56.46
             }
           ],
           "BY_SOURCE": [
@@ -1653,6 +1774,12 @@
               "count": 1,
               "win_rate_pct": 0,
               "avg_pnl_pct": 0
+            },
+            {
+              "key": "CryptoPotato",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 9.44
             },
             {
               "key": "Seeking Alpha RSS",
@@ -1675,13 +1802,18 @@
             },
             {
               "key": "0.70-0.79",
-              "count": 6,
-              "win_rate_pct": 16.67
+              "count": 7,
+              "win_rate_pct": 28.57
             }
           ],
           "BY_EXIT_REASON": [
             {
               "key": "eod",
+              "count": 1,
+              "win_rate_pct": 100
+            },
+            {
+              "key": "target",
               "count": 1,
               "win_rate_pct": 100
             },
@@ -1701,9 +1833,9 @@
             },
             {
               "key": "SELL",
-              "count": 3,
-              "win_rate_pct": 0,
-              "avg_win_pct": 0,
+              "count": 4,
+              "win_rate_pct": 25,
+              "avg_win_pct": 9.44,
               "avg_loss_pct": 0
             }
           ],
@@ -1722,6 +1854,11 @@
               "key": "neutral",
               "count": 1,
               "win_rate_pct": 0
+            },
+            {
+              "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_RSI_BAND": [
@@ -1729,6 +1866,11 @@
               "key": "neutral (30-70)",
               "count": 7,
               "win_rate_pct": 14.29
+            },
+            {
+              "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
             },
             {
               "key": "oversold (<30)",
@@ -1746,6 +1888,11 @@
               "key": "below_ma20 (downtrend)",
               "count": 8,
               "win_rate_pct": 12.5
+            },
+            {
+              "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_HOUR": [
@@ -1768,21 +1915,26 @@
               "key": "16:00 MT",
               "count": 3,
               "win_rate_pct": 0
+            },
+            {
+              "key": "20:00 MT",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 196.18,
-            "avg_win_minutes": 73.86,
+            "avg_minutes": 250.23,
+            "avg_win_minutes": 405.29,
             "avg_loss_minutes": null,
-            "n": 9
+            "n": 10
           }
         },
         "closed": {
-          "count": 9,
-          "wins": 1,
+          "count": 10,
+          "wins": 2,
           "losses": 0,
-          "win_rate_pct": 11.11,
-          "total_pnl_dollars": 9.59,
+          "win_rate_pct": 20,
+          "total_pnl_dollars": 66.05,
           "low_sample": true
         }
       }
@@ -2677,28 +2829,6 @@
     }
   },
   "open_positions": [
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "ZEC",
-      "direction": "SHORT",
-      "stake_amount": 531.44,
-      "shares": 1.411415,
-      "entry_price": 376.53,
-      "entry_time": "2026-06-06T02:43:46.847Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "ZEC",
-      "direction": "SHORT",
-      "stake_amount": 598.01,
-      "shares": 1.588213,
-      "entry_price": 376.53,
-      "entry_time": "2026-06-06T02:43:46.847Z"
-    },
     {
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
