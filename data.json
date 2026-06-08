@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-08T20:30:12.736Z",
+  "generated_at": "2026-06-08T21:00:13.257Z",
   "model": "10-account (5 strategies x 2 exit rules)",
   "totals": {
     "equity": 100177.17,
     "starting": 100000,
     "pnl_dollars": 177.17,
     "pnl_pct": 0.18,
-    "open_positions": 53,
+    "open_positions": 51,
     "book_count": 10
   },
   "strategies": [
@@ -249,20 +249,27 @@
       "deployed_capital": 7478.32,
       "cash_pct": 25.79,
       "invested_pct": 74.21,
-      "open_count": 13,
+      "open_count": 12,
       "analytics": {
         "OVERALL": {
-          "total_closed": 2,
-          "wins": 2,
+          "total_closed": 3,
+          "wins": 3,
           "losses": 0,
           "win_rate_pct": 100,
-          "avg_win_pct": 5.45,
+          "avg_win_pct": 6.39,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 10.9,
-          "total_pnl_dollars": 66.05
+          "total_pnl_pct": 19.16,
+          "total_pnl_dollars": 148.63
         },
         "BY_ASSET": [
+          {
+            "key": "ARCB",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 8.26,
+            "total_pnl_dollars": 82.58
+          },
           {
             "key": "MIRM",
             "count": 1,
@@ -288,13 +295,20 @@
           },
           {
             "key": "Yahoo Finance RSS",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
-            "avg_pnl_pct": 1.46,
-            "avg_pnl_usd": 9.59
+            "avg_pnl_pct": 4.86,
+            "avg_pnl_usd": 46.09
           }
         ],
         "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 8.26,
+            "avg_pnl_usd": 82.58
+          },
           {
             "key": "0.70-0.79",
             "count": 2,
@@ -306,10 +320,10 @@
         "BY_EXIT_REASON": [
           {
             "key": "eod",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
-            "avg_pnl_pct": 1.46,
-            "avg_pnl_usd": 9.59
+            "avg_pnl_pct": 4.86,
+            "avg_pnl_usd": 46.09
           },
           {
             "key": "target",
@@ -322,9 +336,9 @@
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
-            "avg_win_pct": 1.46,
+            "avg_win_pct": 4.86,
             "avg_loss_pct": 0
           },
           {
@@ -336,6 +350,11 @@
           }
         ],
         "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          },
           {
             "key": "conflict",
             "count": 1,
@@ -357,9 +376,19 @@
             "key": "no_data",
             "count": 1,
             "win_rate_pct": 100
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          },
           {
             "key": "below_ma20 (downtrend)",
             "count": 1,
@@ -372,6 +401,13 @@
           }
         ],
         "BY_HOUR": [
+          {
+            "key": "11:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 8.26,
+            "avg_pnl_usd": 82.58
+          },
           {
             "key": "14:00 ET",
             "count": 1,
@@ -388,18 +424,18 @@
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 405.29,
-          "avg_win_minutes": 405.29,
+          "avg_minutes": 1824.1,
+          "avg_win_minutes": 1824.1,
           "avg_loss_minutes": null,
-          "n": 2
+          "n": 3
         }
       },
       "closed": {
-        "count": 2,
-        "wins": 2,
+        "count": 3,
+        "wins": 3,
         "losses": 0,
         "win_rate_pct": 100,
-        "total_pnl_dollars": 66.05,
+        "total_pnl_dollars": 148.63,
         "low_sample": true
       }
     },
@@ -661,45 +697,111 @@
       "total_equity": 10048.6,
       "growth_dollars": 48.6,
       "growth_pct": 0.49,
-      "free_cash": 5314.41,
+      "free_cash": 6396.99,
       "deployed_capital": 4734.19,
-      "cash_pct": 52.89,
-      "invested_pct": 47.11,
-      "open_count": 6,
+      "cash_pct": 57.47,
+      "invested_pct": 42.53,
+      "open_count": 5,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 8.26,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 8.26,
+          "total_pnl_dollars": 82.58
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "ARCB",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 8.26,
+            "total_pnl_dollars": 82.58
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Yahoo Finance RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 8.26,
+            "avg_pnl_usd": 82.58
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 8.26,
+            "avg_pnl_usd": 82.58
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "eod",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 8.26,
+            "avg_pnl_usd": 82.58
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 8.26,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "overbought (>70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "11:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 8.26,
+            "avg_pnl_usd": 82.58
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 4661.73,
+          "avg_win_minutes": 4661.73,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 82.58,
         "low_sample": true
       }
     }
@@ -834,20 +936,27 @@
         "deployed_capital": 7478.32,
         "cash_pct": 25.79,
         "invested_pct": 74.21,
-        "open_count": 13,
+        "open_count": 12,
         "analytics": {
           "OVERALL": {
-            "total_closed": 2,
-            "wins": 2,
+            "total_closed": 3,
+            "wins": 3,
             "losses": 0,
             "win_rate_pct": 100,
-            "avg_win_pct": 5.45,
+            "avg_win_pct": 6.39,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 10.9,
-            "total_pnl_dollars": 66.05
+            "total_pnl_pct": 19.16,
+            "total_pnl_dollars": 148.63
           },
           "BY_ASSET": [
+            {
+              "key": "ARCB",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 8.26,
+              "total_pnl_dollars": 82.58
+            },
             {
               "key": "MIRM",
               "count": 1,
@@ -873,13 +982,20 @@
             },
             {
               "key": "Yahoo Finance RSS",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
-              "avg_pnl_pct": 1.46,
-              "avg_pnl_usd": 9.59
+              "avg_pnl_pct": 4.86,
+              "avg_pnl_usd": 46.09
             }
           ],
           "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 8.26,
+              "avg_pnl_usd": 82.58
+            },
             {
               "key": "0.70-0.79",
               "count": 2,
@@ -891,10 +1007,10 @@
           "BY_EXIT_REASON": [
             {
               "key": "eod",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
-              "avg_pnl_pct": 1.46,
-              "avg_pnl_usd": 9.59
+              "avg_pnl_pct": 4.86,
+              "avg_pnl_usd": 46.09
             },
             {
               "key": "target",
@@ -907,9 +1023,9 @@
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
-              "avg_win_pct": 1.46,
+              "avg_win_pct": 4.86,
               "avg_loss_pct": 0
             },
             {
@@ -921,6 +1037,11 @@
             }
           ],
           "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            },
             {
               "key": "conflict",
               "count": 1,
@@ -942,9 +1063,19 @@
               "key": "no_data",
               "count": 1,
               "win_rate_pct": 100
+            },
+            {
+              "key": "overbought (>70)",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            },
             {
               "key": "below_ma20 (downtrend)",
               "count": 1,
@@ -957,6 +1088,13 @@
             }
           ],
           "BY_HOUR": [
+            {
+              "key": "11:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 8.26,
+              "avg_pnl_usd": 82.58
+            },
             {
               "key": "14:00 ET",
               "count": 1,
@@ -973,18 +1111,18 @@
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 405.29,
-            "avg_win_minutes": 405.29,
+            "avg_minutes": 1824.1,
+            "avg_win_minutes": 1824.1,
             "avg_loss_minutes": null,
-            "n": 2
+            "n": 3
           }
         },
         "closed": {
-          "count": 2,
-          "wins": 2,
+          "count": 3,
+          "wins": 3,
           "losses": 0,
           "win_rate_pct": 100,
-          "total_pnl_dollars": 66.05,
+          "total_pnl_dollars": 148.63,
           "low_sample": true
         }
       }
@@ -1252,45 +1390,111 @@
         "total_equity": 10048.6,
         "growth_dollars": 48.6,
         "growth_pct": 0.49,
-        "free_cash": 5314.41,
+        "free_cash": 6396.99,
         "deployed_capital": 4734.19,
-        "cash_pct": 52.89,
-        "invested_pct": 47.11,
-        "open_count": 6,
+        "cash_pct": 57.47,
+        "invested_pct": 42.53,
+        "open_count": 5,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 8.26,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 8.26,
+            "total_pnl_dollars": 82.58
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "ARCB",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 8.26,
+              "total_pnl_dollars": 82.58
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Yahoo Finance RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 8.26,
+              "avg_pnl_usd": 82.58
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 8.26,
+              "avg_pnl_usd": 82.58
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "eod",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 8.26,
+              "avg_pnl_usd": 82.58
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 8.26,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "overbought (>70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "11:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 8.26,
+              "avg_pnl_usd": 82.58
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 4661.73,
+            "avg_win_minutes": 4661.73,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 82.58,
           "low_sample": true
         }
       }
@@ -1451,23 +1655,6 @@
       "status": "OPEN"
     },
     {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "ARCB",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 6.512961,
-      "entry_price": 153.54,
-      "entry_time": "2026-06-05T15:01:57.985Z",
-      "trade_id": "30372aed-25a4-460f-96b8-7fb9a7f92774",
-      "signal_id": "ARCB|BUY|ArcBest raises Q2 outlook for LTL, asset-light units",
-      "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
@@ -1539,23 +1726,6 @@
       "book_key": "trend_strict__hold_24hr",
       "portfolio": "trend_strict",
       "exit_rule": "hold_24hr",
-      "asset": "ARCB",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 6.512961,
-      "entry_price": 153.54,
-      "entry_time": "2026-06-05T15:01:58.271Z",
-      "trade_id": "30372aed-25a4-460f-96b8-7fb9a7f92774",
-      "signal_id": "ARCB|BUY|ArcBest raises Q2 outlook for LTL, asset-light units",
-      "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
       "asset": "ARCB",
       "direction": "LONG",
       "stake_amount": 1000,
@@ -2350,6 +2520,28 @@
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
+      "asset": "ARCB",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 6.512961,
+      "entry_price": 153.54,
+      "entry_time": "2026-06-05T15:01:57.985Z",
+      "exit_price": 166.22,
+      "exit_time": "2026-06-08T20:43:41.983Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 82.58,
+      "pnl_percent": 0.08258434284225614,
+      "trade_id": "30372aed-25a4-460f-96b8-7fb9a7f92774",
+      "signal_id": "ARCB|BUY|ArcBest raises Q2 outlook for LTL, asset-light units",
+      "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
       "asset": "MIRM",
       "direction": "LONG",
       "stake_amount": 656.1,
@@ -2980,6 +3172,28 @@
       "trade_id": "59e0a0a9-1460-409b-9941-c6b2a7aa166c",
       "signal_id": "IMNN|BUY|Imunon Secures $10 Million Funding Package to Advance Phase 3 Ovarian Cancer Study (IMNN)",
       "title": "Imunon Secures $10 Million Funding Package to Advance Phase 3 Ovarian Cancer Study (IMNN)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "ARCB",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 6.512961,
+      "entry_price": 153.54,
+      "entry_time": "2026-06-05T15:01:58.271Z",
+      "exit_price": 166.22,
+      "exit_time": "2026-06-08T20:43:41.983Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 82.58,
+      "pnl_percent": 0.08258434284225614,
+      "trade_id": "30372aed-25a4-460f-96b8-7fb9a7f92774",
+      "signal_id": "ARCB|BUY|ArcBest raises Q2 outlook for LTL, asset-light units",
+      "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
       "source": "Yahoo Finance RSS",
       "confidence": 0.65,
       "status": "CLOSED"
