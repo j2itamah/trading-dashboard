@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-08T23:00:11.436Z",
+  "generated_at": "2026-06-08T23:30:10.926Z",
   "model": "10-account (5 strategies x 2 exit rules)",
   "totals": {
     "equity": 99108.5,
     "starting": 100000,
     "pnl_dollars": -891.5,
     "pnl_pct": -0.89,
-    "open_positions": 51,
+    "open_positions": 45,
     "book_count": 10
   },
   "strategies": [
@@ -133,20 +133,62 @@
       "deployed_capital": 7764.51,
       "cash_pct": 22.92,
       "invested_pct": 77.08,
-      "open_count": 14,
+      "open_count": 8,
       "analytics": {
         "OVERALL": {
-          "total_closed": 1,
-          "wins": 1,
-          "losses": 0,
-          "win_rate_pct": 100,
-          "avg_win_pct": 9.44,
-          "avg_loss_pct": 0,
-          "reward_risk_ratio": 0,
-          "total_pnl_pct": 9.44,
-          "total_pnl_dollars": 50.18
+          "total_closed": 7,
+          "wins": 4,
+          "losses": 3,
+          "win_rate_pct": 57.14,
+          "avg_win_pct": 4.68,
+          "avg_loss_pct": -3.26,
+          "reward_risk_ratio": 1.44,
+          "total_pnl_pct": 8.94,
+          "total_pnl_dollars": 64.69
         },
         "BY_ASSET": [
+          {
+            "key": "ARCB",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 7.83,
+            "total_pnl_dollars": 78.3
+          },
+          {
+            "key": "AVGO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.62,
+            "total_pnl_dollars": -9.56
+          },
+          {
+            "key": "GSC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.69,
+            "total_pnl_dollars": 5.6
+          },
+          {
+            "key": "MIRM",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.76,
+            "total_pnl_dollars": 4.99
+          },
+          {
+            "key": "RBRK",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -3.1,
+            "total_pnl_dollars": -27.9
+          },
+          {
+            "key": "SMMT",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -5.06,
+            "total_pnl_dollars": -36.92
+          },
           {
             "key": "ZEC",
             "count": 1,
@@ -162,15 +204,36 @@
             "win_rate_pct": 100,
             "avg_pnl_pct": 9.44,
             "avg_pnl_usd": 50.18
+          },
+          {
+            "key": "PR Newswire RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 0.69,
+            "avg_pnl_usd": 5.6
+          },
+          {
+            "key": "Yahoo Finance RSS",
+            "count": 5,
+            "win_rate_pct": 40,
+            "avg_pnl_pct": -0.24,
+            "avg_pnl_usd": 1.78
           }
         ],
         "BY_CONFIDENCE": [
           {
-            "key": "0.70-0.79",
-            "count": 1,
+            "key": "0.60-0.69",
+            "count": 2,
             "win_rate_pct": 100,
-            "avg_pnl_pct": 9.44,
-            "avg_pnl_usd": 50.18
+            "avg_pnl_pct": 4.26,
+            "avg_pnl_usd": 41.95
+          },
+          {
+            "key": "0.70-0.79",
+            "count": 5,
+            "win_rate_pct": 40,
+            "avg_pnl_pct": 0.08,
+            "avg_pnl_usd": -3.84
           }
         ],
         "BY_EXIT_REASON": [
@@ -180,18 +243,47 @@
             "win_rate_pct": 100,
             "avg_pnl_pct": 9.44,
             "avg_pnl_usd": 50.18
+          },
+          {
+            "key": "time",
+            "count": 6,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -0.08,
+            "avg_pnl_usd": 2.42
           }
         ],
         "BY_DIRECTION": [
           {
+            "key": "BUY",
+            "count": 5,
+            "win_rate_pct": 60,
+            "avg_win_pct": 3.09,
+            "avg_loss_pct": -4.08
+          },
+          {
             "key": "SELL",
-            "count": 1,
-            "win_rate_pct": 100,
+            "count": 2,
+            "win_rate_pct": 50,
             "avg_win_pct": 9.44,
-            "avg_loss_pct": 0
+            "avg_loss_pct": -1.62
           }
         ],
         "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 2,
+            "win_rate_pct": 50
+          },
+          {
+            "key": "conflict",
+            "count": 2,
+            "win_rate_pct": 50
+          },
+          {
+            "key": "neutral",
+            "count": 2,
+            "win_rate_pct": 50
+          },
           {
             "key": "no_data",
             "count": 1,
@@ -200,12 +292,32 @@
         ],
         "BY_RSI_BAND": [
           {
+            "key": "neutral (30-70)",
+            "count": 5,
+            "win_rate_pct": 40
+          },
+          {
             "key": "no_data",
+            "count": 1,
+            "win_rate_pct": 100
+          },
+          {
+            "key": "overbought (>70)",
             "count": 1,
             "win_rate_pct": 100
           }
         ],
         "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 3,
+            "win_rate_pct": 66.67
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 3,
+            "win_rate_pct": 33.33
+          },
           {
             "key": "no_data",
             "count": 1,
@@ -213,6 +325,34 @@
           }
         ],
         "BY_HOUR": [
+          {
+            "key": "11:00 ET",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 2.36,
+            "avg_pnl_usd": 25.2
+          },
+          {
+            "key": "13:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 0.69,
+            "avg_pnl_usd": 5.6
+          },
+          {
+            "key": "14:00 ET",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -2.15,
+            "avg_pnl_usd": -15.96
+          },
+          {
+            "key": "15:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -1.62,
+            "avg_pnl_usd": -9.56
+          },
           {
             "key": "22:00 ET",
             "count": 1,
@@ -222,18 +362,18 @@
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 736.71,
-          "avg_win_minutes": 736.71,
-          "avg_loss_minutes": null,
-          "n": 1
+          "avg_minutes": 3935.48,
+          "avg_win_minutes": 3554.24,
+          "avg_loss_minutes": 4443.81,
+          "n": 7
         }
       },
       "closed": {
-        "count": 1,
-        "wins": 1,
-        "losses": 0,
-        "win_rate_pct": 100,
-        "total_pnl_dollars": 50.18,
+        "count": 7,
+        "wins": 4,
+        "losses": 3,
+        "win_rate_pct": 57.14,
+        "total_pnl_dollars": 64.69,
         "low_sample": true
       }
     },
@@ -820,20 +960,62 @@
         "deployed_capital": 7764.51,
         "cash_pct": 22.92,
         "invested_pct": 77.08,
-        "open_count": 14,
+        "open_count": 8,
         "analytics": {
           "OVERALL": {
-            "total_closed": 1,
-            "wins": 1,
-            "losses": 0,
-            "win_rate_pct": 100,
-            "avg_win_pct": 9.44,
-            "avg_loss_pct": 0,
-            "reward_risk_ratio": 0,
-            "total_pnl_pct": 9.44,
-            "total_pnl_dollars": 50.18
+            "total_closed": 7,
+            "wins": 4,
+            "losses": 3,
+            "win_rate_pct": 57.14,
+            "avg_win_pct": 4.68,
+            "avg_loss_pct": -3.26,
+            "reward_risk_ratio": 1.44,
+            "total_pnl_pct": 8.94,
+            "total_pnl_dollars": 64.69
           },
           "BY_ASSET": [
+            {
+              "key": "ARCB",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 7.83,
+              "total_pnl_dollars": 78.3
+            },
+            {
+              "key": "AVGO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -1.62,
+              "total_pnl_dollars": -9.56
+            },
+            {
+              "key": "GSC",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.69,
+              "total_pnl_dollars": 5.6
+            },
+            {
+              "key": "MIRM",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.76,
+              "total_pnl_dollars": 4.99
+            },
+            {
+              "key": "RBRK",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -3.1,
+              "total_pnl_dollars": -27.9
+            },
+            {
+              "key": "SMMT",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -5.06,
+              "total_pnl_dollars": -36.92
+            },
             {
               "key": "ZEC",
               "count": 1,
@@ -849,15 +1031,36 @@
               "win_rate_pct": 100,
               "avg_pnl_pct": 9.44,
               "avg_pnl_usd": 50.18
+            },
+            {
+              "key": "PR Newswire RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 0.69,
+              "avg_pnl_usd": 5.6
+            },
+            {
+              "key": "Yahoo Finance RSS",
+              "count": 5,
+              "win_rate_pct": 40,
+              "avg_pnl_pct": -0.24,
+              "avg_pnl_usd": 1.78
             }
           ],
           "BY_CONFIDENCE": [
             {
-              "key": "0.70-0.79",
-              "count": 1,
+              "key": "0.60-0.69",
+              "count": 2,
               "win_rate_pct": 100,
-              "avg_pnl_pct": 9.44,
-              "avg_pnl_usd": 50.18
+              "avg_pnl_pct": 4.26,
+              "avg_pnl_usd": 41.95
+            },
+            {
+              "key": "0.70-0.79",
+              "count": 5,
+              "win_rate_pct": 40,
+              "avg_pnl_pct": 0.08,
+              "avg_pnl_usd": -3.84
             }
           ],
           "BY_EXIT_REASON": [
@@ -867,18 +1070,47 @@
               "win_rate_pct": 100,
               "avg_pnl_pct": 9.44,
               "avg_pnl_usd": 50.18
+            },
+            {
+              "key": "time",
+              "count": 6,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": -0.08,
+              "avg_pnl_usd": 2.42
             }
           ],
           "BY_DIRECTION": [
             {
+              "key": "BUY",
+              "count": 5,
+              "win_rate_pct": 60,
+              "avg_win_pct": 3.09,
+              "avg_loss_pct": -4.08
+            },
+            {
               "key": "SELL",
-              "count": 1,
-              "win_rate_pct": 100,
+              "count": 2,
+              "win_rate_pct": 50,
               "avg_win_pct": 9.44,
-              "avg_loss_pct": 0
+              "avg_loss_pct": -1.62
             }
           ],
           "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 2,
+              "win_rate_pct": 50
+            },
+            {
+              "key": "conflict",
+              "count": 2,
+              "win_rate_pct": 50
+            },
+            {
+              "key": "neutral",
+              "count": 2,
+              "win_rate_pct": 50
+            },
             {
               "key": "no_data",
               "count": 1,
@@ -887,12 +1119,32 @@
           ],
           "BY_RSI_BAND": [
             {
+              "key": "neutral (30-70)",
+              "count": 5,
+              "win_rate_pct": 40
+            },
+            {
               "key": "no_data",
+              "count": 1,
+              "win_rate_pct": 100
+            },
+            {
+              "key": "overbought (>70)",
               "count": 1,
               "win_rate_pct": 100
             }
           ],
           "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 3,
+              "win_rate_pct": 66.67
+            },
+            {
+              "key": "below_ma20 (downtrend)",
+              "count": 3,
+              "win_rate_pct": 33.33
+            },
             {
               "key": "no_data",
               "count": 1,
@@ -900,6 +1152,34 @@
             }
           ],
           "BY_HOUR": [
+            {
+              "key": "11:00 ET",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 2.36,
+              "avg_pnl_usd": 25.2
+            },
+            {
+              "key": "13:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 0.69,
+              "avg_pnl_usd": 5.6
+            },
+            {
+              "key": "14:00 ET",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": -2.15,
+              "avg_pnl_usd": -15.96
+            },
+            {
+              "key": "15:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -1.62,
+              "avg_pnl_usd": -9.56
+            },
             {
               "key": "22:00 ET",
               "count": 1,
@@ -909,18 +1189,18 @@
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 736.71,
-            "avg_win_minutes": 736.71,
-            "avg_loss_minutes": null,
-            "n": 1
+            "avg_minutes": 3935.48,
+            "avg_win_minutes": 3554.24,
+            "avg_loss_minutes": 4443.81,
+            "n": 7
           }
         },
         "closed": {
-          "count": 1,
-          "wins": 1,
-          "losses": 0,
-          "win_rate_pct": 100,
-          "total_pnl_dollars": 50.18,
+          "count": 7,
+          "wins": 4,
+          "losses": 3,
+          "win_rate_pct": 57.14,
+          "total_pnl_dollars": 64.69,
           "low_sample": true
         }
       },
@@ -1638,40 +1918,6 @@
       "status": "OPEN"
     },
     {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "ARCB",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 6.512961,
-      "entry_price": 153.54,
-      "entry_time": "2026-06-05T15:01:57.985Z",
-      "trade_id": "30372aed-25a4-460f-96b8-7fb9a7f92774",
-      "signal_id": "ARCB|BUY|ArcBest raises Q2 outlook for LTL, asset-light units",
-      "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "RBRK",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 12.202563,
-      "entry_price": 73.755,
-      "entry_time": "2026-06-05T15:01:57.985Z",
-      "trade_id": "b91ec518-c5cf-4f5e-b5f3-1df550f55e89",
-      "signal_id": "RBRK|BUY|Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
-      "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -1740,23 +1986,6 @@
       "status": "OPEN"
     },
     {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "GSC",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 13.07295,
-      "entry_price": 61.96,
-      "entry_time": "2026-06-05T17:01:32.678Z",
-      "trade_id": "0160aa9a-703b-422c-bc39-ec04166b67d7",
-      "signal_id": "GSC|BUY|GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
-      "title": "GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
-      "source": "PR Newswire RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -1808,23 +2037,6 @@
       "status": "OPEN"
     },
     {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "SMMT",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 49.490835,
-      "entry_price": 14.73,
-      "entry_time": "2026-06-05T18:31:14.079Z",
-      "trade_id": "942851ee-0bcd-4762-bd50-c8ca4b23f445",
-      "signal_id": "SMMT|BUY|Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
-      "title": "Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -1845,23 +2057,6 @@
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
-      "asset": "MIRM",
-      "direction": "LONG",
-      "stake_amount": 656.1,
-      "shares": 7.100649,
-      "entry_price": 92.4,
-      "entry_time": "2026-06-05T18:31:14.079Z",
-      "trade_id": "aacc0869-15f0-4e24-943d-f443cf4d38ab",
-      "signal_id": "MIRM|BUY|Mirum Pharmaceuticals (MIRM) Reports Positive Phase 2b Data for Volixibat in PSC at EASL Congress",
-      "title": "Mirum Pharmaceuticals (MIRM) Reports Positive Phase 2b Data for Volixibat in PSC at EASL Congress",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
       "asset": "OKLO",
       "direction": "LONG",
       "stake_amount": 536.46,
@@ -1873,23 +2068,6 @@
       "title": "Oklo buys nuclear technology company ARMEC, advancing reactor capabilities",
       "source": "Seeking Alpha RSS",
       "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "AVGO",
-      "direction": "SHORT",
-      "stake_amount": 590.49,
-      "shares": 1.516468,
-      "entry_price": 389.385,
-      "entry_time": "2026-06-05T19:30:22.180Z",
-      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
-      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.75,
       "status": "OPEN"
     },
     {
@@ -2539,6 +2717,50 @@
       "status": "CLOSED"
     },
     {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "ARCB",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 6.512961,
+      "entry_price": 153.54,
+      "entry_time": "2026-06-05T15:01:57.985Z",
+      "exit_price": 165.55,
+      "exit_time": "2026-06-08T19:45:00.000Z",
+      "exit_reason": "time",
+      "pnl_dollars": 78.3,
+      "pnl_percent": 0.0783,
+      "trade_id": "30372aed-25a4-460f-96b8-7fb9a7f92774",
+      "signal_id": "ARCB|BUY|ArcBest raises Q2 outlook for LTL, asset-light units",
+      "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "RBRK",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 12.202563,
+      "entry_price": 73.755,
+      "entry_time": "2026-06-05T15:01:57.985Z",
+      "exit_price": 71.47,
+      "exit_time": "2026-06-08T19:45:00.000Z",
+      "exit_reason": "time",
+      "pnl_dollars": -27.9,
+      "pnl_percent": -0.031,
+      "trade_id": "b91ec518-c5cf-4f5e-b5f3-1df550f55e89",
+      "signal_id": "RBRK|BUY|Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
+      "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -2558,6 +2780,72 @@
       "title": "Mirum Pharmaceuticals (MIRM) Reports Positive Phase 2b Data for Volixibat in PSC at EASL Congress",
       "source": "Yahoo Finance RSS",
       "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "GSC",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 13.07295,
+      "entry_price": 61.96,
+      "entry_time": "2026-06-05T17:01:32.678Z",
+      "exit_price": 62.39,
+      "exit_time": "2026-06-08T19:45:00.000Z",
+      "exit_reason": "time",
+      "pnl_dollars": 5.6,
+      "pnl_percent": 0.0069,
+      "trade_id": "0160aa9a-703b-422c-bc39-ec04166b67d7",
+      "signal_id": "GSC|BUY|GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
+      "title": "GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
+      "source": "PR Newswire RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "MIRM",
+      "direction": "LONG",
+      "stake_amount": 656.1,
+      "shares": 7.100649,
+      "entry_price": 92.4,
+      "entry_time": "2026-06-05T18:31:14.079Z",
+      "exit_price": 93.07,
+      "exit_time": "2026-06-08T19:45:00.000Z",
+      "exit_reason": "time",
+      "pnl_dollars": 4.99,
+      "pnl_percent": 0.0076,
+      "trade_id": "aacc0869-15f0-4e24-943d-f443cf4d38ab",
+      "signal_id": "MIRM|BUY|Mirum Pharmaceuticals (MIRM) Reports Positive Phase 2b Data for Volixibat in PSC at EASL Congress",
+      "title": "Mirum Pharmaceuticals (MIRM) Reports Positive Phase 2b Data for Volixibat in PSC at EASL Congress",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "SMMT",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 49.490835,
+      "entry_price": 14.73,
+      "entry_time": "2026-06-05T18:31:14.079Z",
+      "exit_price": 13.985,
+      "exit_time": "2026-06-08T19:45:00.000Z",
+      "exit_reason": "time",
+      "pnl_dollars": -36.92,
+      "pnl_percent": -0.0506,
+      "trade_id": "942851ee-0bcd-4762-bd50-c8ca4b23f445",
+      "signal_id": "SMMT|BUY|Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
+      "title": "Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.75,
       "status": "CLOSED"
     },
     {
@@ -3196,6 +3484,28 @@
       "title": "ArcBest raises Q2 outlook for LTL, asset-light units",
       "source": "Yahoo Finance RSS",
       "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "AVGO",
+      "direction": "SHORT",
+      "stake_amount": 590.49,
+      "shares": 1.516468,
+      "entry_price": 389.385,
+      "entry_time": "2026-06-05T19:30:22.180Z",
+      "exit_price": 395.71,
+      "exit_time": "2026-06-08T19:45:00.000Z",
+      "exit_reason": "time",
+      "pnl_dollars": -9.56,
+      "pnl_percent": -0.0162,
+      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
+      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.75,
       "status": "CLOSED"
     }
   ],
