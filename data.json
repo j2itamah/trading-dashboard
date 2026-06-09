@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-09T07:00:12.043Z",
+  "generated_at": "2026-06-09T07:30:13.492Z",
   "model": "10-account (5 strategies x 2 exit rules)",
   "totals": {
     "equity": 100175.3,
     "starting": 100000,
     "pnl_dollars": 175.3,
     "pnl_pct": 0.18,
-    "open_positions": 45,
+    "open_positions": 21,
     "book_count": 10
   },
   "strategies": [
@@ -385,22 +385,22 @@
       "total_equity": 10080.4,
       "growth_dollars": 80.4,
       "growth_pct": 0.8,
-      "free_cash": 3681.12,
-      "deployed_capital": 6467.51,
-      "cash_pct": 36.27,
-      "invested_pct": 63.73,
-      "open_count": 12,
+      "free_cash": 10080.4,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
       "analytics": {
         "OVERALL": {
-          "total_closed": 3,
-          "wins": 3,
-          "losses": 0,
-          "win_rate_pct": 100,
-          "avg_win_pct": 6.39,
-          "avg_loss_pct": 0,
-          "reward_risk_ratio": 0,
-          "total_pnl_pct": 1.49,
-          "total_pnl_dollars": 148.63
+          "total_closed": 15,
+          "wins": 6,
+          "losses": 9,
+          "win_rate_pct": 40,
+          "avg_win_pct": 3.5,
+          "avg_loss_pct": -1.31,
+          "reward_risk_ratio": 2.67,
+          "total_pnl_pct": 0.8,
+          "total_pnl_dollars": 80.4
         },
         "BY_ASSET": [
           {
@@ -411,11 +411,95 @@
             "total_pnl_dollars": 82.58
           },
           {
+            "key": "AVGO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.85,
+            "total_pnl_dollars": -10.94
+          },
+          {
+            "key": "FUTU",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.31,
+            "total_pnl_dollars": -5.75
+          },
+          {
+            "key": "GSC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.69,
+            "total_pnl_dollars": 5.62
+          },
+          {
+            "key": "IOT",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.18,
+            "total_pnl_dollars": 0.96
+          },
+          {
+            "key": "LLY",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.53,
+            "total_pnl_dollars": -1.52
+          },
+          {
             "key": "MIRM",
             "count": 1,
             "win_rate_pct": 100,
             "total_pnl_pct": 1.46,
             "total_pnl_dollars": 9.59
+          },
+          {
+            "key": "NVDA",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.08,
+            "total_pnl_dollars": -0.25
+          },
+          {
+            "key": "OKLO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.67,
+            "total_pnl_dollars": -4.07
+          },
+          {
+            "key": "OPTI",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": 0,
+            "total_pnl_dollars": 0
+          },
+          {
+            "key": "RBRK",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2.75,
+            "total_pnl_dollars": -24.71
+          },
+          {
+            "key": "SMMT",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -4.21,
+            "total_pnl_dollars": -30.68
+          },
+          {
+            "key": "WISE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.95,
+            "total_pnl_dollars": 4.63
+          },
+          {
+            "key": "XZO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.38,
+            "total_pnl_dollars": -1.52
           },
           {
             "key": "ZEC",
@@ -434,36 +518,50 @@
             "avg_pnl_usd": 56.46
           },
           {
+            "key": "PR Newswire RSS",
+            "count": 6,
+            "win_rate_pct": 33.33,
+            "avg_pnl_pct": -0.1,
+            "avg_pnl_usd": 0.24
+          },
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -0.67,
+            "avg_pnl_usd": -4.07
+          },
+          {
             "key": "Yahoo Finance RSS",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 4.86,
-            "avg_pnl_usd": 46.09
+            "count": 7,
+            "win_rate_pct": 42.86,
+            "avg_pnl_pct": 0.14,
+            "avg_pnl_usd": 3.79
           }
         ],
         "BY_CONFIDENCE": [
           {
             "key": "0.60-0.69",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 8.26,
-            "avg_pnl_usd": 82.58
+            "count": 3,
+            "win_rate_pct": 66.67,
+            "avg_pnl_pct": 2.98,
+            "avg_pnl_usd": 29.4
           },
           {
             "key": "0.70-0.79",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 5.45,
-            "avg_pnl_usd": 33.03
+            "count": 12,
+            "win_rate_pct": 33.33,
+            "avg_pnl_pct": 0.02,
+            "avg_pnl_usd": -0.65
           }
         ],
         "BY_EXIT_REASON": [
           {
             "key": "eod",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 4.86,
-            "avg_pnl_usd": 46.09
+            "count": 14,
+            "win_rate_pct": 35.71,
+            "avg_pnl_pct": -0.02,
+            "avg_pnl_usd": 1.71
           },
           {
             "key": "target",
@@ -476,29 +574,34 @@
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_win_pct": 4.86,
-            "avg_loss_pct": 0
+            "count": 10,
+            "win_rate_pct": 40,
+            "avg_win_pct": 2.65,
+            "avg_loss_pct": -1.37
           },
           {
             "key": "SELL",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_win_pct": 9.44,
-            "avg_loss_pct": 0
+            "count": 5,
+            "win_rate_pct": 40,
+            "avg_win_pct": 5.19,
+            "avg_loss_pct": -1.18
           }
         ],
         "BY_ALIGNMENT": [
           {
             "key": "aligned",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 6,
+            "win_rate_pct": 16.67
           },
           {
             "key": "conflict",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 4,
+            "win_rate_pct": 25
+          },
+          {
+            "key": "neutral",
+            "count": 4,
+            "win_rate_pct": 75
           },
           {
             "key": "no_data",
@@ -509,8 +612,8 @@
         "BY_RSI_BAND": [
           {
             "key": "neutral (30-70)",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 11,
+            "win_rate_pct": 36.36
           },
           {
             "key": "no_data",
@@ -519,20 +622,25 @@
           },
           {
             "key": "overbought (>70)",
+            "count": 2,
+            "win_rate_pct": 50
+          },
+          {
+            "key": "oversold (<30)",
             "count": 1,
-            "win_rate_pct": 100
+            "win_rate_pct": 0
           }
         ],
         "BY_TREND": [
           {
             "key": "above_ma20 (uptrend)",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 7,
+            "win_rate_pct": 57.14
           },
           {
             "key": "below_ma20 (downtrend)",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 7,
+            "win_rate_pct": 14.29
           },
           {
             "key": "no_data",
@@ -543,17 +651,38 @@
         "BY_HOUR": [
           {
             "key": "11:00 ET",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 8.26,
-            "avg_pnl_usd": 82.58
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 2.76,
+            "avg_pnl_usd": 28.94
+          },
+          {
+            "key": "12:00 ET",
+            "count": 5,
+            "win_rate_pct": 40,
+            "avg_pnl_pct": -0.25,
+            "avg_pnl_usd": -1.15
+          },
+          {
+            "key": "13:00 ET",
+            "count": 3,
+            "win_rate_pct": 33.33,
+            "avg_pnl_pct": 0.21,
+            "avg_pnl_usd": 1.79
           },
           {
             "key": "14:00 ET",
+            "count": 3,
+            "win_rate_pct": 33.33,
+            "avg_pnl_pct": -1.09,
+            "avg_pnl_usd": -7.54
+          },
+          {
+            "key": "15:00 ET",
             "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 1.46,
-            "avg_pnl_usd": 9.59
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -1.85,
+            "avg_pnl_usd": -10.94
           },
           {
             "key": "22:00 ET",
@@ -564,18 +693,18 @@
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 1824.1,
-          "avg_win_minutes": 1824.1,
-          "avg_loss_minutes": null,
-          "n": 3
+          "avg_minutes": 1894.03,
+          "avg_win_minutes": 1881.18,
+          "avg_loss_minutes": 2080.59,
+          "n": 15
         }
       },
       "closed": {
-        "count": 3,
-        "wins": 3,
-        "losses": 0,
-        "win_rate_pct": 100,
-        "total_pnl_dollars": 148.63,
+        "count": 15,
+        "wins": 6,
+        "losses": 9,
+        "win_rate_pct": 40,
+        "total_pnl_dollars": 80.4,
         "low_sample": true
       }
     },
@@ -637,45 +766,205 @@
       "total_equity": 9969.03,
       "growth_dollars": -30.97,
       "growth_pct": -0.31,
-      "free_cash": 4782.97,
-      "deployed_capital": 5217.03,
-      "cash_pct": 47.83,
-      "invested_pct": 52.17,
-      "open_count": 7,
+      "free_cash": 9969.03,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
-          "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
-          "avg_loss_pct": 0,
-          "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_closed": 7,
+          "wins": 3,
+          "losses": 4,
+          "win_rate_pct": 42.86,
+          "avg_win_pct": 0.61,
+          "avg_loss_pct": -1.25,
+          "reward_risk_ratio": 0.49,
+          "total_pnl_pct": -0.31,
+          "total_pnl_dollars": -30.97
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AVGO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.85,
+            "total_pnl_dollars": -15.01
+          },
+          {
+            "key": "GSC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.69,
+            "total_pnl_dollars": 6.25
+          },
+          {
+            "key": "IOT",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.18,
+            "total_pnl_dollars": 1.29
+          },
+          {
+            "key": "OPTI",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": 0,
+            "total_pnl_dollars": 0
+          },
+          {
+            "key": "RBRK",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2.75,
+            "total_pnl_dollars": -27.46
+          },
+          {
+            "key": "WISE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.95,
+            "total_pnl_dollars": 6.22
+          },
+          {
+            "key": "XZO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.38,
+            "total_pnl_dollars": -2.26
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "PR Newswire RSS",
+            "count": 4,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.31,
+            "avg_pnl_usd": 2.55
+          },
+          {
+            "key": "Yahoo Finance RSS",
+            "count": 3,
+            "win_rate_pct": 33.33,
+            "avg_pnl_pct": -1.47,
+            "avg_pnl_usd": -13.73
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.35,
+            "avg_pnl_usd": 3.13
+          },
+          {
+            "key": "0.70-0.79",
+            "count": 5,
+            "win_rate_pct": 40,
+            "avg_pnl_pct": -0.77,
+            "avg_pnl_usd": -7.44
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "eod",
+            "count": 7,
+            "win_rate_pct": 42.86,
+            "avg_pnl_pct": -0.45,
+            "avg_pnl_usd": -4.42
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 4,
+            "win_rate_pct": 50,
+            "avg_win_pct": 0.44,
+            "avg_loss_pct": -1.37
+          },
+          {
+            "key": "SELL",
+            "count": 3,
+            "win_rate_pct": 33.33,
+            "avg_win_pct": 0.95,
+            "avg_loss_pct": -1.12
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 3,
+            "win_rate_pct": 0
+          },
+          {
+            "key": "neutral",
+            "count": 4,
+            "win_rate_pct": 75
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 7,
+            "win_rate_pct": 42.86
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 5,
+            "win_rate_pct": 60
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 2,
+            "win_rate_pct": 0
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "11:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -2.75,
+            "avg_pnl_usd": -27.46
+          },
+          {
+            "key": "12:00 ET",
+            "count": 3,
+            "win_rate_pct": 66.67,
+            "avg_pnl_pct": 0.25,
+            "avg_pnl_usd": 1.75
+          },
+          {
+            "key": "13:00 ET",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.35,
+            "avg_pnl_usd": 3.13
+          },
+          {
+            "key": "15:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -1.85,
+            "avg_pnl_usd": -15.01
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
-          "avg_loss_minutes": null,
-          "n": 0
+          "avg_minutes": 2338.35,
+          "avg_win_minutes": 1938.25,
+          "avg_loss_minutes": 3358.35,
+          "n": 7
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "count": 7,
+        "wins": 3,
+        "losses": 4,
+        "win_rate_pct": 42.86,
+        "total_pnl_dollars": -30.97,
         "low_sample": true
       }
     },
@@ -837,22 +1126,22 @@
       "total_equity": 10049.41,
       "growth_dollars": 49.41,
       "growth_pct": 0.49,
-      "free_cash": 6396.99,
-      "deployed_capital": 3685.59,
-      "cash_pct": 63.45,
-      "invested_pct": 36.55,
-      "open_count": 5,
+      "free_cash": 10049.41,
+      "deployed_capital": 0,
+      "cash_pct": 100,
+      "invested_pct": 0,
+      "open_count": 0,
       "analytics": {
         "OVERALL": {
-          "total_closed": 1,
+          "total_closed": 6,
           "wins": 1,
-          "losses": 0,
-          "win_rate_pct": 100,
+          "losses": 5,
+          "win_rate_pct": 16.67,
           "avg_win_pct": 8.26,
-          "avg_loss_pct": 0,
-          "reward_risk_ratio": 0,
-          "total_pnl_pct": 0.83,
-          "total_pnl_dollars": 82.58
+          "avg_loss_pct": -0.81,
+          "reward_risk_ratio": 10.15,
+          "total_pnl_pct": 0.49,
+          "total_pnl_dollars": 49.41
         },
         "BY_ASSET": [
           {
@@ -861,63 +1150,134 @@
             "win_rate_pct": 100,
             "total_pnl_pct": 8.26,
             "total_pnl_dollars": 82.58
+          },
+          {
+            "key": "AVGO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.85,
+            "total_pnl_dollars": -16.68
+          },
+          {
+            "key": "FUTU",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.31,
+            "total_pnl_dollars": -10.59
+          },
+          {
+            "key": "LLY",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.53,
+            "total_pnl_dollars": -3.11
+          },
+          {
+            "key": "OPTI",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": 0,
+            "total_pnl_dollars": 0
+          },
+          {
+            "key": "XZO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.38,
+            "total_pnl_dollars": -2.79
           }
         ],
         "BY_SOURCE": [
           {
+            "key": "PR Newswire RSS",
+            "count": 4,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -0.55,
+            "avg_pnl_usd": -4.12
+          },
+          {
             "key": "Yahoo Finance RSS",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 8.26,
-            "avg_pnl_usd": 82.58
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 3.2,
+            "avg_pnl_usd": 32.95
           }
         ],
         "BY_CONFIDENCE": [
           {
             "key": "0.60-0.69",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 8.26,
-            "avg_pnl_usd": 82.58
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 4.13,
+            "avg_pnl_usd": 41.29
+          },
+          {
+            "key": "0.70-0.79",
+            "count": 4,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -1.02,
+            "avg_pnl_usd": -8.29
           }
         ],
         "BY_EXIT_REASON": [
           {
             "key": "eod",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 8.26,
-            "avg_pnl_usd": 82.58
+            "count": 6,
+            "win_rate_pct": 16.67,
+            "avg_pnl_pct": 0.7,
+            "avg_pnl_usd": 8.23
           }
         ],
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 1,
-            "win_rate_pct": 100,
+            "count": 3,
+            "win_rate_pct": 33.33,
             "avg_win_pct": 8.26,
-            "avg_loss_pct": 0
+            "avg_loss_pct": -0.26
+          },
+          {
+            "key": "SELL",
+            "count": 3,
+            "win_rate_pct": 0,
+            "avg_win_pct": 0,
+            "avg_loss_pct": -1.18
           }
         ],
         "BY_ALIGNMENT": [
           {
             "key": "aligned",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 6,
+            "win_rate_pct": 16.67
           }
         ],
         "BY_RSI_BAND": [
           {
+            "key": "neutral (30-70)",
+            "count": 3,
+            "win_rate_pct": 0
+          },
+          {
             "key": "overbought (>70)",
+            "count": 2,
+            "win_rate_pct": 50
+          },
+          {
+            "key": "oversold (<30)",
             "count": 1,
-            "win_rate_pct": 100
+            "win_rate_pct": 0
           }
         ],
         "BY_TREND": [
           {
             "key": "above_ma20 (uptrend)",
-            "count": 1,
-            "win_rate_pct": 100
+            "count": 3,
+            "win_rate_pct": 33.33
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 3,
+            "win_rate_pct": 0
           }
         ],
         "BY_HOUR": [
@@ -927,21 +1287,49 @@
             "win_rate_pct": 100,
             "avg_pnl_pct": 8.26,
             "avg_pnl_usd": 82.58
+          },
+          {
+            "key": "12:00 ET",
+            "count": 2,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -0.84,
+            "avg_pnl_usd": -6.69
+          },
+          {
+            "key": "13:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": 0,
+            "avg_pnl_usd": 0
+          },
+          {
+            "key": "14:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -0.53,
+            "avg_pnl_usd": -3.11
+          },
+          {
+            "key": "15:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -1.85,
+            "avg_pnl_usd": -16.68
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 4661.73,
+          "avg_minutes": 1861.86,
           "avg_win_minutes": 4661.73,
-          "avg_loss_minutes": null,
-          "n": 1
+          "avg_loss_minutes": 1507.69,
+          "n": 6
         }
       },
       "closed": {
-        "count": 1,
+        "count": 6,
         "wins": 1,
-        "losses": 0,
-        "win_rate_pct": 100,
-        "total_pnl_dollars": 82.58,
+        "losses": 5,
+        "win_rate_pct": 16.67,
+        "total_pnl_dollars": 49.41,
         "low_sample": true
       }
     }
@@ -1212,22 +1600,22 @@
         "total_equity": 10080.4,
         "growth_dollars": 80.4,
         "growth_pct": 0.8,
-        "free_cash": 3681.12,
-        "deployed_capital": 6467.51,
-        "cash_pct": 36.27,
-        "invested_pct": 63.73,
-        "open_count": 12,
+        "free_cash": 10080.4,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
         "analytics": {
           "OVERALL": {
-            "total_closed": 3,
-            "wins": 3,
-            "losses": 0,
-            "win_rate_pct": 100,
-            "avg_win_pct": 6.39,
-            "avg_loss_pct": 0,
-            "reward_risk_ratio": 0,
-            "total_pnl_pct": 1.49,
-            "total_pnl_dollars": 148.63
+            "total_closed": 15,
+            "wins": 6,
+            "losses": 9,
+            "win_rate_pct": 40,
+            "avg_win_pct": 3.5,
+            "avg_loss_pct": -1.31,
+            "reward_risk_ratio": 2.67,
+            "total_pnl_pct": 0.8,
+            "total_pnl_dollars": 80.4
           },
           "BY_ASSET": [
             {
@@ -1238,11 +1626,95 @@
               "total_pnl_dollars": 82.58
             },
             {
+              "key": "AVGO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -1.85,
+              "total_pnl_dollars": -10.94
+            },
+            {
+              "key": "FUTU",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -1.31,
+              "total_pnl_dollars": -5.75
+            },
+            {
+              "key": "GSC",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.69,
+              "total_pnl_dollars": 5.62
+            },
+            {
+              "key": "IOT",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.18,
+              "total_pnl_dollars": 0.96
+            },
+            {
+              "key": "LLY",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.53,
+              "total_pnl_dollars": -1.52
+            },
+            {
               "key": "MIRM",
               "count": 1,
               "win_rate_pct": 100,
               "total_pnl_pct": 1.46,
               "total_pnl_dollars": 9.59
+            },
+            {
+              "key": "NVDA",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.08,
+              "total_pnl_dollars": -0.25
+            },
+            {
+              "key": "OKLO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.67,
+              "total_pnl_dollars": -4.07
+            },
+            {
+              "key": "OPTI",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": 0,
+              "total_pnl_dollars": 0
+            },
+            {
+              "key": "RBRK",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -2.75,
+              "total_pnl_dollars": -24.71
+            },
+            {
+              "key": "SMMT",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -4.21,
+              "total_pnl_dollars": -30.68
+            },
+            {
+              "key": "WISE",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.95,
+              "total_pnl_dollars": 4.63
+            },
+            {
+              "key": "XZO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.38,
+              "total_pnl_dollars": -1.52
             },
             {
               "key": "ZEC",
@@ -1261,36 +1733,50 @@
               "avg_pnl_usd": 56.46
             },
             {
+              "key": "PR Newswire RSS",
+              "count": 6,
+              "win_rate_pct": 33.33,
+              "avg_pnl_pct": -0.1,
+              "avg_pnl_usd": 0.24
+            },
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -0.67,
+              "avg_pnl_usd": -4.07
+            },
+            {
               "key": "Yahoo Finance RSS",
-              "count": 2,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 4.86,
-              "avg_pnl_usd": 46.09
+              "count": 7,
+              "win_rate_pct": 42.86,
+              "avg_pnl_pct": 0.14,
+              "avg_pnl_usd": 3.79
             }
           ],
           "BY_CONFIDENCE": [
             {
               "key": "0.60-0.69",
-              "count": 1,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 8.26,
-              "avg_pnl_usd": 82.58
+              "count": 3,
+              "win_rate_pct": 66.67,
+              "avg_pnl_pct": 2.98,
+              "avg_pnl_usd": 29.4
             },
             {
               "key": "0.70-0.79",
-              "count": 2,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 5.45,
-              "avg_pnl_usd": 33.03
+              "count": 12,
+              "win_rate_pct": 33.33,
+              "avg_pnl_pct": 0.02,
+              "avg_pnl_usd": -0.65
             }
           ],
           "BY_EXIT_REASON": [
             {
               "key": "eod",
-              "count": 2,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 4.86,
-              "avg_pnl_usd": 46.09
+              "count": 14,
+              "win_rate_pct": 35.71,
+              "avg_pnl_pct": -0.02,
+              "avg_pnl_usd": 1.71
             },
             {
               "key": "target",
@@ -1303,29 +1789,34 @@
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 2,
-              "win_rate_pct": 100,
-              "avg_win_pct": 4.86,
-              "avg_loss_pct": 0
+              "count": 10,
+              "win_rate_pct": 40,
+              "avg_win_pct": 2.65,
+              "avg_loss_pct": -1.37
             },
             {
               "key": "SELL",
-              "count": 1,
-              "win_rate_pct": 100,
-              "avg_win_pct": 9.44,
-              "avg_loss_pct": 0
+              "count": 5,
+              "win_rate_pct": 40,
+              "avg_win_pct": 5.19,
+              "avg_loss_pct": -1.18
             }
           ],
           "BY_ALIGNMENT": [
             {
               "key": "aligned",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 6,
+              "win_rate_pct": 16.67
             },
             {
               "key": "conflict",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 4,
+              "win_rate_pct": 25
+            },
+            {
+              "key": "neutral",
+              "count": 4,
+              "win_rate_pct": 75
             },
             {
               "key": "no_data",
@@ -1336,8 +1827,8 @@
           "BY_RSI_BAND": [
             {
               "key": "neutral (30-70)",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 11,
+              "win_rate_pct": 36.36
             },
             {
               "key": "no_data",
@@ -1346,20 +1837,25 @@
             },
             {
               "key": "overbought (>70)",
+              "count": 2,
+              "win_rate_pct": 50
+            },
+            {
+              "key": "oversold (<30)",
               "count": 1,
-              "win_rate_pct": 100
+              "win_rate_pct": 0
             }
           ],
           "BY_TREND": [
             {
               "key": "above_ma20 (uptrend)",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 7,
+              "win_rate_pct": 57.14
             },
             {
               "key": "below_ma20 (downtrend)",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 7,
+              "win_rate_pct": 14.29
             },
             {
               "key": "no_data",
@@ -1370,17 +1866,38 @@
           "BY_HOUR": [
             {
               "key": "11:00 ET",
-              "count": 1,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 8.26,
-              "avg_pnl_usd": 82.58
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 2.76,
+              "avg_pnl_usd": 28.94
+            },
+            {
+              "key": "12:00 ET",
+              "count": 5,
+              "win_rate_pct": 40,
+              "avg_pnl_pct": -0.25,
+              "avg_pnl_usd": -1.15
+            },
+            {
+              "key": "13:00 ET",
+              "count": 3,
+              "win_rate_pct": 33.33,
+              "avg_pnl_pct": 0.21,
+              "avg_pnl_usd": 1.79
             },
             {
               "key": "14:00 ET",
+              "count": 3,
+              "win_rate_pct": 33.33,
+              "avg_pnl_pct": -1.09,
+              "avg_pnl_usd": -7.54
+            },
+            {
+              "key": "15:00 ET",
               "count": 1,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 1.46,
-              "avg_pnl_usd": 9.59
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -1.85,
+              "avg_pnl_usd": -10.94
             },
             {
               "key": "22:00 ET",
@@ -1391,18 +1908,18 @@
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 1824.1,
-            "avg_win_minutes": 1824.1,
-            "avg_loss_minutes": null,
-            "n": 3
+            "avg_minutes": 1894.03,
+            "avg_win_minutes": 1881.18,
+            "avg_loss_minutes": 2080.59,
+            "n": 15
           }
         },
         "closed": {
-          "count": 3,
-          "wins": 3,
-          "losses": 0,
-          "win_rate_pct": 100,
-          "total_pnl_dollars": 148.63,
+          "count": 15,
+          "wins": 6,
+          "losses": 9,
+          "win_rate_pct": 40,
+          "total_pnl_dollars": 80.4,
           "low_sample": true
         }
       }
@@ -1466,45 +1983,205 @@
         "total_equity": 9969.03,
         "growth_dollars": -30.97,
         "growth_pct": -0.31,
-        "free_cash": 4782.97,
-        "deployed_capital": 5217.03,
-        "cash_pct": 47.83,
-        "invested_pct": 52.17,
-        "open_count": 7,
+        "free_cash": 9969.03,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
-            "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
-            "avg_loss_pct": 0,
-            "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_closed": 7,
+            "wins": 3,
+            "losses": 4,
+            "win_rate_pct": 42.86,
+            "avg_win_pct": 0.61,
+            "avg_loss_pct": -1.25,
+            "reward_risk_ratio": 0.49,
+            "total_pnl_pct": -0.31,
+            "total_pnl_dollars": -30.97
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AVGO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -1.85,
+              "total_pnl_dollars": -15.01
+            },
+            {
+              "key": "GSC",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.69,
+              "total_pnl_dollars": 6.25
+            },
+            {
+              "key": "IOT",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.18,
+              "total_pnl_dollars": 1.29
+            },
+            {
+              "key": "OPTI",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": 0,
+              "total_pnl_dollars": 0
+            },
+            {
+              "key": "RBRK",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -2.75,
+              "total_pnl_dollars": -27.46
+            },
+            {
+              "key": "WISE",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 0.95,
+              "total_pnl_dollars": 6.22
+            },
+            {
+              "key": "XZO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.38,
+              "total_pnl_dollars": -2.26
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "PR Newswire RSS",
+              "count": 4,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 0.31,
+              "avg_pnl_usd": 2.55
+            },
+            {
+              "key": "Yahoo Finance RSS",
+              "count": 3,
+              "win_rate_pct": 33.33,
+              "avg_pnl_pct": -1.47,
+              "avg_pnl_usd": -13.73
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 0.35,
+              "avg_pnl_usd": 3.13
+            },
+            {
+              "key": "0.70-0.79",
+              "count": 5,
+              "win_rate_pct": 40,
+              "avg_pnl_pct": -0.77,
+              "avg_pnl_usd": -7.44
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "eod",
+              "count": 7,
+              "win_rate_pct": 42.86,
+              "avg_pnl_pct": -0.45,
+              "avg_pnl_usd": -4.42
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 4,
+              "win_rate_pct": 50,
+              "avg_win_pct": 0.44,
+              "avg_loss_pct": -1.37
+            },
+            {
+              "key": "SELL",
+              "count": 3,
+              "win_rate_pct": 33.33,
+              "avg_win_pct": 0.95,
+              "avg_loss_pct": -1.12
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 3,
+              "win_rate_pct": 0
+            },
+            {
+              "key": "neutral",
+              "count": 4,
+              "win_rate_pct": 75
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 7,
+              "win_rate_pct": 42.86
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 5,
+              "win_rate_pct": 60
+            },
+            {
+              "key": "below_ma20 (downtrend)",
+              "count": 2,
+              "win_rate_pct": 0
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "11:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -2.75,
+              "avg_pnl_usd": -27.46
+            },
+            {
+              "key": "12:00 ET",
+              "count": 3,
+              "win_rate_pct": 66.67,
+              "avg_pnl_pct": 0.25,
+              "avg_pnl_usd": 1.75
+            },
+            {
+              "key": "13:00 ET",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 0.35,
+              "avg_pnl_usd": 3.13
+            },
+            {
+              "key": "15:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -1.85,
+              "avg_pnl_usd": -15.01
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
-            "avg_loss_minutes": null,
-            "n": 0
+            "avg_minutes": 2338.35,
+            "avg_win_minutes": 1938.25,
+            "avg_loss_minutes": 3358.35,
+            "n": 7
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
-          "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "count": 7,
+          "wins": 3,
+          "losses": 4,
+          "win_rate_pct": 42.86,
+          "total_pnl_dollars": -30.97,
           "low_sample": true
         }
       }
@@ -1670,22 +2347,22 @@
         "total_equity": 10049.41,
         "growth_dollars": 49.41,
         "growth_pct": 0.49,
-        "free_cash": 6396.99,
-        "deployed_capital": 3685.59,
-        "cash_pct": 63.45,
-        "invested_pct": 36.55,
-        "open_count": 5,
+        "free_cash": 10049.41,
+        "deployed_capital": 0,
+        "cash_pct": 100,
+        "invested_pct": 0,
+        "open_count": 0,
         "analytics": {
           "OVERALL": {
-            "total_closed": 1,
+            "total_closed": 6,
             "wins": 1,
-            "losses": 0,
-            "win_rate_pct": 100,
+            "losses": 5,
+            "win_rate_pct": 16.67,
             "avg_win_pct": 8.26,
-            "avg_loss_pct": 0,
-            "reward_risk_ratio": 0,
-            "total_pnl_pct": 0.83,
-            "total_pnl_dollars": 82.58
+            "avg_loss_pct": -0.81,
+            "reward_risk_ratio": 10.15,
+            "total_pnl_pct": 0.49,
+            "total_pnl_dollars": 49.41
           },
           "BY_ASSET": [
             {
@@ -1694,63 +2371,134 @@
               "win_rate_pct": 100,
               "total_pnl_pct": 8.26,
               "total_pnl_dollars": 82.58
+            },
+            {
+              "key": "AVGO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -1.85,
+              "total_pnl_dollars": -16.68
+            },
+            {
+              "key": "FUTU",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -1.31,
+              "total_pnl_dollars": -10.59
+            },
+            {
+              "key": "LLY",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.53,
+              "total_pnl_dollars": -3.11
+            },
+            {
+              "key": "OPTI",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": 0,
+              "total_pnl_dollars": 0
+            },
+            {
+              "key": "XZO",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -0.38,
+              "total_pnl_dollars": -2.79
             }
           ],
           "BY_SOURCE": [
             {
+              "key": "PR Newswire RSS",
+              "count": 4,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -0.55,
+              "avg_pnl_usd": -4.12
+            },
+            {
               "key": "Yahoo Finance RSS",
-              "count": 1,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 8.26,
-              "avg_pnl_usd": 82.58
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 3.2,
+              "avg_pnl_usd": 32.95
             }
           ],
           "BY_CONFIDENCE": [
             {
               "key": "0.60-0.69",
-              "count": 1,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 8.26,
-              "avg_pnl_usd": 82.58
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 4.13,
+              "avg_pnl_usd": 41.29
+            },
+            {
+              "key": "0.70-0.79",
+              "count": 4,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -1.02,
+              "avg_pnl_usd": -8.29
             }
           ],
           "BY_EXIT_REASON": [
             {
               "key": "eod",
-              "count": 1,
-              "win_rate_pct": 100,
-              "avg_pnl_pct": 8.26,
-              "avg_pnl_usd": 82.58
+              "count": 6,
+              "win_rate_pct": 16.67,
+              "avg_pnl_pct": 0.7,
+              "avg_pnl_usd": 8.23
             }
           ],
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 1,
-              "win_rate_pct": 100,
+              "count": 3,
+              "win_rate_pct": 33.33,
               "avg_win_pct": 8.26,
-              "avg_loss_pct": 0
+              "avg_loss_pct": -0.26
+            },
+            {
+              "key": "SELL",
+              "count": 3,
+              "win_rate_pct": 0,
+              "avg_win_pct": 0,
+              "avg_loss_pct": -1.18
             }
           ],
           "BY_ALIGNMENT": [
             {
               "key": "aligned",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 6,
+              "win_rate_pct": 16.67
             }
           ],
           "BY_RSI_BAND": [
             {
+              "key": "neutral (30-70)",
+              "count": 3,
+              "win_rate_pct": 0
+            },
+            {
               "key": "overbought (>70)",
+              "count": 2,
+              "win_rate_pct": 50
+            },
+            {
+              "key": "oversold (<30)",
               "count": 1,
-              "win_rate_pct": 100
+              "win_rate_pct": 0
             }
           ],
           "BY_TREND": [
             {
               "key": "above_ma20 (uptrend)",
-              "count": 1,
-              "win_rate_pct": 100
+              "count": 3,
+              "win_rate_pct": 33.33
+            },
+            {
+              "key": "below_ma20 (downtrend)",
+              "count": 3,
+              "win_rate_pct": 0
             }
           ],
           "BY_HOUR": [
@@ -1760,21 +2508,49 @@
               "win_rate_pct": 100,
               "avg_pnl_pct": 8.26,
               "avg_pnl_usd": 82.58
+            },
+            {
+              "key": "12:00 ET",
+              "count": 2,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -0.84,
+              "avg_pnl_usd": -6.69
+            },
+            {
+              "key": "13:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": 0,
+              "avg_pnl_usd": 0
+            },
+            {
+              "key": "14:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -0.53,
+              "avg_pnl_usd": -3.11
+            },
+            {
+              "key": "15:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -1.85,
+              "avg_pnl_usd": -16.68
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 4661.73,
+            "avg_minutes": 1861.86,
             "avg_win_minutes": 4661.73,
-            "avg_loss_minutes": null,
-            "n": 1
+            "avg_loss_minutes": 1507.69,
+            "n": 6
           }
         },
         "closed": {
-          "count": 1,
+          "count": 6,
           "wins": 1,
-          "losses": 0,
-          "win_rate_pct": 100,
-          "total_pnl_dollars": 82.58,
+          "losses": 5,
+          "win_rate_pct": 16.67,
+          "total_pnl_dollars": 49.41,
           "low_sample": true
         }
       }
@@ -1904,66 +2680,6 @@
       "status": "OPEN"
     },
     {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "NVDA",
-      "direction": "LONG",
-      "stake_amount": 320.81,
-      "shares": 1.536446,
-      "entry_price": 208.8,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T17:30:51.898Z",
-      "trade_id": "9be312b3-dcc2-4634-8e98-c5cc3903fdca",
-      "signal_id": "NVDA|BUY|NVIDIA (NVDA) Acquires AI Startup Kumo as Full-Stack Strategy Expands",
-      "title": "NVIDIA (NVDA) Acquires AI Startup Kumo as Full-Stack Strategy Expands",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "SMMT",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 49.490835,
-      "entry_price": 14.73,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T18:31:14.079Z",
-      "trade_id": "942851ee-0bcd-4762-bd50-c8ca4b23f445",
-      "signal_id": "SMMT|BUY|Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
-      "title": "Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "AVGO",
-      "direction": "SHORT",
-      "stake_amount": 590.49,
-      "shares": 1.516468,
-      "entry_price": 389.385,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T19:30:22.180Z",
-      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
-      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
       "book_key": "news_plus_ta__hold_24hr",
       "portfolio": "news_plus_ta",
       "exit_rule": "hold_24hr",
@@ -2021,86 +2737,6 @@
       "title": "Oklo buys nuclear technology company ARMEC, advancing reactor capabilities",
       "source": "Seeking Alpha RSS",
       "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "RBRK",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 12.202563,
-      "entry_price": 73.755,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T15:01:57.985Z",
-      "trade_id": "b91ec518-c5cf-4f5e-b5f3-1df550f55e89",
-      "signal_id": "RBRK|BUY|Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
-      "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "RBRK",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 13.558403,
-      "entry_price": 73.755,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T15:01:58.130Z",
-      "trade_id": "b91ec518-c5cf-4f5e-b5f3-1df550f55e89",
-      "signal_id": "RBRK|BUY|Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
-      "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "GSC",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 13.07295,
-      "entry_price": 61.96,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T17:01:32.678Z",
-      "trade_id": "0160aa9a-703b-422c-bc39-ec04166b67d7",
-      "signal_id": "GSC|BUY|GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
-      "title": "GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
-      "source": "PR Newswire RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "GSC",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 14.5255,
-      "entry_price": 61.96,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T17:01:32.828Z",
-      "trade_id": "0160aa9a-703b-422c-bc39-ec04166b67d7",
-      "signal_id": "GSC|BUY|GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
-      "title": "GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
-      "source": "PR Newswire RSS",
-      "confidence": 0.65,
       "status": "OPEN"
     },
     {
@@ -2384,77 +3020,17 @@
       "status": "OPEN"
     },
     {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "IOT",
-      "direction": "LONG",
-      "stake_amount": 543.29,
-      "shares": 15.979118,
-      "entry_price": 34,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:31:04.694Z",
-      "trade_id": "23d0a474-a813-46dc-972c-96ef9a90c919",
-      "signal_id": "IOT|BUY|Samsara raises guidance amid data center boom",
-      "title": "Samsara raises guidance amid data center boom",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "IOT",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 21.441176,
-      "entry_price": 34,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:31:04.871Z",
-      "trade_id": "23d0a474-a813-46dc-972c-96ef9a90c919",
-      "signal_id": "IOT|BUY|Samsara raises guidance amid data center boom",
-      "title": "Samsara raises guidance amid data center boom",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "WISE",
-      "direction": "SHORT",
-      "stake_amount": 488.96,
-      "shares": 11.879495,
-      "entry_price": 41.16,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:32:02.223Z",
-      "trade_id": "0883c94e-6724-4afc-892e-a3a7a902c9b1",
-      "signal_id": "WISE|SELL|WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
-      "title": "WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.7,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
+      "book_key": "trend_strict__hold_24hr",
       "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
+      "exit_rule": "hold_24hr",
       "asset": "FUTU",
       "direction": "SHORT",
       "stake_amount": 810,
       "shares": 9.00951,
       "entry_price": 89.905,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
+      "current_price": 91.08,
+      "unrealized_pnl_dollars": -10.59,
+      "unrealized_pnl_percent": -0.013069,
       "entry_time": "2026-06-08T16:32:02.556Z",
       "trade_id": "1b59c7f2-9d58-4486-a11c-7251d9314933",
       "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
@@ -2502,289 +3078,53 @@
       "source": "Yahoo Finance RSS",
       "confidence": 0.75,
       "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__hold_24hr",
-      "portfolio": "trend_strict",
-      "exit_rule": "hold_24hr",
-      "asset": "FUTU",
-      "direction": "SHORT",
-      "stake_amount": 810,
-      "shares": 9.00951,
-      "entry_price": 89.905,
-      "current_price": 91.08,
-      "unrealized_pnl_dollars": -10.59,
-      "unrealized_pnl_percent": -0.013069,
-      "entry_time": "2026-06-08T16:32:02.556Z",
-      "trade_id": "1b59c7f2-9d58-4486-a11c-7251d9314933",
-      "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
-      "title": "FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.7,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "AVGO",
-      "direction": "SHORT",
-      "stake_amount": 810,
-      "shares": 2.080203,
-      "entry_price": 389.385,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T19:30:22.325Z",
-      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
-      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "OKLO",
-      "direction": "LONG",
-      "stake_amount": 603.66,
-      "shares": 10.172902,
-      "entry_price": 59.34,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:01:15.726Z",
-      "trade_id": "23c4caa6-9aca-48be-b1c8-4c473c0bec06",
-      "signal_id": "OKLO|BUY|Oklo buys nuclear technology company ARMEC, advancing reactor capabilities",
-      "title": "Oklo buys nuclear technology company ARMEC, advancing reactor capabilities",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "asset": "XZO",
-      "direction": "SHORT",
-      "stake_amount": 729,
-      "shares": 55.819296,
-      "entry_price": 13.06,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:32:02.556Z",
-      "trade_id": "4d7317d7-32d0-4f14-9068-3fe7bed7f82f",
-      "signal_id": "XZO|SELL|XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
-      "title": "XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "LLY",
-      "direction": "LONG",
-      "stake_amount": 288.73,
-      "shares": 0.249932,
-      "entry_price": 1155.233,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T18:54:00.000Z",
-      "trade_id": "bbce0881-b517-4575-93a6-c11d8163ca0e",
-      "signal_id": "LLY|BUY|Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
-      "title": "Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
-      "source": "PR Newswire RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "asset": "LLY",
-      "direction": "LONG",
-      "stake_amount": 590.49,
-      "shares": 0.511144,
-      "entry_price": 1155.233,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T18:54:00.000Z",
-      "trade_id": "bbce0881-b517-4575-93a6-c11d8163ca0e",
-      "signal_id": "LLY|BUY|Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
-      "title": "Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
-      "source": "PR Newswire RSS",
-      "confidence": 0.72,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "asset": "AVGO",
-      "direction": "SHORT",
-      "stake_amount": 900,
-      "shares": 2.311337,
-      "entry_price": 389.385,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-05T19:30:22.465Z",
-      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
-      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "FUTU",
-      "direction": "SHORT",
-      "stake_amount": 440.06,
-      "shares": 4.894722,
-      "entry_price": 89.905,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:32:02.223Z",
-      "trade_id": "1b59c7f2-9d58-4486-a11c-7251d9314933",
-      "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
-      "title": "FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.7,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "XZO",
-      "direction": "SHORT",
-      "stake_amount": 396.06,
-      "shares": 30.326187,
-      "entry_price": 13.06,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:32:02.223Z",
-      "trade_id": "4d7317d7-32d0-4f14-9068-3fe7bed7f82f",
-      "signal_id": "XZO|SELL|XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
-      "title": "XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "WISE",
-      "direction": "SHORT",
-      "stake_amount": 656.1,
-      "shares": 15.940233,
-      "entry_price": 41.16,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:32:02.402Z",
-      "trade_id": "0883c94e-6724-4afc-892e-a3a7a902c9b1",
-      "signal_id": "WISE|SELL|WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
-      "title": "WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.7,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "XZO",
-      "direction": "SHORT",
-      "stake_amount": 590.49,
-      "shares": 45.213629,
-      "entry_price": 13.06,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T16:32:02.402Z",
-      "trade_id": "4d7317d7-32d0-4f14-9068-3fe7bed7f82f",
-      "signal_id": "XZO|SELL|XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
-      "title": "XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
-      "source": "PR Newswire RSS",
-      "confidence": 0.75,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "OPTI",
-      "direction": "LONG",
-      "stake_amount": 356.45,
-      "shares": 891125,
-      "entry_price": 0.0004,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T17:01:07.981Z",
-      "trade_id": "4db23cff-74f5-4634-bde3-f23e716fd1e0",
-      "signal_id": "OPTI|BUY|Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
-      "title": "Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
-      "source": "PR Newswire RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "OPTI",
-      "direction": "LONG",
-      "stake_amount": 531.44,
-      "shares": 1328600,
-      "entry_price": 0.0004,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T17:01:08.157Z",
-      "trade_id": "4db23cff-74f5-4634-bde3-f23e716fd1e0",
-      "signal_id": "OPTI|BUY|Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
-      "title": "Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
-      "source": "PR Newswire RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "asset": "OPTI",
-      "direction": "LONG",
-      "stake_amount": 656.1,
-      "shares": 1640250,
-      "entry_price": 0.0004,
-      "current_price": 0,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-08T17:01:08.326Z",
-      "trade_id": "4db23cff-74f5-4634-bde3-f23e716fd1e0",
-      "signal_id": "OPTI|BUY|Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
-      "title": "Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
-      "source": "PR Newswire RSS",
-      "confidence": 0.65,
-      "status": "OPEN"
     }
   ],
   "closed_trades": [
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "NVDA",
+      "direction": "LONG",
+      "stake_amount": 320.81,
+      "shares": 1.536446,
+      "entry_price": 208.8,
+      "entry_time": "2026-06-08T17:30:51.898Z",
+      "exit_price": 208.64,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -0.25,
+      "pnl_percent": -0.0007662835249043343,
+      "trade_id": "9be312b3-dcc2-4634-8e98-c5cc3903fdca",
+      "signal_id": "NVDA|BUY|NVIDIA (NVDA) Acquires AI Startup Kumo as Full-Stack Strategy Expands",
+      "title": "NVIDIA (NVDA) Acquires AI Startup Kumo as Full-Stack Strategy Expands",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "SMMT",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 49.490835,
+      "entry_price": 14.73,
+      "entry_time": "2026-06-05T18:31:14.079Z",
+      "exit_price": 14.11,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -30.68,
+      "pnl_percent": -0.042090970807875154,
+      "trade_id": "942851ee-0bcd-4762-bd50-c8ca4b23f445",
+      "signal_id": "SMMT|BUY|Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
+      "title": "Summit (SMMT) Reports Positive Phase III Overall Survival Data for Ivonescimab in Advanced NSCLC",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
     {
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
@@ -2826,6 +3166,28 @@
       "signal_id": "ZEC|SELL|Critical Zcash Vulnerability Revealed by Founder: Key Details and ZEC Outlook (Expert Take)",
       "title": "Critical Zcash Vulnerability Revealed by Founder: Key Details and ZEC Outlook (Expert Take)",
       "source": "CryptoPotato",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "AVGO",
+      "direction": "SHORT",
+      "stake_amount": 590.49,
+      "shares": 1.516468,
+      "entry_price": 389.385,
+      "entry_time": "2026-06-05T19:30:22.180Z",
+      "exit_price": 396.6,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -10.94,
+      "pnl_percent": -0.018529219153280256,
+      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
+      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "source": "Yahoo Finance RSS",
       "confidence": 0.75,
       "status": "CLOSED"
     },
@@ -2893,6 +3255,94 @@
       "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
       "source": "Yahoo Finance RSS",
       "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "RBRK",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 12.202563,
+      "entry_price": 73.755,
+      "entry_time": "2026-06-05T15:01:57.985Z",
+      "exit_price": 71.73,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -24.71,
+      "pnl_percent": -0.027455765710799152,
+      "trade_id": "b91ec518-c5cf-4f5e-b5f3-1df550f55e89",
+      "signal_id": "RBRK|BUY|Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
+      "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "RBRK",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 13.558403,
+      "entry_price": 73.755,
+      "entry_time": "2026-06-05T15:01:58.130Z",
+      "exit_price": 71.73,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -27.46,
+      "pnl_percent": -0.027455765710799152,
+      "trade_id": "b91ec518-c5cf-4f5e-b5f3-1df550f55e89",
+      "signal_id": "RBRK|BUY|Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
+      "title": "Rubrik beats Q1 estimates, raises full-year guidance as cyber resilience demand rises",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "GSC",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 13.07295,
+      "entry_price": 61.96,
+      "entry_time": "2026-06-05T17:01:32.678Z",
+      "exit_price": 62.39,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 5.62,
+      "pnl_percent": 0.0069399612653324675,
+      "trade_id": "0160aa9a-703b-422c-bc39-ec04166b67d7",
+      "signal_id": "GSC|BUY|GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
+      "title": "GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
+      "source": "PR Newswire RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "GSC",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 14.5255,
+      "entry_price": 61.96,
+      "entry_time": "2026-06-05T17:01:32.828Z",
+      "exit_price": 62.39,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 6.25,
+      "pnl_percent": 0.0069399612653324675,
+      "trade_id": "0160aa9a-703b-422c-bc39-ec04166b67d7",
+      "signal_id": "GSC|BUY|GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
+      "title": "GreenCore Solutions Corp. (GSC) Signs Multi-Year Asia BPC Supply Deal as Inbound Agent Traffic Hits Record Levels -- Asia-Pacific Crosses 1 Million Inbound Agent Requests",
+      "source": "PR Newswire RSS",
+      "confidence": 0.65,
       "status": "CLOSED"
     },
     {
@@ -2984,6 +3434,72 @@
       "status": "CLOSED"
     },
     {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "IOT",
+      "direction": "LONG",
+      "stake_amount": 543.29,
+      "shares": 15.979118,
+      "entry_price": 34,
+      "entry_time": "2026-06-08T16:31:04.694Z",
+      "exit_price": 34.06,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 0.96,
+      "pnl_percent": 0.001764705882353008,
+      "trade_id": "23d0a474-a813-46dc-972c-96ef9a90c919",
+      "signal_id": "IOT|BUY|Samsara raises guidance amid data center boom",
+      "title": "Samsara raises guidance amid data center boom",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "IOT",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 21.441176,
+      "entry_price": 34,
+      "entry_time": "2026-06-08T16:31:04.871Z",
+      "exit_price": 34.06,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 1.29,
+      "pnl_percent": 0.001764705882353008,
+      "trade_id": "23d0a474-a813-46dc-972c-96ef9a90c919",
+      "signal_id": "IOT|BUY|Samsara raises guidance amid data center boom",
+      "title": "Samsara raises guidance amid data center boom",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "WISE",
+      "direction": "SHORT",
+      "stake_amount": 488.96,
+      "shares": 11.879495,
+      "entry_price": 41.16,
+      "entry_time": "2026-06-08T16:32:02.223Z",
+      "exit_price": 40.77,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 4.63,
+      "pnl_percent": 0.009475218658891971,
+      "trade_id": "0883c94e-6724-4afc-892e-a3a7a902c9b1",
+      "signal_id": "WISE|SELL|WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
+      "title": "WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.7,
+      "status": "CLOSED"
+    },
+    {
       "book_key": "trend_strict__sell_eod",
       "portfolio": "trend_strict",
       "exit_rule": "sell_eod",
@@ -3025,6 +3541,314 @@
       "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
       "source": "Yahoo Finance RSS",
       "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "FUTU",
+      "direction": "SHORT",
+      "stake_amount": 810,
+      "shares": 9.00951,
+      "entry_price": 89.905,
+      "entry_time": "2026-06-08T16:32:02.556Z",
+      "exit_price": 91.08,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -10.59,
+      "pnl_percent": -0.013069350981591649,
+      "trade_id": "1b59c7f2-9d58-4486-a11c-7251d9314933",
+      "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "title": "FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.7,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "AVGO",
+      "direction": "SHORT",
+      "stake_amount": 810,
+      "shares": 2.080203,
+      "entry_price": 389.385,
+      "entry_time": "2026-06-05T19:30:22.325Z",
+      "exit_price": 396.6,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -15.01,
+      "pnl_percent": -0.018529219153280256,
+      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
+      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "OKLO",
+      "direction": "LONG",
+      "stake_amount": 603.66,
+      "shares": 10.172902,
+      "entry_price": 59.34,
+      "entry_time": "2026-06-08T16:01:15.726Z",
+      "exit_price": 58.94,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -4.07,
+      "pnl_percent": -0.0067408156386923775,
+      "trade_id": "23c4caa6-9aca-48be-b1c8-4c473c0bec06",
+      "signal_id": "OKLO|BUY|Oklo buys nuclear technology company ARMEC, advancing reactor capabilities",
+      "title": "Oklo buys nuclear technology company ARMEC, advancing reactor capabilities",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "XZO",
+      "direction": "SHORT",
+      "stake_amount": 729,
+      "shares": 55.819296,
+      "entry_price": 13.06,
+      "entry_time": "2026-06-08T16:32:02.556Z",
+      "exit_price": 13.11,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -2.79,
+      "pnl_percent": -0.0038284839203674525,
+      "trade_id": "4d7317d7-32d0-4f14-9068-3fe7bed7f82f",
+      "signal_id": "XZO|SELL|XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
+      "title": "XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "LLY",
+      "direction": "LONG",
+      "stake_amount": 288.73,
+      "shares": 0.249932,
+      "entry_price": 1155.233,
+      "entry_time": "2026-06-08T18:54:00.000Z",
+      "exit_price": 1149.15,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -1.52,
+      "pnl_percent": -0.005265604427851227,
+      "trade_id": "bbce0881-b517-4575-93a6-c11d8163ca0e",
+      "signal_id": "LLY|BUY|Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
+      "title": "Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
+      "source": "PR Newswire RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "LLY",
+      "direction": "LONG",
+      "stake_amount": 590.49,
+      "shares": 0.511144,
+      "entry_price": 1155.233,
+      "entry_time": "2026-06-08T18:54:00.000Z",
+      "exit_price": 1149.15,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -3.11,
+      "pnl_percent": -0.005265604427851227,
+      "trade_id": "bbce0881-b517-4575-93a6-c11d8163ca0e",
+      "signal_id": "LLY|BUY|Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
+      "title": "Lilly's oral GLP-1 Foundayo (orforglipron) delivered superior A1C control and weight loss in three pivotal type 2 diabetes trials",
+      "source": "PR Newswire RSS",
+      "confidence": 0.72,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "AVGO",
+      "direction": "SHORT",
+      "stake_amount": 900,
+      "shares": 2.311337,
+      "entry_price": 389.385,
+      "entry_time": "2026-06-05T19:30:22.465Z",
+      "exit_price": 396.6,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -16.68,
+      "pnl_percent": -0.018529219153280256,
+      "trade_id": "e88cdc4e-2050-4bb4-bb0f-d0725e195e2f",
+      "signal_id": "AVGO|SELL|Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "title": "Nasdaq Futures Plunge as Broadcom Sinks on Disappointing AI Chip Sales Forecast",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "FUTU",
+      "direction": "SHORT",
+      "stake_amount": 440.06,
+      "shares": 4.894722,
+      "entry_price": 89.905,
+      "entry_time": "2026-06-08T16:32:02.223Z",
+      "exit_price": 91.08,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -5.75,
+      "pnl_percent": -0.013069350981591649,
+      "trade_id": "1b59c7f2-9d58-4486-a11c-7251d9314933",
+      "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "title": "FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.7,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "XZO",
+      "direction": "SHORT",
+      "stake_amount": 396.06,
+      "shares": 30.326187,
+      "entry_price": 13.06,
+      "entry_time": "2026-06-08T16:32:02.223Z",
+      "exit_price": 13.11,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -1.52,
+      "pnl_percent": -0.0038284839203674525,
+      "trade_id": "4d7317d7-32d0-4f14-9068-3fe7bed7f82f",
+      "signal_id": "XZO|SELL|XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
+      "title": "XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "WISE",
+      "direction": "SHORT",
+      "stake_amount": 656.1,
+      "shares": 15.940233,
+      "entry_price": 41.16,
+      "entry_time": "2026-06-08T16:32:02.402Z",
+      "exit_price": 40.77,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 6.22,
+      "pnl_percent": 0.009475218658891971,
+      "trade_id": "0883c94e-6724-4afc-892e-a3a7a902c9b1",
+      "signal_id": "WISE|SELL|WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
+      "title": "WSE Investors Have Opportunity to Join Wise Group plc Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.7,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "XZO",
+      "direction": "SHORT",
+      "stake_amount": 590.49,
+      "shares": 45.213629,
+      "entry_price": 13.06,
+      "entry_time": "2026-06-08T16:32:02.402Z",
+      "exit_price": 13.11,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": -2.26,
+      "pnl_percent": -0.0038284839203674525,
+      "trade_id": "4d7317d7-32d0-4f14-9068-3fe7bed7f82f",
+      "signal_id": "XZO|SELL|XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
+      "title": "XZO Investors Have Opportunity to Join Exzeo Group, Inc. Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.75,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "OPTI",
+      "direction": "LONG",
+      "stake_amount": 356.45,
+      "shares": 891125,
+      "entry_price": 0.0004,
+      "entry_time": "2026-06-08T17:01:07.981Z",
+      "exit_price": 0.0004,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 0,
+      "pnl_percent": 0,
+      "trade_id": "4db23cff-74f5-4634-bde3-f23e716fd1e0",
+      "signal_id": "OPTI|BUY|Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
+      "title": "Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
+      "source": "PR Newswire RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "OPTI",
+      "direction": "LONG",
+      "stake_amount": 531.44,
+      "shares": 1328600,
+      "entry_price": 0.0004,
+      "entry_time": "2026-06-08T17:01:08.157Z",
+      "exit_price": 0.0004,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 0,
+      "pnl_percent": 0,
+      "trade_id": "4db23cff-74f5-4634-bde3-f23e716fd1e0",
+      "signal_id": "OPTI|BUY|Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
+      "title": "Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
+      "source": "PR Newswire RSS",
+      "confidence": 0.65,
+      "status": "CLOSED"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "OPTI",
+      "direction": "LONG",
+      "stake_amount": 656.1,
+      "shares": 1640250,
+      "entry_price": 0.0004,
+      "entry_time": "2026-06-08T17:01:08.326Z",
+      "exit_price": 0.0004,
+      "exit_time": "2026-06-09T00:59:48.541Z",
+      "exit_reason": "eod",
+      "pnl_dollars": 0,
+      "pnl_percent": 0,
+      "trade_id": "4db23cff-74f5-4634-bde3-f23e716fd1e0",
+      "signal_id": "OPTI|BUY|Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
+      "title": "Optimi Health Secures Ibogaine Supply and Commences Finished Drug Product Development",
+      "source": "PR Newswire RSS",
+      "confidence": 0.65,
       "status": "CLOSED"
     }
   ],
