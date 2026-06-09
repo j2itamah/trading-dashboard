@@ -328,9 +328,9 @@ function render(){
   posPanel += '</div>';
 
   var isEOD = (b.book_key||'').indexOf('sell_eod') !== -1;
-      var closedTitle = isEOD ? 'Scheduled Daily Closes' : 'Closed Trades';
+      var closedTitle = isEOD ? 'Scheduled Daily Evaluations' : 'Closed Trades';
       let closedPanel = '<div class="panel"><h2>'+closedTitle+' ('+closedRows.length+')</h2>';
-      if(isEOD) closedPanel += '<div class="footnote" style="margin-bottom:10px">Early Exit strategy: all positions automatically close at 3:45 PM ET (stocks) / 10 PM ET (crypto). No positions held overnight.</div>';
+      if(isEOD) closedPanel += '<div class="footnote" style="margin-bottom:10px">Early Exit (sell_eod): each scheduled daily evaluation closes a position only if its direction-adjusted P&amp;L meets the profit threshold &mdash; stocks at 3:45 PM ET when P&amp;L &ge; +1%, crypto at 10 PM ET when P&amp;L &ge; +2%. Positions below threshold remain OPEN; there is no automatic 24-hour fallback for Early Exit.</div>';
     if(!closedRows.length) closedPanel += '<div class="zero-text">No closed trades in this book.</div>';
     else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
     closedPanel += '</div>';
