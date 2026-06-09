@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+·<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -309,7 +309,7 @@ function render(){
   const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); window.__openRows = positions; window.__closedRows = closedRows;
   let posPanel = '<div class="panel"><h2>Open Positions</h2>';
   if(!positions.length) posPanel += '<div class="zero-text" style="font-size:13px;color:var(--ink-soft)">No open positions.</div>';
-  else posPanel += positions.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta">'+fmtNum(p.shares)+' @ '+fmtMoney(p.entry_price)+' · '+fmtMoney(p.stake_amount)+'<span class="chev">›</span></div></div>';}).join('');
+  else posPanel += positions.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta">'+(p.current_price!=null?fmtMoney(p.entry_price)+'→'+fmtMoney(p.current_price)+' · '+(p.unrealized_pnl_dollars>=0?'+':'')+fmtMoney(p.unrealized_pnl_dollars)+' · '+(p.unrealized_pnl_percent>=0?'+':'')+(p.unrealized_pnl_percent*100).toFixed(2)+'%':fmtNum(p.shares)+' @ '+fmtMoney(p.entry_price)+' · '+fmtMoney(p.stake_amount))+'<span class="chev">›</span></div></div>';}).join('');
   posPanel += '</div>';
 
   var isEOD = (b.book_key||'').indexOf('sell_eod') !== -1;
