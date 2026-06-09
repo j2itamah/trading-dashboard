@@ -230,11 +230,26 @@ let sel = {
 };
 
 const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtPrice = n => {
+  const v = Number(n||0), a = Math.abs(v);
+  const digits = a>0 && a<0.01 ? 8 : (a<1 ? 4 : 2);
+  return '$' + v.toLocaleString('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+};
 const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
 const fmtNum = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:4});
 const signCls = n => n>0?'pos-text':(n<0?'neg-text':'zero-text');
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const minsLabel = m => { if(m==null) return '—'; const h=Math.floor(m/60), mm=Math.round(m%60); return h>0?(h+'h '+mm+'m'):(mm+'m'); };
+function nonWeekendHours(iso){
+  if(!iso) return 0;
+  const start=new Date(iso), end=new Date(); let hours=0;
+  for(let t=start.getTime();t<end.getTime();t+=3600000){
+    const mid=new Date(t+1800000);
+    const wd=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(mid);
+    if(wd!=='Sat'&&wd!=='Sun') hours+=Math.min(3600000,end.getTime()-t)/3600000;
+  }
+  return hours;
+}
 
 function book(){ const g=DATA&&DATA.grid&&DATA.grid[sel.strategy]; return g?g[sel.rule]:null; }
 
@@ -281,7 +296,7 @@ function render(){
   const eq =
     '<div class="equity-summary">'+
       '<div class="eq-card">'+
-        '<div class="eq-label">Total Equity</div>'+
+        '<div class="eq-label">Marked Equity</div>'+
         '<div class="eq-equity">'+fmtMoney(b.total_equity)+'</div>'+
         '<div class="eq-growth '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+' · '+fmtPct(b.growth_pct)+'</div>'+
         ''+
@@ -309,7 +324,7 @@ function render(){
   const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); window.__openRows = positions; window.__closedRows = closedRows;
   let posPanel = '<div class="panel"><h2>Open Positions</h2>';
   if(!positions.length) posPanel += '<div class="zero-text" style="font-size:13px;color:var(--ink-soft)">No open positions.</div>';
-  else posPanel += positions.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta">'+(p.current_price!=null?fmtMoney(p.entry_price)+'→'+fmtMoney(p.current_price)+' · '+(p.unrealized_pnl_dollars>=0?'+':'')+fmtMoney(p.unrealized_pnl_dollars)+' · '+(p.unrealized_pnl_percent>=0?'+':'')+(p.unrealized_pnl_percent*100).toFixed(2)+'%':fmtNum(p.shares)+' @ '+fmtMoney(p.entry_price)+' · '+fmtMoney(p.stake_amount))+'<span class="chev">›</span></div></div>';}).join('');
+  else posPanel += positions.map(function(p,i){var overdue=p.exit_rule==='hold_24hr'&&nonWeekendHours(p.entry_time)>=24; return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span>'+(overdue?' <span class="badge short">⚠ OVERDUE</span>':'')+'</div>'+'<div class="pos-meta">'+(p.current_price!=null?fmtPrice(p.entry_price)+'→'+fmtPrice(p.current_price)+' · '+(p.unrealized_pnl_dollars>=0?'+':'')+fmtMoney(p.unrealized_pnl_dollars)+' · '+(p.unrealized_pnl_percent>=0?'+':'')+(p.unrealized_pnl_percent*100).toFixed(2)+'%':fmtNum(p.shares)+' @ '+fmtPrice(p.entry_price)+' · '+fmtMoney(p.stake_amount))+'<span class="chev">›</span></div></div>';}).join('');
   posPanel += '</div>';
 
   var isEOD = (b.book_key||'').indexOf('sell_eod') !== -1;
@@ -393,12 +408,12 @@ function openTradeModal(t){
   var dirCls = t.direction==='SHORT'?'short':'long';
   var pnlPctDisp = (t.pnl_percent==null)?null:(t.pnl_percent*100);
   var head = '<div class="tm-head"><div><h3>'+esc(t.asset)+'<span class="tm-badge '+dirCls+'">'+esc(t.direction)+'</span><span class="tm-badge '+(isOpen?'open':'closed')+'">'+esc(t.status)+'</span></h3><div class="tm-sub">'+esc((t.portfolio||'')+' · '+(t.exit_rule||''))+'</div></div><button class="tm-close" onclick="closeTradeModal()">×</button></div>';
-  var entryCol = '<div class="tm-col"><h4>Entry</h4>'+tmRow('Price', fmtMoney(t.entry_price))+tmRow('Date / Time', tmFmtET(t.entry_time))+tmRow('Capital', fmtMoney(t.stake_amount))+tmRow('Shares', fmtNum(t.shares))+'</div>';
+  var entryCol = '<div class="tm-col"><h4>Entry</h4>'+tmRow('Price', fmtPrice(t.entry_price))+tmRow('Date / Time', tmFmtET(t.entry_time))+tmRow('Capital', fmtMoney(t.stake_amount))+tmRow('Shares', fmtNum(t.shares))+'</div>';
   var rightCol;
   if(isOpen){
-    rightCol = '<div class="tm-col"><h4>Current (Open)</h4>'+tmRow('Last price', '<span style=\"color:var(--muted,#999)\">live fetch n/a</span>')+tmRow('Held', tmDuration(t.entry_time,null))+tmRow('Exit rule', esc(t.exit_rule||'—'))+'</div>';
+    rightCol = '<div class="tm-col"><h4>Current (Open)</h4>'+tmRow('Last price', t.current_price==null?'—':fmtPrice(t.current_price))+tmRow('Price updated', tmFmtET(t.current_price_at))+tmRow('Held', tmDuration(t.entry_time,null))+tmRow('Exit rule', esc(t.exit_rule||'—'))+'</div>';
   } else {
-    rightCol = '<div class="tm-col"><h4>Exit</h4>'+tmRow('Price', fmtMoney(t.exit_price))+tmRow('Date / Time', tmFmtET(t.exit_time))+tmRow('Reason', esc(t.exit_reason||'—'))+tmRow('Held', tmDuration(t.entry_time,t.exit_time))+'</div>';
+    rightCol = '<div class="tm-col"><h4>Exit</h4>'+tmRow('Price', fmtPrice(t.exit_price))+tmRow('Date / Time', tmFmtET(t.exit_time))+tmRow('Reason', esc(t.exit_reason||'—'))+tmRow('Held', tmDuration(t.entry_time,t.exit_time))+'</div>';
   }
   var banner='';
   if(!isOpen){
@@ -406,7 +421,8 @@ function openTradeModal(t){
     var sign = (t.pnl_dollars>=0)?'+':'';
     banner = '<div class="tm-pnl-banner '+cls+'">'+sign+fmtMoney(t.pnl_dollars)+'<div class="sub">'+sign+(pnlPctDisp==null?'—':pnlPctDisp.toFixed(2)+'%')+' realized P&L</div></div>';
   } else {
-    banner = '<div class="tm-pnl-banner flat">Position Open<div class="sub">unrealized P&L requires a live price fetch</div></div>';
+    var usign=(Number(t.unrealized_pnl_dollars||0)>=0)?'+':'';
+    banner = '<div class="tm-pnl-banner '+signCls(t.unrealized_pnl_dollars)+'">'+usign+fmtMoney(t.unrealized_pnl_dollars)+'<div class="sub">'+usign+Number((t.unrealized_pnl_percent||0)*100).toFixed(2)+'% unrealized P&L</div></div>';
   }
   var ctx = '<div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div>';
   var foot = '<div class="tm-foot"><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy trade details</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
