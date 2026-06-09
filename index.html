@@ -312,9 +312,12 @@ function render(){
   else posPanel += positions.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta">'+fmtNum(p.shares)+' @ '+fmtMoney(p.entry_price)+' · '+fmtMoney(p.stake_amount)+'<span class="chev">›</span></div></div>';}).join('');
   posPanel += '</div>';
 
-  let closedPanel = '<div class="panel"><h2>Closed Trades</h2>';
+  var isEOD = (b.book_key||'').indexOf('sell_eod') !== -1;
+      var closedTitle = isEOD ? 'Scheduled Daily Closes' : 'Closed Trades';
+      let closedPanel = '<div class="panel"><h2>'+closedTitle+' ('+closedRows.length+')</h2>';
+      if(isEOD) closedPanel += '<div class="footnote" style="margin-bottom:10px">Early Exit strategy: all positions automatically close at 3:45 PM ET (stocks) / 10 PM ET (crypto). No positions held overnight.</div>';
     if(!closedRows.length) closedPanel += '<div class="zero-text">No closed trades in this book.</div>';
-    else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+fmtMoney(p.entry_price)+'→'+fmtMoney(p.exit_price)+'<span class="chev">›</span></div></div>';}).join('');
+    else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
     closedPanel += '</div>';
     const grid =
     '<div class="grid">'+
