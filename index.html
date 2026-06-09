@@ -251,6 +251,26 @@ function nonWeekendHours(iso){
   return hours;
 }
 
+// ===== asset class + lifecycle rules (live rule set as of 2026-06-09) =====
+// Best-effort crypto detection until publisher emits per-trade asset_class (see MASTER_SPEC).
+const CRYPTO_SET = new Set(['BTC','ETH','SOL','XRP','ADA','DOGE','ZEC','LTC','BCH','DOT','AVAX','LINK','MATIC','POL','SHIB','TRX','UNI','ATOM','XLM','ETC','FIL','APT','ARB','OP','INJ','SUI','SEI','TIA','NEAR','ALGO','AAVE','MKR','RUNE','IMX','GRT','SAND','MANA','AXS','CRV','LDO','PEPE','WIF','BONK','HBAR','ICP','VET','EGLD','FTM','THETA','XTZ','EOS','KAS','TON','RNDR','FET','STX','ORDI']);
+function assetClass(t){ if(t.asset_class) return t.asset_class; return CRYPTO_SET.has(String(t.asset||'').toUpperCase()) ? 'crypto' : 'stock'; }
+function rulesFor(cls){ return cls==='crypto' ? {tp:0.10, sl:0.05, eod:0.02, evalLbl:'10:00 PM ET'} : {tp:0.04, sl:0.02, eod:0.01, evalLbl:'3:45 PM ET'}; }
+function tpSlPrices(t){
+  const cls=assetClass(t), r=rulesFor(cls), e=Number(t.entry_price)||0, long=(t.direction!=='SHORT');
+  return { cls, r, tp: long ? e*(1+r.tp) : e*(1-r.tp), sl: long ? e*(1-r.sl) : e*(1+r.sl) };
+}
+function holdExpiry(t){
+  const cls=assetClass(t);
+  if(cls==='crypto') return new Date(new Date(t.entry_time).getTime()+24*3600000);
+  let rem = 24 - nonWeekendHours(t.entry_time);
+  if(rem<=0) return null;
+  let t0=Date.now(), guard=0;
+  while(rem>0 && guard++<1000){ t0+=3600000; const wd=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date(t0-1800000)); if(wd!=='Sat'&&wd!=='Sun') rem-=1; }
+  return new Date(t0);
+}
+function isStale(){ if(!DATA||!DATA.generated_at) return false; return (Date.now()-new Date(DATA.generated_at).getTime()) > 40*60000; }
+
 function book(){ const g=DATA&&DATA.grid&&DATA.grid[sel.strategy]; return g?g[sel.rule]:null; }
 
 function kpiCard(label, value, cls, sub){
@@ -321,7 +341,7 @@ function render(){
 
   const caveat = lowSample ? '<div class="footnote">⚠ small sample ('+b.closed.count+' trade'+(b.closed.count===1?'':'s')+') — not yet meaningful</div>' : '';
 
-  const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.exit_reason !== 'voided_pre_gate_bug').sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); window.__openRows = positions; window.__closedRows = closedRows;
+  const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && String(p.exit_reason||'').indexOf('voided')!==0).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); window.__openRows = positions; window.__closedRows = closedRows;
   let posPanel = '<div class="panel"><h2>Open Positions ('+positions.length+')</h2>';
   if(!positions.length) posPanel += '<div class="zero-text" style="font-size:13px;color:var(--ink-soft)">No open positions.</div>';
   else posPanel += positions.map(function(p,i){var overdue=p.exit_rule==='hold_24hr'&&nonWeekendHours(p.entry_time)>=24; return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span>'+(overdue?' <span class="badge short">⚠ OVERDUE</span>':'')+'</div>'+'<div class="pos-meta">'+(p.current_price!=null?fmtPrice(p.entry_price)+'→'+fmtPrice(p.current_price)+' · '+(p.unrealized_pnl_dollars>=0?'+':'')+fmtMoney(p.unrealized_pnl_dollars)+' · '+(p.unrealized_pnl_percent>=0?'+':'')+(p.unrealized_pnl_percent*100).toFixed(2)+'%':fmtNum(p.shares)+' @ '+fmtPrice(p.entry_price)+' · '+fmtMoney(p.stake_amount))+'<span class="chev">›</span></div></div>';}).join('');
@@ -368,7 +388,7 @@ function render(){
 
 function buildPills(){
   const tg=document.getElementById('portfolio-toggle');
-  tg.innerHTML = (DATA.strategies||Object.keys(STRAT_LABELS)).map(s=>
+  tg.innerHTML = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict').map(s=>
     '<button class="toggle-btn'+(s===sel.strategy?' on':'')+'" data-strat="'+s+'">'+STRAT_LABELS[s]+'</button>'
   ).join('');
   tg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{ sel.strategy=btn.dataset.strat; localStorage.setItem('dash_strategy',sel.strategy); render(); }));
@@ -378,13 +398,19 @@ function wireSwitch(){
   document.querySelectorAll('#exit-switch button').forEach(btn=>btn.addEventListener('click',()=>{ sel.rule=btn.dataset.rule; localStorage.setItem('dash_rule',sel.rule); render(); }));
 }
 
-function setUpdated(){ const d=DATA&&DATA.generated_at?new Date(DATA.generated_at):new Date(); document.getElementById('upd-date').textContent = d.toLocaleString(); }
+function setUpdated(){
+  const d=DATA&&DATA.generated_at?new Date(DATA.generated_at):new Date();
+  var el=document.getElementById('upd-date');
+  el.textContent = d.toLocaleString();
+  if(isStale()){ el.innerHTML += ' <span style="color:var(--red);font-weight:700">⚠ data &gt;40m old</span>'; }
+}
 
 async function loadData(){
   try{
     const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
+    if(sel.strategy==='strict'){ sel.strategy='news_only'; localStorage.setItem('dash_strategy','news_only'); }
     buildPills(); setUpdated(); render();
   }catch(e){
     document.getElementById('content').innerHTML='<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
@@ -426,9 +452,30 @@ function openTradeModal(t){
     var usign=(Number(t.unrealized_pnl_dollars||0)>=0)?'+':'';
     banner = '<div class="tm-pnl-banner '+signCls(t.unrealized_pnl_dollars)+'">'+usign+fmtMoney(t.unrealized_pnl_dollars)+'<div class="sub">'+usign+Number((t.unrealized_pnl_percent||0)*100).toFixed(2)+'% unrealized P&L</div></div>';
   }
-  var ctx = '<div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div>';
+  // ----- targets + lifecycle (added 2026-06-09) -----
+  var ts = tpSlPrices(t);
+  var lifecycle = '<div class="tm-context" style="margin-top:16px"><h4 style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted,#999)">Targets &amp; lifecycle ('+ts.cls+')</h4>';
+  lifecycle += tmRow('Take profit (+'+(ts.r.tp*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
+  lifecycle += tmRow('Stop loss (−'+(ts.r.sl*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
+  if(isOpen && (t.exit_rule||'')==='hold_24hr'){
+    var elapsed = ts.cls==='crypto' ? (Date.now()-new Date(t.entry_time).getTime())/3600000 : nonWeekendHours(t.entry_time);
+    var remaining = 24 - elapsed, exp = holdExpiry(t);
+    var cd = remaining<=0 ? '⚠ overdue — closes at next market-hours check' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
+    lifecycle += tmRow('Hold elapsed', elapsed.toFixed(1)+'h / 24h'+(ts.cls==='stock'?' (weekdays only)':''));
+    lifecycle += tmRow('Closes on time', exp?tmFmtET(exp.toISOString()):'overdue');
+    lifecycle += tmRow('Countdown', '<span class="'+(remaining<=0?'neg-text':'')+'">'+cd+'</span>');
+  } else if(isOpen){
+    var thr = ts.r.eod, cur = Number(t.unrealized_pnl_percent||0), meets = cur>=thr;
+    var prog = Math.max(0, Math.min(100, (cur/thr)*100));
+    lifecycle += tmRow('Profit gate', '≥ +'+(thr*100).toFixed(0)+'% to take the win');
+    lifecycle += tmRow('Now', '<span class="'+signCls(cur)+'">'+(cur>=0?'+':'')+(cur*100).toFixed(2)+'%'+(meets?' ✓ would close':'')+'</span>');
+    lifecycle += '<div style="height:8px;background:var(--bg);border-radius:5px;overflow:hidden;margin:8px 0 6px"><span style="display:block;height:100%;width:'+prog+'%;background:'+(meets?'var(--green)':'var(--accent)')+'"></span></div>';
+    lifecycle += '<div style="font-size:11px;color:var(--ink-soft);line-height:1.4">Checked daily at '+ts.r.evalLbl+'. Closes only if the gate is met — otherwise stays open. No forced 24h close.</div>';
+  }
+  lifecycle += '</div>';
+  var ctx = '<div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+(t.rule_version?tmRow('Rule version', esc(t.rule_version)):'')+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div>';
   var foot = '<div class="tm-foot"><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy trade details</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
-  document.getElementById('tm-modal').innerHTML = head + '<div class="tm-body"><div class="tm-cols">'+entryCol+rightCol+'</div>'+banner+ctx+'</div>'+foot;
+  document.getElementById('tm-modal').innerHTML = head + '<div class="tm-body"><div class="tm-cols">'+entryCol+rightCol+'</div>'+banner+lifecycle+ctx+'</div>'+foot;
   document.getElementById('tm-overlay').classList.add('open');
 }
 function closeTradeModal(){ document.getElementById('tm-overlay').classList.remove('open'); }
