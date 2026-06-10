@@ -130,13 +130,7 @@
 .dot{width:11px;height:11px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 4px var(--green-bg);}
 .footnote{font-family:"Spline Sans Mono",monospace;font-size:11.5px;color:var(--gold);background:#fbf3e0;border:1px solid #ecdcb5;border-radius:10px;padding:9px 14px;margin:14px 0 4px;}
 
-/* description spacing polish (tweak) */
-#active-label{ margin:18px 0 22px; }
-#active-label strong{ font-size:13px; }
-#book-plain{ margin-top:6px !important; line-height:1.5 !important; }
-@media (max-width:640px){ #active-label{ margin:22px 0 26px; padding:0 4px; } }
-
-/* description spacing polish (tweak) */
+/* description spacing */
 #active-label{ margin:18px 0 22px; }
 #active-label strong{ font-size:13px; }
 #book-plain{ margin-top:6px !important; line-height:1.5 !important; }
@@ -178,6 +172,26 @@
 .tm-btn:hover{background:rgba(0,0,0,.04);}
 .tm-btn.copied{background:#e6f4ea;border-color:#1a7f37;color:#1a7f37;}
 .snapshot-warning{display:none;margin:0 0 18px;padding:11px 14px;border:1px solid #e7c46a;border-radius:10px;background:#fff8e5;color:#7a5610;font:600 12px/1.45 'Spline Sans Mono',monospace;}
+
+/* mobile: full-screen modal */
+@media(max-width:520px){
+  .tm-overlay{padding:0;}
+  .tm-modal{border-radius:0;max-width:100%;min-height:100vh;min-height:100dvh;}
+  .tm-head{padding:16px 18px;} .tm-body{padding:16px 18px;} .tm-foot{padding:12px 18px;}
+  .tm-head h3{font-size:18px;} .tm-pnl-banner{font-size:20px;}
+}
+/* small phones: single-column KPIs */
+@media(max-width:390px){
+  .kpis{grid-template-columns:1fr 1fr !important;}
+  .kpi .value{font-size:22px !important;}
+  body{padding:20px 14px 40px;}
+  .wrap{padding-bottom:24px;}
+}
+/* progressive disclosure toggle for closed trades */
+.closed-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font:600 13px 'Spline Sans',sans-serif;color:var(--ink-soft);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.closed-toggle:hover{background:rgba(0,0,0,.02);}
+.closed-toggle .arrow{transition:transform .2s;font-size:11px;}
+.closed-toggle.expanded .arrow{transform:rotate(90deg);}
 </style>
 </head>
 <body>
@@ -254,28 +268,32 @@ function nonWeekendHours(iso){
   return hours;
 }
 
-// ===== asset class + lifecycle rules (live rule set as of 2026-06-09) =====
-// Best-effort crypto detection until publisher emits per-trade asset_class (see MASTER_SPEC).
+// ===== asset class + lifecycle — reads DB authoritative fields from data.json =====
 const CRYPTO_SET = new Set(['BTC','ETH','SOL','XRP','ADA','DOGE','ZEC','LTC','BCH','DOT','AVAX','LINK','MATIC','POL','SHIB','TRX','UNI','ATOM','XLM','ETC','FIL','APT','ARB','OP','INJ','SUI','SEI','TIA','NEAR','ALGO','AAVE','MKR','RUNE','IMX','GRT','SAND','MANA','AXS','CRV','LDO','PEPE','WIF','BONK','HBAR','ICP','VET','EGLD','FTM','THETA','XTZ','EOS','KAS','TON','RNDR','FET','STX','ORDI']);
 function assetClass(t){ if(t.asset_class) return t.asset_class; return CRYPTO_SET.has(String(t.asset||'').toUpperCase()) ? 'crypto' : 'stock'; }
-function rulesFor(cls, rv){
-  var v1 = String(rv||'').indexOf('stop5pct') >= 0;
-  if(cls==='crypto') return {tp:0.10, sl:0.05, eod:0.02, evalLbl:'10:00 PM ET', proven:true};
-  if(v1) return {tp:0.10, sl:0.05, eod:0.01, evalLbl:'3:45 PM ET', proven:true, tpShort:0.08, slShort:0.04};
-  return {tp:0.04, sl:0.02, eod:0.01, evalLbl:'3:45 PM ET', proven:true};
-}
 function tpSlPrices(t){
-  const cls=assetClass(t), r=rulesFor(cls, t.rule_version), e=Number(t.entry_price)||0, long=(t.direction!=='SHORT');
-  var tp_r = long ? r.tp : (r.tpShort||r.tp), sl_r = long ? r.sl : (r.slShort||r.sl);
-  return { cls, r, tp_r, sl_r, tp: long ? e*(1+tp_r) : e*(1-tp_r), sl: long ? e*(1-sl_r) : e*(1+sl_r) };
+  var cls=assetClass(t), e=Number(t.entry_price)||0, long=(t.direction!=='SHORT');
+  if(t.take_profit_pct!=null && t.stop_loss_pct!=null){
+    var tp_r=Number(t.take_profit_pct), sl_r=Number(t.stop_loss_pct);
+    var tp=t.take_profit_price!=null ? Number(t.take_profit_price) : (long ? e*(1+tp_r) : e*(1-tp_r));
+    var sl=t.stop_loss_price!=null ? Number(t.stop_loss_price) : (long ? e*(1-sl_r) : e*(1+sl_r));
+    var eod=t.early_exit_threshold_pct!=null ? Number(t.early_exit_threshold_pct) : (cls==='crypto'?0.02:0.01);
+    var evalLbl=cls==='crypto'?'10:00 PM ET':'3:45 PM ET';
+    return {cls, r:{tp:tp_r,sl:sl_r,eod:eod,evalLbl:evalLbl}, tp_r:tp_r, sl_r:sl_r, tp:tp, sl:sl};
+  }
+  var v1=String(t.rule_version||'').indexOf('stop5pct')>=0;
+  if(cls==='crypto'){var r={tp:0.10,sl:0.05,eod:0.02,evalLbl:'10:00 PM ET'};return{cls,r:r,tp_r:r.tp,sl_r:r.sl,tp:long?e*1.10:e*0.90,sl:long?e*0.95:e*1.05};}
+  if(v1){var tp_r2=long?0.10:0.08,sl_r2=long?0.05:0.04;return{cls,r:{tp:tp_r2,sl:sl_r2,eod:0.01,evalLbl:'3:45 PM ET'},tp_r:tp_r2,sl_r:sl_r2,tp:long?e*(1+tp_r2):e*(1-tp_r2),sl:long?e*(1-sl_r2):e*(1+sl_r2)};}
+  return{cls,r:{tp:0.04,sl:0.02,eod:0.01,evalLbl:'3:45 PM ET'},tp_r:0.04,sl_r:0.02,tp:long?e*1.04:e*0.96,sl:long?e*0.98:e*1.02};
 }
 function holdExpiry(t){
-  const cls=assetClass(t);
+  if(t.effective_expiry_at) return new Date(t.effective_expiry_at);
+  var cls=assetClass(t);
   if(cls==='crypto') return new Date(new Date(t.entry_time).getTime()+24*3600000);
-  let rem = 24 - nonWeekendHours(t.entry_time);
+  var rem=24-nonWeekendHours(t.entry_time);
   if(rem<=0) return null;
-  let t0=Date.now(), guard=0;
-  while(rem>0 && guard++<1000){ t0+=3600000; const wd=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date(t0-1800000)); if(wd!=='Sat'&&wd!=='Sun') rem-=1; }
+  var t0=Date.now(), guard=0;
+  while(rem>0 && guard++<1000){ t0+=3600000; var wd=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date(t0-1800000)); if(wd!=='Sat'&&wd!=='Sun') rem-=1; }
   return new Date(t0);
 }
 function snapshotAgeMinutes(){ if(!DATA||!DATA.generated_at) return null; return Math.max(0,Math.floor((Date.now()-new Date(DATA.generated_at).getTime())/60000)); }
@@ -354,7 +372,7 @@ function render(){
   let posPanel = '<div class="panel"><h2>Open Positions ('+positions.length+')</h2>';
   if(!positions.length) posPanel += '<div class="zero-text" style="font-size:13px;color:var(--ink-soft)">No open positions.</div>';
   else posPanel += positions.map(function(p,i){
-      var overdue=p.exit_rule==='hold_24hr'&&nonWeekendHours(p.entry_time)>=24;
+      var overdue=p.effective_expiry_at ? new Date(p.effective_expiry_at)<=new Date() : (nonWeekendHours(p.entry_time)>=24);
       var pct=Number(p.unrealized_pnl_percent||0);
       var nowv=Number(p.stake_amount||0)+Number(p.unrealized_pnl_dollars||0);
       var pctStr='<span class="'+signCls(pct)+'" style="font-weight:700">'+(pct>=0?'+':'')+(pct*100).toFixed(2)+'%</span>';
@@ -367,9 +385,17 @@ function render(){
   var isEOD = (b.book_key||'').indexOf('sell_eod') !== -1;
       var closedTitle = isEOD ? 'Closed Positions' : 'Closed Trades';
       let closedPanel = '<div class="panel"><h2>'+closedTitle+' ('+closedRows.length+')</h2>';
-      
     if(!closedRows.length) closedPanel += '<div class="zero-text">No closed trades in this book.</div>';
-    else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" role="button" tabindex="0" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
+    else {
+      var PREVIEW_COUNT = 5;
+      var closedHtml = closedRows.map(function(p,i){return '<div class="pos-row trade-clk" role="button" tabindex="0" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
+      if(closedRows.length > PREVIEW_COUNT){
+        closedPanel += '<div id="closed-list" style="max-height:'+((PREVIEW_COUNT*43)+4)+'px;overflow:hidden;transition:max-height .3s ease">'+closedHtml+'</div>';
+        closedPanel += '<button class="closed-toggle" id="closed-toggle" onclick="toggleClosed()"><span>Show all '+closedRows.length+' trades</span><span class="arrow">›</span></button>';
+      } else {
+        closedPanel += closedHtml;
+      }
+    }
     closedPanel += '</div>';
     var dataPanel = '';
     if(dataIssueRows.length){
@@ -408,6 +434,14 @@ function render(){
       el.addEventListener('click', open);
       el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
     });
+}
+
+function toggleClosed(){
+  var list=document.getElementById('closed-list'), btn=document.getElementById('closed-toggle');
+  if(!list||!btn) return;
+  var expanded=btn.classList.toggle('expanded');
+  if(expanded){ list.style.maxHeight=list.scrollHeight+'px'; btn.querySelector('span:first-child').textContent='Show fewer'; }
+  else { list.style.maxHeight=(5*43+4)+'px'; btn.querySelector('span:first-child').textContent='Show all '+window.__closedRows.length+' trades'; }
 }
 
 function buildPills(){
@@ -500,10 +534,12 @@ function openTradeModal(t, rt, ri){
   lifecycle += tmRow('Take profit (+'+(ts.tp_r*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
   lifecycle += tmRow('Stop loss (-'+(ts.sl_r*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
   if(isOpen){
+    var exp = holdExpiry(t);
     var elapsed = ts.cls==='crypto' ? (Date.now()-new Date(t.entry_time).getTime())/3600000 : nonWeekendHours(t.entry_time);
-    var remaining = 24 - elapsed, exp = holdExpiry(t);
+    var remaining = exp ? Math.max(0,(exp.getTime()-Date.now())/3600000) : (24-elapsed);
     var cd = remaining<=0 ? 'overdue' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
     lifecycle += tmRow('Time cap', elapsed.toFixed(1)+'h / 24h · '+cd);
+    if(t.effective_expiry_at) lifecycle += tmRow('Expires', tmFmtET(t.effective_expiry_at));
   }
   if((t.exit_rule||'')==='sell_eod'){
     var thr = ts.r.eod;
