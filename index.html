@@ -352,7 +352,7 @@ function render(){
       var pctStr='<span class="'+signCls(pct)+'" style="font-weight:700">'+(pct>=0?'+':'')+(pct*100).toFixed(2)+'%</span>';
       return '<div class="pos-row trade-clk" role="button" tabindex="0" data-rt="open" data-ri="'+i+'">'
         +'<div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span>'+(overdue?' <span class="badge short">⚠ OVERDUE</span>':'')+'</div>'
-        +'<div class="pos-meta">'+fmtNum(p.shares)+' @ '+fmtPrice(p.entry_price)+' · spent '+fmtMoney(p.stake_amount)+' · now '+fmtMoney(nowv)+' · '+pctStr+'<span class="chev">›</span></div></div>';
+        +'<div class="pos-meta">'+fmtNum(p.shares)+' @ '+fmtPrice(p.entry_price)+' · '+fmtMoney(p.stake_amount)+' · '+pctStr+'<span class="chev">›</span></div></div>';
     }).join('');
   posPanel += '</div>';
 
