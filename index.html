@@ -328,13 +328,11 @@ function render(){
         ''+
       '</div>'+
       '<div class="eq-card split-card">'+
-        '<div class="eq-label">Cash / Invested</div>'+
         '<div class="split-bar"><span class="cash" style="width:'+(b.cash_pct||0)+'%"></span><span class="inv" style="width:'+(b.invested_pct||0)+'%"></span></div>'+
         '<div class="split-legend">'+
-          '<div class="lg cash"><span class="k">Free Cash</span><span class="v">'+fmtMoney(b.free_cash)+'</span></div>'+
-          '<div class="lg inv" style="text-align:right"><span class="k" style="justify-content:flex-end">Deployed cost</span><span class="v">'+fmtMoney((DATA.open_positions||[]).filter(function(p){return p.book_key===b.book_key;}).reduce(function(s,p){return s+Number(p.stake_amount||0);},0))+'</span></div>'+
+          '<div class="lg cash"><span class="k">Available Cash</span><span class="v">'+fmtMoney(b.free_cash)+'</span></div>'+
+          '<div class="lg inv" style="text-align:right"><span class="k" style="justify-content:flex-end">Invested</span><span class="v">'+fmtMoney((DATA.open_positions||[]).filter(function(p){return p.book_key===b.book_key;}).reduce(function(s,p){return s+Number(p.stake_amount||0);},0))+'</span></div>'+
         '</div>'+
-        '<div class="split-legend" style="margin-top:6px"><div class="lg"><span class="k" style="font-size:11px;color:var(--ink-soft)">Marked value (cost + unrealized)</span></div><div class="lg" style="text-align:right"><span class="v">'+fmtMoney(b.deployed_capital)+'</span></div></div>'+
       '</div>'+
     '</div>';
 
