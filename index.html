@@ -455,6 +455,14 @@ function openTradeModal(t){
   // ----- targets + lifecycle (added 2026-06-09) -----
   var ts = tpSlPrices(t);
   var lifecycle = '<div class="tm-context" style="margin-top:16px"><h4 style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted,#999)">Targets &amp; lifecycle ('+ts.cls+')</h4>';
+  // Max favorable / adverse excursion during the hold (from published period_high/low)
+  if(t.period_high!=null && t.period_low!=null && t.entry_price){
+    var ph=Number(t.period_high), pl=Number(t.period_low), ep=Number(t.entry_price);
+    var sh=(String(t.direction||'').toUpperCase()==='SHORT'||String(t.direction||'').toUpperCase()==='SELL');
+    var mfe=sh?(ep-pl)/ep:(ph-ep)/ep, mae=sh?(ep-ph)/ep:(pl-ep)/ep;
+    lifecycle += tmRow('Max run-up', '<span class="pos-text">+'+(mfe*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?pl:ph));
+    lifecycle += tmRow('Max drawdown', '<span class="neg-text">'+(mae*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?ph:pl));
+  }
   if((t.exit_rule||'')==='hold_24hr'){
     // 24hr Hold: TP/SL + time exit apply
     lifecycle += tmRow('Take profit (+'+(ts.r.tp*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
