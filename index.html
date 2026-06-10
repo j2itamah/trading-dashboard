@@ -326,8 +326,9 @@ function render(){
         '<div class="split-bar"><span class="cash" style="width:'+(b.cash_pct||0)+'%"></span><span class="inv" style="width:'+(b.invested_pct||0)+'%"></span></div>'+
         '<div class="split-legend">'+
           '<div class="lg cash"><span class="k">Free Cash</span><span class="v">'+fmtMoney(b.free_cash)+'</span></div>'+
-          '<div class="lg inv" style="text-align:right"><span class="k" style="justify-content:flex-end">Deployed</span><span class="v">'+fmtMoney(b.deployed_capital)+'</span></div>'+
+          '<div class="lg inv" style="text-align:right"><span class="k" style="justify-content:flex-end">Deployed cost</span><span class="v">'+fmtMoney((DATA.open_positions||[]).filter(function(p){return p.book_key===b.book_key;}).reduce(function(s,p){return s+Number(p.stake_amount||0);},0))+'</span></div>'+
         '</div>'+
+        '<div class="split-legend" style="margin-top:6px"><div class="lg"><span class="k" style="font-size:11px;color:var(--ink-soft)">Marked value (cost + unrealized)</span></div><div class="lg" style="text-align:right"><span class="v">'+fmtMoney(b.deployed_capital)+'</span></div></div>'+
       '</div>'+
     '</div>';
 
@@ -349,7 +350,7 @@ function render(){
       var pct=Number(p.unrealized_pnl_percent||0);
       var nowv=Number(p.stake_amount||0)+Number(p.unrealized_pnl_dollars||0);
       var pctStr='<span class="'+signCls(pct)+'" style="font-weight:700">'+(pct>=0?'+':'')+(pct*100).toFixed(2)+'%</span>';
-      return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'">'
+      return '<div class="pos-row trade-clk" role="button" tabindex="0" data-rt="open" data-ri="'+i+'">'
         +'<div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span>'+(overdue?' <span class="badge short">⚠ OVERDUE</span>':'')+'</div>'
         +'<div class="pos-meta">'+fmtNum(p.shares)+' @ '+fmtPrice(p.entry_price)+' · spent '+fmtMoney(p.stake_amount)+' · now '+fmtMoney(nowv)+' · '+pctStr+'<span class="chev">›</span></div></div>';
     }).join('');
@@ -360,11 +361,11 @@ function render(){
       let closedPanel = '<div class="panel"><h2>'+closedTitle+' ('+closedRows.length+')</h2>';
       
     if(!closedRows.length) closedPanel += '<div class="zero-text">No closed trades in this book.</div>';
-    else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
+    else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" role="button" tabindex="0" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
     closedPanel += '</div>';
     var dataPanel = '';
     if(dataIssueRows.length){
-      dataPanel = '<div class="panel"><h2>Data issues ('+dataIssueRows.length+')</h2><div class="zero-text" style="font-size:12px;color:var(--ink-soft);margin-bottom:8px">Legacy/unverified closes — excluded from win rate & P/L stats.</div>'+dataIssueRows.map(function(p){return '<div class="pos-row"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div><div class="pos-meta">'+esc(p.exit_reason||'—')+' · '+(p.pnl_percent>=0?'+':'')+(Number(p.pnl_percent||0)*100).toFixed(2)+'%</div></div>';}).join('')+'</div>';
+      dataPanel = '<div class="panel"><h2>Data issues ('+dataIssueRows.length+')</h2><div class="zero-text" style="font-size:12px;color:var(--ink-soft);margin-bottom:8px">Legacy/unverified closes — excluded from win rate & P/L stats.</div>'+dataIssueRows.map(function(p){return '<div class="pos-row"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div><div class="pos-meta">'+esc(prettyReason(p.exit_reason))+' · '+(p.pnl_percent>=0?'+':'')+(Number(p.pnl_percent||0)*100).toFixed(2)+'%</div></div>';}).join('')+'</div>';
     }
     var eodNote = '';
   const grid =
@@ -391,11 +392,13 @@ function render(){
 
   c.innerHTML = eq + kpis + caveat + grid + holdPanel;
     c.querySelectorAll('.trade-clk').forEach(function(el){
-      el.addEventListener('click', function(){
+      var open = function(){
         var rt = el.getAttribute('data-rt'); var ri = parseInt(el.getAttribute('data-ri'),10);
         var arr = rt==='open' ? window.__openRows : window.__closedRows;
         if(arr && arr[ri]) openTradeModal(arr[ri], rt, ri);
-      });
+      };
+      el.addEventListener('click', open);
+      el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
     });
 }
 
@@ -443,6 +446,7 @@ loadData();
 function tmFmtET(iso){ if(!iso) return '—'; try{ var d=new Date(iso); return d.toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){ return String(iso); } }
 function tmDuration(a,b){ if(!a) return '—'; var end=b?new Date(b):new Date(); var ms=end-new Date(a); if(!isFinite(ms)||ms<0) return '—'; var mins=Math.floor(ms/60000); var d=Math.floor(mins/1440); var hrs=Math.floor((mins%1440)/60); var m=mins%60; var parts=[]; if(d) parts.push(d+'d'); parts.push(hrs+'h'); parts.push(m+'m'); return parts.join(' '); }
 function tmRow(k,v){ return '<div class="tm-kv"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'; }
+function prettyReason(r){ var m={take_profit:'Take profit',stop_loss:'Stop loss',time:'24h time exit',early_exit_stock_threshold:'Early exit (+1% gate)',early_exit_crypto_threshold:'Early exit (+2% gate)',eod:'Legacy EOD (unverified)',target:'Take profit',stop:'Stop loss'}; return m[r]||(r||'—'); }
 function openTradeModal(t, rt, ri){
   window.__tmTrade = t;
   if(rt!=null) window.__curRt = rt; if(ri!=null) window.__curRi = ri;
@@ -455,7 +459,7 @@ function openTradeModal(t, rt, ri){
   if(isOpen){
     rightCol = '<div class="tm-col"><h4>Current (Open)</h4>'+tmRow('Last price', t.current_price==null?'—':fmtPrice(t.current_price))+tmRow('Price updated', tmFmtET(t.current_price_at))+tmRow('Held', tmDuration(t.entry_time,null))+tmRow('Exit rule', esc(t.exit_rule||'—'))+'</div>';
   } else {
-    rightCol = '<div class="tm-col"><h4>Exit</h4>'+tmRow('Price', fmtPrice(t.exit_price))+tmRow('Date / Time', tmFmtET(t.exit_time))+tmRow('Reason', esc(t.exit_reason||'—'))+tmRow('Held', tmDuration(t.entry_time,t.exit_time))+'</div>';
+    rightCol = '<div class="tm-col"><h4>Exit</h4>'+tmRow('Price', fmtPrice(t.exit_price))+tmRow('Date / Time', tmFmtET(t.exit_time))+tmRow('Reason', prettyReason(t.exit_reason)+(t.exit_reason?' <span style="color:var(--ink-soft);font-size:11px">('+esc(t.exit_reason)+')</span>':''))+tmRow('Held', tmDuration(t.entry_time,t.exit_time))+'</div>';
   }
   var banner='';
   if(!isOpen){
