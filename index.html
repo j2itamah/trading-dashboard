@@ -255,10 +255,16 @@ function nonWeekendHours(iso){
 // Best-effort crypto detection until publisher emits per-trade asset_class (see MASTER_SPEC).
 const CRYPTO_SET = new Set(['BTC','ETH','SOL','XRP','ADA','DOGE','ZEC','LTC','BCH','DOT','AVAX','LINK','MATIC','POL','SHIB','TRX','UNI','ATOM','XLM','ETC','FIL','APT','ARB','OP','INJ','SUI','SEI','TIA','NEAR','ALGO','AAVE','MKR','RUNE','IMX','GRT','SAND','MANA','AXS','CRV','LDO','PEPE','WIF','BONK','HBAR','ICP','VET','EGLD','FTM','THETA','XTZ','EOS','KAS','TON','RNDR','FET','STX','ORDI']);
 function assetClass(t){ if(t.asset_class) return t.asset_class; return CRYPTO_SET.has(String(t.asset||'').toUpperCase()) ? 'crypto' : 'stock'; }
-function rulesFor(cls){ return cls==='crypto' ? {tp:0.10, sl:0.05, eod:0.02, evalLbl:'10:00 PM ET'} : {tp:0.04, sl:0.02, eod:0.01, evalLbl:'3:45 PM ET'}; }
+function rulesFor(cls, rv){
+  var v1 = String(rv||'').indexOf('stop5pct') >= 0;
+  if(cls==='crypto') return {tp:0.10, sl:0.05, eod:0.02, evalLbl:'10:00 PM ET', proven:true};
+  if(v1) return {tp:0.10, sl:0.05, eod:0.01, evalLbl:'3:45 PM ET', proven:true, tpShort:0.08, slShort:0.04};
+  return {tp:0.04, sl:0.02, eod:0.01, evalLbl:'3:45 PM ET', proven:true};
+}
 function tpSlPrices(t){
-  const cls=assetClass(t), r=rulesFor(cls), e=Number(t.entry_price)||0, long=(t.direction!=='SHORT');
-  return { cls, r, tp: long ? e*(1+r.tp) : e*(1-r.tp), sl: long ? e*(1-r.sl) : e*(1+r.sl) };
+  const cls=assetClass(t), r=rulesFor(cls, t.rule_version), e=Number(t.entry_price)||0, long=(t.direction!=='SHORT');
+  var tp_r = long ? r.tp : (r.tpShort||r.tp), sl_r = long ? r.sl : (r.slShort||r.sl);
+  return { cls, r, tp_r, sl_r, tp: long ? e*(1+tp_r) : e*(1-tp_r), sl: long ? e*(1-sl_r) : e*(1+sl_r) };
 }
 function holdExpiry(t){
   const cls=assetClass(t);
@@ -470,10 +476,9 @@ function openTradeModal(t, rt, ri){
     var usign=(Number(t.unrealized_pnl_dollars||0)>=0)?'+':'';
     banner = '<div class="tm-pnl-banner '+signCls(t.unrealized_pnl_dollars)+'">'+usign+fmtMoney(t.unrealized_pnl_dollars)+'<div class="sub">'+usign+Number((t.unrealized_pnl_percent||0)*100).toFixed(2)+'% unrealized P&L</div></div>';
   }
-  // ----- targets + lifecycle (added 2026-06-09) -----
+  // ----- targets + lifecycle -----
   var ts = tpSlPrices(t);
   var lifecycle = '<div class="tm-context" style="margin-top:16px"><h4 style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted,#999)">Targets &amp; lifecycle ('+ts.cls+')</h4>';
-  // Max favorable / adverse excursion during the hold (from published period_high/low)
   if(t.period_high!=null && t.period_low!=null && t.entry_price){
     var ph=Number(t.period_high), pl=Number(t.period_low), ep=Number(t.entry_price);
     var sh=(String(t.direction||'').toUpperCase()==='SHORT'||String(t.direction||'').toUpperCase()==='SELL');
@@ -481,32 +486,28 @@ function openTradeModal(t, rt, ri){
     lifecycle += tmRow('Max run-up', '<span class="pos-text">+'+(mfe*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?pl:ph));
     lifecycle += tmRow('Max drawdown', '<span class="neg-text">'+(mae*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?ph:pl));
   }
-  // TP/SL + 24h time exit apply to BOTH books
-  lifecycle += tmRow('Take profit (+'+(ts.r.tp*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
-  lifecycle += tmRow('Stop loss (−'+(ts.r.sl*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
+  lifecycle += tmRow('Take profit (+'+(ts.tp_r*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
+  lifecycle += tmRow('Stop loss (-'+(ts.sl_r*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
   if(isOpen){
     var elapsed = ts.cls==='crypto' ? (Date.now()-new Date(t.entry_time).getTime())/3600000 : nonWeekendHours(t.entry_time);
     var remaining = 24 - elapsed, exp = holdExpiry(t);
-    var cd = remaining<=0 ? '⚠ past 24h — closes at next market-hours check' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
-    lifecycle += tmRow('Hold elapsed', elapsed.toFixed(1)+'h / 24h'+(ts.cls==='stock'?' (weekdays only)':''));
-    lifecycle += tmRow('Closes on time', exp?tmFmtET(exp.toISOString()):'overdue');
-    lifecycle += tmRow('Countdown', '<span class="'+(remaining<=0?'neg-text':'')+'">'+cd+'</span>');
+    var cd = remaining<=0 ? 'overdue' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
+    lifecycle += tmRow('Time cap', elapsed.toFixed(1)+'h / 24h · '+cd);
   }
   if((t.exit_rule||'')==='sell_eod'){
     var thr = ts.r.eod;
-    lifecycle += tmRow('+ EOD profit-take', '≥ +'+(thr*100).toFixed(0)+'% at '+ts.r.evalLbl+' (extra early win)');
+    lifecycle += tmRow('Exit type', 'Early Exit — 24h cap + EOD profit-take');
+    lifecycle += tmRow('Profit gate', '≥ +'+(thr*100).toFixed(0)+'% at '+ts.r.evalLbl+' (take win early)');
     if(isOpen){
       var cur = Number(t.unrealized_pnl_percent||0), meets = cur>=thr;
       var prog = Math.max(0, Math.min(100, (cur/thr)*100));
-      lifecycle += tmRow('Now vs gate', '<span class="'+signCls(cur)+'">'+(cur>=0?'+':'')+(cur*100).toFixed(2)+'%'+(meets?' ✓ takes win at next EOD':'')+'</span>');
+      lifecycle += tmRow('Now', '<span class="'+signCls(cur)+'">'+(cur>=0?'+':'')+(cur*100).toFixed(2)+'%'+(meets?' ✓':'')+'</span>');
       lifecycle += '<div style="height:8px;background:var(--bg);border-radius:5px;overflow:hidden;margin:8px 0 6px"><span style="display:block;height:100%;width:'+prog+'%;background:'+(meets?'var(--green)':'var(--accent)')+'"></span></div>';
     }
-    lifecycle += '<div style="font-size:11px;color:var(--ink-soft);line-height:1.4">Early Exit = take-profit, stop-loss, or 24h — <strong>plus</strong> an early win at the EOD check if ≥ +'+(thr*100).toFixed(0)+'%.</div>';
-  } else {
-    lifecycle += '<div style="font-size:11px;color:var(--ink-soft);line-height:1.4">24hr Hold = take-profit, stop-loss, or 24h time exit.</div>';
+  } else {;
   }
   lifecycle += '</div>';
-  var ctx = '<div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+(t.rule_version?tmRow('Rule version', esc(t.rule_version)):'')+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div>';
+  var ctx = '<div class=”tm-context”>'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+tmRow('Rule version', esc(t.rule_version||'—'))+(t.title?('<div class=”hl”>”'+esc(t.title)+'”</div>'):'')+'</div>';
   var navArr = (window.__curRt==='open'?window.__openRows:window.__closedRows)||[]; var ci=window.__curRi;
   var prevDis = (ci>0)?'':'disabled'; var nextDis = (ci>=0 && ci<navArr.length-1)?'':'disabled';
   var foot = '<div class="tm-foot"><button class="tm-btn" '+prevDis+' onclick="tmNav(-1)">‹ Prev</button><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy</button><button class="tm-btn" '+nextDis+' onclick="tmNav(1)">Next ›</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
