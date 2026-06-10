@@ -394,7 +394,7 @@ function render(){
       el.addEventListener('click', function(){
         var rt = el.getAttribute('data-rt'); var ri = parseInt(el.getAttribute('data-ri'),10);
         var arr = rt==='open' ? window.__openRows : window.__closedRows;
-        if(arr && arr[ri]) openTradeModal(arr[ri]);
+        if(arr && arr[ri]) openTradeModal(arr[ri], rt, ri);
       });
     });
 }
@@ -443,8 +443,9 @@ loadData();
 function tmFmtET(iso){ if(!iso) return '—'; try{ var d=new Date(iso); return d.toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){ return String(iso); } }
 function tmDuration(a,b){ if(!a) return '—'; var end=b?new Date(b):new Date(); var ms=end-new Date(a); if(!isFinite(ms)||ms<0) return '—'; var mins=Math.floor(ms/60000); var d=Math.floor(mins/1440); var hrs=Math.floor((mins%1440)/60); var m=mins%60; var parts=[]; if(d) parts.push(d+'d'); parts.push(hrs+'h'); parts.push(m+'m'); return parts.join(' '); }
 function tmRow(k,v){ return '<div class="tm-kv"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'; }
-function openTradeModal(t){
+function openTradeModal(t, rt, ri){
   window.__tmTrade = t;
+  if(rt!=null) window.__curRt = rt; if(ri!=null) window.__curRi = ri;
   var isOpen = String(t.status).toUpperCase()==='OPEN';
   var dirCls = t.direction==='SHORT'?'short':'long';
   var pnlPctDisp = (t.pnl_percent==null)?null:(t.pnl_percent*100);
@@ -503,13 +504,21 @@ function openTradeModal(t){
   }
   lifecycle += '</div>';
   var ctx = '<div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+(t.rule_version?tmRow('Rule version', esc(t.rule_version)):'')+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div>';
-  var foot = '<div class="tm-foot"><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy trade details</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
+  var navArr = (window.__curRt==='open'?window.__openRows:window.__closedRows)||[]; var ci=window.__curRi;
+  var prevDis = (ci>0)?'':'disabled'; var nextDis = (ci>=0 && ci<navArr.length-1)?'':'disabled';
+  var foot = '<div class="tm-foot"><button class="tm-btn" '+prevDis+' onclick="tmNav(-1)">‹ Prev</button><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy</button><button class="tm-btn" '+nextDis+' onclick="tmNav(1)">Next ›</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
   document.getElementById('tm-modal').innerHTML = head + '<div class="tm-body"><div class="tm-cols">'+entryCol+rightCol+'</div>'+banner+lifecycle+ctx+'</div>'+foot;
   document.getElementById('tm-overlay').classList.add('open');
 }
 function closeTradeModal(){ document.getElementById('tm-overlay').classList.remove('open'); }
 function tmCopy(){ try{ var t=window.__tmTrade; navigator.clipboard.writeText(JSON.stringify(t,null,2)); var b=document.getElementById('tm-copy'); var o=b.textContent; b.textContent='Copied ✓'; b.classList.add('copied'); setTimeout(function(){b.textContent=o;b.classList.remove('copied');},1400);}catch(e){} }
-document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeTradeModal(); });
+function tmNav(d){ var arr=(window.__curRt==='open'?window.__openRows:window.__closedRows)||[]; var ni=(window.__curRi==null?0:window.__curRi)+d; if(arr[ni]) openTradeModal(arr[ni], window.__curRt, ni); }
+document.addEventListener('keydown',function(e){
+  var ov=document.getElementById('tm-overlay'); var open=ov&&ov.classList.contains('open');
+  if(e.key==='Escape') closeTradeModal();
+  if(open && e.key==='ArrowLeft') tmNav(-1);
+  if(open && e.key==='ArrowRight') tmNav(1);
+});
 </script>
 
 <div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()"><div class="tm-modal" id="tm-modal"></div></div>
