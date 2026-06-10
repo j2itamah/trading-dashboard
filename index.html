@@ -177,6 +177,7 @@
 .tm-btn{font:inherit;font-size:13px;padding:8px 14px;border-radius:9px;border:1px solid var(--line,#ddd);background:var(--card,#fff);cursor:pointer;}
 .tm-btn:hover{background:rgba(0,0,0,.04);}
 .tm-btn.copied{background:#e6f4ea;border-color:#1a7f37;color:#1a7f37;}
+.snapshot-warning{display:none;margin:0 0 18px;padding:11px 14px;border:1px solid #e7c46a;border-radius:10px;background:#fff8e5;color:#7a5610;font:600 12px/1.45 'Spline Sans Mono',monospace;}
 </style>
 </head>
 <body>
@@ -191,6 +192,8 @@
       <strong id="upd-date">—</strong>
     </div>
   </header>
+
+  <div class="snapshot-warning" id="snapshot-warning"></div>
 
   <div class="ptr-hint" id="ptr-hint">↓ pull to refresh</div>
 
@@ -275,7 +278,8 @@ function holdExpiry(t){
   while(rem>0 && guard++<1000){ t0+=3600000; const wd=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date(t0-1800000)); if(wd!=='Sat'&&wd!=='Sun') rem-=1; }
   return new Date(t0);
 }
-function isStale(){ if(!DATA||!DATA.generated_at) return false; return (Date.now()-new Date(DATA.generated_at).getTime()) > 40*60000; }
+function snapshotAgeMinutes(){ if(!DATA||!DATA.generated_at) return null; return Math.max(0,Math.floor((Date.now()-new Date(DATA.generated_at).getTime())/60000)); }
+function isStale(){ const age=snapshotAgeMinutes(); return age!==null && age>10; }
 
 function book(){ const g=DATA&&DATA.grid&&DATA.grid[sel.strategy]; return g?g[sel.rule]:null; }
 
@@ -422,7 +426,16 @@ function setUpdated(){
   const d=DATA&&DATA.generated_at?new Date(DATA.generated_at):new Date();
   var el=document.getElementById('upd-date');
   el.textContent = d.toLocaleString();
-  if(isStale()){ el.innerHTML += ' <span style="color:var(--red);font-weight:700">⚠ data &gt;40m old</span>'; }
+  const age=snapshotAgeMinutes();
+  const warning=document.getElementById('snapshot-warning');
+  if(isStale()){
+    el.innerHTML += ' <span style="color:var(--red);font-weight:700">⚠ '+age+'m old</span>';
+    warning.style.display='block';
+    warning.textContent='Dashboard snapshot is '+age+' minutes old. Recent trades, closes, and price changes may not appear yet.';
+  }else{
+    warning.style.display='none';
+    warning.textContent='';
+  }
 }
 
 async function loadData(){
