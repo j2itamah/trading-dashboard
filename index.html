@@ -334,8 +334,8 @@ function render(){
   const kpis =
     '<div class="kpis">'+
       kpiCard('Win Rate', noTrades?'—':((o.win_rate_pct==null?'—':Number(o.win_rate_pct).toFixed(0)+'%')), '', (b.closed.count||0)+' closed'+(b.open_count?(' · '+b.open_count+' open'):''))+
-      kpiCard('Total P/L %', noTrades?'—':fmtPct(o.total_pnl_pct), signCls(o.total_pnl_pct))+
-      kpiCard('Total P/L $', noTrades?'—':((o.total_pnl_dollars>=0?'+':'')+fmtMoney(o.total_pnl_dollars)), signCls(o.total_pnl_dollars))+
+      kpiCard('Realized P/L %', noTrades?'—':fmtPct(o.total_pnl_pct), signCls(o.total_pnl_pct))+
+      kpiCard('Realized P/L $', noTrades?'—':((o.total_pnl_dollars>=0?'+':'')+fmtMoney(o.total_pnl_dollars)), signCls(o.total_pnl_dollars))+
       kpiCard('Reward / Risk', noTrades?'—':(o.reward_risk_ratio==null?'—':Number(o.reward_risk_ratio).toFixed(2)), '', 'avg win / avg loss')+
     '</div>';
 
@@ -354,7 +354,7 @@ function render(){
     if(!closedRows.length) closedPanel += '<div class="zero-text">No closed trades in this book.</div>';
     else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
     closedPanel += '</div>';
-    var eodNote = isEOD ? '<div class="footnote" style="grid-column:1/-1;margin-bottom:4px">Early Exit positions are evaluated daily. Stocks close at +1% or greater direction-adjusted profit; crypto closes at +2% or greater. Positions below the threshold remain open.</div>' : '';
+    var eodNote = '';
   const grid =
     '<div class="grid">'+
       eodNote+
@@ -455,22 +455,30 @@ function openTradeModal(t){
   // ----- targets + lifecycle (added 2026-06-09) -----
   var ts = tpSlPrices(t);
   var lifecycle = '<div class="tm-context" style="margin-top:16px"><h4 style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted,#999)">Targets &amp; lifecycle ('+ts.cls+')</h4>';
-  lifecycle += tmRow('Take profit (+'+(ts.r.tp*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
-  lifecycle += tmRow('Stop loss (−'+(ts.r.sl*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
-  if(isOpen && (t.exit_rule||'')==='hold_24hr'){
-    var elapsed = ts.cls==='crypto' ? (Date.now()-new Date(t.entry_time).getTime())/3600000 : nonWeekendHours(t.entry_time);
-    var remaining = 24 - elapsed, exp = holdExpiry(t);
-    var cd = remaining<=0 ? '⚠ overdue — closes at next market-hours check' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
-    lifecycle += tmRow('Hold elapsed', elapsed.toFixed(1)+'h / 24h'+(ts.cls==='stock'?' (weekdays only)':''));
-    lifecycle += tmRow('Closes on time', exp?tmFmtET(exp.toISOString()):'overdue');
-    lifecycle += tmRow('Countdown', '<span class="'+(remaining<=0?'neg-text':'')+'">'+cd+'</span>');
-  } else if(isOpen){
-    var thr = ts.r.eod, cur = Number(t.unrealized_pnl_percent||0), meets = cur>=thr;
-    var prog = Math.max(0, Math.min(100, (cur/thr)*100));
-    lifecycle += tmRow('Profit gate', '≥ +'+(thr*100).toFixed(0)+'% to take the win');
-    lifecycle += tmRow('Now', '<span class="'+signCls(cur)+'">'+(cur>=0?'+':'')+(cur*100).toFixed(2)+'%'+(meets?' ✓ would close':'')+'</span>');
-    lifecycle += '<div style="height:8px;background:var(--bg);border-radius:5px;overflow:hidden;margin:8px 0 6px"><span style="display:block;height:100%;width:'+prog+'%;background:'+(meets?'var(--green)':'var(--accent)')+'"></span></div>';
-    lifecycle += '<div style="font-size:11px;color:var(--ink-soft);line-height:1.4">Checked daily at '+ts.r.evalLbl+'. Closes only if the gate is met — otherwise stays open. No forced 24h close.</div>';
+  if((t.exit_rule||'')==='hold_24hr'){
+    // 24hr Hold: TP/SL + time exit apply
+    lifecycle += tmRow('Take profit (+'+(ts.r.tp*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
+    lifecycle += tmRow('Stop loss (−'+(ts.r.sl*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
+    if(isOpen){
+      var elapsed = ts.cls==='crypto' ? (Date.now()-new Date(t.entry_time).getTime())/3600000 : nonWeekendHours(t.entry_time);
+      var remaining = 24 - elapsed, exp = holdExpiry(t);
+      var cd = remaining<=0 ? '⚠ overdue — closes at next market-hours check' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
+      lifecycle += tmRow('Hold elapsed', elapsed.toFixed(1)+'h / 24h'+(ts.cls==='stock'?' (weekdays only)':''));
+      lifecycle += tmRow('Closes on time', exp?tmFmtET(exp.toISOString()):'overdue');
+      lifecycle += tmRow('Countdown', '<span class="'+(remaining<=0?'neg-text':'')+'">'+cd+'</span>');
+    }
+  } else {
+    // Early Exit (sell_eod): ONLY the daily profit gate applies — no TP/SL, no time limit
+    var thr = ts.r.eod;
+    lifecycle += tmRow('Exit type', 'Early Exit — no stop-loss, no time limit');
+    lifecycle += tmRow('Profit gate', '≥ +'+(thr*100).toFixed(0)+'% · checked daily '+ts.r.evalLbl);
+    if(isOpen){
+      var cur = Number(t.unrealized_pnl_percent||0), meets = cur>=thr;
+      var prog = Math.max(0, Math.min(100, (cur/thr)*100));
+      lifecycle += tmRow('Now', '<span class="'+signCls(cur)+'">'+(cur>=0?'+':'')+(cur*100).toFixed(2)+'%'+(meets?' ✓ would close':'')+'</span>');
+      lifecycle += '<div style="height:8px;background:var(--bg);border-radius:5px;overflow:hidden;margin:8px 0 6px"><span style="display:block;height:100%;width:'+prog+'%;background:'+(meets?'var(--green)':'var(--accent)')+'"></span></div>';
+      lifecycle += '<div style="font-size:11px;color:var(--ink-soft);line-height:1.4">Stays open until it closes at the gate (or you close it manually). It will <strong>not</strong> stop out on a loss or time — by design.</div>';
+    }
   }
   lifecycle += '</div>';
   var ctx = '<div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+(t.rule_version?tmRow('Rule version', esc(t.rule_version)):'')+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div>';
