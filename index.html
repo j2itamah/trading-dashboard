@@ -341,7 +341,7 @@ function render(){
 
   const caveat = lowSample ? '<div class="footnote">⚠ small sample ('+b.closed.count+' trade'+(b.closed.count===1?'':'s')+') — not yet meaningful</div>' : '';
 
-  const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && String(p.exit_reason||'').indexOf('voided')!==0).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); window.__openRows = positions; window.__closedRows = closedRows;
+  const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.research_valid !== false).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); const dataIssueRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.research_valid === false); window.__openRows = positions; window.__closedRows = closedRows;
   let posPanel = '<div class="panel"><h2>Open Positions ('+positions.length+')</h2>';
   if(!positions.length) posPanel += '<div class="zero-text" style="font-size:13px;color:var(--ink-soft)">No open positions.</div>';
   else posPanel += positions.map(function(p,i){var overdue=p.exit_rule==='hold_24hr'&&nonWeekendHours(p.entry_time)>=24; return '<div class="pos-row trade-clk" data-rt="open" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span>'+(overdue?' <span class="badge short">⚠ OVERDUE</span>':'')+'</div>'+'<div class="pos-meta">'+(p.current_price!=null?fmtPrice(p.entry_price)+'→'+fmtPrice(p.current_price)+' · '+(p.unrealized_pnl_dollars>=0?'+':'')+fmtMoney(p.unrealized_pnl_dollars)+' · '+(p.unrealized_pnl_percent>=0?'+':'')+(p.unrealized_pnl_percent*100).toFixed(2)+'%':fmtNum(p.shares)+' @ '+fmtPrice(p.entry_price)+' · '+fmtMoney(p.stake_amount))+'<span class="chev">›</span></div></div>';}).join('');
@@ -354,12 +354,17 @@ function render(){
     if(!closedRows.length) closedPanel += '<div class="zero-text">No closed trades in this book.</div>';
     else closedPanel += closedRows.map(function(p,i){return '<div class="pos-row trade-clk" data-rt="closed" data-ri="'+i+'"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div>'+'<div class="pos-meta"><span class="'+signCls(p.pnl_dollars)+'">'+(p.pnl_dollars>=0?'+':'')+fmtMoney(p.pnl_dollars)+'</span> · '+(p.pnl_percent>=0?'+':'')+(p.pnl_percent*100).toFixed(2)+'%'+'<span class="chev">›</span></div></div>';}).join('');
     closedPanel += '</div>';
+    var dataPanel = '';
+    if(dataIssueRows.length){
+      dataPanel = '<div class="panel"><h2>Data issues ('+dataIssueRows.length+')</h2><div class="zero-text" style="font-size:12px;color:var(--ink-soft);margin-bottom:8px">Legacy/unverified closes — excluded from win rate & P/L stats.</div>'+dataIssueRows.map(function(p){return '<div class="pos-row"><div class="asset">'+esc(p.asset)+' <span class="badge '+(p.direction==='SHORT'?'short':'long')+'">'+p.direction+'</span></div><div class="pos-meta">'+esc(p.exit_reason||'—')+' · '+(p.pnl_percent>=0?'+':'')+(Number(p.pnl_percent||0)*100).toFixed(2)+'%</div></div>';}).join('')+'</div>';
+    }
     var eodNote = '';
   const grid =
     '<div class="grid">'+
       eodNote+
       posPanel+
       closedPanel+
+      dataPanel+
       groupPanel('By Asset', a.BY_ASSET, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
       groupPanel('By Direction', a.BY_DIRECTION, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_win_pct',lab:'avg win',fmt:'pct',sign:1}])+
       groupPanel('By Source', a.BY_SOURCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
