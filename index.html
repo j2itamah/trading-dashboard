@@ -256,7 +256,7 @@ const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
 const fmtNum = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:4});
 const signCls = n => n>0?'pos-text':(n<0?'neg-text':'zero-text');
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const minsLabel = m => { if(m==null) return '—'; const h=Math.floor(m/60), mm=Math.round(m%60); return h>0?(h+'h '+mm+'m'):(mm+'m'); };
+const minsLabel = m => { if(m==null) return '—'; var total=Math.round(m), h=Math.floor(total/60), mm=total%60; return h>0?(h+'h '+mm+'m'):(mm+'m'); };
 function nonWeekendHours(iso){
   if(!iso) return 0;
   const start=new Date(iso), end=new Date(); let hours=0;
@@ -311,7 +311,8 @@ function groupPanel(title, rows, cols){
   for(const r of rows){
     const cells = cols.map(c=>{
       let v=r[c.k];
-      if(c.fmt==='pct') v=(v==null?'—':fmtPct(v));
+      if(c.zeroAs!=null && (v===0||v==='0'||v===0.0)) v=c.zeroAs;
+      else if(c.fmt==='pct') v=(v==null?'—':fmtPct(v));
       else if(c.fmt==='money') v=(v==null?'—':fmtMoney(v));
       else if(c.fmt==='wr') v=(v==null?'—':(Number(v).toFixed(0)+'%'));
       else if(c.fmt==='mins') v=minsLabel(v);
@@ -409,10 +410,10 @@ function render(){
       closedPanel+
       dataPanel+
       groupPanel('By Asset', a.BY_ASSET, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
-      groupPanel('By Direction', a.BY_DIRECTION, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_win_pct',lab:'avg win',fmt:'pct',sign:1}])+
+      groupPanel('By Direction', a.BY_DIRECTION, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_win_pct',lab:'avg win',fmt:'pct',sign:1,zeroAs:'—'}])+
       groupPanel('By Source', a.BY_SOURCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
       groupPanel('By Confidence', a.BY_CONFIDENCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
-      groupPanel('By Exit Reason', a.BY_EXIT_REASON, [{k:'count',lab:'n'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
+      groupPanel('By Exit Reason', a.BY_EXIT_REASON, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
       groupPanel('By Hour', a.BY_HOUR, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
     '</div>';
 
@@ -528,8 +529,9 @@ function openTradeModal(t, rt, ri){
     var ph=Number(t.period_high), pl=Number(t.period_low), ep=Number(t.entry_price);
     var sh=(String(t.direction||'').toUpperCase()==='SHORT'||String(t.direction||'').toUpperCase()==='SELL');
     var mfe=sh?(ep-pl)/ep:(ph-ep)/ep, mae=sh?(ep-ph)/ep:(pl-ep)/ep;
-    lifecycle += tmRow('Max run-up', '<span class="pos-text">+'+(mfe*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?pl:ph));
-    lifecycle += tmRow('Max drawdown', '<span class="neg-text">'+(mae*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?ph:pl));
+    lifecycle += tmRow('Best observed excursion', '<span class="pos-text">+'+(mfe*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?pl:ph));
+    lifecycle += tmRow('Worst observed excursion', '<span class="neg-text">'+(mae*100).toFixed(2)+'%</span> @ '+fmtPrice(sh?ph:pl));
+    lifecycle += '<div style="font-size:10px;color:var(--muted,#888);margin:2px 0 6px;line-height:1.4">Based on periodic monitor prices through the close time; intrabar highs/lows may differ.</div>';
   }
   lifecycle += tmRow('Take profit (+'+(ts.tp_r*100).toFixed(0)+'%)', '<span class="pos-text">'+fmtPrice(ts.tp)+'</span>');
   lifecycle += tmRow('Stop loss (-'+(ts.sl_r*100).toFixed(0)+'%)', '<span class="neg-text">'+fmtPrice(ts.sl)+'</span>');
@@ -537,7 +539,8 @@ function openTradeModal(t, rt, ri){
     var exp = holdExpiry(t);
     var elapsed = ts.cls==='crypto' ? (Date.now()-new Date(t.entry_time).getTime())/3600000 : nonWeekendHours(t.entry_time);
     var remaining = exp ? Math.max(0,(exp.getTime()-Date.now())/3600000) : (24-elapsed);
-    var cd = remaining<=0 ? 'overdue' : (Math.floor(remaining)+'h '+Math.round((remaining-Math.floor(remaining))*60)+'m left');
+    var cdTotal = Math.round(remaining*60), cdH = Math.floor(cdTotal/60), cdM = cdTotal%60;
+    var cd = remaining<=0 ? 'overdue' : (cdH+'h '+cdM+'m left');
     lifecycle += tmRow('Time cap', elapsed.toFixed(1)+'h / 24h · '+cd);
     if(t.effective_expiry_at) lifecycle += tmRow('Expires', tmFmtET(t.effective_expiry_at));
   }
