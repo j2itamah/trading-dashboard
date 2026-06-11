@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-11T16:00:11.321Z",
+  "generated_at": "2026-06-11T16:30:09.450Z",
   "model": "10-account (5 strategies x 2 exit rules)",
   "totals": {
-    "equity": 80049.62,
+    "equity": 80457.54,
     "starting": 80000,
-    "pnl_dollars": 49.62,
-    "pnl_pct": 0.06,
-    "open_positions": 32,
+    "pnl_dollars": 457.54,
+    "pnl_pct": 0.57,
+    "open_positions": 26,
     "book_count": 8
   },
   "strategies": [
@@ -25,48 +25,114 @@
       "exit_rule": "hold_24hr",
       "book_key": "mean_reversion__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10012.62,
-      "growth_dollars": 12.62,
-      "growth_pct": 0.13,
-      "free_cash": 8100,
-      "deployed_capital": 1912.62,
-      "cash_pct": 80.9,
-      "invested_pct": 19.1,
-      "open_count": 2,
+      "total_equity": 10062.86,
+      "growth_dollars": 62.86,
+      "growth_pct": 0.63,
+      "free_cash": 9140,
+      "deployed_capital": 922.86,
+      "cash_pct": 90.83,
+      "invested_pct": 9.17,
+      "open_count": 1,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 0.4,
+          "total_pnl_dollars": 40
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 159.8,
+          "avg_win_minutes": 159.8,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 40,
         "low_sample": true
       }
     },
@@ -75,48 +141,114 @@
       "exit_rule": "sell_eod",
       "book_key": "mean_reversion__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10012.62,
-      "growth_dollars": 12.62,
-      "growth_pct": 0.13,
-      "free_cash": 8100,
-      "deployed_capital": 1912.62,
-      "cash_pct": 80.9,
-      "invested_pct": 19.1,
-      "open_count": 2,
+      "total_equity": 10062.86,
+      "growth_dollars": 62.86,
+      "growth_pct": 0.63,
+      "free_cash": 9140,
+      "deployed_capital": 922.86,
+      "cash_pct": 90.83,
+      "invested_pct": 9.17,
+      "open_count": 1,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 0.4,
+          "total_pnl_dollars": 40
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 159.8,
+          "avg_win_minutes": 159.8,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 40,
         "low_sample": true
       }
     },
@@ -125,48 +257,145 @@
       "exit_rule": "hold_24hr",
       "book_key": "news_only__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 9996.03,
-      "growth_dollars": -3.97,
-      "growth_pct": -0.04,
-      "free_cash": 4304.67,
-      "deployed_capital": 4681.62,
-      "cash_pct": 47.9,
-      "invested_pct": 52.1,
-      "open_count": 8,
+      "total_equity": 10056.4,
+      "growth_dollars": 56.4,
+      "growth_pct": 0.56,
+      "free_cash": 5628.62,
+      "deployed_capital": 4427.78,
+      "cash_pct": 55.97,
+      "invested_pct": 44.03,
+      "open_count": 7,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
-          "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
-          "avg_loss_pct": 0,
-          "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_closed": 2,
+          "wins": 1,
+          "losses": 1,
+          "win_rate_pct": 50,
+          "avg_win_pct": 4,
+          "avg_loss_pct": -2,
+          "reward_risk_ratio": 2,
+          "total_pnl_pct": 0.25,
+          "total_pnl_dollars": 25.42
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          },
+          {
+            "key": "TROX",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2,
+            "total_pnl_dollars": -14.58
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1,
+            "avg_pnl_usd": 12.71
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1,
+            "avg_pnl_usd": 12.71
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "stop_loss",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -2,
+            "avg_pnl_usd": -14.58
+          },
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_win_pct": 4,
+            "avg_loss_pct": -2
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          },
+          {
+            "key": "conflict",
+            "count": 1,
+            "win_rate_pct": 0
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 2,
+            "win_rate_pct": 50
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 1,
+            "win_rate_pct": 0
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          },
+          {
+            "key": "10:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -2,
+            "avg_pnl_usd": -14.58
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
-          "avg_loss_minutes": null,
-          "n": 0
+          "avg_minutes": 144.71,
+          "avg_win_minutes": 159.8,
+          "avg_loss_minutes": 129.61,
+          "n": 2
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "count": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate_pct": 50,
+        "total_pnl_dollars": 25.42,
         "low_sample": true
       }
     },
@@ -175,48 +404,145 @@
       "exit_rule": "sell_eod",
       "book_key": "news_only__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 9996.03,
-      "growth_dollars": -3.97,
-      "growth_pct": -0.04,
-      "free_cash": 4304.67,
-      "deployed_capital": 4681.62,
-      "cash_pct": 47.9,
-      "invested_pct": 52.1,
-      "open_count": 8,
+      "total_equity": 10056.4,
+      "growth_dollars": 56.4,
+      "growth_pct": 0.56,
+      "free_cash": 5628.62,
+      "deployed_capital": 4427.78,
+      "cash_pct": 55.97,
+      "invested_pct": 44.03,
+      "open_count": 7,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
-          "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
-          "avg_loss_pct": 0,
-          "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_closed": 2,
+          "wins": 1,
+          "losses": 1,
+          "win_rate_pct": 50,
+          "avg_win_pct": 4,
+          "avg_loss_pct": -2,
+          "reward_risk_ratio": 2,
+          "total_pnl_pct": 0.25,
+          "total_pnl_dollars": 25.42
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          },
+          {
+            "key": "TROX",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2,
+            "total_pnl_dollars": -14.58
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1,
+            "avg_pnl_usd": 12.71
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1,
+            "avg_pnl_usd": 12.71
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "stop_loss",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -2,
+            "avg_pnl_usd": -14.58
+          },
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_win_pct": 4,
+            "avg_loss_pct": -2
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          },
+          {
+            "key": "conflict",
+            "count": 1,
+            "win_rate_pct": 0
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 2,
+            "win_rate_pct": 50
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 1,
+            "win_rate_pct": 0
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          },
+          {
+            "key": "10:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -2,
+            "avg_pnl_usd": -14.58
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
-          "avg_loss_minutes": null,
-          "n": 0
+          "avg_minutes": 144.71,
+          "avg_win_minutes": 159.8,
+          "avg_loss_minutes": 129.61,
+          "n": 2
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "count": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate_pct": 50,
+        "total_pnl_dollars": 25.42,
         "low_sample": true
       }
     },
@@ -225,48 +551,114 @@
       "exit_rule": "hold_24hr",
       "book_key": "news_plus_ta__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10003.54,
-      "growth_dollars": 3.54,
-      "growth_pct": 0.04,
-      "free_cash": 6561,
-      "deployed_capital": 3442.54,
-      "cash_pct": 65.59,
-      "invested_pct": 34.41,
+      "total_equity": 10046.65,
+      "growth_dollars": 46.65,
+      "growth_pct": 0.47,
+      "free_cash": 6944.9,
+      "deployed_capital": 3101.75,
+      "cash_pct": 69.13,
+      "invested_pct": 30.87,
       "open_count": 4,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 0.4,
+          "total_pnl_dollars": 40
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 159.8,
+          "avg_win_minutes": 159.8,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 40,
         "low_sample": true
       }
     },
@@ -275,48 +667,114 @@
       "exit_rule": "sell_eod",
       "book_key": "news_plus_ta__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10003.54,
-      "growth_dollars": 3.54,
-      "growth_pct": 0.04,
-      "free_cash": 6561,
-      "deployed_capital": 3442.54,
-      "cash_pct": 65.59,
-      "invested_pct": 34.41,
+      "total_equity": 10046.65,
+      "growth_dollars": 46.65,
+      "growth_pct": 0.47,
+      "free_cash": 6944.9,
+      "deployed_capital": 3101.75,
+      "cash_pct": 69.13,
+      "invested_pct": 30.87,
       "open_count": 4,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 0.4,
+          "total_pnl_dollars": 40
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 159.8,
+          "avg_win_minutes": 159.8,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 40,
         "low_sample": true
       }
     },
@@ -325,48 +783,114 @@
       "exit_rule": "hold_24hr",
       "book_key": "trend_strict__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10012.62,
-      "growth_dollars": 12.62,
-      "growth_pct": 0.13,
-      "free_cash": 8100,
-      "deployed_capital": 1912.62,
-      "cash_pct": 80.9,
-      "invested_pct": 19.1,
-      "open_count": 2,
+      "total_equity": 10062.86,
+      "growth_dollars": 62.86,
+      "growth_pct": 0.63,
+      "free_cash": 9140,
+      "deployed_capital": 922.86,
+      "cash_pct": 90.83,
+      "invested_pct": 9.17,
+      "open_count": 1,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 0.4,
+          "total_pnl_dollars": 40
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 159.8,
+          "avg_win_minutes": 159.8,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 40,
         "low_sample": true
       }
     },
@@ -375,48 +899,114 @@
       "exit_rule": "sell_eod",
       "book_key": "trend_strict__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10012.62,
-      "growth_dollars": 12.62,
-      "growth_pct": 0.13,
-      "free_cash": 8100,
-      "deployed_capital": 1912.62,
-      "cash_pct": 80.9,
-      "invested_pct": 19.1,
-      "open_count": 2,
+      "total_equity": 10062.86,
+      "growth_dollars": 62.86,
+      "growth_pct": 0.63,
+      "free_cash": 9140,
+      "deployed_capital": 922.86,
+      "cash_pct": 90.83,
+      "invested_pct": 9.17,
+      "open_count": 1,
       "analytics": {
         "OVERALL": {
-          "total_closed": 0,
-          "wins": 0,
+          "total_closed": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": 0,
-          "avg_win_pct": 0,
+          "win_rate_pct": 100,
+          "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0,
-          "total_pnl_dollars": 0
+          "total_pnl_pct": 0.4,
+          "total_pnl_dollars": 40
         },
-        "BY_ASSET": [],
-        "BY_SOURCE": [],
-        "BY_CONFIDENCE": [],
-        "BY_EXIT_REASON": [],
-        "BY_DIRECTION": [],
-        "BY_ALIGNMENT": [],
-        "BY_RSI_BAND": [],
-        "BY_TREND": [],
-        "BY_HOUR": [],
+        "BY_ASSET": [
+          {
+            "key": "AIFU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 40
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "take_profit",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
+            "avg_loss_pct": 0
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 1,
+            "win_rate_pct": 100
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "09:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 40
+          }
+        ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": null,
-          "avg_win_minutes": null,
+          "avg_minutes": 159.8,
+          "avg_win_minutes": 159.8,
           "avg_loss_minutes": null,
-          "n": 0
+          "n": 1
         }
       },
       "closed": {
-        "count": 0,
-        "wins": 0,
+        "count": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate_pct": null,
-        "total_pnl_dollars": 0,
+        "win_rate_pct": 100,
+        "total_pnl_dollars": 40,
         "low_sample": true
       }
     }
@@ -428,48 +1018,145 @@
         "exit_rule": "hold_24hr",
         "book_key": "news_only__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 9996.03,
-        "growth_dollars": -3.97,
-        "growth_pct": -0.04,
-        "free_cash": 4304.67,
-        "deployed_capital": 4681.62,
-        "cash_pct": 47.9,
-        "invested_pct": 52.1,
-        "open_count": 8,
+        "total_equity": 10056.4,
+        "growth_dollars": 56.4,
+        "growth_pct": 0.56,
+        "free_cash": 5628.62,
+        "deployed_capital": 4427.78,
+        "cash_pct": 55.97,
+        "invested_pct": 44.03,
+        "open_count": 7,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
-            "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
-            "avg_loss_pct": 0,
-            "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_closed": 2,
+            "wins": 1,
+            "losses": 1,
+            "win_rate_pct": 50,
+            "avg_win_pct": 4,
+            "avg_loss_pct": -2,
+            "reward_risk_ratio": 2,
+            "total_pnl_pct": 0.25,
+            "total_pnl_dollars": 25.42
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            },
+            {
+              "key": "TROX",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -2,
+              "total_pnl_dollars": -14.58
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 1,
+              "avg_pnl_usd": 12.71
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 1,
+              "avg_pnl_usd": 12.71
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "stop_loss",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -2,
+              "avg_pnl_usd": -14.58
+            },
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_win_pct": 4,
+              "avg_loss_pct": -2
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            },
+            {
+              "key": "conflict",
+              "count": 1,
+              "win_rate_pct": 0
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 2,
+              "win_rate_pct": 50
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            },
+            {
+              "key": "below_ma20 (downtrend)",
+              "count": 1,
+              "win_rate_pct": 0
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            },
+            {
+              "key": "10:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -2,
+              "avg_pnl_usd": -14.58
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
-            "avg_loss_minutes": null,
-            "n": 0
+            "avg_minutes": 144.71,
+            "avg_win_minutes": 159.8,
+            "avg_loss_minutes": 129.61,
+            "n": 2
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
-          "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "count": 2,
+          "wins": 1,
+          "losses": 1,
+          "win_rate_pct": 50,
+          "total_pnl_dollars": 25.42,
           "low_sample": true
         }
       },
@@ -478,48 +1165,145 @@
         "exit_rule": "sell_eod",
         "book_key": "news_only__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 9996.03,
-        "growth_dollars": -3.97,
-        "growth_pct": -0.04,
-        "free_cash": 4304.67,
-        "deployed_capital": 4681.62,
-        "cash_pct": 47.9,
-        "invested_pct": 52.1,
-        "open_count": 8,
+        "total_equity": 10056.4,
+        "growth_dollars": 56.4,
+        "growth_pct": 0.56,
+        "free_cash": 5628.62,
+        "deployed_capital": 4427.78,
+        "cash_pct": 55.97,
+        "invested_pct": 44.03,
+        "open_count": 7,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
-            "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
-            "avg_loss_pct": 0,
-            "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_closed": 2,
+            "wins": 1,
+            "losses": 1,
+            "win_rate_pct": 50,
+            "avg_win_pct": 4,
+            "avg_loss_pct": -2,
+            "reward_risk_ratio": 2,
+            "total_pnl_pct": 0.25,
+            "total_pnl_dollars": 25.42
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            },
+            {
+              "key": "TROX",
+              "count": 1,
+              "win_rate_pct": 0,
+              "total_pnl_pct": -2,
+              "total_pnl_dollars": -14.58
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 1,
+              "avg_pnl_usd": 12.71
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 1,
+              "avg_pnl_usd": 12.71
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "stop_loss",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -2,
+              "avg_pnl_usd": -14.58
+            },
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_win_pct": 4,
+              "avg_loss_pct": -2
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            },
+            {
+              "key": "conflict",
+              "count": 1,
+              "win_rate_pct": 0
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 2,
+              "win_rate_pct": 50
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            },
+            {
+              "key": "below_ma20 (downtrend)",
+              "count": 1,
+              "win_rate_pct": 0
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            },
+            {
+              "key": "10:00 ET",
+              "count": 1,
+              "win_rate_pct": 0,
+              "avg_pnl_pct": -2,
+              "avg_pnl_usd": -14.58
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
-            "avg_loss_minutes": null,
-            "n": 0
+            "avg_minutes": 144.71,
+            "avg_win_minutes": 159.8,
+            "avg_loss_minutes": 129.61,
+            "n": 2
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
-          "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "count": 2,
+          "wins": 1,
+          "losses": 1,
+          "win_rate_pct": 50,
+          "total_pnl_dollars": 25.42,
           "low_sample": true
         }
       }
@@ -530,48 +1314,114 @@
         "exit_rule": "hold_24hr",
         "book_key": "news_plus_ta__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10003.54,
-        "growth_dollars": 3.54,
-        "growth_pct": 0.04,
-        "free_cash": 6561,
-        "deployed_capital": 3442.54,
-        "cash_pct": 65.59,
-        "invested_pct": 34.41,
+        "total_equity": 10046.65,
+        "growth_dollars": 46.65,
+        "growth_pct": 0.47,
+        "free_cash": 6944.9,
+        "deployed_capital": 3101.75,
+        "cash_pct": 69.13,
+        "invested_pct": 30.87,
         "open_count": 4,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 0.4,
+            "total_pnl_dollars": 40
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 4,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 159.8,
+            "avg_win_minutes": 159.8,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 40,
           "low_sample": true
         }
       },
@@ -580,48 +1430,114 @@
         "exit_rule": "sell_eod",
         "book_key": "news_plus_ta__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10003.54,
-        "growth_dollars": 3.54,
-        "growth_pct": 0.04,
-        "free_cash": 6561,
-        "deployed_capital": 3442.54,
-        "cash_pct": 65.59,
-        "invested_pct": 34.41,
+        "total_equity": 10046.65,
+        "growth_dollars": 46.65,
+        "growth_pct": 0.47,
+        "free_cash": 6944.9,
+        "deployed_capital": 3101.75,
+        "cash_pct": 69.13,
+        "invested_pct": 30.87,
         "open_count": 4,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 0.4,
+            "total_pnl_dollars": 40
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 4,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 159.8,
+            "avg_win_minutes": 159.8,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 40,
           "low_sample": true
         }
       }
@@ -632,48 +1548,114 @@
         "exit_rule": "hold_24hr",
         "book_key": "mean_reversion__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10012.62,
-        "growth_dollars": 12.62,
-        "growth_pct": 0.13,
-        "free_cash": 8100,
-        "deployed_capital": 1912.62,
-        "cash_pct": 80.9,
-        "invested_pct": 19.1,
-        "open_count": 2,
+        "total_equity": 10062.86,
+        "growth_dollars": 62.86,
+        "growth_pct": 0.63,
+        "free_cash": 9140,
+        "deployed_capital": 922.86,
+        "cash_pct": 90.83,
+        "invested_pct": 9.17,
+        "open_count": 1,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 0.4,
+            "total_pnl_dollars": 40
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 4,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 159.8,
+            "avg_win_minutes": 159.8,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 40,
           "low_sample": true
         }
       },
@@ -682,48 +1664,114 @@
         "exit_rule": "sell_eod",
         "book_key": "mean_reversion__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10012.62,
-        "growth_dollars": 12.62,
-        "growth_pct": 0.13,
-        "free_cash": 8100,
-        "deployed_capital": 1912.62,
-        "cash_pct": 80.9,
-        "invested_pct": 19.1,
-        "open_count": 2,
+        "total_equity": 10062.86,
+        "growth_dollars": 62.86,
+        "growth_pct": 0.63,
+        "free_cash": 9140,
+        "deployed_capital": 922.86,
+        "cash_pct": 90.83,
+        "invested_pct": 9.17,
+        "open_count": 1,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 0.4,
+            "total_pnl_dollars": 40
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 4,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 159.8,
+            "avg_win_minutes": 159.8,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 40,
           "low_sample": true
         }
       }
@@ -734,48 +1782,114 @@
         "exit_rule": "hold_24hr",
         "book_key": "trend_strict__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10012.62,
-        "growth_dollars": 12.62,
-        "growth_pct": 0.13,
-        "free_cash": 8100,
-        "deployed_capital": 1912.62,
-        "cash_pct": 80.9,
-        "invested_pct": 19.1,
-        "open_count": 2,
+        "total_equity": 10062.86,
+        "growth_dollars": 62.86,
+        "growth_pct": 0.63,
+        "free_cash": 9140,
+        "deployed_capital": 922.86,
+        "cash_pct": 90.83,
+        "invested_pct": 9.17,
+        "open_count": 1,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 0.4,
+            "total_pnl_dollars": 40
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 4,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 159.8,
+            "avg_win_minutes": 159.8,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 40,
           "low_sample": true
         }
       },
@@ -784,48 +1898,114 @@
         "exit_rule": "sell_eod",
         "book_key": "trend_strict__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10012.62,
-        "growth_dollars": 12.62,
-        "growth_pct": 0.13,
-        "free_cash": 8100,
-        "deployed_capital": 1912.62,
-        "cash_pct": 80.9,
-        "invested_pct": 19.1,
-        "open_count": 2,
+        "total_equity": 10062.86,
+        "growth_dollars": 62.86,
+        "growth_pct": 0.63,
+        "free_cash": 9140,
+        "deployed_capital": 922.86,
+        "cash_pct": 90.83,
+        "invested_pct": 9.17,
+        "open_count": 1,
         "analytics": {
           "OVERALL": {
-            "total_closed": 0,
-            "wins": 0,
+            "total_closed": 1,
+            "wins": 1,
             "losses": 0,
-            "win_rate_pct": 0,
-            "avg_win_pct": 0,
+            "win_rate_pct": 100,
+            "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
+            "total_pnl_pct": 0.4,
+            "total_pnl_dollars": 40
           },
-          "BY_ASSET": [],
-          "BY_SOURCE": [],
-          "BY_CONFIDENCE": [],
-          "BY_EXIT_REASON": [],
-          "BY_DIRECTION": [],
-          "BY_ALIGNMENT": [],
-          "BY_RSI_BAND": [],
-          "BY_TREND": [],
-          "BY_HOUR": [],
+          "BY_ASSET": [
+            {
+              "key": "AIFU",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 40
+            }
+          ],
+          "BY_SOURCE": [
+            {
+              "key": "Seeking Alpha RSS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_CONFIDENCE": [
+            {
+              "key": "0.60-0.69",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_EXIT_REASON": [
+            {
+              "key": "take_profit",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
+          "BY_DIRECTION": [
+            {
+              "key": "BUY",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_win_pct": 4,
+              "avg_loss_pct": 0
+            }
+          ],
+          "BY_ALIGNMENT": [
+            {
+              "key": "aligned",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_RSI_BAND": [
+            {
+              "key": "neutral (30-70)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_TREND": [
+            {
+              "key": "above_ma20 (uptrend)",
+              "count": 1,
+              "win_rate_pct": 100
+            }
+          ],
+          "BY_HOUR": [
+            {
+              "key": "09:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 40
+            }
+          ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": null,
-            "avg_win_minutes": null,
+            "avg_minutes": 159.8,
+            "avg_win_minutes": 159.8,
             "avg_loss_minutes": null,
-            "n": 0
+            "n": 1
           }
         },
         "closed": {
-          "count": 0,
-          "wins": 0,
+          "count": 1,
+          "wins": 1,
           "losses": 0,
-          "win_rate_pct": null,
-          "total_pnl_dollars": 0,
+          "win_rate_pct": 100,
+          "total_pnl_dollars": 40,
           "low_sample": true
         }
       }
@@ -833,829 +2013,136 @@
   },
   "open_positions": [
     {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:45.993Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "228",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T13:40:45.993Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:45.993Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "229",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T13:40:45.993Z"
-    },
-    {
       "book_key": "news_plus_ta__hold_24hr",
       "portfolio": "news_plus_ta",
       "exit_rule": "hold_24hr",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:46.177Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "232",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T13:40:46.177Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "CDNS",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 2.319289,
-      "entry_price": 388.05,
-      "current_price": 384.54,
-      "unrealized_pnl_dollars": -8.14,
-      "unrealized_pnl_percent": -0.009045,
-      "entry_time": "2026-06-11T13:51:22.395Z",
-      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
-      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "239",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 388.115,
-      "period_low": 381.805,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 403.572,
-      "stop_loss_price": 380.289,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T13:51:22.395Z"
-    },
-    {
-      "book_key": "news_plus_ta__hold_24hr",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "hold_24hr",
-      "asset": "CDNS",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 2.319289,
-      "entry_price": 388.05,
-      "current_price": 384.54,
-      "unrealized_pnl_dollars": -8.14,
-      "unrealized_pnl_percent": -0.009045,
-      "entry_time": "2026-06-11T13:51:22.591Z",
-      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
-      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "242",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 388.115,
-      "period_low": 381.805,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 403.572,
-      "stop_loss_price": 380.289,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T13:51:22.591Z"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "CDNS",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 2.319289,
-      "entry_price": 388.05,
-      "current_price": 384.54,
-      "unrealized_pnl_dollars": -8.14,
-      "unrealized_pnl_percent": -0.009045,
-      "entry_time": "2026-06-11T13:51:22.591Z",
-      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
-      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "243",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 388.115,
-      "period_low": 381.805,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 403.572,
-      "stop_loss_price": 380.289,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T13:51:22.591Z"
-    },
-    {
-      "book_key": "mean_reversion__hold_24hr",
-      "portfolio": "mean_reversion",
-      "exit_rule": "hold_24hr",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:45.828Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "224",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T13:40:45.828Z"
-    },
-    {
-      "book_key": "mean_reversion__sell_eod",
-      "portfolio": "mean_reversion",
-      "exit_rule": "sell_eod",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:45.828Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "225",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T13:40:45.828Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "CDNS",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 2.319289,
-      "entry_price": 388.05,
-      "current_price": 384.54,
-      "unrealized_pnl_dollars": -8.14,
-      "unrealized_pnl_percent": -0.009045,
-      "entry_time": "2026-06-11T13:51:22.395Z",
-      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
-      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "238",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 388.115,
-      "period_low": 381.805,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 403.572,
-      "stop_loss_price": 380.289,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T13:51:22.395Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "TROX",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 95.169713,
-      "entry_price": 7.66,
-      "current_price": 7.59,
-      "unrealized_pnl_dollars": -6.66,
-      "unrealized_pnl_percent": -0.009138,
-      "entry_time": "2026-06-11T14:10:57.326Z",
-      "trade_id": "9bd2ce78-d891-4926-91b4-d79e5f416797",
-      "signal_id": "TROX|BUY|Tronox upgraded at Truist as improving materials pricing offsets some risks",
-      "title": "Tronox upgraded at Truist as improving materials pricing offsets some risks",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "250",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 7.66,
-      "period_low": 7.56,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 7.9664,
-      "stop_loss_price": 7.5068,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "TROX",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 95.169713,
-      "entry_price": 7.66,
-      "current_price": 7.59,
-      "unrealized_pnl_dollars": -6.66,
-      "unrealized_pnl_percent": -0.009138,
-      "entry_time": "2026-06-11T14:10:57.326Z",
-      "trade_id": "9bd2ce78-d891-4926-91b4-d79e5f416797",
-      "signal_id": "TROX|BUY|Tronox upgraded at Truist as improving materials pricing offsets some risks",
-      "title": "Tronox upgraded at Truist as improving materials pricing offsets some risks",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "251",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 7.66,
-      "period_low": 7.56,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 7.9664,
-      "stop_loss_price": 7.5068,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
-    },
-    {
-      "book_key": "news_plus_ta__sell_eod",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "sell_eod",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:46.177Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "233",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T13:40:46.177Z"
-    },
-    {
-      "book_key": "trend_strict__hold_24hr",
-      "portfolio": "trend_strict",
-      "exit_rule": "hold_24hr",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:46.325Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "236",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T13:40:46.325Z"
-    },
-    {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "asset": "AIFU",
-      "direction": "LONG",
-      "stake_amount": 1000,
-      "shares": 400,
-      "entry_price": 2.5,
-      "current_price": 2.5,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T13:40:46.325Z",
-      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
-      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
-      "title": "AIFU signs MOU to acquire Peakleap Ventures",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "237",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 2.58,
-      "period_low": 2.5,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 2.6,
-      "stop_loss_price": 2.45,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T13:40:46.325Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "ASYS",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 40.212481,
-      "entry_price": 20.143,
-      "current_price": 20.177,
-      "unrealized_pnl_dollars": 1.37,
-      "unrealized_pnl_percent": 0.001688,
-      "entry_time": "2026-06-11T14:10:57.326Z",
-      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
-      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "246",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 20.255,
-      "period_low": 20.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 20.94872,
-      "stop_loss_price": 19.74014,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "ASYS",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 40.212481,
-      "entry_price": 20.143,
-      "current_price": 20.177,
-      "unrealized_pnl_dollars": 1.37,
-      "unrealized_pnl_percent": 0.001688,
-      "entry_time": "2026-06-11T14:10:57.326Z",
-      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
-      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "247",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 20.255,
-      "period_low": 20.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 20.94872,
-      "stop_loss_price": 19.74014,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "GME",
-      "direction": "LONG",
+      "asset": "FUTU",
+      "direction": "SHORT",
       "stake_amount": 656.1,
-      "shares": 29.634146,
-      "entry_price": 22.14,
-      "current_price": 22.18,
-      "unrealized_pnl_dollars": 1.19,
-      "unrealized_pnl_percent": 0.001807,
-      "entry_time": "2026-06-11T14:50:28.862Z",
-      "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
-      "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
-      "title": "GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
+      "shares": 6.926,
+      "entry_price": 94.73,
+      "current_price": 94.557,
+      "unrealized_pnl_dollars": 1.2,
+      "unrealized_pnl_percent": 0.001826,
+      "entry_time": "2026-06-11T16:11:14.839Z",
+      "trade_id": "56206caa-6af2-4d19-b064-f323536a1d46",
+      "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "title": "FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.7,
       "status": "OPEN",
-      "row_id": "254",
+      "row_id": "288",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 22.18,
-      "period_low": 22.065,
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 94.886,
+      "period_low": 94.557,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
       "stop_loss_pct": 0.02,
-      "take_profit_price": 23.0256,
-      "stop_loss_price": 21.6972,
+      "take_profit_price": 90.9408,
+      "stop_loss_price": 96.6246,
       "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T14:50:28.862Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "GME",
-      "direction": "LONG",
-      "stake_amount": 656.1,
-      "shares": 29.634146,
-      "entry_price": 22.14,
-      "current_price": 22.18,
-      "unrealized_pnl_dollars": 1.19,
-      "unrealized_pnl_percent": 0.001807,
-      "entry_time": "2026-06-11T14:50:28.862Z",
-      "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
-      "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
-      "title": "GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "255",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 22.18,
-      "period_low": 22.058,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 23.0256,
-      "stop_loss_price": 21.6972,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T14:50:28.862Z"
-    },
-    {
-      "book_key": "news_plus_ta__hold_24hr",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "hold_24hr",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 2.641209,
-      "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 10.22,
-      "unrealized_pnl_percent": 0.014021,
-      "entry_time": "2026-06-11T15:00:27.983Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "270",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
-      "period_low": 276.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T15:00:27.983Z"
-    },
-    {
-      "book_key": "news_plus_ta__hold_24hr",
-      "portfolio": "news_plus_ta",
-      "exit_rule": "hold_24hr",
-      "asset": "GME",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 36.585366,
-      "entry_price": 22.14,
-      "current_price": 22.18,
-      "unrealized_pnl_dollars": 1.46,
-      "unrealized_pnl_percent": 0.001807,
-      "entry_time": "2026-06-11T14:50:29.074Z",
-      "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
-      "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
-      "title": "GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "258",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 22.18,
-      "period_low": 22.058,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 23.0256,
-      "stop_loss_price": 21.6972,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T14:50:29.074Z"
-    },
-    {
-      "book_key": "mean_reversion__hold_24hr",
-      "portfolio": "mean_reversion",
-      "exit_rule": "hold_24hr",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 3.260751,
-      "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 12.62,
-      "unrealized_pnl_percent": 0.014021,
-      "entry_time": "2026-06-11T15:00:27.619Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "262",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
-      "period_low": 276.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T15:00:27.619Z"
-    },
-    {
-      "book_key": "mean_reversion__sell_eod",
-      "portfolio": "mean_reversion",
-      "exit_rule": "sell_eod",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 3.260751,
-      "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 12.62,
-      "unrealized_pnl_percent": 0.014021,
-      "entry_time": "2026-06-11T15:00:27.619Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "263",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
-      "period_low": 276.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T15:00:27.619Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 590.49,
-      "shares": 2.139379,
-      "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 8.28,
-      "unrealized_pnl_percent": 0.014021,
-      "entry_time": "2026-06-11T15:00:27.790Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "266",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
-      "period_low": 276.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T15:00:27.790Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 590.49,
-      "shares": 2.139379,
-      "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 8.28,
-      "unrealized_pnl_percent": 0.014021,
-      "entry_time": "2026-06-11T15:00:27.790Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "267",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
-      "period_low": 276.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T15:00:27.790Z"
+      "effective_expiry_at": "2026-06-12T16:11:14.839Z"
     },
     {
       "book_key": "news_plus_ta__sell_eod",
       "portfolio": "news_plus_ta",
       "exit_rule": "sell_eod",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 729,
-      "shares": 2.641209,
-      "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 10.22,
-      "unrealized_pnl_percent": 0.014021,
-      "entry_time": "2026-06-11T15:00:27.983Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
+      "asset": "FUTU",
+      "direction": "SHORT",
+      "stake_amount": 656.1,
+      "shares": 6.926,
+      "entry_price": 94.73,
+      "current_price": 94.557,
+      "unrealized_pnl_dollars": 1.2,
+      "unrealized_pnl_percent": 0.001826,
+      "entry_time": "2026-06-11T16:11:14.839Z",
+      "trade_id": "56206caa-6af2-4d19-b064-f323536a1d46",
+      "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "title": "FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
+      "source": "PR Newswire RSS",
+      "confidence": 0.7,
       "status": "OPEN",
-      "row_id": "271",
+      "row_id": "289",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
-      "period_low": 276.01,
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 94.886,
+      "period_low": 94.557,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
       "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
+      "take_profit_price": 90.9408,
+      "stop_loss_price": 96.6246,
       "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T15:00:27.983Z"
+      "effective_expiry_at": "2026-06-12T16:11:14.839Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "VBVBF",
+      "direction": "LONG",
+      "stake_amount": 430.47,
+      "shares": 9.772304,
+      "entry_price": 44.05,
+      "current_price": 44.05,
+      "unrealized_pnl_dollars": 0,
+      "unrealized_pnl_percent": 0,
+      "entry_time": "2026-06-11T16:20:23.187Z",
+      "trade_id": "762367c7-f493-470d-95c3-c054dcf75670",
+      "signal_id": "VBVBF|BUY|Vera Bradley signals at least 50% non-GAAP operating loss improvement in FY2027 amid $255M-$270M sales plan",
+      "title": "Vera Bradley signals at least 50% non-GAAP operating loss improvement in FY2027 amid $255M-$270M sales plan",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "294",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 44.05,
+      "period_low": 44.05,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 45.812,
+      "stop_loss_price": 43.169,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T16:20:23.187Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "VBVBF",
+      "direction": "LONG",
+      "stake_amount": 430.47,
+      "shares": 9.772304,
+      "entry_price": 44.05,
+      "current_price": 44.05,
+      "unrealized_pnl_dollars": 0,
+      "unrealized_pnl_percent": 0,
+      "entry_time": "2026-06-11T16:20:23.187Z",
+      "trade_id": "762367c7-f493-470d-95c3-c054dcf75670",
+      "signal_id": "VBVBF|BUY|Vera Bradley signals at least 50% non-GAAP operating loss improvement in FY2027 amid $255M-$270M sales plan",
+      "title": "Vera Bradley signals at least 50% non-GAAP operating loss improvement in FY2027 amid $255M-$270M sales plan",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "295",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 44.05,
+      "period_low": 44.05,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 45.812,
+      "stop_loss_price": 43.169,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T16:20:23.187Z"
     },
     {
       "book_key": "trend_strict__hold_24hr",
@@ -1666,9 +2153,9 @@
       "stake_amount": 900,
       "shares": 3.260751,
       "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 12.62,
-      "unrealized_pnl_percent": 0.014021,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 22.86,
+      "unrealized_pnl_percent": 0.025398,
       "entry_time": "2026-06-11T15:00:28.129Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -1678,8 +2165,8 @@
       "status": "OPEN",
       "row_id": "274",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.755,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
@@ -1699,9 +2186,9 @@
       "stake_amount": 900,
       "shares": 3.260751,
       "entry_price": 276.01,
-      "current_price": 279.88,
-      "unrealized_pnl_dollars": 12.62,
-      "unrealized_pnl_percent": 0.014021,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 22.86,
+      "unrealized_pnl_percent": 0.025398,
       "entry_time": "2026-06-11T15:00:28.129Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -1711,8 +2198,8 @@
       "status": "OPEN",
       "row_id": "275",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
-      "period_high": 279.88,
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.755,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
@@ -1732,9 +2219,9 @@
       "stake_amount": 810,
       "shares": 36.585366,
       "entry_price": 22.14,
-      "current_price": 22.18,
-      "unrealized_pnl_dollars": 1.46,
-      "unrealized_pnl_percent": 0.001807,
+      "current_price": 22.105,
+      "unrealized_pnl_dollars": -1.28,
+      "unrealized_pnl_percent": -0.001581,
       "entry_time": "2026-06-11T14:50:29.074Z",
       "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
       "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
@@ -1744,9 +2231,9 @@
       "status": "OPEN",
       "row_id": "259",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:25:31.144Z",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
       "period_high": 22.18,
-      "period_low": 22.058,
+      "period_low": 22.035,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -1757,105 +2244,6 @@
       "effective_expiry_at": "2026-06-12T14:50:29.074Z"
     },
     {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "CCJ",
-      "direction": "LONG",
-      "stake_amount": 531.44,
-      "shares": 5.493772,
-      "entry_price": 96.735,
-      "current_price": 96.735,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T15:30:40.936Z",
-      "trade_id": "d97ec86c-8f4d-48b6-9064-186cd8678b4e",
-      "signal_id": "CCJ|BUY|Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
-      "title": "Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "276",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:30:40.936Z",
-      "period_high": 96.735,
-      "period_low": 96.735,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 100.6044,
-      "stop_loss_price": 94.8003,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T15:30:40.936Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "CCJ",
-      "direction": "LONG",
-      "stake_amount": 531.44,
-      "shares": 5.493772,
-      "entry_price": 96.735,
-      "current_price": 96.735,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T15:30:40.936Z",
-      "trade_id": "d97ec86c-8f4d-48b6-9064-186cd8678b4e",
-      "signal_id": "CCJ|BUY|Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
-      "title": "Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "277",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:30:40.936Z",
-      "period_high": 96.735,
-      "period_low": 96.735,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 100.6044,
-      "stop_loss_price": 94.8003,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T15:30:40.936Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "asset": "CLS",
-      "direction": "LONG",
-      "stake_amount": 478.3,
-      "shares": 1.291603,
-      "entry_price": 370.315,
-      "current_price": 370.315,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
-      "entry_time": "2026-06-11T15:30:40.936Z",
-      "trade_id": "5ba49a07-a2e7-4875-88f3-4140e46ba3fa",
-      "signal_id": "CLS|BUY|Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
-      "title": "Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "280",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:30:40.936Z",
-      "period_high": 370.315,
-      "period_low": 370.315,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 385.1276,
-      "stop_loss_price": 362.9087,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T15:30:40.936Z"
-    },
-    {
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -1864,9 +2252,9 @@
       "stake_amount": 478.3,
       "shares": 1.291603,
       "entry_price": 370.315,
-      "current_price": 370.315,
-      "unrealized_pnl_dollars": 0,
-      "unrealized_pnl_percent": 0,
+      "current_price": 373.415,
+      "unrealized_pnl_dollars": 4,
+      "unrealized_pnl_percent": 0.008371,
       "entry_time": "2026-06-11T15:30:40.936Z",
       "trade_id": "5ba49a07-a2e7-4875-88f3-4140e46ba3fa",
       "signal_id": "CLS|BUY|Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
@@ -1876,8 +2264,8 @@
       "status": "OPEN",
       "row_id": "281",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T15:30:40.936Z",
-      "period_high": 370.315,
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 374.96,
       "period_low": 370.315,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
@@ -1887,8 +2275,953 @@
       "stop_loss_price": 362.9087,
       "early_exit_threshold_pct": 0.01,
       "effective_expiry_at": "2026-06-12T15:30:40.936Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "CDNS",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 2.319289,
+      "entry_price": 388.05,
+      "current_price": 382.97,
+      "unrealized_pnl_dollars": -11.78,
+      "unrealized_pnl_percent": -0.013091,
+      "entry_time": "2026-06-11T13:51:22.395Z",
+      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
+      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "239",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 388.115,
+      "period_low": 381.805,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 403.572,
+      "stop_loss_price": 380.289,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T13:51:22.395Z"
+    },
+    {
+      "book_key": "news_plus_ta__hold_24hr",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "hold_24hr",
+      "asset": "CDNS",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 2.319289,
+      "entry_price": 388.05,
+      "current_price": 382.97,
+      "unrealized_pnl_dollars": -11.78,
+      "unrealized_pnl_percent": -0.013091,
+      "entry_time": "2026-06-11T13:51:22.591Z",
+      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
+      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "242",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 388.115,
+      "period_low": 381.805,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 403.572,
+      "stop_loss_price": 380.289,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T13:51:22.591Z"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "CDNS",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 2.319289,
+      "entry_price": 388.05,
+      "current_price": 382.97,
+      "unrealized_pnl_dollars": -11.78,
+      "unrealized_pnl_percent": -0.013091,
+      "entry_time": "2026-06-11T13:51:22.591Z",
+      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
+      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "243",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 388.115,
+      "period_low": 381.805,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 403.572,
+      "stop_loss_price": 380.289,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T13:51:22.591Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "CDNS",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 2.319289,
+      "entry_price": 388.05,
+      "current_price": 382.97,
+      "unrealized_pnl_dollars": -11.78,
+      "unrealized_pnl_percent": -0.013091,
+      "entry_time": "2026-06-11T13:51:22.395Z",
+      "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
+      "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "title": "Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "238",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 388.115,
+      "period_low": 381.805,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 403.572,
+      "stop_loss_price": 380.289,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T13:51:22.395Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "ASYS",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 40.212481,
+      "entry_price": 20.143,
+      "current_price": 20.77,
+      "unrealized_pnl_dollars": 25.21,
+      "unrealized_pnl_percent": 0.031127,
+      "entry_time": "2026-06-11T14:10:57.326Z",
+      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
+      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "246",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 20.77,
+      "period_low": 20.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 20.94872,
+      "stop_loss_price": 19.74014,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "ASYS",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 40.212481,
+      "entry_price": 20.143,
+      "current_price": 20.77,
+      "unrealized_pnl_dollars": 25.21,
+      "unrealized_pnl_percent": 0.031127,
+      "entry_time": "2026-06-11T14:10:57.326Z",
+      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
+      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "247",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 20.77,
+      "period_low": 20.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 20.94872,
+      "stop_loss_price": 19.74014,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "GME",
+      "direction": "LONG",
+      "stake_amount": 656.1,
+      "shares": 29.634146,
+      "entry_price": 22.14,
+      "current_price": 22.105,
+      "unrealized_pnl_dollars": -1.04,
+      "unrealized_pnl_percent": -0.001581,
+      "entry_time": "2026-06-11T14:50:28.862Z",
+      "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
+      "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
+      "title": "GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "254",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 22.18,
+      "period_low": 22.035,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 23.0256,
+      "stop_loss_price": 21.6972,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T14:50:28.862Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "GME",
+      "direction": "LONG",
+      "stake_amount": 656.1,
+      "shares": 29.634146,
+      "entry_price": 22.14,
+      "current_price": 22.105,
+      "unrealized_pnl_dollars": -1.04,
+      "unrealized_pnl_percent": -0.001581,
+      "entry_time": "2026-06-11T14:50:28.862Z",
+      "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
+      "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
+      "title": "GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "255",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 22.18,
+      "period_low": 22.035,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 23.0256,
+      "stop_loss_price": 21.6972,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T14:50:28.862Z"
+    },
+    {
+      "book_key": "news_plus_ta__hold_24hr",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "hold_24hr",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 2.641209,
+      "entry_price": 276.01,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 18.51,
+      "unrealized_pnl_percent": 0.025398,
+      "entry_time": "2026-06-11T15:00:27.983Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "270",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.44,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T15:00:27.983Z"
+    },
+    {
+      "book_key": "news_plus_ta__hold_24hr",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "hold_24hr",
+      "asset": "GME",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 36.585366,
+      "entry_price": 22.14,
+      "current_price": 22.105,
+      "unrealized_pnl_dollars": -1.28,
+      "unrealized_pnl_percent": -0.001581,
+      "entry_time": "2026-06-11T14:50:29.074Z",
+      "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
+      "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
+      "title": "GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "258",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 22.18,
+      "period_low": 22.035,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 23.0256,
+      "stop_loss_price": 21.6972,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T14:50:29.074Z"
+    },
+    {
+      "book_key": "mean_reversion__hold_24hr",
+      "portfolio": "mean_reversion",
+      "exit_rule": "hold_24hr",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 3.260751,
+      "entry_price": 276.01,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 22.86,
+      "unrealized_pnl_percent": 0.025398,
+      "entry_time": "2026-06-11T15:00:27.619Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "262",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.44,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T15:00:27.619Z"
+    },
+    {
+      "book_key": "mean_reversion__sell_eod",
+      "portfolio": "mean_reversion",
+      "exit_rule": "sell_eod",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 3.260751,
+      "entry_price": 276.01,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 22.86,
+      "unrealized_pnl_percent": 0.025398,
+      "entry_time": "2026-06-11T15:00:27.619Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "263",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.44,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T15:00:27.619Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 590.49,
+      "shares": 2.139379,
+      "entry_price": 276.01,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 15,
+      "unrealized_pnl_percent": 0.025398,
+      "entry_time": "2026-06-11T15:00:27.790Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "266",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.44,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T15:00:27.790Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 590.49,
+      "shares": 2.139379,
+      "entry_price": 276.01,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 15,
+      "unrealized_pnl_percent": 0.025398,
+      "entry_time": "2026-06-11T15:00:27.790Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "267",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.44,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T15:00:27.790Z"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 2.641209,
+      "entry_price": 276.01,
+      "current_price": 283.02,
+      "unrealized_pnl_dollars": 18.51,
+      "unrealized_pnl_percent": 0.025398,
+      "entry_time": "2026-06-11T15:00:27.983Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "271",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 284.755,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T15:00:27.983Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "CCJ",
+      "direction": "LONG",
+      "stake_amount": 531.44,
+      "shares": 5.493772,
+      "entry_price": 96.735,
+      "current_price": 96.66,
+      "unrealized_pnl_dollars": -0.41,
+      "unrealized_pnl_percent": -0.000775,
+      "entry_time": "2026-06-11T15:30:40.936Z",
+      "trade_id": "d97ec86c-8f4d-48b6-9064-186cd8678b4e",
+      "signal_id": "CCJ|BUY|Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
+      "title": "Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "276",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 97.04,
+      "period_low": 96.66,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 100.6044,
+      "stop_loss_price": 94.8003,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T15:30:40.936Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "CCJ",
+      "direction": "LONG",
+      "stake_amount": 531.44,
+      "shares": 5.493772,
+      "entry_price": 96.735,
+      "current_price": 96.66,
+      "unrealized_pnl_dollars": -0.41,
+      "unrealized_pnl_percent": -0.000775,
+      "entry_time": "2026-06-11T15:30:40.936Z",
+      "trade_id": "d97ec86c-8f4d-48b6-9064-186cd8678b4e",
+      "signal_id": "CCJ|BUY|Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
+      "title": "Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "277",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 97.04,
+      "period_low": 96.66,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 100.6044,
+      "stop_loss_price": 94.8003,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T15:30:40.936Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "CLS",
+      "direction": "LONG",
+      "stake_amount": 478.3,
+      "shares": 1.291603,
+      "entry_price": 370.315,
+      "current_price": 373.415,
+      "unrealized_pnl_dollars": 4,
+      "unrealized_pnl_percent": 0.008371,
+      "entry_time": "2026-06-11T15:30:40.936Z",
+      "trade_id": "5ba49a07-a2e7-4875-88f3-4140e46ba3fa",
+      "signal_id": "CLS|BUY|Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
+      "title": "Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "280",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "period_high": 374.96,
+      "period_low": 370.315,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 385.1276,
+      "stop_loss_price": 362.9087,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T15:30:40.936Z"
     }
   ],
-  "closed_trades": [],
+  "closed_trades": [
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:45.993Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "228",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T13:40:45.993Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:45.993Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "229",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T13:40:45.993Z"
+    },
+    {
+      "book_key": "news_plus_ta__hold_24hr",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "hold_24hr",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:46.177Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "232",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T13:40:46.177Z"
+    },
+    {
+      "book_key": "mean_reversion__hold_24hr",
+      "portfolio": "mean_reversion",
+      "exit_rule": "hold_24hr",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:45.828Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "224",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T13:40:45.828Z"
+    },
+    {
+      "book_key": "mean_reversion__sell_eod",
+      "portfolio": "mean_reversion",
+      "exit_rule": "sell_eod",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:45.828Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "225",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T13:40:45.828Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "TROX",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 95.169713,
+      "entry_price": 7.66,
+      "entry_time": "2026-06-11T14:10:57.326Z",
+      "exit_price": 7.5068,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "stop_loss",
+      "pnl_dollars": -14.58,
+      "pnl_percent": -0.02,
+      "trade_id": "9bd2ce78-d891-4926-91b4-d79e5f416797",
+      "signal_id": "TROX|BUY|Tronox upgraded at Truist as improving materials pricing offsets some risks",
+      "title": "Tronox upgraded at Truist as improving materials pricing offsets some risks",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "250",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 7.66,
+      "period_low": 7.5068,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 7.9664,
+      "stop_loss_price": 7.5068,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "TROX",
+      "direction": "LONG",
+      "stake_amount": 729,
+      "shares": 95.169713,
+      "entry_price": 7.66,
+      "entry_time": "2026-06-11T14:10:57.326Z",
+      "exit_price": 7.5068,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "stop_loss",
+      "pnl_dollars": -14.58,
+      "pnl_percent": -0.02,
+      "trade_id": "9bd2ce78-d891-4926-91b4-d79e5f416797",
+      "signal_id": "TROX|BUY|Tronox upgraded at Truist as improving materials pricing offsets some risks",
+      "title": "Tronox upgraded at Truist as improving materials pricing offsets some risks",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "251",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 7.66,
+      "period_low": 7.5068,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 7.9664,
+      "stop_loss_price": 7.5068,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
+    },
+    {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:46.177Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "233",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T13:40:46.177Z"
+    },
+    {
+      "book_key": "trend_strict__hold_24hr",
+      "portfolio": "trend_strict",
+      "exit_rule": "hold_24hr",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:46.325Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "236",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T13:40:46.325Z"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "AIFU",
+      "direction": "LONG",
+      "stake_amount": 1000,
+      "shares": 400,
+      "entry_price": 2.5,
+      "entry_time": "2026-06-11T13:40:46.325Z",
+      "exit_price": 2.6,
+      "exit_time": "2026-06-11T16:20:34.094Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 40,
+      "pnl_percent": 0.04,
+      "trade_id": "4f787d12-2e54-4202-9b6c-10c3acaa118d",
+      "signal_id": "AIFU|BUY|AIFU signs MOU to acquire Peakleap Ventures",
+      "title": "AIFU signs MOU to acquire Peakleap Ventures",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "237",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:15:33.646Z",
+      "period_high": 2.795,
+      "period_low": 2.5,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 2.6,
+      "stop_loss_price": 2.45,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T13:40:46.325Z"
+    }
+  ],
   "low_sample_threshold": 20
 }
