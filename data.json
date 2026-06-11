@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-11T16:30:09.450Z",
-  "model": "10-account (5 strategies x 2 exit rules)",
+  "generated_at": "2026-06-11T17:00:11.333Z",
+  "model": "8 active books (4 strategies × 2 exit variants); Strict Confluence pending",
   "totals": {
-    "equity": 80457.54,
+    "equity": 80491.59,
     "starting": 80000,
-    "pnl_dollars": 457.54,
-    "pnl_pct": 0.57,
-    "open_positions": 26,
+    "pnl_dollars": 491.59,
+    "pnl_pct": 0.61,
+    "open_positions": 24,
     "book_count": 8
   },
   "strategies": [
@@ -25,13 +25,13 @@
       "exit_rule": "hold_24hr",
       "book_key": "mean_reversion__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10062.86,
-      "growth_dollars": 62.86,
-      "growth_pct": 0.63,
+      "total_equity": 10051.1,
+      "growth_dollars": 51.1,
+      "growth_pct": 0.51,
       "free_cash": 9140,
-      "deployed_capital": 922.86,
-      "cash_pct": 90.83,
-      "invested_pct": 9.17,
+      "deployed_capital": 911.1,
+      "cash_pct": 90.94,
+      "invested_pct": 9.06,
       "open_count": 1,
       "analytics": {
         "OVERALL": {
@@ -141,13 +141,13 @@
       "exit_rule": "sell_eod",
       "book_key": "mean_reversion__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10062.86,
-      "growth_dollars": 62.86,
-      "growth_pct": 0.63,
+      "total_equity": 10051.1,
+      "growth_dollars": 51.1,
+      "growth_pct": 0.51,
       "free_cash": 9140,
-      "deployed_capital": 922.86,
-      "cash_pct": 90.83,
-      "invested_pct": 9.17,
+      "deployed_capital": 911.1,
+      "cash_pct": 90.94,
+      "invested_pct": 9.06,
       "open_count": 1,
       "analytics": {
         "OVERALL": {
@@ -257,33 +257,47 @@
       "exit_rule": "hold_24hr",
       "book_key": "news_only__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10056.4,
-      "growth_dollars": 56.4,
-      "growth_pct": 0.56,
-      "free_cash": 5628.62,
-      "deployed_capital": 4427.78,
-      "cash_pct": 55.97,
-      "invested_pct": 44.03,
-      "open_count": 7,
+      "total_equity": 10073.82,
+      "growth_dollars": 73.82,
+      "growth_pct": 0.74,
+      "free_cash": 6493.53,
+      "deployed_capital": 3580.29,
+      "cash_pct": 64.46,
+      "invested_pct": 35.54,
+      "open_count": 6,
       "analytics": {
         "OVERALL": {
-          "total_closed": 2,
-          "wins": 1,
+          "total_closed": 4,
+          "wins": 3,
           "losses": 1,
-          "win_rate_pct": 50,
+          "win_rate_pct": 75,
           "avg_win_pct": 4,
           "avg_loss_pct": -2,
           "reward_risk_ratio": 2,
-          "total_pnl_pct": 0.25,
-          "total_pnl_dollars": 25.42
+          "total_pnl_pct": 0.8,
+          "total_pnl_dollars": 80.33
         },
         "BY_ASSET": [
+          {
+            "key": "ADIL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 22.51
+          },
           {
             "key": "AIFU",
             "count": 1,
             "win_rate_pct": 100,
             "total_pnl_pct": 4,
             "total_pnl_dollars": 40
+          },
+          {
+            "key": "ASYS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 32.4
           },
           {
             "key": "TROX",
@@ -296,19 +310,19 @@
         "BY_SOURCE": [
           {
             "key": "Seeking Alpha RSS",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 1,
-            "avg_pnl_usd": 12.71
+            "count": 4,
+            "win_rate_pct": 75,
+            "avg_pnl_pct": 2.5,
+            "avg_pnl_usd": 20.08
           }
         ],
         "BY_CONFIDENCE": [
           {
             "key": "0.60-0.69",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 1,
-            "avg_pnl_usd": 12.71
+            "count": 4,
+            "win_rate_pct": 75,
+            "avg_pnl_pct": 2.5,
+            "avg_pnl_usd": 20.08
           }
         ],
         "BY_EXIT_REASON": [
@@ -321,17 +335,17 @@
           },
           {
             "key": "take_profit",
-            "count": 1,
+            "count": 3,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 31.64
           }
         ],
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 2,
-            "win_rate_pct": 50,
+            "count": 4,
+            "win_rate_pct": 75,
             "avg_win_pct": 4,
             "avg_loss_pct": -2
           }
@@ -339,32 +353,37 @@
         "BY_ALIGNMENT": [
           {
             "key": "aligned",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           },
           {
             "key": "conflict",
-            "count": 1,
-            "win_rate_pct": 0
+            "count": 2,
+            "win_rate_pct": 50
           }
         ],
         "BY_RSI_BAND": [
           {
             "key": "neutral (30-70)",
-            "count": 2,
-            "win_rate_pct": 50
+            "count": 3,
+            "win_rate_pct": 66.67
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_TREND": [
           {
             "key": "above_ma20 (uptrend)",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           },
           {
             "key": "below_ma20 (downtrend)",
-            "count": 1,
-            "win_rate_pct": 0
+            "count": 2,
+            "win_rate_pct": 50
           }
         ],
         "BY_HOUR": [
@@ -377,25 +396,32 @@
           },
           {
             "key": "10:00 ET",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1,
+            "avg_pnl_usd": 8.91
+          },
+          {
+            "key": "12:00 ET",
             "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -2,
-            "avg_pnl_usd": -14.58
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 22.51
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 144.71,
-          "avg_win_minutes": 159.8,
+          "avg_minutes": 113.51,
+          "avg_win_minutes": 108.15,
           "avg_loss_minutes": 129.61,
-          "n": 2
+          "n": 4
         }
       },
       "closed": {
-        "count": 2,
-        "wins": 1,
+        "count": 4,
+        "wins": 3,
         "losses": 1,
-        "win_rate_pct": 50,
-        "total_pnl_dollars": 25.42,
+        "win_rate_pct": 75,
+        "total_pnl_dollars": 80.33,
         "low_sample": true
       }
     },
@@ -404,33 +430,47 @@
       "exit_rule": "sell_eod",
       "book_key": "news_only__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10056.4,
-      "growth_dollars": 56.4,
-      "growth_pct": 0.56,
-      "free_cash": 5628.62,
-      "deployed_capital": 4427.78,
-      "cash_pct": 55.97,
-      "invested_pct": 44.03,
-      "open_count": 7,
+      "total_equity": 10074.23,
+      "growth_dollars": 74.23,
+      "growth_pct": 0.74,
+      "free_cash": 6493.53,
+      "deployed_capital": 3580.7,
+      "cash_pct": 64.46,
+      "invested_pct": 35.54,
+      "open_count": 6,
       "analytics": {
         "OVERALL": {
-          "total_closed": 2,
-          "wins": 1,
+          "total_closed": 4,
+          "wins": 3,
           "losses": 1,
-          "win_rate_pct": 50,
+          "win_rate_pct": 75,
           "avg_win_pct": 4,
           "avg_loss_pct": -2,
           "reward_risk_ratio": 2,
-          "total_pnl_pct": 0.25,
-          "total_pnl_dollars": 25.42
+          "total_pnl_pct": 0.8,
+          "total_pnl_dollars": 80.33
         },
         "BY_ASSET": [
+          {
+            "key": "ADIL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 22.51
+          },
           {
             "key": "AIFU",
             "count": 1,
             "win_rate_pct": 100,
             "total_pnl_pct": 4,
             "total_pnl_dollars": 40
+          },
+          {
+            "key": "ASYS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 32.4
           },
           {
             "key": "TROX",
@@ -443,19 +483,19 @@
         "BY_SOURCE": [
           {
             "key": "Seeking Alpha RSS",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 1,
-            "avg_pnl_usd": 12.71
+            "count": 4,
+            "win_rate_pct": 75,
+            "avg_pnl_pct": 2.5,
+            "avg_pnl_usd": 20.08
           }
         ],
         "BY_CONFIDENCE": [
           {
             "key": "0.60-0.69",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 1,
-            "avg_pnl_usd": 12.71
+            "count": 4,
+            "win_rate_pct": 75,
+            "avg_pnl_pct": 2.5,
+            "avg_pnl_usd": 20.08
           }
         ],
         "BY_EXIT_REASON": [
@@ -468,17 +508,17 @@
           },
           {
             "key": "take_profit",
-            "count": 1,
+            "count": 3,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 31.64
           }
         ],
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 2,
-            "win_rate_pct": 50,
+            "count": 4,
+            "win_rate_pct": 75,
             "avg_win_pct": 4,
             "avg_loss_pct": -2
           }
@@ -486,32 +526,37 @@
         "BY_ALIGNMENT": [
           {
             "key": "aligned",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           },
           {
             "key": "conflict",
-            "count": 1,
-            "win_rate_pct": 0
+            "count": 2,
+            "win_rate_pct": 50
           }
         ],
         "BY_RSI_BAND": [
           {
             "key": "neutral (30-70)",
-            "count": 2,
-            "win_rate_pct": 50
+            "count": 3,
+            "win_rate_pct": 66.67
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_TREND": [
           {
             "key": "above_ma20 (uptrend)",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           },
           {
             "key": "below_ma20 (downtrend)",
-            "count": 1,
-            "win_rate_pct": 0
+            "count": 2,
+            "win_rate_pct": 50
           }
         ],
         "BY_HOUR": [
@@ -524,25 +569,32 @@
           },
           {
             "key": "10:00 ET",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1,
+            "avg_pnl_usd": 8.91
+          },
+          {
+            "key": "12:00 ET",
             "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -2,
-            "avg_pnl_usd": -14.58
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 22.51
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 144.71,
-          "avg_win_minutes": 159.8,
+          "avg_minutes": 113.51,
+          "avg_win_minutes": 108.15,
           "avg_loss_minutes": 129.61,
-          "n": 2
+          "n": 4
         }
       },
       "closed": {
-        "count": 2,
-        "wins": 1,
+        "count": 4,
+        "wins": 3,
         "losses": 1,
-        "win_rate_pct": 50,
-        "total_pnl_dollars": 25.42,
+        "win_rate_pct": 75,
+        "total_pnl_dollars": 80.33,
         "low_sample": true
       }
     },
@@ -551,13 +603,13 @@
       "exit_rule": "hold_24hr",
       "book_key": "news_plus_ta__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10046.65,
-      "growth_dollars": 46.65,
-      "growth_pct": 0.47,
+      "total_equity": 10033,
+      "growth_dollars": 33,
+      "growth_pct": 0.33,
       "free_cash": 6944.9,
-      "deployed_capital": 3101.75,
-      "cash_pct": 69.13,
-      "invested_pct": 30.87,
+      "deployed_capital": 3088.1,
+      "cash_pct": 69.22,
+      "invested_pct": 30.78,
       "open_count": 4,
       "analytics": {
         "OVERALL": {
@@ -667,13 +719,13 @@
       "exit_rule": "sell_eod",
       "book_key": "news_plus_ta__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10046.65,
-      "growth_dollars": 46.65,
-      "growth_pct": 0.47,
+      "total_equity": 10033,
+      "growth_dollars": 33,
+      "growth_pct": 0.33,
       "free_cash": 6944.9,
-      "deployed_capital": 3101.75,
-      "cash_pct": 69.13,
-      "invested_pct": 30.87,
+      "deployed_capital": 3088.1,
+      "cash_pct": 69.22,
+      "invested_pct": 30.78,
       "open_count": 4,
       "analytics": {
         "OVERALL": {
@@ -783,27 +835,34 @@
       "exit_rule": "hold_24hr",
       "book_key": "trend_strict__hold_24hr",
       "starting_balance": 10000,
-      "total_equity": 10062.86,
-      "growth_dollars": 62.86,
-      "growth_pct": 0.63,
-      "free_cash": 9140,
-      "deployed_capital": 922.86,
-      "cash_pct": 90.83,
-      "invested_pct": 9.17,
+      "total_equity": 10087.66,
+      "growth_dollars": 87.66,
+      "growth_pct": 0.88,
+      "free_cash": 9176.56,
+      "deployed_capital": 911.1,
+      "cash_pct": 90.97,
+      "invested_pct": 9.03,
       "open_count": 1,
       "analytics": {
         "OVERALL": {
-          "total_closed": 1,
-          "wins": 1,
+          "total_closed": 2,
+          "wins": 2,
           "losses": 0,
           "win_rate_pct": 100,
           "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0.4,
-          "total_pnl_dollars": 40
+          "total_pnl_pct": 0.77,
+          "total_pnl_dollars": 76.56
         },
         "BY_ASSET": [
+          {
+            "key": "ADIL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 36.56
+          },
           {
             "key": "AIFU",
             "count": 1,
@@ -815,34 +874,34 @@
         "BY_SOURCE": [
           {
             "key": "Seeking Alpha RSS",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 38.28
           }
         ],
         "BY_CONFIDENCE": [
           {
             "key": "0.60-0.69",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 38.28
           }
         ],
         "BY_EXIT_REASON": [
           {
             "key": "take_profit",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 38.28
           }
         ],
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_win_pct": 4,
             "avg_loss_pct": 0
@@ -851,7 +910,7 @@
         "BY_ALIGNMENT": [
           {
             "key": "aligned",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           }
         ],
@@ -860,12 +919,17 @@
             "key": "neutral (30-70)",
             "count": 1,
             "win_rate_pct": 100
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_TREND": [
           {
             "key": "above_ma20 (uptrend)",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           }
         ],
@@ -876,21 +940,28 @@
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
             "avg_pnl_usd": 40
+          },
+          {
+            "key": "12:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 36.56
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 159.8,
-          "avg_win_minutes": 159.8,
+          "avg_minutes": 82.45,
+          "avg_win_minutes": 82.45,
           "avg_loss_minutes": null,
-          "n": 1
+          "n": 2
         }
       },
       "closed": {
-        "count": 1,
-        "wins": 1,
+        "count": 2,
+        "wins": 2,
         "losses": 0,
         "win_rate_pct": 100,
-        "total_pnl_dollars": 40,
+        "total_pnl_dollars": 76.56,
         "low_sample": true
       }
     },
@@ -899,27 +970,34 @@
       "exit_rule": "sell_eod",
       "book_key": "trend_strict__sell_eod",
       "starting_balance": 10000,
-      "total_equity": 10062.86,
-      "growth_dollars": 62.86,
-      "growth_pct": 0.63,
-      "free_cash": 9140,
-      "deployed_capital": 922.86,
-      "cash_pct": 90.83,
-      "invested_pct": 9.17,
+      "total_equity": 10087.66,
+      "growth_dollars": 87.66,
+      "growth_pct": 0.88,
+      "free_cash": 9176.56,
+      "deployed_capital": 911.1,
+      "cash_pct": 90.97,
+      "invested_pct": 9.03,
       "open_count": 1,
       "analytics": {
         "OVERALL": {
-          "total_closed": 1,
-          "wins": 1,
+          "total_closed": 2,
+          "wins": 2,
           "losses": 0,
           "win_rate_pct": 100,
           "avg_win_pct": 4,
           "avg_loss_pct": 0,
           "reward_risk_ratio": 0,
-          "total_pnl_pct": 0.4,
-          "total_pnl_dollars": 40
+          "total_pnl_pct": 0.77,
+          "total_pnl_dollars": 76.56
         },
         "BY_ASSET": [
+          {
+            "key": "ADIL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4,
+            "total_pnl_dollars": 36.56
+          },
           {
             "key": "AIFU",
             "count": 1,
@@ -931,34 +1009,34 @@
         "BY_SOURCE": [
           {
             "key": "Seeking Alpha RSS",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 38.28
           }
         ],
         "BY_CONFIDENCE": [
           {
             "key": "0.60-0.69",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 38.28
           }
         ],
         "BY_EXIT_REASON": [
           {
             "key": "take_profit",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
-            "avg_pnl_usd": 40
+            "avg_pnl_usd": 38.28
           }
         ],
         "BY_DIRECTION": [
           {
             "key": "BUY",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100,
             "avg_win_pct": 4,
             "avg_loss_pct": 0
@@ -967,7 +1045,7 @@
         "BY_ALIGNMENT": [
           {
             "key": "aligned",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           }
         ],
@@ -976,12 +1054,17 @@
             "key": "neutral (30-70)",
             "count": 1,
             "win_rate_pct": 100
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 1,
+            "win_rate_pct": 100
           }
         ],
         "BY_TREND": [
           {
             "key": "above_ma20 (uptrend)",
-            "count": 1,
+            "count": 2,
             "win_rate_pct": 100
           }
         ],
@@ -992,21 +1075,28 @@
             "win_rate_pct": 100,
             "avg_pnl_pct": 4,
             "avg_pnl_usd": 40
+          },
+          {
+            "key": "12:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4,
+            "avg_pnl_usd": 36.56
           }
         ],
         "AVG_HOLD_TIME": {
-          "avg_minutes": 159.8,
-          "avg_win_minutes": 159.8,
+          "avg_minutes": 82.45,
+          "avg_win_minutes": 82.45,
           "avg_loss_minutes": null,
-          "n": 1
+          "n": 2
         }
       },
       "closed": {
-        "count": 1,
-        "wins": 1,
+        "count": 2,
+        "wins": 2,
         "losses": 0,
         "win_rate_pct": 100,
-        "total_pnl_dollars": 40,
+        "total_pnl_dollars": 76.56,
         "low_sample": true
       }
     }
@@ -1018,33 +1108,47 @@
         "exit_rule": "hold_24hr",
         "book_key": "news_only__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10056.4,
-        "growth_dollars": 56.4,
-        "growth_pct": 0.56,
-        "free_cash": 5628.62,
-        "deployed_capital": 4427.78,
-        "cash_pct": 55.97,
-        "invested_pct": 44.03,
-        "open_count": 7,
+        "total_equity": 10073.82,
+        "growth_dollars": 73.82,
+        "growth_pct": 0.74,
+        "free_cash": 6493.53,
+        "deployed_capital": 3580.29,
+        "cash_pct": 64.46,
+        "invested_pct": 35.54,
+        "open_count": 6,
         "analytics": {
           "OVERALL": {
-            "total_closed": 2,
-            "wins": 1,
+            "total_closed": 4,
+            "wins": 3,
             "losses": 1,
-            "win_rate_pct": 50,
+            "win_rate_pct": 75,
             "avg_win_pct": 4,
             "avg_loss_pct": -2,
             "reward_risk_ratio": 2,
-            "total_pnl_pct": 0.25,
-            "total_pnl_dollars": 25.42
+            "total_pnl_pct": 0.8,
+            "total_pnl_dollars": 80.33
           },
           "BY_ASSET": [
+            {
+              "key": "ADIL",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 22.51
+            },
             {
               "key": "AIFU",
               "count": 1,
               "win_rate_pct": 100,
               "total_pnl_pct": 4,
               "total_pnl_dollars": 40
+            },
+            {
+              "key": "ASYS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 32.4
             },
             {
               "key": "TROX",
@@ -1057,19 +1161,19 @@
           "BY_SOURCE": [
             {
               "key": "Seeking Alpha RSS",
-              "count": 2,
-              "win_rate_pct": 50,
-              "avg_pnl_pct": 1,
-              "avg_pnl_usd": 12.71
+              "count": 4,
+              "win_rate_pct": 75,
+              "avg_pnl_pct": 2.5,
+              "avg_pnl_usd": 20.08
             }
           ],
           "BY_CONFIDENCE": [
             {
               "key": "0.60-0.69",
-              "count": 2,
-              "win_rate_pct": 50,
-              "avg_pnl_pct": 1,
-              "avg_pnl_usd": 12.71
+              "count": 4,
+              "win_rate_pct": 75,
+              "avg_pnl_pct": 2.5,
+              "avg_pnl_usd": 20.08
             }
           ],
           "BY_EXIT_REASON": [
@@ -1082,17 +1186,17 @@
             },
             {
               "key": "take_profit",
-              "count": 1,
+              "count": 3,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 31.64
             }
           ],
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 2,
-              "win_rate_pct": 50,
+              "count": 4,
+              "win_rate_pct": 75,
               "avg_win_pct": 4,
               "avg_loss_pct": -2
             }
@@ -1100,32 +1204,37 @@
           "BY_ALIGNMENT": [
             {
               "key": "aligned",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             },
             {
               "key": "conflict",
-              "count": 1,
-              "win_rate_pct": 0
+              "count": 2,
+              "win_rate_pct": 50
             }
           ],
           "BY_RSI_BAND": [
             {
               "key": "neutral (30-70)",
-              "count": 2,
-              "win_rate_pct": 50
+              "count": 3,
+              "win_rate_pct": 66.67
+            },
+            {
+              "key": "overbought (>70)",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_TREND": [
             {
               "key": "above_ma20 (uptrend)",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             },
             {
               "key": "below_ma20 (downtrend)",
-              "count": 1,
-              "win_rate_pct": 0
+              "count": 2,
+              "win_rate_pct": 50
             }
           ],
           "BY_HOUR": [
@@ -1138,25 +1247,32 @@
             },
             {
               "key": "10:00 ET",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 1,
+              "avg_pnl_usd": 8.91
+            },
+            {
+              "key": "12:00 ET",
               "count": 1,
-              "win_rate_pct": 0,
-              "avg_pnl_pct": -2,
-              "avg_pnl_usd": -14.58
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 22.51
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 144.71,
-            "avg_win_minutes": 159.8,
+            "avg_minutes": 113.51,
+            "avg_win_minutes": 108.15,
             "avg_loss_minutes": 129.61,
-            "n": 2
+            "n": 4
           }
         },
         "closed": {
-          "count": 2,
-          "wins": 1,
+          "count": 4,
+          "wins": 3,
           "losses": 1,
-          "win_rate_pct": 50,
-          "total_pnl_dollars": 25.42,
+          "win_rate_pct": 75,
+          "total_pnl_dollars": 80.33,
           "low_sample": true
         }
       },
@@ -1165,33 +1281,47 @@
         "exit_rule": "sell_eod",
         "book_key": "news_only__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10056.4,
-        "growth_dollars": 56.4,
-        "growth_pct": 0.56,
-        "free_cash": 5628.62,
-        "deployed_capital": 4427.78,
-        "cash_pct": 55.97,
-        "invested_pct": 44.03,
-        "open_count": 7,
+        "total_equity": 10074.23,
+        "growth_dollars": 74.23,
+        "growth_pct": 0.74,
+        "free_cash": 6493.53,
+        "deployed_capital": 3580.7,
+        "cash_pct": 64.46,
+        "invested_pct": 35.54,
+        "open_count": 6,
         "analytics": {
           "OVERALL": {
-            "total_closed": 2,
-            "wins": 1,
+            "total_closed": 4,
+            "wins": 3,
             "losses": 1,
-            "win_rate_pct": 50,
+            "win_rate_pct": 75,
             "avg_win_pct": 4,
             "avg_loss_pct": -2,
             "reward_risk_ratio": 2,
-            "total_pnl_pct": 0.25,
-            "total_pnl_dollars": 25.42
+            "total_pnl_pct": 0.8,
+            "total_pnl_dollars": 80.33
           },
           "BY_ASSET": [
+            {
+              "key": "ADIL",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 22.51
+            },
             {
               "key": "AIFU",
               "count": 1,
               "win_rate_pct": 100,
               "total_pnl_pct": 4,
               "total_pnl_dollars": 40
+            },
+            {
+              "key": "ASYS",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 32.4
             },
             {
               "key": "TROX",
@@ -1204,19 +1334,19 @@
           "BY_SOURCE": [
             {
               "key": "Seeking Alpha RSS",
-              "count": 2,
-              "win_rate_pct": 50,
-              "avg_pnl_pct": 1,
-              "avg_pnl_usd": 12.71
+              "count": 4,
+              "win_rate_pct": 75,
+              "avg_pnl_pct": 2.5,
+              "avg_pnl_usd": 20.08
             }
           ],
           "BY_CONFIDENCE": [
             {
               "key": "0.60-0.69",
-              "count": 2,
-              "win_rate_pct": 50,
-              "avg_pnl_pct": 1,
-              "avg_pnl_usd": 12.71
+              "count": 4,
+              "win_rate_pct": 75,
+              "avg_pnl_pct": 2.5,
+              "avg_pnl_usd": 20.08
             }
           ],
           "BY_EXIT_REASON": [
@@ -1229,17 +1359,17 @@
             },
             {
               "key": "take_profit",
-              "count": 1,
+              "count": 3,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 31.64
             }
           ],
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 2,
-              "win_rate_pct": 50,
+              "count": 4,
+              "win_rate_pct": 75,
               "avg_win_pct": 4,
               "avg_loss_pct": -2
             }
@@ -1247,32 +1377,37 @@
           "BY_ALIGNMENT": [
             {
               "key": "aligned",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             },
             {
               "key": "conflict",
-              "count": 1,
-              "win_rate_pct": 0
+              "count": 2,
+              "win_rate_pct": 50
             }
           ],
           "BY_RSI_BAND": [
             {
               "key": "neutral (30-70)",
-              "count": 2,
-              "win_rate_pct": 50
+              "count": 3,
+              "win_rate_pct": 66.67
+            },
+            {
+              "key": "overbought (>70)",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_TREND": [
             {
               "key": "above_ma20 (uptrend)",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             },
             {
               "key": "below_ma20 (downtrend)",
-              "count": 1,
-              "win_rate_pct": 0
+              "count": 2,
+              "win_rate_pct": 50
             }
           ],
           "BY_HOUR": [
@@ -1285,25 +1420,32 @@
             },
             {
               "key": "10:00 ET",
+              "count": 2,
+              "win_rate_pct": 50,
+              "avg_pnl_pct": 1,
+              "avg_pnl_usd": 8.91
+            },
+            {
+              "key": "12:00 ET",
               "count": 1,
-              "win_rate_pct": 0,
-              "avg_pnl_pct": -2,
-              "avg_pnl_usd": -14.58
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 22.51
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 144.71,
-            "avg_win_minutes": 159.8,
+            "avg_minutes": 113.51,
+            "avg_win_minutes": 108.15,
             "avg_loss_minutes": 129.61,
-            "n": 2
+            "n": 4
           }
         },
         "closed": {
-          "count": 2,
-          "wins": 1,
+          "count": 4,
+          "wins": 3,
           "losses": 1,
-          "win_rate_pct": 50,
-          "total_pnl_dollars": 25.42,
+          "win_rate_pct": 75,
+          "total_pnl_dollars": 80.33,
           "low_sample": true
         }
       }
@@ -1314,13 +1456,13 @@
         "exit_rule": "hold_24hr",
         "book_key": "news_plus_ta__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10046.65,
-        "growth_dollars": 46.65,
-        "growth_pct": 0.47,
+        "total_equity": 10033,
+        "growth_dollars": 33,
+        "growth_pct": 0.33,
         "free_cash": 6944.9,
-        "deployed_capital": 3101.75,
-        "cash_pct": 69.13,
-        "invested_pct": 30.87,
+        "deployed_capital": 3088.1,
+        "cash_pct": 69.22,
+        "invested_pct": 30.78,
         "open_count": 4,
         "analytics": {
           "OVERALL": {
@@ -1430,13 +1572,13 @@
         "exit_rule": "sell_eod",
         "book_key": "news_plus_ta__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10046.65,
-        "growth_dollars": 46.65,
-        "growth_pct": 0.47,
+        "total_equity": 10033,
+        "growth_dollars": 33,
+        "growth_pct": 0.33,
         "free_cash": 6944.9,
-        "deployed_capital": 3101.75,
-        "cash_pct": 69.13,
-        "invested_pct": 30.87,
+        "deployed_capital": 3088.1,
+        "cash_pct": 69.22,
+        "invested_pct": 30.78,
         "open_count": 4,
         "analytics": {
           "OVERALL": {
@@ -1548,13 +1690,13 @@
         "exit_rule": "hold_24hr",
         "book_key": "mean_reversion__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10062.86,
-        "growth_dollars": 62.86,
-        "growth_pct": 0.63,
+        "total_equity": 10051.1,
+        "growth_dollars": 51.1,
+        "growth_pct": 0.51,
         "free_cash": 9140,
-        "deployed_capital": 922.86,
-        "cash_pct": 90.83,
-        "invested_pct": 9.17,
+        "deployed_capital": 911.1,
+        "cash_pct": 90.94,
+        "invested_pct": 9.06,
         "open_count": 1,
         "analytics": {
           "OVERALL": {
@@ -1664,13 +1806,13 @@
         "exit_rule": "sell_eod",
         "book_key": "mean_reversion__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10062.86,
-        "growth_dollars": 62.86,
-        "growth_pct": 0.63,
+        "total_equity": 10051.1,
+        "growth_dollars": 51.1,
+        "growth_pct": 0.51,
         "free_cash": 9140,
-        "deployed_capital": 922.86,
-        "cash_pct": 90.83,
-        "invested_pct": 9.17,
+        "deployed_capital": 911.1,
+        "cash_pct": 90.94,
+        "invested_pct": 9.06,
         "open_count": 1,
         "analytics": {
           "OVERALL": {
@@ -1782,27 +1924,34 @@
         "exit_rule": "hold_24hr",
         "book_key": "trend_strict__hold_24hr",
         "starting_balance": 10000,
-        "total_equity": 10062.86,
-        "growth_dollars": 62.86,
-        "growth_pct": 0.63,
-        "free_cash": 9140,
-        "deployed_capital": 922.86,
-        "cash_pct": 90.83,
-        "invested_pct": 9.17,
+        "total_equity": 10087.66,
+        "growth_dollars": 87.66,
+        "growth_pct": 0.88,
+        "free_cash": 9176.56,
+        "deployed_capital": 911.1,
+        "cash_pct": 90.97,
+        "invested_pct": 9.03,
         "open_count": 1,
         "analytics": {
           "OVERALL": {
-            "total_closed": 1,
-            "wins": 1,
+            "total_closed": 2,
+            "wins": 2,
             "losses": 0,
             "win_rate_pct": 100,
             "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0.4,
-            "total_pnl_dollars": 40
+            "total_pnl_pct": 0.77,
+            "total_pnl_dollars": 76.56
           },
           "BY_ASSET": [
+            {
+              "key": "ADIL",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 36.56
+            },
             {
               "key": "AIFU",
               "count": 1,
@@ -1814,34 +1963,34 @@
           "BY_SOURCE": [
             {
               "key": "Seeking Alpha RSS",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 38.28
             }
           ],
           "BY_CONFIDENCE": [
             {
               "key": "0.60-0.69",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 38.28
             }
           ],
           "BY_EXIT_REASON": [
             {
               "key": "take_profit",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 38.28
             }
           ],
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_win_pct": 4,
               "avg_loss_pct": 0
@@ -1850,7 +1999,7 @@
           "BY_ALIGNMENT": [
             {
               "key": "aligned",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             }
           ],
@@ -1859,12 +2008,17 @@
               "key": "neutral (30-70)",
               "count": 1,
               "win_rate_pct": 100
+            },
+            {
+              "key": "overbought (>70)",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_TREND": [
             {
               "key": "above_ma20 (uptrend)",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             }
           ],
@@ -1875,21 +2029,28 @@
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
               "avg_pnl_usd": 40
+            },
+            {
+              "key": "12:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 36.56
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 159.8,
-            "avg_win_minutes": 159.8,
+            "avg_minutes": 82.45,
+            "avg_win_minutes": 82.45,
             "avg_loss_minutes": null,
-            "n": 1
+            "n": 2
           }
         },
         "closed": {
-          "count": 1,
-          "wins": 1,
+          "count": 2,
+          "wins": 2,
           "losses": 0,
           "win_rate_pct": 100,
-          "total_pnl_dollars": 40,
+          "total_pnl_dollars": 76.56,
           "low_sample": true
         }
       },
@@ -1898,27 +2059,34 @@
         "exit_rule": "sell_eod",
         "book_key": "trend_strict__sell_eod",
         "starting_balance": 10000,
-        "total_equity": 10062.86,
-        "growth_dollars": 62.86,
-        "growth_pct": 0.63,
-        "free_cash": 9140,
-        "deployed_capital": 922.86,
-        "cash_pct": 90.83,
-        "invested_pct": 9.17,
+        "total_equity": 10087.66,
+        "growth_dollars": 87.66,
+        "growth_pct": 0.88,
+        "free_cash": 9176.56,
+        "deployed_capital": 911.1,
+        "cash_pct": 90.97,
+        "invested_pct": 9.03,
         "open_count": 1,
         "analytics": {
           "OVERALL": {
-            "total_closed": 1,
-            "wins": 1,
+            "total_closed": 2,
+            "wins": 2,
             "losses": 0,
             "win_rate_pct": 100,
             "avg_win_pct": 4,
             "avg_loss_pct": 0,
             "reward_risk_ratio": 0,
-            "total_pnl_pct": 0.4,
-            "total_pnl_dollars": 40
+            "total_pnl_pct": 0.77,
+            "total_pnl_dollars": 76.56
           },
           "BY_ASSET": [
+            {
+              "key": "ADIL",
+              "count": 1,
+              "win_rate_pct": 100,
+              "total_pnl_pct": 4,
+              "total_pnl_dollars": 36.56
+            },
             {
               "key": "AIFU",
               "count": 1,
@@ -1930,34 +2098,34 @@
           "BY_SOURCE": [
             {
               "key": "Seeking Alpha RSS",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 38.28
             }
           ],
           "BY_CONFIDENCE": [
             {
               "key": "0.60-0.69",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 38.28
             }
           ],
           "BY_EXIT_REASON": [
             {
               "key": "take_profit",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
-              "avg_pnl_usd": 40
+              "avg_pnl_usd": 38.28
             }
           ],
           "BY_DIRECTION": [
             {
               "key": "BUY",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100,
               "avg_win_pct": 4,
               "avg_loss_pct": 0
@@ -1966,7 +2134,7 @@
           "BY_ALIGNMENT": [
             {
               "key": "aligned",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             }
           ],
@@ -1975,12 +2143,17 @@
               "key": "neutral (30-70)",
               "count": 1,
               "win_rate_pct": 100
+            },
+            {
+              "key": "overbought (>70)",
+              "count": 1,
+              "win_rate_pct": 100
             }
           ],
           "BY_TREND": [
             {
               "key": "above_ma20 (uptrend)",
-              "count": 1,
+              "count": 2,
               "win_rate_pct": 100
             }
           ],
@@ -1991,21 +2164,28 @@
               "win_rate_pct": 100,
               "avg_pnl_pct": 4,
               "avg_pnl_usd": 40
+            },
+            {
+              "key": "12:00 ET",
+              "count": 1,
+              "win_rate_pct": 100,
+              "avg_pnl_pct": 4,
+              "avg_pnl_usd": 36.56
             }
           ],
           "AVG_HOLD_TIME": {
-            "avg_minutes": 159.8,
-            "avg_win_minutes": 159.8,
+            "avg_minutes": 82.45,
+            "avg_win_minutes": 82.45,
             "avg_loss_minutes": null,
-            "n": 1
+            "n": 2
           }
         },
         "closed": {
-          "count": 1,
-          "wins": 1,
+          "count": 2,
+          "wins": 2,
           "losses": 0,
           "win_rate_pct": 100,
-          "total_pnl_dollars": 40,
+          "total_pnl_dollars": 76.56,
           "low_sample": true
         }
       }
@@ -2021,9 +2201,9 @@
       "stake_amount": 656.1,
       "shares": 6.926,
       "entry_price": 94.73,
-      "current_price": 94.557,
-      "unrealized_pnl_dollars": 1.2,
-      "unrealized_pnl_percent": 0.001826,
+      "current_price": 94.405,
+      "unrealized_pnl_dollars": 2.25,
+      "unrealized_pnl_percent": 0.003431,
       "entry_time": "2026-06-11T16:11:14.839Z",
       "trade_id": "56206caa-6af2-4d19-b064-f323536a1d46",
       "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
@@ -2033,9 +2213,9 @@
       "status": "OPEN",
       "row_id": "288",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 94.886,
-      "period_low": 94.557,
+      "current_price_at": "2026-06-11T16:55:31.619Z",
+      "period_high": 95.12,
+      "period_low": 94.405,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -2054,9 +2234,9 @@
       "stake_amount": 656.1,
       "shares": 6.926,
       "entry_price": 94.73,
-      "current_price": 94.557,
-      "unrealized_pnl_dollars": 1.2,
-      "unrealized_pnl_percent": 0.001826,
+      "current_price": 94.405,
+      "unrealized_pnl_dollars": 2.25,
+      "unrealized_pnl_percent": 0.003431,
       "entry_time": "2026-06-11T16:11:14.839Z",
       "trade_id": "56206caa-6af2-4d19-b064-f323536a1d46",
       "signal_id": "FUTU|SELL|FUTU Investors Have Opportunity to Join Futu Holdings Limited Fraud Investigation with the Schall Law Firm",
@@ -2066,9 +2246,9 @@
       "status": "OPEN",
       "row_id": "289",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 94.886,
-      "period_low": 94.557,
+      "current_price_at": "2026-06-11T16:55:31.619Z",
+      "period_high": 95.12,
+      "period_low": 94.405,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -2099,7 +2279,7 @@
       "status": "OPEN",
       "row_id": "294",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 44.05,
       "period_low": 44.05,
       "rule_version": "v2_20260609_stop2pct",
@@ -2132,7 +2312,7 @@
       "status": "OPEN",
       "row_id": "295",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 44.05,
       "period_low": 44.05,
       "rule_version": "v2_20260609_stop2pct",
@@ -2153,9 +2333,9 @@
       "stake_amount": 900,
       "shares": 3.260751,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 22.86,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 11.1,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:28.129Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2165,7 +2345,7 @@
       "status": "OPEN",
       "row_id": "274",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.755,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2178,39 +2358,6 @@
       "effective_expiry_at": "2026-06-12T15:00:28.129Z"
     },
     {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "asset": "IDCC",
-      "direction": "LONG",
-      "stake_amount": 900,
-      "shares": 3.260751,
-      "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 22.86,
-      "unrealized_pnl_percent": 0.025398,
-      "entry_time": "2026-06-11T15:00:28.129Z",
-      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
-      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
-      "source": "Yahoo Finance RSS",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "275",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 284.755,
-      "period_low": 276.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 287.0504,
-      "stop_loss_price": 270.4898,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T15:00:28.129Z"
-    },
-    {
       "book_key": "news_plus_ta__sell_eod",
       "portfolio": "news_plus_ta",
       "exit_rule": "sell_eod",
@@ -2219,9 +2366,9 @@
       "stake_amount": 810,
       "shares": 36.585366,
       "entry_price": 22.14,
-      "current_price": 22.105,
-      "unrealized_pnl_dollars": -1.28,
-      "unrealized_pnl_percent": -0.001581,
+      "current_price": 22.075,
+      "unrealized_pnl_dollars": -2.38,
+      "unrealized_pnl_percent": -0.002936,
       "entry_time": "2026-06-11T14:50:29.074Z",
       "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
       "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
@@ -2231,7 +2378,7 @@
       "status": "OPEN",
       "row_id": "259",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 22.18,
       "period_low": 22.035,
       "rule_version": "v2_20260609_stop2pct",
@@ -2252,9 +2399,9 @@
       "stake_amount": 478.3,
       "shares": 1.291603,
       "entry_price": 370.315,
-      "current_price": 373.415,
-      "unrealized_pnl_dollars": 4,
-      "unrealized_pnl_percent": 0.008371,
+      "current_price": 371.45,
+      "unrealized_pnl_dollars": 1.47,
+      "unrealized_pnl_percent": 0.003065,
       "entry_time": "2026-06-11T15:30:40.936Z",
       "trade_id": "5ba49a07-a2e7-4875-88f3-4140e46ba3fa",
       "signal_id": "CLS|BUY|Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
@@ -2264,7 +2411,7 @@
       "status": "OPEN",
       "row_id": "281",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 374.96,
       "period_low": 370.315,
       "rule_version": "v2_20260609_stop2pct",
@@ -2277,6 +2424,39 @@
       "effective_expiry_at": "2026-06-12T15:30:40.936Z"
     },
     {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "IDCC",
+      "direction": "LONG",
+      "stake_amount": 900,
+      "shares": 3.260751,
+      "entry_price": 276.01,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 11.1,
+      "unrealized_pnl_percent": 0.012337,
+      "entry_time": "2026-06-11T15:00:28.129Z",
+      "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
+      "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "title": "InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
+      "source": "Yahoo Finance RSS",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "275",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
+      "period_high": 284.755,
+      "period_low": 276.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 287.0504,
+      "stop_loss_price": 270.4898,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T15:00:28.129Z"
+    },
+    {
       "book_key": "news_only__sell_eod",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -2285,9 +2465,9 @@
       "stake_amount": 900,
       "shares": 2.319289,
       "entry_price": 388.05,
-      "current_price": 382.97,
-      "unrealized_pnl_dollars": -11.78,
-      "unrealized_pnl_percent": -0.013091,
+      "current_price": 381.21,
+      "unrealized_pnl_dollars": -15.86,
+      "unrealized_pnl_percent": -0.017627,
       "entry_time": "2026-06-11T13:51:22.395Z",
       "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
       "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
@@ -2297,9 +2477,9 @@
       "status": "OPEN",
       "row_id": "239",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 388.115,
-      "period_low": 381.805,
+      "period_low": 381.21,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -2318,9 +2498,9 @@
       "stake_amount": 900,
       "shares": 2.319289,
       "entry_price": 388.05,
-      "current_price": 382.97,
-      "unrealized_pnl_dollars": -11.78,
-      "unrealized_pnl_percent": -0.013091,
+      "current_price": 381.21,
+      "unrealized_pnl_dollars": -15.86,
+      "unrealized_pnl_percent": -0.017627,
       "entry_time": "2026-06-11T13:51:22.591Z",
       "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
       "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
@@ -2330,9 +2510,9 @@
       "status": "OPEN",
       "row_id": "242",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 388.115,
-      "period_low": 381.805,
+      "period_low": 381.21,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -2351,9 +2531,9 @@
       "stake_amount": 900,
       "shares": 2.319289,
       "entry_price": 388.05,
-      "current_price": 382.97,
-      "unrealized_pnl_dollars": -11.78,
-      "unrealized_pnl_percent": -0.013091,
+      "current_price": 381.21,
+      "unrealized_pnl_dollars": -15.86,
+      "unrealized_pnl_percent": -0.017627,
       "entry_time": "2026-06-11T13:51:22.591Z",
       "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
       "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
@@ -2363,9 +2543,9 @@
       "status": "OPEN",
       "row_id": "243",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 388.115,
-      "period_low": 381.805,
+      "period_low": 381.21,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -2384,9 +2564,9 @@
       "stake_amount": 900,
       "shares": 2.319289,
       "entry_price": 388.05,
-      "current_price": 382.97,
-      "unrealized_pnl_dollars": -11.78,
-      "unrealized_pnl_percent": -0.013091,
+      "current_price": 381.21,
+      "unrealized_pnl_dollars": -15.86,
+      "unrealized_pnl_percent": -0.017627,
       "entry_time": "2026-06-11T13:51:22.395Z",
       "trade_id": "dffcbc23-8866-44dd-abf3-be19e033e7bb",
       "signal_id": "CDNS|BUY|Cadence (CDNS) Expands Deal With Intel Foundry To Benefit From Agentic AI Boom",
@@ -2396,9 +2576,9 @@
       "status": "OPEN",
       "row_id": "238",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 388.115,
-      "period_low": 381.805,
+      "period_low": 381.21,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
       "take_profit_pct": 0.04,
@@ -2412,80 +2592,14 @@
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
-      "asset": "ASYS",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 40.212481,
-      "entry_price": 20.143,
-      "current_price": 20.77,
-      "unrealized_pnl_dollars": 25.21,
-      "unrealized_pnl_percent": 0.031127,
-      "entry_time": "2026-06-11T14:10:57.326Z",
-      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
-      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "246",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 20.77,
-      "period_low": 20.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 20.94872,
-      "stop_loss_price": 19.74014,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
-    },
-    {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "asset": "ASYS",
-      "direction": "LONG",
-      "stake_amount": 810,
-      "shares": 40.212481,
-      "entry_price": 20.143,
-      "current_price": 20.77,
-      "unrealized_pnl_dollars": 25.21,
-      "unrealized_pnl_percent": 0.031127,
-      "entry_time": "2026-06-11T14:10:57.326Z",
-      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
-      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
-      "source": "Seeking Alpha RSS",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "247",
-      "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 20.77,
-      "period_low": 20.01,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.04,
-      "stop_loss_pct": 0.02,
-      "take_profit_price": 20.94872,
-      "stop_loss_price": 19.74014,
-      "early_exit_threshold_pct": 0.01,
-      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
       "asset": "GME",
       "direction": "LONG",
       "stake_amount": 656.1,
       "shares": 29.634146,
       "entry_price": 22.14,
-      "current_price": 22.105,
-      "unrealized_pnl_dollars": -1.04,
-      "unrealized_pnl_percent": -0.001581,
+      "current_price": 22.075,
+      "unrealized_pnl_dollars": -1.93,
+      "unrealized_pnl_percent": -0.002936,
       "entry_time": "2026-06-11T14:50:28.862Z",
       "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
       "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
@@ -2495,7 +2609,7 @@
       "status": "OPEN",
       "row_id": "254",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 22.18,
       "period_low": 22.035,
       "rule_version": "v2_20260609_stop2pct",
@@ -2516,9 +2630,9 @@
       "stake_amount": 656.1,
       "shares": 29.634146,
       "entry_price": 22.14,
-      "current_price": 22.105,
-      "unrealized_pnl_dollars": -1.04,
-      "unrealized_pnl_percent": -0.001581,
+      "current_price": 22.075,
+      "unrealized_pnl_dollars": -1.93,
+      "unrealized_pnl_percent": -0.002936,
       "entry_time": "2026-06-11T14:50:28.862Z",
       "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
       "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
@@ -2528,7 +2642,7 @@
       "status": "OPEN",
       "row_id": "255",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 22.18,
       "period_low": 22.035,
       "rule_version": "v2_20260609_stop2pct",
@@ -2549,9 +2663,9 @@
       "stake_amount": 729,
       "shares": 2.641209,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 18.51,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 8.99,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:27.983Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2561,7 +2675,7 @@
       "status": "OPEN",
       "row_id": "270",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.44,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2582,9 +2696,9 @@
       "stake_amount": 810,
       "shares": 36.585366,
       "entry_price": 22.14,
-      "current_price": 22.105,
-      "unrealized_pnl_dollars": -1.28,
-      "unrealized_pnl_percent": -0.001581,
+      "current_price": 22.075,
+      "unrealized_pnl_dollars": -2.38,
+      "unrealized_pnl_percent": -0.002936,
       "entry_time": "2026-06-11T14:50:29.074Z",
       "trade_id": "5142a66d-fa77-47d5-acce-6e545432cdda",
       "signal_id": "GME|BUY|GameStop Surges on Q1 Beat, $2B Buyback, $39 Target",
@@ -2594,7 +2708,7 @@
       "status": "OPEN",
       "row_id": "258",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 22.18,
       "period_low": 22.035,
       "rule_version": "v2_20260609_stop2pct",
@@ -2615,9 +2729,9 @@
       "stake_amount": 900,
       "shares": 3.260751,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 22.86,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 11.1,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:27.619Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2627,7 +2741,7 @@
       "status": "OPEN",
       "row_id": "262",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.44,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2648,9 +2762,9 @@
       "stake_amount": 900,
       "shares": 3.260751,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 22.86,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 11.1,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:27.619Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2660,7 +2774,7 @@
       "status": "OPEN",
       "row_id": "263",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.44,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2681,9 +2795,9 @@
       "stake_amount": 590.49,
       "shares": 2.139379,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 15,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 7.28,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:27.790Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2693,7 +2807,7 @@
       "status": "OPEN",
       "row_id": "266",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.44,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2714,9 +2828,9 @@
       "stake_amount": 590.49,
       "shares": 2.139379,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 15,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 7.28,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:27.790Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2726,7 +2840,7 @@
       "status": "OPEN",
       "row_id": "267",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.44,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2747,9 +2861,9 @@
       "stake_amount": 729,
       "shares": 2.641209,
       "entry_price": 276.01,
-      "current_price": 283.02,
-      "unrealized_pnl_dollars": 18.51,
-      "unrealized_pnl_percent": 0.025398,
+      "current_price": 279.415,
+      "unrealized_pnl_dollars": 8.99,
+      "unrealized_pnl_percent": 0.012337,
       "entry_time": "2026-06-11T15:00:27.983Z",
       "trade_id": "9f41bfcd-fb2e-4ead-b331-af4f7a5a92bf",
       "signal_id": "IDCC|BUY|InterDigital Signs Amazon License Agreement Covering Video Services and Devices, Expands Streaming Royalty Opportunity (IDCC)",
@@ -2759,7 +2873,7 @@
       "status": "OPEN",
       "row_id": "271",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 284.755,
       "period_low": 276.01,
       "rule_version": "v2_20260609_stop2pct",
@@ -2780,9 +2894,9 @@
       "stake_amount": 531.44,
       "shares": 5.493772,
       "entry_price": 96.735,
-      "current_price": 96.66,
-      "unrealized_pnl_dollars": -0.41,
-      "unrealized_pnl_percent": -0.000775,
+      "current_price": 97.27,
+      "unrealized_pnl_dollars": 2.94,
+      "unrealized_pnl_percent": 0.005531,
       "entry_time": "2026-06-11T15:30:40.936Z",
       "trade_id": "d97ec86c-8f4d-48b6-9064-186cd8678b4e",
       "signal_id": "CCJ|BUY|Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
@@ -2792,8 +2906,8 @@
       "status": "OPEN",
       "row_id": "276",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 97.04,
+      "current_price_at": "2026-06-11T16:55:31.619Z",
+      "period_high": 97.36,
       "period_low": 96.66,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
@@ -2813,9 +2927,9 @@
       "stake_amount": 531.44,
       "shares": 5.493772,
       "entry_price": 96.735,
-      "current_price": 96.66,
-      "unrealized_pnl_dollars": -0.41,
-      "unrealized_pnl_percent": -0.000775,
+      "current_price": 97.27,
+      "unrealized_pnl_dollars": 2.94,
+      "unrealized_pnl_percent": 0.005531,
       "entry_time": "2026-06-11T15:30:40.936Z",
       "trade_id": "d97ec86c-8f4d-48b6-9064-186cd8678b4e",
       "signal_id": "CCJ|BUY|Cameco (CCJ), Orano to Acquire TEPCO Resources' Stake in Cigar Lake JV",
@@ -2825,8 +2939,8 @@
       "status": "OPEN",
       "row_id": "277",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
-      "period_high": 97.04,
+      "current_price_at": "2026-06-11T16:55:31.619Z",
+      "period_high": 97.36,
       "period_low": 96.66,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
@@ -2846,9 +2960,9 @@
       "stake_amount": 478.3,
       "shares": 1.291603,
       "entry_price": 370.315,
-      "current_price": 373.415,
-      "unrealized_pnl_dollars": 4,
-      "unrealized_pnl_percent": 0.008371,
+      "current_price": 371.13,
+      "unrealized_pnl_dollars": 1.05,
+      "unrealized_pnl_percent": 0.002201,
       "entry_time": "2026-06-11T15:30:40.936Z",
       "trade_id": "5ba49a07-a2e7-4875-88f3-4140e46ba3fa",
       "signal_id": "CLS|BUY|Celestica (CLS) to Establish New Manufacturing Campus in Fort Worth, Texas",
@@ -2858,7 +2972,7 @@
       "status": "OPEN",
       "row_id": "280",
       "asset_class": "stock",
-      "current_price_at": "2026-06-11T16:25:32.243Z",
+      "current_price_at": "2026-06-11T16:55:31.619Z",
       "period_high": 374.96,
       "period_low": 370.315,
       "rule_version": "v2_20260609_stop2pct",
@@ -2872,6 +2986,181 @@
     }
   ],
   "closed_trades": [
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "ADIL",
+      "direction": "LONG",
+      "stake_amount": 562.86,
+      "shares": 127.632653,
+      "entry_price": 4.41,
+      "entry_time": "2026-06-11T16:30:26.192Z",
+      "exit_price": 4.5864,
+      "exit_time": "2026-06-11T16:35:32.529Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 22.51,
+      "pnl_percent": 0.04,
+      "trade_id": "85c4dca1-1afc-4b21-8936-956cca5c9408",
+      "signal_id": "ADIL|BUY|Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "title": "Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "298",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:30:26.192Z",
+      "period_high": 4.5864,
+      "period_low": 4.41,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 4.5864,
+      "stop_loss_price": 4.3218,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T16:30:26.192Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "ADIL",
+      "direction": "LONG",
+      "stake_amount": 562.86,
+      "shares": 127.632653,
+      "entry_price": 4.41,
+      "entry_time": "2026-06-11T16:30:26.192Z",
+      "exit_price": 4.5864,
+      "exit_time": "2026-06-11T16:35:32.529Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 22.51,
+      "pnl_percent": 0.04,
+      "trade_id": "85c4dca1-1afc-4b21-8936-956cca5c9408",
+      "signal_id": "ADIL|BUY|Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "title": "Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "299",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:30:26.192Z",
+      "period_high": 4.5864,
+      "period_low": 4.41,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 4.5864,
+      "stop_loss_price": 4.3218,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T16:30:26.192Z"
+    },
+    {
+      "book_key": "trend_strict__hold_24hr",
+      "portfolio": "trend_strict",
+      "exit_rule": "hold_24hr",
+      "asset": "ADIL",
+      "direction": "LONG",
+      "stake_amount": 914,
+      "shares": 207.256236,
+      "entry_price": 4.41,
+      "entry_time": "2026-06-11T16:30:26.407Z",
+      "exit_price": 4.5864,
+      "exit_time": "2026-06-11T16:35:32.529Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 36.56,
+      "pnl_percent": 0.04,
+      "trade_id": "85c4dca1-1afc-4b21-8936-956cca5c9408",
+      "signal_id": "ADIL|BUY|Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "title": "Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "302",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:30:26.407Z",
+      "period_high": 4.5864,
+      "period_low": 4.41,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 4.5864,
+      "stop_loss_price": 4.3218,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-12T16:30:26.407Z"
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "asset": "ADIL",
+      "direction": "LONG",
+      "stake_amount": 914,
+      "shares": 207.256236,
+      "entry_price": 4.41,
+      "entry_time": "2026-06-11T16:30:26.407Z",
+      "exit_price": 4.5864,
+      "exit_time": "2026-06-11T16:35:32.529Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 36.56,
+      "pnl_percent": 0.04,
+      "trade_id": "85c4dca1-1afc-4b21-8936-956cca5c9408",
+      "signal_id": "ADIL|BUY|Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "title": "Adial Pharmaceuticals acquires Azora Therapeutics, secures up to $64M financing",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "303",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:30:26.407Z",
+      "period_high": 4.5864,
+      "period_low": 4.41,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 4.5864,
+      "stop_loss_price": 4.3218,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T16:30:26.407Z"
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "asset": "ASYS",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 40.212481,
+      "entry_price": 20.143,
+      "entry_time": "2026-06-11T14:10:57.326Z",
+      "exit_price": 20.94872,
+      "exit_time": "2026-06-11T16:50:29.606Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 32.4,
+      "pnl_percent": 0.04,
+      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
+      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "247",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:45:31.996Z",
+      "period_high": 20.94872,
+      "period_low": 20.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 20.94872,
+      "stop_loss_price": 19.74014,
+      "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
+    },
     {
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
@@ -3115,6 +3404,41 @@
       "take_profit_price": 7.9664,
       "stop_loss_price": 7.5068,
       "early_exit_threshold_pct": 0.01,
+      "effective_expiry_at": "2026-06-12T14:10:57.326Z"
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "asset": "ASYS",
+      "direction": "LONG",
+      "stake_amount": 810,
+      "shares": 40.212481,
+      "entry_price": 20.143,
+      "entry_time": "2026-06-11T14:10:57.326Z",
+      "exit_price": 20.94872,
+      "exit_time": "2026-06-11T16:50:29.606Z",
+      "exit_reason": "take_profit",
+      "pnl_dollars": 32.4,
+      "pnl_percent": 0.04,
+      "trade_id": "4dbe9ec3-0df6-48c0-a63c-7403deb82a3f",
+      "signal_id": "ASYS|BUY|Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "title": "Amtech Systems set to join Russell 3000, Russell 2000 indexes",
+      "source": "Seeking Alpha RSS",
+      "confidence": 0.65,
+      "status": "CLOSED",
+      "row_id": "246",
+      "asset_class": "stock",
+      "current_price_at": "2026-06-11T16:45:31.996Z",
+      "period_high": 20.94872,
+      "period_low": 20.01,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.04,
+      "stop_loss_pct": 0.02,
+      "take_profit_price": 20.94872,
+      "stop_loss_price": 19.74014,
+      "early_exit_threshold_pct": null,
       "effective_expiry_at": "2026-06-12T14:10:57.326Z"
     },
     {
