@@ -229,6 +229,21 @@ function render() {
   var realizedPnl = viewClosed.reduce(function(s,c){ return s + Number(c.pnl_dollars||0); }, 0);
   var unrealizedPnl = viewOpen.reduce(function(s,p){ return s + Number(p.unrealized_pnl_dollars||0); }, 0);
 
+  // Filter snapshots by current view
+  var viewSnapKey = activeFilter === 'all' ? 'all' : activeFilter;
+  var viewSnaps = snapshots.filter(function(s){ return s[viewSnapKey]; }).map(function(s){
+    return { date: s.date, equity: Number(s[viewSnapKey].equity), starting: Number(s[viewSnapKey].starting), realized: Number(s[viewSnapKey].realized), unrealized: Number(s[viewSnapKey].unrealized) };
+  });
+  viewSnaps.sort(function(a,b){ return a.date.localeCompare(b.date); });
+
+  var todayStr = new Date().toLocaleDateString('en-CA', {timeZone:'America/New_York'});
+  var todaySnap = viewSnaps.length > 0 ? viewSnaps[viewSnaps.length - 1] : null;
+  var yesterdaySnap = viewSnaps.length > 1 ? viewSnaps[viewSnaps.length - 2] : null;
+  var todayChange = null;
+  if (todaySnap && todaySnap.date === todayStr) {
+    todayChange = yesterdaySnap ? todaySnap.equity - yesterdaySnap.equity : todaySnap.equity - todaySnap.starting;
+  }
+
   var health = D.health || {};
   var healthStatus = health.status || 'unknown';
   var healthDotCls = healthStatus === 'healthy' ? '' : (healthStatus === 'degraded' ? ' warn' : ' err');
@@ -277,9 +292,12 @@ function render() {
       '</div>' +
       '<div class="card">' +
         '<div class="eyebrow">Made today</div>' +
-        (snapshots.length > 0
-          ? '<div class="today-val ' + signCls(0) + '">—</div><div class="sub">Requires daily snapshots</div>'
-          : '<div class="today-val" style="color:var(--ink-soft)">—</div><div class="sub">Collecting authoritative growth history</div>'
+        (todayChange !== null
+          ? '<div class="today-val ' + signCls(todayChange) + '">' + (todayChange >= 0 ? '+' : '') + fmtMoney(todayChange) + '</div><div class="sub">Since ' + (yesterdaySnap ? 'yesterday\'s close' : 'experiment start') + '</div>'
+          : (snapshots.length > 0
+            ? '<div class="today-val" style="color:var(--ink-soft)">—</div><div class="sub">Today\'s snapshot not yet captured</div>'
+            : '<div class="today-val" style="color:var(--ink-soft)">—</div><div class="sub">Collecting authoritative growth history</div>'
+          )
         ) +
         '<div class="note">The daily number resets at midnight ET. It includes today\'s realized and unrealized change.</div>' +
       '</div>' +
@@ -290,18 +308,51 @@ function render() {
       '<div class="metric"><div class="eyebrow">Starting Capital</div><div class="value">' + fmtMoney(viewStarting) + '</div><div class="sub">' + viewBooks.length + ' books × $10,000</div></div>' +
       '<div class="metric"><div class="eyebrow">Realized Profit</div><div class="value ' + signCls(realizedPnl) + '">' + (realizedPnl >= 0 ? '+' : '') + fmtMoney(realizedPnl) + '</div><div class="sub">From closed trades</div></div>' +
       '<div class="metric"><div class="eyebrow">Open-Trade Change</div><div class="value ' + signCls(unrealizedPnl) + '">' + (unrealizedPnl >= 0 ? '+' : '') + fmtMoney(unrealizedPnl) + '</div><div class="sub">' + viewOpen.length + ' open positions</div></div>' +
-      '<div class="metric"><div class="eyebrow">Average Daily Growth</div><div class="value" style="color:var(--ink-soft)">—</div><div class="sub">Requires daily snapshots</div></div>' +
+      (function(){
+        if (viewSnaps.length >= 2) {
+          var totalGain = viewSnaps[viewSnaps.length-1].equity - viewSnaps[0].starting;
+          var avgDaily = totalGain / viewSnaps.length;
+          return '<div class="metric"><div class="eyebrow">Average Daily Growth</div><div class="value ' + signCls(avgDaily) + '">' + (avgDaily>=0?'+':'') + fmtMoney(avgDaily) + '</div><div class="sub">Over ' + viewSnaps.length + ' days</div></div>';
+        }
+        return '<div class="metric"><div class="eyebrow">Average Daily Growth</div><div class="value" style="color:var(--ink-soft)">—</div><div class="sub">' + (viewSnaps.length === 1 ? '1 day captured — need 2+' : 'Requires daily snapshots') + '</div></div>';
+      })() +
     '</section>';
 
   var chartHtml =
     '<section class="card chart-card">' +
       '<div class="chart-top">' +
         '<div><h2>Compounding growth</h2><div class="sub" style="margin-top:4px">Actual marked equity versus the 1%-per-day reference path</div></div>' +
-        '<div class="controls"><button>7D</button><button class="on">Since start</button><button>Monthly</button></div>' +
       '</div>' +
       '<div class="legend"><span>Actual system</span><span class="ref">1% daily reference</span></div>' +
       '<div class="chart-area">' +
-        '<div class="chart-empty">Collecting authoritative growth history.<br>Chart will populate as daily snapshots accumulate.</div>' +
+        (function(){
+          if (viewSnaps.length < 2) return '<div class="chart-empty">Collecting authoritative growth history.<br>' + (viewSnaps.length === 1 ? '1 snapshot captured — chart draws at 2+ days.' : 'Chart will populate as daily snapshots accumulate.') + '</div>';
+          var W=700, H=220, PL=60, PR=10, PT=15, PB=20;
+          var startEq = viewSnaps[0].starting;
+          var refPts = viewSnaps.map(function(_,i){ return startEq * Math.pow(1.01, i); });
+          var eqVals = viewSnaps.map(function(s){ return s.equity; });
+          var allV = eqVals.concat(refPts);
+          var yMin = Math.min.apply(null, allV), yMax = Math.max.apply(null, allV);
+          var pad = (yMax - yMin) * 0.08 || 200;
+          yMin -= pad; yMax += pad;
+          function xP(i){ return PL + (i / (viewSnaps.length - 1)) * (W - PL - PR); }
+          function yP(v){ return PT + (1 - (v - yMin) / (yMax - yMin)) * (H - PT - PB); }
+          var grid = '';
+          for (var g = 0; g <= 4; g++) {
+            var gy = PT + (g / 4) * (H - PT - PB);
+            var gv = yMax - (g / 4) * (yMax - yMin);
+            grid += '<line x1="'+PL+'" y1="'+gy.toFixed(1)+'" x2="'+(W-PR)+'" y2="'+gy.toFixed(1)+'" stroke="#e4e2d8" stroke-width="0.5"/>';
+            grid += '<text x="'+(PL-6)+'" y="'+(gy+3).toFixed(1)+'" text-anchor="end" font-size="9" fill="#6b7269" font-family="Spline Sans Mono,monospace">$'+Math.round(gv).toLocaleString()+'</text>';
+          }
+          var refD = refPts.map(function(v,i){ return (i===0?'M':'L')+xP(i).toFixed(1)+','+yP(v).toFixed(1); }).join(' ');
+          var actD = eqVals.map(function(v,i){ return (i===0?'M':'L')+xP(i).toFixed(1)+','+yP(v).toFixed(1); }).join(' ');
+          var dots = eqVals.map(function(v,i){ return '<circle cx="'+xP(i).toFixed(1)+'" cy="'+yP(v).toFixed(1)+'" r="3.5" fill="#1d9d6b" stroke="#fff" stroke-width="1.5"/>'; }).join('');
+          var labels = viewSnaps.map(function(s,i){
+            var lbl = s.date.slice(5);
+            return '<text x="'+xP(i).toFixed(1)+'" y="'+(H-2)+'" text-anchor="middle" font-size="9" fill="#6b7269" font-family="Spline Sans Mono,monospace">'+lbl+'</text>';
+          }).join('');
+          return '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">'+grid+'<path d="'+refD+'" fill="none" stroke="#c08a2d" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.6"/><path d="'+actD+'" fill="none" stroke="#1d9d6b" stroke-width="2.5"/>'+dots+labels+'</svg>';
+        })() +
       '</div>' +
       '<div class="note" style="margin-top:12px"><strong>Reference path only</strong> — the 1% line is not a target, promise, or trading instruction. The system must never alter trades or risk-taking to chase this line.</div>' +
     '</section>';
@@ -330,8 +381,20 @@ function render() {
 
   lowerHtml += '<div class="card"><div class="section-title" style="margin-top:0">Daily results</div>';
   lowerHtml += '<div class="sub" style="margin-bottom:12px">What the experiment gained or lost each day</div>';
-  if (snapshots.length > 0) {
-    lowerHtml += '<div><!-- daily rows from snapshots would go here --></div>';
+  if (viewSnaps.length > 0) {
+    var maxAbsChange = 1;
+    var dailyRows = viewSnaps.map(function(s, i) {
+      var prev = i > 0 ? viewSnaps[i-1].equity : s.starting;
+      var change = s.equity - prev;
+      var changePct = prev > 0 ? (change / prev) * 100 : 0;
+      if (Math.abs(change) > maxAbsChange) maxAbsChange = Math.abs(change);
+      return { date: s.date, equity: s.equity, change: change, changePct: changePct };
+    });
+    lowerHtml += '<div class="day-row" style="font-weight:600;color:var(--ink-soft);border-bottom:2px solid var(--line)"><span>Date</span><span></span><span>Change</span><span class="equity">Equity</span></div>';
+    dailyRows.slice().reverse().forEach(function(r) {
+      var barW = Math.round((Math.abs(r.change) / maxAbsChange) * 100);
+      lowerHtml += '<div class="day-row"><span>' + r.date.slice(5) + '</span><div class="day-bar"><i style="width:'+Math.max(barW,2)+'%"' + (r.change < 0 ? ' class="neg"' : '') + '></i></div><span class="' + signCls(r.change) + '">' + (r.change>=0?'+':'') + fmtMoney(r.change) + '</span><span class="equity">' + fmtMoney(r.equity) + '</span></div>';
+    });
   } else {
     lowerHtml += '<div style="padding:30px 0;text-align:center;color:var(--ink-soft);font-family:\'Spline Sans Mono\',monospace;font-size:12px">Collecting authoritative growth history.<br>Daily results will appear as snapshots accumulate.</div>';
   }
