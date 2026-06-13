@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Analyst — Research</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spline+Sans+Mono:wght@400;500;600&family=Spline+Sans:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #f4f3ee; --panel: #ffffff; --ink: #1a1d1a; --ink-soft: #6b7269;
+    --line: #e4e2d8; --green: #1d9d6b; --green-bg: #e6f5ee; --red: #d6485a;
+    --red-bg: #fbeaec; --accent: #3a5a78; --accent-bg: #eaf0f5; --gold: #c08a2d;
+    --violet: #6d28d9; --violet-bg: #f3eefe;
+    --shadow: 0 1px 2px rgba(26,29,26,.04), 0 8px 24px rgba(26,29,26,.05);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Spline Sans', sans-serif; background: var(--bg); color: var(--ink);
+    padding: 32px 24px 60px; min-height: 100vh;
+    background-image: radial-gradient(circle at 1px 1px, rgba(26,29,26,.025) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  /* --- shared site navigation --- */
+  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;}
+  .nav-link{font-family:'Spline Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ink-soft);background:transparent;text-decoration:none;border-radius:12px;padding:10px 20px;transition:all .15s ease;}
+  .nav-link:hover{color:var(--ink);}
+  .nav-link.on{background:var(--accent);color:#fff;}
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+  .title-block h1 { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 600; letter-spacing: -.5px; display: flex; align-items: center; gap: 12px; }
+  .title-block .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px var(--green-bg); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .title-block p { color: var(--ink-soft); font-size: 13px; margin-top: 4px; font-family: 'Spline Sans Mono', monospace; }
+  .updated { text-align: right; font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
+  .updated strong { color: var(--ink); display: block; font-size: 13px; }
+
+  /* research tabs */
+  .tabs{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
+  .tab-btn{font-family:'Spline Sans',sans-serif;font-size:12px;font-weight:700;color:var(--ink-soft);background:transparent;border:none;border-radius:12px;padding:9px 16px;cursor:pointer;transition:all .15s ease;white-space:nowrap;}
+  .tab-btn:hover{color:var(--ink);}
+  .tab-btn.on{background:var(--accent);color:#fff;}
+  .tab-panel{display:none;}
+  .tab-panel.on{display:block;}
+
+  /* cards */
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); }
+  .eyebrow { font-family: 'Spline Sans Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-soft); font-weight: 600; }
+  .big { font-family: 'Fraunces', serif; font-size: clamp(28px, 4.5vw, 42px); font-weight: 600; margin: 8px 0 4px; letter-spacing: -1px; }
+  .sub { color: var(--ink-soft); font-size: 12px; font-family: 'Spline Sans Mono', monospace; margin-top: 4px; }
+  .pos-text { color: var(--green); } .neg-text { color: var(--red); } .zero-text { color: var(--ink-soft); }
+  .section-title { font-family: 'Spline Sans Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); font-weight: 600; margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
+  .section-title::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .tag { font-family: 'Spline Sans Mono', monospace; font-size: 10px; background: var(--accent-bg); color: var(--accent); padding: 2px 7px; border-radius: 5px; font-weight: 600; }
+  .tag.vol { background: var(--violet-bg); color: var(--violet); }
+  .tag.lab { background: #fef3c7; color: #92400e; }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1.4fr .8fr; gap: 16px; margin-bottom: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+  .stat { background: var(--bg); border-radius: 12px; padding: 12px; }
+  .stat strong { display: block; font-family: 'Fraunces', serif; font-size: 20px; margin-top: 4px; }
+  .health-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
+  .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+  /* leaderboard */
+  .leader { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .rank { position: relative; overflow: hidden; }
+  .rank::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--green); }
+  .rank:nth-child(2)::before { background: var(--accent); }
+  .rank:nth-child(3)::before { background: var(--gold); }
+  .rank-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .rank h3 { font-size: 13px; font-weight: 600; margin: 0; }
+  .rank-num { font-family: 'Spline Sans Mono', monospace; font-size: 12px; color: var(--ink-soft); }
+  .rank .return { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; margin: 10px 0 6px; }
+  .bar { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .bar span { display: block; height: 100%; border-radius: 3px; background: var(--green); }
+  .rank-foot { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-soft); margin-top: 8px; font-family: 'Spline Sans Mono', monospace; }
+
+  /* table */
+  .matrix { overflow-x: auto; padding: 0; }
+  .matrix table { width: 100%; border-collapse: collapse; min-width: 700px; }
+  .matrix th, .matrix td { text-align: left; border-bottom: 1px solid var(--line); padding: 12px 14px; font-size: 12px; }
+  .matrix th { color: var(--ink-soft); letter-spacing: .8px; text-transform: uppercase; font-size: 10px; background: #fafaf7; font-family: 'Spline Sans Mono', monospace; }
+  .matrix tr:last-child td { border: 0; }
+  .booklink { font-weight: 700; color: var(--accent); }
+  .delta { font-weight: 700; }
+
+  /* compare */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .compare-card h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .mode { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .mode.vol { border-color: #cfc1f6; background: var(--violet-bg); }
+  .mode b { display: block; font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; font-family: 'Spline Sans Mono', monospace; }
+  .mode strong { font-family: 'Fraunces', serif; font-size: 22px; }
+  .insight { margin-top: 12px; background: var(--bg); border-radius: 10px; padding: 10px 12px; font-size: 11px; line-height: 1.55; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
+
+  /* signals */
+  .signals-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+  .signal { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; margin-bottom: 8px; }
+  .signal .asset { font-weight: 700; font-size: 13px; white-space: nowrap; }
+  .signal .headline { font-size: 11px; line-height: 1.4; }
+  .signal .headline a { color: var(--accent); text-decoration: none; }
+  .signal .children { font-size: 10px; color: var(--ink-soft); white-space: nowrap; font-family: 'Spline Sans Mono', monospace; }
+  .gate { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 12px; background: var(--bg); font-size: 12px; margin-bottom: 8px; }
+  .gate strong { font-size: 13px; }
+
+  /* books list */
+  .book-filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .filter-btn { font-family: 'Spline Sans', sans-serif; font-size: 11px; font-weight: 600; color: var(--ink-soft); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; cursor: pointer; }
+  .filter-btn.on { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .book-search { width: 100%; padding: 9px 14px; border: 1px solid var(--line); border-radius: 12px; font: 400 13px 'Spline Sans', sans-serif; margin-bottom: 14px; outline: none; background: var(--panel); }
+  .book-search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+
+  /* health */
+  .health-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .health-card { position: relative; overflow: hidden; }
+  .health-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; }
+  .health-card.ok::before { background: var(--green); }
+  .health-card.warn::before { background: var(--gold); }
+  .health-card.err::before { background: var(--red); }
+  .health-card .h-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .health-card .h-val { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; }
+  .health-card .h-sub { font-size: 11px; color: var(--ink-soft); margin-top: 4px; font-family: 'Spline Sans Mono', monospace; }
+
+  .footnote { margin-top: 22px; padding: 14px 18px; background: var(--accent-bg); border-radius: 12px; font-size: 12px; color: var(--accent); line-height: 1.55; border-left: 3px solid var(--accent); font-family: 'Spline Sans Mono', monospace; }
+  .note { background: #fbf6e8; border: 1px solid #ead8a4; color: #8a6927; padding: 12px; border-radius: 12px; font-size: 11px; line-height: 1.55; margin-top: 12px; font-family: 'Spline Sans Mono', monospace; }
+  .status { text-align: center; padding: 40px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; font-size: 13px; }
+  .status.err { color: var(--red); }
+
+  @media (max-width: 720px) {
+    .hero, .compare-grid, .signals-grid, .health-grid { grid-template-columns: 1fr; }
+    .leader { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    header { flex-direction: column; align-items: flex-start; }
+    .updated { text-align: left; }
+    .signal { grid-template-columns: auto 1fr; }
+    .signal .children { grid-column: 1 / -1; }
+  }
+  @media(max-width:640px){
+    .site-nav{position:fixed;bottom:0;left:0;right:0;border-radius:0;z-index:100;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel);box-shadow:0 -2px 10px rgba(0,0,0,.08);}
+    body{padding-bottom:70px !important;}
+    .tabs{overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="site-nav">
+    <a href="../overview/" class="nav-link">Overview</a>
+    <a href="../research/" class="nav-link on">Research</a>
+    <a href="../operations/" class="nav-link">Operations</a>
+  </nav>
+
+  <header>
+    <div class="title-block">
+      <h1><span class="dot"></span>Trading Analyst</h1>
+      <p>What is working?</p>
+    </div>
+    <div class="updated">
+      <span>Last updated</span>
+      <strong id="upd-date">—</strong>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab-btn on" data-tab="command">Command Center</button>
+    <button class="tab-btn" data-tab="compare">Compare</button>
+    <button class="tab-btn" data-tab="signals">Signals</button>
+    <button class="tab-btn" data-tab="books">Books</button>
+    <button class="tab-btn" data-tab="health">System Health</button>
+  </div>
+
+  <div id="content">
+    <div class="status">Loading…</div>
+  </div>
+</div>
+
+<script>
+const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'All Signals', crypto_lab:'Crypto Lab' };
+const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
+const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
+const signCls = n => n>0?'pos-text':(n<0?'neg-text':'zero-text');
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let DATA = null;
+let currentTab = 'command';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  if (DATA) renderTab();
+}
+
+document.getElementById('tabs').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (btn) switchTab(btn.dataset.tab);
+});
+
+async function loadData() {
+  try {
+    const r = await fetch('../data.json?t='+Date.now(), {cache:'no-store'});
+    DATA = await r.json();
+    const d = DATA.generated_at ? new Date(DATA.generated_at) : new Date();
+    document.getElementById('upd-date').textContent = d.toLocaleString();
+    renderTab();
+  } catch(e) {
+    document.getElementById('content').innerHTML = '<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
+  }
+}
+
+function renderTab() {
+  const c = document.getElementById('content');
+  switch(currentTab) {
+    case 'command': c.innerHTML = renderCommand(); break;
+    case 'compare': c.innerHTML = renderCompare(); break;
+    case 'signals': c.innerHTML = renderSignals(); break;
+    case 'books': c.innerHTML = renderBooks(); wireBookFilters(); break;
+    case 'health': c.innerHTML = renderHealth(); break;
+  }
+}
+
+function renderCommand() {
+  const t = DATA.totals || {};
+  const books = DATA.books || [];
+  const openPos = DATA.open_positions || [];
+  const closedTrades = (DATA.closed_trades || []).filter(c => c.research_valid !== false);
+  const totalEquity = Number(t.equity || 0);
+  const startingCapital = Number(t.starting || 0);
+  const totalGain = totalEquity - startingCapital;
+  const totalReturn = startingCapital > 0 ? (totalGain / startingCapital) * 100 : 0;
+  const bookCount = Number(t.book_count || books.length || 0);
+
+  const sigMap = {};
+  openPos.concat(closedTrades).forEach(tr => {
+    const sid = tr.signal_id || tr.trade_id || '?';
+    if (!sigMap[sid]) sigMap[sid] = true;
+  });
+  const sigCount = Object.keys(sigMap).length;
+
+  const sorted = books.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
+  const top3 = sorted.slice(0, 3);
+
+  let html = '<section class="hero">' +
+    '<div class="card">' +
+      '<div class="eyebrow">Total research capital · ' + bookCount + ' independent paper books</div>' +
+      '<div class="big">' + fmtMoney(totalEquity) + '</div>' +
+      '<div class="' + signCls(totalGain) + '" style="font-weight:600;font-size:14px">' + (totalGain >= 0 ? '+' : '') + fmtMoney(totalGain) + ' · ' + fmtPct(totalReturn) + ' combined marked return</div>' +
+      '<div class="health-row"><span class="health-dot"></span>System operational</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="eyebrow">Experiment snapshot</div>' +
+      '<div class="stats">' +
+        '<div class="stat"><span class="eyebrow">Open</span><strong>' + openPos.length + '</strong></div>' +
+        '<div class="stat"><span class="eyebrow">Closed</span><strong>' + closedTrades.length + '</strong></div>' +
+        '<div class="stat"><span class="eyebrow">Signals</span><strong>' + sigCount + '</strong></div>' +
+      '</div>' +
+      '<div class="sub" style="margin-top:10px">Source signals are counted once, not once per child book.</div>' +
+    '</div>' +
+  '</section>';
+
+  html += '<div class="section-title">Best-performing books</div><div class="leader">';
+  top3.forEach((b, i) => {
+    const g = Number(b.growth_pct || 0);
+    const maxG = Math.max(Number(top3[0].growth_pct || 1), 0.01);
+    const barW = Math.max(Math.round((Math.max(g, 0) / maxG) * 100), 2);
+    const model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
+    const closedCount = (DATA.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
+    const wr = b.analytics && b.analytics.OVERALL && b.analytics.OVERALL.win_rate_pct != null ? Number(b.analytics.OVERALL.win_rate_pct).toFixed(0) + '% win' : '';
+    html += '<div class="card rank"><div class="rank-top"><div><h3>' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</h3>' + model + '</div><span class="rank-num">#' + (i + 1) + '</span></div>' +
+      '<div class="return ' + signCls(g) + '">' + fmtPct(g) + '</div>' +
+      '<div class="bar"><span style="width:' + barW + '%"></span></div>' +
+      '<div class="rank-foot"><span>' + closedCount + ' closed' + (wr ? ' · ' + wr : '') + '</span><span>' + fmtMoney(b.total_equity) + '</span></div></div>';
+  });
+  html += '</div>';
+
+  html += '<div class="section-title">All books</div><div class="card matrix"><table><thead><tr><th>Book</th><th>Lifecycle</th><th>Targets</th><th>Equity</th><th>Return</th><th>Trades</th></tr></thead><tbody>';
+  sorted.forEach(b => {
+    const g = Number(b.growth_pct || 0);
+    const model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
+    const closedCount = (DATA.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
+    const isLab = b.portfolio === 'crypto_lab';
+    html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + (isLab ? ' <span class="tag lab">LAB</span>' : '') + '</td>' +
+      '<td>' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</td>' +
+      '<td>' + model + '</td>' +
+      '<td>' + fmtMoney(b.total_equity) + '</td>' +
+      '<td class="' + signCls(g) + ' delta">' + fmtPct(g) + '</td>' +
+      '<td>' + closedCount + ' closed · ' + (b.open_count || 0) + ' open</td></tr>';
+  });
+  html += '</tbody></table></div>';
+
+  const lowSample = DATA.low_sample_threshold || 20;
+  html += '<div class="note"><strong>Small-sample warning:</strong> Books with fewer than ' + lowSample + ' closed trades are not yet statistically meaningful. Do not draw conclusions from early returns.</div>';
+
+  return html;
+}
+
+function renderCompare() {
+  const books = DATA.books || [];
+  const fixedBooks = books.filter(b => (b.target_model || 'fixed') === 'fixed');
+  const volBooks = books.filter(b => b.target_model === 'volatility');
+
+  let html = '<div class="section-title">Fixed versus Volatility</div>';
+
+  if (volBooks.length === 0) {
+    html += '<div class="card"><div class="sub">No volatility books have traded yet. Comparisons will appear once both models have closed trades.</div></div>';
+  } else {
+    const fixedEq = fixedBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+    const fixedStart = fixedBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+    const fixedRet = fixedStart > 0 ? ((fixedEq - fixedStart) / fixedStart) * 100 : 0;
+    const fixedClosed = (DATA.closed_trades || []).filter(c => (c.target_model || 'fixed') === 'fixed' && c.research_valid !== false).length;
+
+    const volEq = volBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+    const volStart = volBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+    const volRet = volStart > 0 ? ((volEq - volStart) / volStart) * 100 : 0;
+    const volClosed = (DATA.closed_trades || []).filter(c => c.target_model === 'volatility' && c.research_valid !== false).length;
+
+    html += '<div class="compare-grid"><div class="card"><h3>Overall model comparison</h3><div class="mode-grid">' +
+      '<div class="mode"><b>Fixed (' + fixedBooks.length + ' books)</b><strong class="' + signCls(fixedRet) + '">' + fmtPct(fixedRet) + '</strong><div class="sub">' + fixedClosed + ' closed trades</div></div>' +
+      '<div class="mode vol"><b>Volatility (' + volBooks.length + ' books)</b><strong class="' + signCls(volRet) + '">' + fmtPct(volRet) + '</strong><div class="sub">' + volClosed + ' closed trades</div></div>' +
+      '</div><div class="insight">Compare cautiously — sample sizes differ significantly between models.</div></div>';
+
+    html += '<div class="card"><h3>Equity summary</h3><div class="mode-grid">' +
+      '<div class="mode"><b>Fixed total equity</b><strong>' + fmtMoney(fixedEq) + '</strong><div class="sub">Started ' + fmtMoney(fixedStart) + '</div></div>' +
+      '<div class="mode vol"><b>Volatility total equity</b><strong>' + fmtMoney(volEq) + '</strong><div class="sub">Started ' + fmtMoney(volStart) + '</div></div>' +
+      '</div></div></div>';
+  }
+
+  html += '<div class="section-title">24hr Hold versus Early Exit</div><div class="compare-grid">';
+  const holdBooks = books.filter(b => b.exit_rule === 'hold_24hr');
+  const eodBooks = books.filter(b => b.exit_rule === 'sell_eod');
+  const holdEq = holdBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+  const holdStart = holdBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+  const holdRet = holdStart > 0 ? ((holdEq - holdStart) / holdStart) * 100 : 0;
+  const holdClosed = (DATA.closed_trades || []).filter(c => c.exit_rule === 'hold_24hr' && c.research_valid !== false).length;
+  const eodEq = eodBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+  const eodStart = eodBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+  const eodRet = eodStart > 0 ? ((eodEq - eodStart) / eodStart) * 100 : 0;
+  const eodClosed = (DATA.closed_trades || []).filter(c => c.exit_rule === 'sell_eod' && c.research_valid !== false).length;
+
+  html += '<div class="card"><h3>Lifecycle comparison</h3><div class="mode-grid">' +
+    '<div class="mode"><b>24hr Hold (' + holdBooks.length + ' books)</b><strong class="' + signCls(holdRet) + '">' + fmtPct(holdRet) + '</strong><div class="sub">' + holdClosed + ' closed</div></div>' +
+    '<div class="mode"><b>Early Exit (' + eodBooks.length + ' books)</b><strong class="' + signCls(eodRet) + '">' + fmtPct(eodRet) + '</strong><div class="sub">' + eodClosed + ' closed</div></div>' +
+    '</div></div>';
+
+  const strategies = DATA.strategies || Object.keys(STRAT_LABELS);
+  const prodStrats = strategies.filter(s => s !== 'strict' && s !== 'crypto_lab');
+  html += '<div class="card"><h3>By signal gate</h3>';
+  prodStrats.forEach(s => {
+    const sBooks = books.filter(b => b.portfolio === s);
+    const sEq = sBooks.reduce((sum, b) => sum + Number(b.total_equity || 0), 0);
+    const sStart = sBooks.reduce((sum, b) => sum + Number(b.starting_balance || 0), 0);
+    const sRet = sStart > 0 ? ((sEq - sStart) / sStart) * 100 : 0;
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">' +
+      '<span style="font-weight:600;font-size:13px">' + esc(STRAT_LABELS[s] || s) + ' <span class="tag">' + sBooks.length + ' books</span></span>' +
+      '<span class="' + signCls(sRet) + '" style="font-weight:700;font-family:\'Spline Sans Mono\',monospace">' + fmtPct(sRet) + '</span></div>';
+  });
+  html += '</div></div>';
+
+  html += '<div class="note"><strong>Never imply superiority from unmatched or tiny samples.</strong> Comparisons require matched source-signal cohorts and sufficient trade counts to be meaningful.</div>';
+
+  return html;
+}
+
+function renderSignals() {
+  const openPos = DATA.open_positions || [];
+  const closedTrades = (DATA.closed_trades || []).filter(c => c.research_valid !== false);
+  const allTrades = openPos.concat(closedTrades);
+
+  const sigMap = {};
+  allTrades.forEach(tr => {
+    const sid = tr.signal_id || tr.trade_id || '?';
+    if (!sigMap[sid]) sigMap[sid] = { asset: tr.asset, direction: tr.direction, title: tr.title, source: tr.source, confidence: tr.confidence, time: tr.entry_time, children: [], news_url: tr.news_url || tr.source_url || tr.link };
+    sigMap[sid].children.push(tr);
+  });
+  const sigKeys = Object.keys(sigMap).sort((a, b) => new Date(sigMap[b].time || 0) - new Date(sigMap[a].time || 0));
+
+  const strategies = DATA.strategies || Object.keys(STRAT_LABELS);
+  const prodStrats = strategies.filter(s => s !== 'strict');
+  const gateCounts = {};
+  prodStrats.forEach(s => { gateCounts[s] = 0; });
+  allTrades.forEach(tr => {
+    if (gateCounts[tr.portfolio] !== undefined) gateCounts[tr.portfolio]++;
+  });
+
+  let html = '<div class="signals-grid"><div class="card"><div class="eyebrow">Source signals · counted once</div><div class="sub" style="margin-bottom:14px">' + sigKeys.length + ' unique signals. Each can create multiple child trades across books.</div>';
+
+  const MAX_SIGNALS = 20;
+  sigKeys.slice(0, MAX_SIGNALS).forEach(sid => {
+    const s = sigMap[sid];
+    const n = s.children.length;
+    const timeStr = s.time ? new Date(s.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    const headlineHtml = s.title ? '<span class="headline">' + (s.news_url ? '<a href="' + esc(s.news_url) + '" target="_blank" rel="noopener">' : '') + '"' + esc(s.title) + '"' + (s.news_url ? ' ↗</a>' : '') + '</span>' : '';
+    html += '<div class="signal">' +
+      '<span class="asset">' + esc(s.asset) + ' · ' + esc(s.direction) + '</span>' +
+      headlineHtml +
+      '<span class="children">' + n + ' trade' + (n > 1 ? 's' : '') + ' · ' + timeStr + '</span>' +
+    '</div>';
+  });
+  if (sigKeys.length > MAX_SIGNALS) html += '<div class="sub" style="text-align:center;padding:8px">Showing ' + MAX_SIGNALS + ' of ' + sigKeys.length + ' signals</div>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="eyebrow">Signal gate funnel</div><div style="margin-top:14px">';
+  const gateOrder = ['news_only', 'news_plus_ta', 'mean_reversion', 'trend_strict', 'crypto_lab'];
+  gateOrder.filter(g => prodStrats.includes(g)).forEach(g => {
+    const count = gateCounts[g] || 0;
+    html += '<div class="gate"><strong>' + esc(STRAT_LABELS[g] || g) + '</strong><span>' + count + ' trades created</span></div>';
+  });
+  html += '</div><div class="sub" style="margin-top:12px">Each gate filters signals differently. News Only accepts all qualifying signals; Trend Strict requires price above MA20 + momentum.</div></div></div>';
+
+  return html;
+}
+
+function renderBooks() {
+  const books = DATA.books || [];
+  const sorted = books.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
+
+  let html = '<input type="text" class="book-search" id="book-search" placeholder="Search books…">' +
+    '<div class="book-filters" id="book-filters">' +
+      '<button class="filter-btn on" data-filter="all">All</button>' +
+      '<button class="filter-btn" data-filter="fixed">Fixed</button>' +
+      '<button class="filter-btn" data-filter="volatility">Volatility</button>' +
+      '<button class="filter-btn" data-filter="hold_24hr">24hr Hold</button>' +
+      '<button class="filter-btn" data-filter="sell_eod">Early Exit</button>' +
+    '</div>';
+
+  html += '<div class="card matrix"><table><thead><tr><th>Book</th><th>Lifecycle</th><th>Targets</th><th>Equity</th><th>Return</th><th>Win Rate</th><th>Trades</th></tr></thead><tbody id="books-tbody">';
+  sorted.forEach(b => {
+    const g = Number(b.growth_pct || 0);
+    const model = (b.target_model || 'fixed');
+    const modelTag = model === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
+    const closedCount = (DATA.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
+    const wr = b.analytics && b.analytics.OVERALL && b.analytics.OVERALL.win_rate_pct != null ? Number(b.analytics.OVERALL.win_rate_pct).toFixed(0) + '%' : '—';
+    const isLab = b.portfolio === 'crypto_lab';
+    html += '<tr data-model="' + model + '" data-rule="' + (b.exit_rule || '') + '" data-text="' + esc((STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' ' + (b.exit_rule || '') + ' ' + model).toLowerCase() + '">' +
+      '<td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + (isLab ? ' <span class="tag lab">LAB</span>' : '') + '</td>' +
+      '<td>' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</td>' +
+      '<td>' + modelTag + '</td>' +
+      '<td>' + fmtMoney(b.total_equity) + '</td>' +
+      '<td class="' + signCls(g) + ' delta">' + fmtPct(g) + '</td>' +
+      '<td>' + wr + '</td>' +
+      '<td>' + closedCount + ' closed · ' + (b.open_count || 0) + ' open</td></tr>';
+  });
+  html += '</tbody></table></div>';
+
+  return html;
+}
+
+function wireBookFilters() {
+  const search = document.getElementById('book-search');
+  const filters = document.getElementById('book-filters');
+  if (!filters || !search) return;
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const term = search.value.toLowerCase();
+    const rows = document.querySelectorAll('#books-tbody tr');
+    rows.forEach(r => {
+      const text = r.getAttribute('data-text') || '';
+      const model = r.getAttribute('data-model') || '';
+      const rule = r.getAttribute('data-rule') || '';
+      let show = true;
+      if (activeFilter !== 'all') {
+        if (activeFilter === 'fixed' || activeFilter === 'volatility') show = model === activeFilter;
+        else show = rule === activeFilter;
+      }
+      if (show && term) show = text.includes(term);
+      r.style.display = show ? '' : 'none';
+    });
+  }
+
+  filters.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    activeFilter = btn.dataset.filter;
+    filters.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('on', b.dataset.filter === activeFilter));
+    applyFilters();
+  });
+  search.addEventListener('input', applyFilters);
+}
+
+function renderHealth() {
+  const t = DATA.totals || {};
+  const books = DATA.books || [];
+  const genAt = DATA.generated_at ? new Date(DATA.generated_at) : null;
+  const ageMin = genAt ? Math.max(0, Math.floor((Date.now() - genAt.getTime()) / 60000)) : null;
+  const isStale = ageMin !== null && ageMin > 10;
+
+  let driftBooks = 0;
+  books.forEach(b => {
+    const eq = Number(b.total_equity || 0);
+    const fc = Number(b.free_cash || 0);
+    const deployed = Number(b.deployed_capital || 0);
+    const diff = Math.abs(eq - fc - deployed);
+    if (diff > 0.02) driftBooks++;
+  });
+
+  const openPos = DATA.open_positions || [];
+  let overdueCount = 0;
+  openPos.forEach(p => {
+    if (p.effective_expiry_at && new Date(p.effective_expiry_at) <= new Date()) overdueCount++;
+  });
+
+  let html = '<div class="health-grid">';
+
+  html += '<div class="card health-card ' + (isStale ? 'warn' : 'ok') + '">' +
+    '<div class="h-title">Publisher freshness</div>' +
+    '<div class="h-val">' + (ageMin !== null ? ageMin + ' min ago' : '—') + '</div>' +
+    '<div class="h-sub">' + (isStale ? 'Stale — data may not reflect recent trades' : 'Within acceptable range') + '</div></div>';
+
+  html += '<div class="card health-card ' + (driftBooks > 0 ? 'err' : 'ok') + '">' +
+    '<div class="h-title">Accounting drift</div>' +
+    '<div class="h-val">' + driftBooks + ' books</div>' +
+    '<div class="h-sub">' + (driftBooks > 0 ? 'Books with equity ≠ free_cash + deployed beyond $0.02' : 'All books within $0.02 tolerance') + '</div></div>';
+
+  html += '<div class="card health-card ' + (overdueCount > 0 ? 'warn' : 'ok') + '">' +
+    '<div class="h-title">Overdue positions</div>' +
+    '<div class="h-val">' + overdueCount + '</div>' +
+    '<div class="h-sub">' + (overdueCount > 0 ? 'Positions past their expiry time — WF2/WF3 should close these' : 'No overdue positions') + '</div></div>';
+
+  html += '<div class="card health-card ok">' +
+    '<div class="h-title">Book count</div>' +
+    '<div class="h-val">' + books.length + ' books</div>' +
+    '<div class="h-sub">Model: ' + esc(DATA.model || '') + '</div></div>';
+
+  html += '</div>';
+
+  html += '<div class="section-title">Book-level health</div><div class="card matrix"><table><thead><tr><th>Book</th><th>Equity</th><th>Free Cash</th><th>Deployed</th><th>Drift</th><th>Status</th></tr></thead><tbody>';
+  books.forEach(b => {
+    const eq = Number(b.total_equity || 0);
+    const fc = Number(b.free_cash || 0);
+    const deployed = Number(b.deployed_capital || 0);
+    const drift = Math.abs(eq - fc - deployed);
+    const ok = drift <= 0.02;
+    html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</td>' +
+      '<td>' + fmtMoney(eq) + '</td><td>' + fmtMoney(fc) + '</td><td>' + fmtMoney(deployed) + '</td>' +
+      '<td class="' + (ok ? '' : 'neg-text') + '">' + fmtMoney(drift) + '</td>' +
+      '<td>' + (ok ? '<span class="tag" style="background:var(--green-bg);color:var(--green)">OK</span>' : '<span class="tag" style="background:var(--red-bg);color:var(--red)">DRIFT</span>') + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+
+  html += '<div class="footnote"><strong>System health checks:</strong> Publisher freshness, accounting drift, overdue positions, and book balance consistency. For detailed workflow status, check n8n execution history directly.</div>';
+
+  return html;
+}
+
+loadData();
+</script>
+</body>
+</html>

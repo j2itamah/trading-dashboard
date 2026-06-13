@@ -245,11 +245,23 @@
 .trade-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg);}
 .trade-search::placeholder{color:var(--ink-soft);opacity:.6;}
 @media(max-width:640px){.lab-divider{width:100%;height:1px;margin:4px 0;}}
+
+/* --- shared site navigation --- */
+.site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;}
+.nav-link{font-family:'Spline Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ink-soft);background:transparent;text-decoration:none;border-radius:12px;padding:10px 20px;transition:all .15s ease;}
+.nav-link:hover{color:var(--ink);}
+.nav-link.on{background:var(--accent);color:#fff;}
+@media(max-width:640px){.site-nav{position:fixed;bottom:0;left:0;right:0;border-radius:0;z-index:100;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel);box-shadow:0 -2px 10px rgba(0,0,0,.08);}body{padding-bottom:70px !important;}}
 </style>
 </head>
 <body>
 
 <div class="wrap">
+  <nav class="site-nav">
+    <a href="../overview/" class="nav-link">Overview</a>
+    <a href="../research/" class="nav-link">Research</a>
+    <a href="../operations/" class="nav-link on">Operations</a>
+  </nav>
   <header>
     <div class="title-block">
       <h1><span class="dot"></span>Trading Analyst</h1>
@@ -297,7 +309,7 @@
 
 <script>
 
-const DATA_URL = 'data.json?t=' + Date.now();
+const DATA_URL = '../data.json?t=' + Date.now();
 const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'All Signals', crypto_lab:'Crypto Lab' };
 const STRAT_DESC = {
   news_only:'Takes every qualifying news signal. No filter (baseline).',
@@ -656,7 +668,7 @@ function setUpdated(){
 
 async function loadData(){
   try{
-    const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});
+    const r=await fetch('../data.json?t='+Date.now(),{cache:'no-store'});
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
     if(sel.strategy==='strict'){ sel.strategy='news_only'; localStorage.setItem('dash_strategy','news_only'); }
