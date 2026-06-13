@@ -213,6 +213,21 @@
 .closed-toggle:hover{background:rgba(0,0,0,.02);}
 .closed-toggle .arrow{transition:transform .2s;font-size:11px;}
 .closed-toggle.expanded .arrow{transform:rotate(90deg);}
+
+/* --- target model selector --- */
+.model-section{margin:4px 0 0;text-align:center;}
+.model-section-label{font:600 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.8px;color:var(--ink-soft);margin-bottom:10px;}
+.model-cards{display:inline-flex;gap:10px;}
+.model-card{display:flex;align-items:center;gap:9px;padding:10px 20px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);cursor:pointer;transition:all .18s ease;font:600 13px 'Spline Sans',sans-serif;color:var(--ink-soft);box-shadow:var(--shadow);position:relative;}
+.model-card:hover{border-color:#b0b0b0;}
+.model-card .mc-icon{width:20px;height:20px;flex-shrink:0;}
+.model-card.on.fixed{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);}
+.model-card.on.volatility{border-color:#7c3aed;background:#f3eefe;color:#6d28d9;}
+.model-card .pilot-tag{position:absolute;top:-8px;right:-6px;font:700 8.5px/1 'Spline Sans Mono',monospace;background:#7c3aed;color:#fff;padding:3px 7px;border-radius:6px;letter-spacing:.4px;white-space:nowrap;}
+.toggle-btn.disabled{opacity:.38;cursor:not-allowed;pointer-events:none;}
+.weekend-pilot-label{display:inline-block;font:700 10px/1 'Spline Sans Mono',monospace;background:#f3eefe;color:#7c3aed;border:1px solid #ddd6fe;padding:4px 10px;border-radius:8px;margin-left:8px;vertical-align:middle;letter-spacing:.3px;}
+.volatility-detail{font:500 11px/1.3 'Spline Sans Mono',monospace;color:#7c3aed;margin-top:4px;}
+@media(max-width:640px){.model-cards{flex-direction:row;gap:8px;}.model-card{padding:9px 14px;font-size:12px;}.model-card .pilot-tag{font-size:7.5px;padding:2px 5px;top:-7px;right:-4px;}}
 </style>
 </head>
 <body>
@@ -240,6 +255,21 @@
     </div>
   </div>
 
+  <div class="model-section" id="model-section">
+    <div class="model-section-label">Target Model</div>
+    <div class="model-cards" id="model-cards">
+      <button class="model-card fixed on" data-model="fixed">
+        <svg class="mc-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="16" height="2" rx="1" fill="currentColor"/><rect x="2" y="12" width="16" height="2" rx="1" fill="currentColor"/></svg>
+        Fixed
+      </button>
+      <button class="model-card volatility" data-model="volatility">
+        <svg class="mc-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="1,14 4,10 7,13 10,5 13,11 16,7 19,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        Volatility
+        <span class="pilot-tag">PILOT</span>
+      </button>
+    </div>
+  </div>
+
   <div class="portfolio-toggle" id="portfolio-toggle"></div>
   <div id="active-label"></div>
 
@@ -264,8 +294,10 @@ const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
 let DATA = null;
 let sel = {
   strategy: localStorage.getItem('dash_strategy') || 'news_only',
-  rule: localStorage.getItem('dash_rule') || 'hold_24hr'
+  rule: localStorage.getItem('dash_rule') || 'hold_24hr',
+  target_model: localStorage.getItem('dash_target_model') || 'fixed'
 };
+const VOLATILITY_STRATEGIES = ['news_only'];
 
 const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtPrice = n => {
@@ -320,7 +352,13 @@ function holdExpiry(t){
 function snapshotAgeMinutes(){ if(!DATA||!DATA.generated_at) return null; return Math.max(0,Math.floor((Date.now()-new Date(DATA.generated_at).getTime())/60000)); }
 function isStale(){ const age=snapshotAgeMinutes(); return age!==null && age>10; }
 
-function book(){ const g=DATA&&DATA.grid&&DATA.grid[sel.strategy]; return g?g[sel.rule]:null; }
+function book(){
+  if(sel.target_model==='volatility'){
+    const vg=DATA&&DATA.volatility_grid&&DATA.volatility_grid[sel.strategy];
+    return vg?vg[sel.rule]:null;
+  }
+  const g=DATA&&DATA.grid&&DATA.grid[sel.strategy]; return g?g[sel.rule]:null;
+}
 
 function kpiCard(label, value, cls, sub){
   return '<div class="kpi"><div class="label">'+label+'</div><div class="value '+(cls||'')+'">'+value+'</div>'+(sub?'<div class="sub">'+sub+'</div>':'')+'</div>';
@@ -350,9 +388,12 @@ function render(){
   document.getElementById('exit-switch').className = 'exit-switch' + (sel.rule==='sell_eod'?' eod':'');
   document.querySelectorAll('#exit-switch button').forEach(b=>b.classList.toggle('on', b.dataset.rule===sel.rule));
   document.querySelectorAll('#portfolio-toggle button').forEach(b=>b.classList.toggle('on', b.dataset.strat===sel.strategy));
+  document.querySelectorAll('#model-cards .model-card').forEach(b=>b.classList.toggle('on', b.dataset.model===sel.target_model));
+  var pilotBadge = sel.target_model==='volatility' ? '<span class="weekend-pilot-label">Weekend Pilot</span>' : '';
+  var modelLabel = sel.target_model==='volatility' ? 'Volatility' : 'Fixed';
   document.getElementById('active-label').innerHTML =
-    '<strong>'+STRAT_LABELS[sel.strategy]+' · '+RULE_LABEL[sel.rule]+'</strong>'+
-    '<div id="book-plain">'+STRAT_DESC[sel.strategy]+'</div>';
+    '<strong>'+STRAT_LABELS[sel.strategy]+' · '+RULE_LABEL[sel.rule]+' · '+modelLabel+pilotBadge+'</strong>'+
+    '<div id="book-plain">'+STRAT_DESC[sel.strategy]+(sel.target_model==='volatility'?'<div class="volatility-detail">ATR-based targets · 1.5× ATR stop · 2× stop target</div>':'')+'</div>';
 
   const b = book();
   const c = document.getElementById('content');
@@ -469,10 +510,23 @@ function toggleClosed(){
 
 function buildPills(){
   const tg=document.getElementById('portfolio-toggle');
-  tg.innerHTML = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict').map(s=>
-    '<button class="toggle-btn'+(s===sel.strategy?' on':'')+'" data-strat="'+s+'">'+STRAT_LABELS[s]+'</button>'
-  ).join('');
-  tg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{ sel.strategy=btn.dataset.strat; localStorage.setItem('dash_strategy',sel.strategy); render(); }));
+  const strats = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict');
+  tg.innerHTML = strats.map(s=>{
+    var dis = sel.target_model==='volatility' && VOLATILITY_STRATEGIES.indexOf(s)===-1;
+    return '<button class="toggle-btn'+(s===sel.strategy?' on':'')+(dis?' disabled':'')+'" data-strat="'+s+'"'+(dis?' title="Not yet tested with volatility model"':'')+'>'+STRAT_LABELS[s]+(dis?' <span style="font-size:9px;opacity:.6">soon</span>':'')+'</button>';
+  }).join('');
+  tg.querySelectorAll('button:not(.disabled)').forEach(btn=>btn.addEventListener('click',()=>{ sel.strategy=btn.dataset.strat; localStorage.setItem('dash_strategy',sel.strategy); render(); }));
+}
+
+function wireModelCards(){
+  document.querySelectorAll('#model-cards .model-card').forEach(btn=>btn.addEventListener('click',()=>{
+    sel.target_model=btn.dataset.model;
+    localStorage.setItem('dash_target_model',sel.target_model);
+    if(sel.target_model==='volatility' && VOLATILITY_STRATEGIES.indexOf(sel.strategy)===-1){
+      sel.strategy='news_only'; localStorage.setItem('dash_strategy','news_only');
+    }
+    buildPills(); render();
+  }));
 }
 
 function wireSwitch(){
@@ -513,6 +567,7 @@ window.addEventListener('touchmove',e=>{ if(!pulling) return; const dy=e.touches
 window.addEventListener('touchend',e=>{ const h=document.getElementById('ptr-hint'); if(pulling&&h.classList.contains('show')){ h.classList.remove('show'); loadData(); } pulling=false; },{passive:true});
 
 wireSwitch();
+wireModelCards();
 loadData();
 
 
@@ -527,7 +582,9 @@ function openTradeModal(t, rt, ri){
   var isOpen = String(t.status).toUpperCase()==='OPEN';
   var dirCls = t.direction==='SHORT'?'short':'long';
   var pnlPctDisp = (t.pnl_percent==null)?null:(t.pnl_percent*100);
-  var head = '<div class="tm-head"><div><h3>'+esc(t.asset)+'<span class="tm-badge '+dirCls+'">'+esc(t.direction)+'</span><span class="tm-badge '+(isOpen?'open':'closed')+'">'+esc(t.status)+'</span></h3><div class="tm-sub">'+esc((t.portfolio||'')+' · '+(t.exit_rule||''))+'</div></div><button class="tm-close" onclick="closeTradeModal()">×</button></div>';
+  var tmModel = t.target_model||'fixed';
+  var modelBadge = tmModel==='volatility'?'<span class="tm-badge" style="background:#f3eefe;color:#6d28d9">VOL</span>':'';
+  var head = '<div class="tm-head"><div><h3>'+esc(t.asset)+'<span class="tm-badge '+dirCls+'">'+esc(t.direction)+'</span><span class="tm-badge '+(isOpen?'open':'closed')+'">'+esc(t.status)+'</span>'+modelBadge+'</h3><div class="tm-sub">'+esc((t.portfolio||'')+' · '+(t.exit_rule||''))+' · '+tmModel+'</div></div><button class="tm-close" onclick="closeTradeModal()">×</button></div>';
   var entryCol = '<div class="tm-col"><h4>Entry</h4>'+tmRow('Price', fmtPrice(t.entry_price))+tmRow('Date / Time', tmFmtET(t.entry_time))+tmRow('Capital', fmtMoney(t.stake_amount))+tmRow('Shares', fmtNum(t.shares))+'</div>';
   var rightCol;
   if(isOpen){
@@ -587,7 +644,17 @@ function openTradeModal(t, rt, ri){
   } else {;
   }
   lifecycle += '</div>';
-  var ctx = '<details class="tm-details"><summary>Show research details</summary><div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+tmRow('Rule version', esc(t.rule_version||'—'))+(t.title?('<div class="hl">“'+esc(t.title)+'”</div>'):'')+'</div></details>';
+  var atrRows = '';
+  if(tmModel==='volatility'){
+    atrRows = tmRow('Target model', '<span style=”color:#6d28d9;font-weight:700”>Volatility (ATR)</span>')+
+      tmRow('ATR %', t.atr_pct_at_entry!=null?(Number(t.atr_pct_at_entry).toFixed(2)+'%'):'—')+
+      tmRow('Stop distance', t.stop_distance_pct!=null?(Number(t.stop_distance_pct).toFixed(2)+'%'):'—')+
+      tmRow('Target distance', t.target_distance_pct!=null?(Number(t.target_distance_pct).toFixed(2)+'%'):'—')+
+      tmRow('Experiment', esc(t.experiment_phase||'—'));
+  } else {
+    atrRows = tmRow('Target model', 'Fixed');
+  }
+  var ctx = '<details class=”tm-details”><summary>Show research details</summary><div class=”tm-context”>'+tmRow('Book', esc(t.book_key||'—'))+atrRows+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+tmRow('Rule version', esc(t.rule_version||'—'))+(t.title?('<div class=”hl”>”'+esc(t.title)+'”</div>'):'')+'</div></details>';
   var navArr = (window.__curRt==='open'?window.__openRows:window.__closedRows)||[]; var ci=window.__curRi;
   var prevDis = (ci>0)?'':'disabled'; var nextDis = (ci>=0 && ci<navArr.length-1)?'':'disabled';
   var foot = '<div class="tm-foot"><button class="tm-btn" '+prevDis+' onclick="tmNav(-1)">‹ Prev</button><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy</button><button class="tm-btn" '+nextDis+' onclick="tmNav(1)">Next ›</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
