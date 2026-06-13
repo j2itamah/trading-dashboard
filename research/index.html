@@ -179,7 +179,7 @@
 </div>
 
 <script>
-const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'All Signals', crypto_lab:'Crypto Lab' };
+const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
 const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
 const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
@@ -223,16 +223,30 @@ function renderTab() {
   }
 }
 
+function classifyBook(b) {
+  if (b.portfolio === 'crypto_lab') return 'lab';
+  if (b.target_model === 'volatility') return 'pilot';
+  return 'production';
+}
+
 function renderCommand() {
   const t = DATA.totals || {};
   const books = DATA.books || [];
   const openPos = DATA.open_positions || [];
   const closedTrades = (DATA.closed_trades || []).filter(c => c.research_valid !== false);
-  const totalEquity = Number(t.equity || 0);
-  const startingCapital = Number(t.starting || 0);
+
+  const prodTotals = DATA.production_totals || null;
+  const labTotals = DATA.lab_totals || null;
+  const prodBooks = books.filter(b => classifyBook(b) === 'production');
+  const pilotBooks = books.filter(b => classifyBook(b) === 'pilot');
+  const labBooks = books.filter(b => classifyBook(b) === 'lab');
+
+  const totalEquity = prodTotals ? Number(prodTotals.equity || 0) : prodBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+  const startingCapital = prodTotals ? Number(prodTotals.starting || 0) : prodBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
   const totalGain = totalEquity - startingCapital;
   const totalReturn = startingCapital > 0 ? (totalGain / startingCapital) * 100 : 0;
-  const bookCount = Number(t.book_count || books.length || 0);
+  const bookCount = prodTotals ? Number(prodTotals.book_count || prodBooks.length) : prodBooks.length;
+  const totalBookCount = Number(t.book_count || books.length || 0);
 
   const sigMap = {};
   openPos.concat(closedTrades).forEach(tr => {
@@ -241,15 +255,16 @@ function renderCommand() {
   });
   const sigCount = Object.keys(sigMap).length;
 
-  const sorted = books.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
+  const nonLabBooks = prodBooks.concat(pilotBooks);
+  const sorted = nonLabBooks.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
   const top3 = sorted.slice(0, 3);
 
   let html = '<section class="hero">' +
     '<div class="card">' +
-      '<div class="eyebrow">Total research capital · ' + bookCount + ' independent paper books</div>' +
+      '<div class="eyebrow">Production research capital · ' + bookCount + ' production books</div>' +
       '<div class="big">' + fmtMoney(totalEquity) + '</div>' +
       '<div class="' + signCls(totalGain) + '" style="font-weight:600;font-size:14px">' + (totalGain >= 0 ? '+' : '') + fmtMoney(totalGain) + ' · ' + fmtPct(totalReturn) + ' combined marked return</div>' +
-      '<div class="health-row"><span class="health-dot"></span>System operational</div>' +
+      (function(){ var h=DATA.health||{}, s=h.status||'unknown'; var cls=s==='healthy'?'':(s==='degraded'?' warn':' err'); var lbl=s==='healthy'?'System operational':(s==='degraded'?'System degraded':(s==='error'?'System error':'Health unknown')); return '<div class="health-row"><span class="health-dot'+cls+'"></span>'+lbl+'</div>'; })() +
     '</div>' +
     '<div class="card">' +
       '<div class="eyebrow">Experiment snapshot</div>' +
@@ -277,13 +292,13 @@ function renderCommand() {
   });
   html += '</div>';
 
-  html += '<div class="section-title">All books</div><div class="card matrix"><table><thead><tr><th>Book</th><th>Lifecycle</th><th>Targets</th><th>Equity</th><th>Return</th><th>Trades</th></tr></thead><tbody>';
+  html += '<div class="section-title">Production &amp; Pilot books</div><div class="card matrix"><table><thead><tr><th>Book</th><th>Lifecycle</th><th>Targets</th><th>Equity</th><th>Return</th><th>Trades</th></tr></thead><tbody>';
   sorted.forEach(b => {
     const g = Number(b.growth_pct || 0);
     const model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
     const closedCount = (DATA.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
-    const isLab = b.portfolio === 'crypto_lab';
-    html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + (isLab ? ' <span class="tag lab">LAB</span>' : '') + '</td>' +
+    const isPilot = classifyBook(b) === 'pilot';
+    html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + (isPilot ? ' <span class="tag vol">PILOT</span>' : '') + '</td>' +
       '<td>' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</td>' +
       '<td>' + model + '</td>' +
       '<td>' + fmtMoney(b.total_equity) + '</td>' +
@@ -291,6 +306,23 @@ function renderCommand() {
       '<td>' + closedCount + ' closed · ' + (b.open_count || 0) + ' open</td></tr>';
   });
   html += '</tbody></table></div>';
+
+  if (labBooks.length > 0) {
+    const labSorted = labBooks.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
+    html += '<div class="section-title">Crypto Lab (experimental — not blended into production)</div><div class="card matrix"><table><thead><tr><th>Book</th><th>Lifecycle</th><th>Targets</th><th>Equity</th><th>Return</th><th>Trades</th></tr></thead><tbody>';
+    labSorted.forEach(b => {
+      const g = Number(b.growth_pct || 0);
+      const model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
+      const closedCount = (DATA.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
+      html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' <span class="tag lab">LAB</span></td>' +
+        '<td>' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</td>' +
+        '<td>' + model + '</td>' +
+        '<td>' + fmtMoney(b.total_equity) + '</td>' +
+        '<td class="' + signCls(g) + ' delta">' + fmtPct(g) + '</td>' +
+        '<td>' + closedCount + ' closed · ' + (b.open_count || 0) + ' open</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  }
 
   const lowSample = DATA.low_sample_threshold || 20;
   html += '<div class="note"><strong>Small-sample warning:</strong> Books with fewer than ' + lowSample + ' closed trades are not yet statistically meaningful. Do not draw conclusions from early returns.</div>';
@@ -300,8 +332,9 @@ function renderCommand() {
 
 function renderCompare() {
   const books = DATA.books || [];
-  const fixedBooks = books.filter(b => (b.target_model || 'fixed') === 'fixed');
-  const volBooks = books.filter(b => b.target_model === 'volatility');
+  const nonLabBooks = books.filter(b => b.portfolio !== 'crypto_lab');
+  const fixedBooks = nonLabBooks.filter(b => (b.target_model || 'fixed') === 'fixed');
+  const volBooks = nonLabBooks.filter(b => b.target_model === 'volatility');
 
   let html = '<div class="section-title">Fixed versus Volatility</div>';
 
@@ -330,8 +363,8 @@ function renderCompare() {
   }
 
   html += '<div class="section-title">24hr Hold versus Early Exit</div><div class="compare-grid">';
-  const holdBooks = books.filter(b => b.exit_rule === 'hold_24hr');
-  const eodBooks = books.filter(b => b.exit_rule === 'sell_eod');
+  const holdBooks = nonLabBooks.filter(b => b.exit_rule === 'hold_24hr');
+  const eodBooks = nonLabBooks.filter(b => b.exit_rule === 'sell_eod');
   const holdEq = holdBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
   const holdStart = holdBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
   const holdRet = holdStart > 0 ? ((holdEq - holdStart) / holdStart) * 100 : 0;

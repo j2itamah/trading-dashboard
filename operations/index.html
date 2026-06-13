@@ -310,14 +310,14 @@
 <script>
 
 const DATA_URL = '../data.json?t=' + Date.now();
-const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'All Signals', crypto_lab:'Crypto Lab' };
+const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
 const STRAT_DESC = {
   news_only:'Takes every qualifying news signal. No filter (baseline).',
   news_plus_ta:'News signals, lightly filtered by RSI.',
   mean_reversion:'Buys oversold dips. RSI + trend confirmation.',
   trend_strict:'Trend-following. Needs price above MA20 + momentum.',
   strict:'Tightest filter. RSI + trend + momentum + volume.',
-  crypto_lab:'Experimental crypto-only area with a slightly relaxed signal gate (confidence ≥ 0.60 vs production 0.65). Creates matched trades across all 4 book combinations for direct Fixed vs Volatility comparison.'
+  crypto_lab:'Experimental crypto-only area with a relaxed signal gate. Creates matched trades across all 4 book combinations for direct Fixed vs Volatility comparison.'
 };
 const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
 
@@ -423,7 +423,7 @@ function render(){
   var modelLabel = sel.target_model==='volatility' ? 'Volatility' : 'Fixed';
   document.getElementById('active-label').innerHTML =
     '<strong>'+STRAT_LABELS[sel.strategy]+' · '+RULE_LABEL[sel.rule]+' · '+modelLabel+pilotBadge+'</strong>'+
-    '<div id="book-plain">'+STRAT_DESC[sel.strategy]+(sel.target_model==='volatility'?'<div class="volatility-detail">ATR-based targets · 1.5× ATR stop · 2× stop target</div>':'')+'</div>';
+    '<div id="book-plain">'+(sel.strategy==='crypto_lab' && DATA && DATA.config ? STRAT_DESC[sel.strategy].replace(/signal gate/, 'signal gate (confidence ≥ '+(DATA.config.lab_threshold||0.10).toFixed(2)+' vs production '+(DATA.config.production_threshold||0.65).toFixed(2)+')') : STRAT_DESC[sel.strategy])+(sel.target_model==='volatility'?'<div class="volatility-detail">ATR-based targets · 1.5× ATR stop · 2× stop target</div>':'')+'</div>';
 
   const b = book();
   const c = document.getElementById('content');
@@ -435,7 +435,9 @@ function render(){
   const noTrades = !b.closed || b.closed.count===0;
   const isLab = sel.strategy==='crypto_lab';
 
-  const labWarn = isLab ? '<div class="lab-warning"><span class="lw-icon">🧪</span>Crypto Lab — exploratory signal gate (confidence ≥ 0.60). Results are not blended into production strategy totals.</div>' : '';
+  const labThreshold = DATA && DATA.config && DATA.config.lab_threshold != null ? DATA.config.lab_threshold : 0.10;
+  const prodThreshold = DATA && DATA.config && DATA.config.production_threshold != null ? DATA.config.production_threshold : 0.65;
+  const labWarn = isLab ? '<div class="lab-warning"><span class="lw-icon">🧪</span>Crypto Lab — exploratory signal gate (confidence ≥ '+labThreshold.toFixed(2)+' vs production '+prodThreshold.toFixed(2)+'). Results are not blended into production strategy totals.</div>' : '';
 
   const eq =
     '<div class="equity-summary">'+

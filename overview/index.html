@@ -127,7 +127,7 @@
 </div>
 
 <script>
-const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'All Signals', crypto_lab:'Crypto Lab' };
+const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
 const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
 const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
@@ -146,65 +146,91 @@ async function loadData(){
   }
 }
 
+function classifyBook(b) {
+  if (b.portfolio === 'crypto_lab') return 'lab';
+  if (b.target_model === 'volatility') return 'pilot';
+  return 'production';
+}
+
 function render(D) {
   const t = D.totals || {};
   const books = D.books || [];
   const openPos = D.open_positions || [];
   const closedTrades = D.closed_trades || [];
 
-  const totalEquity = Number(t.equity || 0);
-  const startingCapital = Number(t.starting || 0);
-  const totalGain = totalEquity - startingCapital;
-  const totalReturn = startingCapital > 0 ? (totalGain / startingCapital) * 100 : 0;
+  const prodTotals = D.production_totals || null;
+  const labTotals = D.lab_totals || null;
 
-  const realizedPnl = closedTrades.filter(c => c.research_valid !== false).reduce((s, c) => s + Number(c.pnl_dollars || 0), 0);
-  const unrealizedPnl = openPos.reduce((s, p) => s + Number(p.unrealized_pnl_dollars || 0), 0);
-  const openCount = Number(t.open_positions || openPos.length || 0);
-  const bookCount = Number(t.book_count || books.length || 0);
+  const prodBooks = books.filter(b => classifyBook(b) === 'production');
+  const pilotBooks = books.filter(b => classifyBook(b) === 'pilot');
+  const labBooks = books.filter(b => classifyBook(b) === 'lab');
 
-  const sorted = books.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
+  const primaryEquity = prodTotals ? Number(prodTotals.equity || 0) : prodBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+  const primaryStarting = prodTotals ? Number(prodTotals.starting || 0) : prodBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+  const primaryGain = primaryEquity - primaryStarting;
+  const primaryReturn = primaryStarting > 0 ? (primaryGain / primaryStarting) * 100 : 0;
+  const primaryBookCount = prodTotals ? Number(prodTotals.book_count || prodBooks.length) : prodBooks.length;
+
+  const labEquity = labTotals ? Number(labTotals.equity || 0) : labBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+  const labStarting = labTotals ? Number(labTotals.starting || 0) : labBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+  const labGain = labEquity - labStarting;
+  const labReturn = labStarting > 0 ? (labGain / labStarting) * 100 : 0;
+
+  const prodOpen = openPos.filter(p => classifyBook({portfolio: p.portfolio, target_model: p.target_model}) === 'production');
+  const realizedPnl = closedTrades.filter(c => c.research_valid !== false && classifyBook({portfolio: c.portfolio, target_model: c.target_model}) === 'production').reduce((s, c) => s + Number(c.pnl_dollars || 0), 0);
+  const unrealizedPnl = prodOpen.reduce((s, p) => s + Number(p.unrealized_pnl_dollars || 0), 0);
+  const openCount = prodOpen.length;
+  const bookCount = primaryBookCount;
+  const totalBookCount = Number(t.book_count || books.length || 0);
+
+  const nonLabBooks = prodBooks.concat(pilotBooks);
+  const sorted = nonLabBooks.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
   const top3 = sorted.slice(0, 3);
-  const worst = sorted.slice().reverse().slice(0, 3);
+
+  const health = D.health || {};
+  const healthStatus = health.status || 'unknown';
+  const healthDotCls = healthStatus === 'healthy' ? '' : (healthStatus === 'degraded' ? ' warn' : ' err');
+  const healthLabel = healthStatus === 'healthy' ? 'System operational' : (healthStatus === 'degraded' ? 'System degraded' : (healthStatus === 'error' ? 'System error' : 'Health unknown'));
 
   const heroHtml =
     '<section class="hero">' +
       '<div class="card">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">' +
-          '<span class="eyebrow">Total marked equity · ' + bookCount + ' independent books</span>' +
+          '<span class="eyebrow">Primary experiment · ' + bookCount + ' production books</span>' +
           '<span class="pill">' + openCount + ' open positions</span>' +
         '</div>' +
-        '<div class="big">' + fmtMoney(totalEquity) + '</div>' +
-        '<div class="' + signCls(totalGain) + '" style="font-weight:600;font-size:14px">' +
-          (totalGain >= 0 ? '+' : '') + fmtMoney(totalGain) + ' · ' + fmtPct(totalReturn) + ' combined marked return' +
+        '<div class="big">' + fmtMoney(primaryEquity) + '</div>' +
+        '<div class="' + signCls(primaryGain) + '" style="font-weight:600;font-size:14px">' +
+          (primaryGain >= 0 ? '+' : '') + fmtMoney(primaryGain) + ' · ' + fmtPct(primaryReturn) + ' production marked return' +
         '</div>' +
         '<div class="health-row">' +
-          '<span class="health-dot"></span>' +
-          'System operational · ' + bookCount + ' books tracked' +
+          '<span class="health-dot' + healthDotCls + '"></span>' +
+          healthLabel + ' · ' + totalBookCount + ' total books tracked' +
         '</div>' +
       '</div>' +
       '<div class="card">' +
         '<div class="eyebrow">Experiment status</div>' +
-        '<div class="today-val">' + bookCount + ' books</div>' +
-        '<div class="sub">' + fmtMoney(startingCapital) + ' starting capital</div>' +
+        '<div class="today-val">' + totalBookCount + ' books</div>' +
+        '<div class="sub">' + bookCount + ' production' + (pilotBooks.length ? ' · ' + pilotBooks.length + ' pilot' : '') + (labBooks.length ? ' · ' + labBooks.length + ' lab' : '') + '</div>' +
         '<div class="note">' +
-          '<strong>Important:</strong> Total research capital represents multiple independent paper books, not one combined live brokerage account.' +
+          '<strong>Important:</strong> Primary totals exclude Crypto Lab. Each book is an independent paper account, not one combined live brokerage.' +
         '</div>' +
       '</div>' +
     '</section>';
 
   const metricsHtml =
     '<section class="metrics">' +
-      '<div class="metric"><div class="eyebrow">Starting Capital</div><div class="value">' + fmtMoney(startingCapital) + '</div><div class="sub">' + bookCount + ' books × ' + fmtMoney(startingCapital / bookCount) + '</div></div>' +
-      '<div class="metric"><div class="eyebrow">Realized P/L</div><div class="value ' + signCls(realizedPnl) + '">' + (realizedPnl >= 0 ? '+' : '') + fmtMoney(realizedPnl) + '</div><div class="sub">From ' + closedTrades.filter(c => c.research_valid !== false).length + ' closed trades</div></div>' +
+      '<div class="metric"><div class="eyebrow">Starting Capital</div><div class="value">' + fmtMoney(primaryStarting) + '</div><div class="sub">' + bookCount + ' production books</div></div>' +
+      '<div class="metric"><div class="eyebrow">Realized P/L</div><div class="value ' + signCls(realizedPnl) + '">' + (realizedPnl >= 0 ? '+' : '') + fmtMoney(realizedPnl) + '</div><div class="sub">Production closed trades</div></div>' +
       '<div class="metric"><div class="eyebrow">Unrealized P/L</div><div class="value ' + signCls(unrealizedPnl) + '">' + (unrealizedPnl >= 0 ? '+' : '') + fmtMoney(unrealizedPnl) + '</div><div class="sub">' + openCount + ' open positions</div></div>' +
-      '<div class="metric"><div class="eyebrow">Total P/L</div><div class="value ' + signCls(totalGain) + '">' + fmtPct(totalReturn) + '</div><div class="sub">' + (totalGain >= 0 ? '+' : '') + fmtMoney(totalGain) + '</div></div>' +
+      '<div class="metric"><div class="eyebrow">Total P/L</div><div class="value ' + signCls(primaryGain) + '">' + fmtPct(primaryReturn) + '</div><div class="sub">' + (primaryGain >= 0 ? '+' : '') + fmtMoney(primaryGain) + '</div></div>' +
     '</section>';
 
-  let leaderHtml = '<div class="section-title">Best-performing books</div><div class="leader">';
+  let leaderHtml = '<div class="section-title">Best-performing production books</div><div class="leader">';
   top3.forEach((b, i) => {
     const g = Number(b.growth_pct || 0);
-    const maxG = Number(top3[0].growth_pct || 1);
-    const barW = maxG > 0 ? Math.round((g / maxG) * 100) : 0;
+    const maxG = Math.max(Number(top3[0].growth_pct || 1), 0.01);
+    const barW = maxG > 0 ? Math.round((Math.max(g, 0) / maxG) * 100) : 0;
     const model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
     const closedCount = (D.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
     leaderHtml +=
@@ -217,13 +243,15 @@ function render(D) {
   });
   leaderHtml += '</div>';
 
-  let lowerHtml = '<section class="lower"><div class="card"><h2 class="section-title" style="margin-top:0">All books by return</h2>';
+  let lowerHtml = '<section class="lower"><div class="card"><h2 class="section-title" style="margin-top:0">Production books by return</h2>';
   sorted.forEach(b => {
     const g = Number(b.growth_pct || 0);
     const model = (b.target_model || 'fixed') === 'volatility' ? ' · VOL' : '';
+    const cls = classifyBook(b);
+    const clsTag = cls === 'pilot' ? ' <span style="color:#6d28d9;font-size:10px;font-weight:700">PILOT</span>' : '';
     lowerHtml +=
       '<div class="book-row">' +
-        '<div class="name">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + model +
+        '<div class="name">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + model + clsTag +
           '<small>' + fmtMoney(b.total_equity) + ' equity · ' + (b.open_count || 0) + ' open</small>' +
         '</div>' +
         '<span class="spark ' + signCls(g) + '">' + (g >= 0 ? '+' : '') + fmtMoney(b.growth_dollars || 0) + '</span>' +
@@ -232,17 +260,21 @@ function render(D) {
   lowerHtml += '</div>';
 
   lowerHtml += '<div class="card"><h2 class="section-title" style="margin-top:0">Experiment summary</h2>';
-  lowerHtml += '<div class="book-row"><div class="name">Total books</div><span class="spark">' + bookCount + '</span></div>';
-  lowerHtml += '<div class="book-row"><div class="name">Open positions</div><span class="spark">' + openCount + '</span></div>';
-  lowerHtml += '<div class="book-row"><div class="name">Closed trades</div><span class="spark">' + closedTrades.filter(c => c.research_valid !== false).length + '</span></div>';
+  lowerHtml += '<div class="book-row"><div class="name">Production books</div><span class="spark">' + prodBooks.length + '</span></div>';
+  if (pilotBooks.length) lowerHtml += '<div class="book-row"><div class="name">Pilot books (Volatility)</div><span class="spark">' + pilotBooks.length + '</span></div>';
+  lowerHtml += '<div class="book-row"><div class="name">Open positions (production)</div><span class="spark">' + openCount + '</span></div>';
+  lowerHtml += '<div class="book-row"><div class="name">Closed trades (production)</div><span class="spark">' + closedTrades.filter(c => c.research_valid !== false && classifyBook({portfolio: c.portfolio, target_model: c.target_model}) === 'production').length + '</span></div>';
 
-  const fixedBooks = books.filter(b => (b.target_model || 'fixed') === 'fixed');
-  const volBooks = books.filter(b => b.target_model === 'volatility');
+  const fixedBooks = prodBooks.filter(b => (b.target_model || 'fixed') === 'fixed');
   const fixedEq = fixedBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
-  const volEq = volBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
-  lowerHtml += '<div class="book-row"><div class="name">Fixed model equity<small>' + fixedBooks.length + ' books</small></div><span class="spark">' + fmtMoney(fixedEq) + '</span></div>';
-  if (volBooks.length > 0) {
-    lowerHtml += '<div class="book-row"><div class="name">Volatility model equity<small>' + volBooks.length + ' books (pilot)</small></div><span class="spark">' + fmtMoney(volEq) + '</span></div>';
+  lowerHtml += '<div class="book-row"><div class="name">Fixed model equity<small>' + fixedBooks.length + ' production books</small></div><span class="spark">' + fmtMoney(fixedEq) + '</span></div>';
+  if (pilotBooks.length > 0) {
+    const pilotEq = pilotBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
+    lowerHtml += '<div class="book-row"><div class="name">Volatility model equity<small>' + pilotBooks.length + ' pilot books</small></div><span class="spark">' + fmtMoney(pilotEq) + '</span></div>';
+  }
+
+  if (labBooks.length > 0) {
+    lowerHtml += '<div class="book-row" style="border-top:2px solid #d97706;margin-top:8px;padding-top:12px"><div class="name" style="color:#92400e">Crypto Lab<small>' + labBooks.length + ' books · experimental, not blended into primary</small></div><span class="spark ' + signCls(labGain) + '">' + (labGain >= 0 ? '+' : '') + fmtMoney(labGain) + ' (' + fmtPct(labReturn) + ')</span></div>';
   }
 
   lowerHtml += '<div class="note" style="margin-top:16px"><strong>Reference paths only.</strong> Any growth comparisons shown are reference lines, not targets, promises, or forecasts. The system must never alter trading behavior to chase a dashboard reference line.</div>';
