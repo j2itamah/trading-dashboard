@@ -21,7 +21,6 @@
   }
   .wrap { max-width: 1080px; margin: 0 auto; }
 
-  /* --- shared site navigation --- */
   .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;}
   .nav-link{font-family:'Spline Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ink-soft);background:transparent;text-decoration:none;border-radius:12px;padding:10px 20px;transition:all .15s ease;}
   .nav-link:hover{color:var(--ink);}
@@ -35,24 +34,22 @@
   .updated { text-align: right; font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
   .updated strong { color: var(--ink); display: block; font-size: 13px; }
 
-  /* hero */
   .hero { display: grid; grid-template-columns: 1.35fr .65fr; gap: 16px; margin-bottom: 16px; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
   .eyebrow { font-family: 'Spline Sans Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-soft); font-weight: 600; }
   .big { font-family: 'Fraunces', serif; font-size: clamp(32px, 5vw, 54px); font-weight: 600; margin: 10px 0 4px; letter-spacing: -1px; line-height: 1.05; }
   .pos-text { color: var(--green); } .neg-text { color: var(--red); } .zero-text { color: var(--ink-soft); }
   .pill { display: inline-flex; padding: 5px 10px; border-radius: 20px; background: var(--green-bg); color: var(--green); font-weight: 700; font-size: 11px; font-family: 'Spline Sans Mono', monospace; }
+  .pill.amber { background: #fef3c7; color: #92400e; }
   .today-val { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 600; margin: 10px 0 4px; }
   .sub { color: var(--ink-soft); font-size: 12px; font-family: 'Spline Sans Mono', monospace; margin-top: 6px; }
   .note { background: #fbf6e8; border: 1px solid #ead8a4; color: #8a6927; padding: 12px; border-radius: 12px; font-size: 11px; line-height: 1.55; margin-top: 12px; font-family: 'Spline Sans Mono', monospace; }
 
-  /* metric grid */
   .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
   .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); }
   .metric .value { font-family: 'Fraunces', serif; font-size: clamp(22px, 3.5vw, 31px); font-weight: 600; margin: 8px 0 4px; letter-spacing: -0.5px; }
   .metric .sub { font-size: 11px; }
 
-  /* books leaderboard */
   .section-title { font-family: 'Spline Sans Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); font-weight: 600; margin: 28px 0 14px; display: flex; align-items: center; gap: 8px; }
   .section-title::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
   .leader { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -70,19 +67,45 @@
   .tag { font-family: 'Spline Sans Mono', monospace; font-size: 10px; background: var(--accent-bg); color: var(--accent); padding: 2px 7px; border-radius: 5px; font-weight: 600; }
   .tag.vol { background: #f3eefe; color: #6d28d9; }
 
-  /* health */
   .health-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 12px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; }
   .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
   .health-dot.warn { background: var(--gold); }
   .health-dot.err { background: var(--red); }
 
-  /* lower grid */
+  /* chart */
+  .chart-card { margin-bottom: 16px; }
+  .chart-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+  .chart-top h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin: 0; }
+  .controls { display: flex; gap: 6px; }
+  .controls button { background: var(--panel); border: 1px solid var(--line); padding: 7px 12px; border-radius: 10px; font: 600 11px 'Spline Sans Mono', monospace; color: var(--ink-soft); cursor: pointer; }
+  .controls .on { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  .legend { display: flex; gap: 18px; font-size: 11px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; margin-bottom: 14px; }
+  .legend span::before { content: ''; display: inline-block; width: 16px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: var(--green); }
+  .legend .ref::before { background: var(--gold); border-top: 1px dashed var(--gold); }
+  .chart-area { height: 240px; position: relative; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); background: repeating-linear-gradient(to bottom, transparent 0, transparent 59px, var(--line) 60px); border-radius: 0 0 8px 0; }
+  .chart-area svg { width: 100%; height: 100%; overflow: visible; }
+  .chart-labels { display: flex; justify-content: space-between; color: var(--ink-soft); font-size: 10px; margin-top: 8px; font-family: 'Spline Sans Mono', monospace; }
+  .chart-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; font-size: 13px; text-align: center; padding: 20px; }
+
+  /* filter pills */
+  .filter-row { display: flex; gap: 6px; padding: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+  .filter-btn { border: 0; background: transparent; padding: 9px 14px; border-radius: 10px; font: 600 12px 'Spline Sans', sans-serif; color: var(--ink-soft); cursor: pointer; }
+  .filter-btn.on { background: var(--accent); color: #fff; }
+  .filter-btn.lab-filter { color: #92400e; }
+  .filter-btn.lab-filter.on { background: #f59e0b; color: #fff; }
+
   .lower { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; margin-top: 16px; }
   .book-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .book-row:last-child { border-bottom: none; }
   .book-row .name { font-weight: 600; font-size: 13px; }
   .book-row .name small { display: block; font-size: 11px; color: var(--ink-soft); font-weight: 400; }
   .book-row .spark { font-family: 'Spline Sans Mono', monospace; font-weight: 600; font-size: 14px; }
+
+  .day-row { display: grid; grid-template-columns: 90px 1fr 90px 90px; gap: 10px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 12px; font-family: 'Spline Sans Mono', monospace; }
+  .day-row:last-child { border-bottom: none; }
+  .day-bar { height: 8px; background: var(--bg); border-radius: 6px; overflow: hidden; }
+  .day-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #8fc35d); border-radius: 6px; }
+  .day-bar i.neg { background: var(--red); }
 
   .footnote { margin-top: 22px; padding: 14px 18px; background: var(--accent-bg); border-radius: 12px; font-size: 12px; color: var(--accent); line-height: 1.55; border-left: 3px solid var(--accent); font-family: 'Spline Sans Mono', monospace; }
   .status { text-align: center; padding: 40px; color: var(--ink-soft); font-family: 'Spline Sans Mono', monospace; font-size: 13px; }
@@ -95,6 +118,9 @@
     .lower { grid-template-columns: 1fr; }
     header { flex-direction: column; align-items: flex-start; }
     .updated { text-align: left; }
+    .chart-area { height: 200px; }
+    .day-row { grid-template-columns: 70px 1fr 70px; }
+    .day-row .equity { display: none; }
   }
   @media(max-width:640px){
     .site-nav{position:fixed;bottom:0;left:0;right:0;border-radius:0;z-index:100;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel);box-shadow:0 -2px 10px rgba(0,0,0,.08);}
@@ -112,10 +138,10 @@
 
   <header>
     <div class="title-block">
-      <h1><span class="dot"></span>Trading Analyst</h1>
-      <p>How is the experiment doing?</p>
+      <h1><span class="dot"></span>Research Growth</h1>
+      <p>How the complete experiment is growing over time</p>
     </div>
-    <div class="updated">
+    <div class="updated" id="started-block">
       <span>Last updated</span>
       <strong id="upd-date">—</strong>
     </div>
@@ -127,24 +153,16 @@
 </div>
 
 <script>
-const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
-const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
-const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
-const signCls = n => n>0?'pos-text':(n<0?'neg-text':'zero-text');
-const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+var DATA_URL = '../data.json?t=' + Date.now();
+var STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
+var RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
+var fmtMoney = function(n) { return '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); };
+var fmtPct = function(n) { return (n>0?'+':'') + Number(n||0).toFixed(2) + '%'; };
+var signCls = function(n) { return n>0?'pos-text':(n<0?'neg-text':'zero-text'); };
+var esc = function(s) { return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
 
-async function loadData(){
-  try {
-    const r = await fetch('../data.json?t='+Date.now(), {cache:'no-store'});
-    const D = await r.json();
-    render(D);
-    const d = D.generated_at ? new Date(D.generated_at) : new Date();
-    document.getElementById('upd-date').textContent = d.toLocaleString();
-  } catch(e) {
-    document.getElementById('content').innerHTML = '<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
-  }
-}
+var DATA = null;
+var activeFilter = 'production';
 
 function classifyBook(b) {
   if (b.portfolio === 'crypto_lab') return 'lab';
@@ -152,87 +170,152 @@ function classifyBook(b) {
   return 'production';
 }
 
-function render(D) {
-  const t = D.totals || {};
-  const books = D.books || [];
-  const openPos = D.open_positions || [];
-  const closedTrades = D.closed_trades || [];
+async function loadData() {
+  try {
+    var r = await fetch(DATA_URL, {cache:'no-store'});
+    DATA = await r.json();
+    var d = DATA.generated_at ? new Date(DATA.generated_at) : new Date();
+    document.getElementById('upd-date').textContent = d.toLocaleString();
+    render();
+  } catch(e) {
+    document.getElementById('content').innerHTML = '<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
+  }
+}
 
-  const prodTotals = D.production_totals || null;
-  const labTotals = D.lab_totals || null;
+function setFilter(f) {
+  activeFilter = f;
+  render();
+}
 
-  const prodBooks = books.filter(b => classifyBook(b) === 'production');
-  const pilotBooks = books.filter(b => classifyBook(b) === 'pilot');
-  const labBooks = books.filter(b => classifyBook(b) === 'lab');
+function render() {
+  var D = DATA;
+  if (!D) return;
+  var books = D.books || [];
+  var openPos = D.open_positions || [];
+  var closedTrades = D.closed_trades || [];
+  var snapshots = D.snapshots || [];
+  var config = D.config || {};
+  var experimentStart = config.experiment_start || null;
 
-  const primaryEquity = prodTotals ? Number(prodTotals.equity || 0) : prodBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
-  const primaryStarting = prodTotals ? Number(prodTotals.starting || 0) : prodBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
-  const primaryGain = primaryEquity - primaryStarting;
-  const primaryReturn = primaryStarting > 0 ? (primaryGain / primaryStarting) * 100 : 0;
-  const primaryBookCount = prodTotals ? Number(prodTotals.book_count || prodBooks.length) : prodBooks.length;
+  var prodBooks = books.filter(function(b){ return classifyBook(b) === 'production'; });
+  var pilotBooks = books.filter(function(b){ return classifyBook(b) === 'pilot'; });
+  var labBooks = books.filter(function(b){ return classifyBook(b) === 'lab'; });
 
-  const labEquity = labTotals ? Number(labTotals.equity || 0) : labBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
-  const labStarting = labTotals ? Number(labTotals.starting || 0) : labBooks.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
-  const labGain = labEquity - labStarting;
-  const labReturn = labStarting > 0 ? (labGain / labStarting) * 100 : 0;
+  var viewBooks, viewLabel, viewFilter;
+  if (activeFilter === 'production') {
+    viewBooks = prodBooks; viewLabel = 'Primary Experiment'; viewFilter = 'production';
+  } else if (activeFilter === 'pilot') {
+    viewBooks = pilotBooks; viewLabel = 'Volatility Pilot'; viewFilter = 'pilot';
+  } else if (activeFilter === 'lab') {
+    viewBooks = labBooks; viewLabel = 'Crypto Lab'; viewFilter = 'lab';
+  } else {
+    viewBooks = books; viewLabel = 'All Research Books'; viewFilter = 'all';
+  }
 
-  const prodOpen = openPos.filter(p => classifyBook({portfolio: p.portfolio, target_model: p.target_model}) === 'production');
-  const realizedPnl = closedTrades.filter(c => c.research_valid !== false && classifyBook({portfolio: c.portfolio, target_model: c.target_model}) === 'production').reduce((s, c) => s + Number(c.pnl_dollars || 0), 0);
-  const unrealizedPnl = prodOpen.reduce((s, p) => s + Number(p.unrealized_pnl_dollars || 0), 0);
-  const openCount = prodOpen.length;
-  const bookCount = primaryBookCount;
-  const totalBookCount = Number(t.book_count || books.length || 0);
+  var viewEquity = viewBooks.reduce(function(s,b){ return s + Number(b.total_equity||0); }, 0);
+  var viewStarting = viewBooks.reduce(function(s,b){ return s + Number(b.starting_balance||0); }, 0);
+  var viewGain = viewEquity - viewStarting;
+  var viewReturn = viewStarting > 0 ? (viewGain / viewStarting) * 100 : 0;
 
-  const nonLabBooks = prodBooks.concat(pilotBooks);
-  const sorted = nonLabBooks.slice().sort((a, b) => Number(b.growth_pct || 0) - Number(a.growth_pct || 0));
-  const top3 = sorted.slice(0, 3);
+  var viewOpen = openPos.filter(function(p) {
+    var cls = classifyBook({portfolio:p.portfolio, target_model:p.target_model});
+    return viewFilter === 'all' || cls === viewFilter;
+  });
+  var viewClosed = closedTrades.filter(function(c) {
+    if (c.research_valid === false) return false;
+    var cls = classifyBook({portfolio:c.portfolio, target_model:c.target_model});
+    return viewFilter === 'all' || cls === viewFilter;
+  });
+  var realizedPnl = viewClosed.reduce(function(s,c){ return s + Number(c.pnl_dollars||0); }, 0);
+  var unrealizedPnl = viewOpen.reduce(function(s,p){ return s + Number(p.unrealized_pnl_dollars||0); }, 0);
 
-  const health = D.health || {};
-  const healthStatus = health.status || 'unknown';
-  const healthDotCls = healthStatus === 'healthy' ? '' : (healthStatus === 'degraded' ? ' warn' : ' err');
-  const healthLabel = healthStatus === 'healthy' ? 'System operational' : (healthStatus === 'degraded' ? 'System degraded' : (healthStatus === 'error' ? 'System error' : 'Health unknown'));
+  var health = D.health || {};
+  var healthStatus = health.status || 'unknown';
+  var healthDotCls = healthStatus === 'healthy' ? '' : (healthStatus === 'degraded' ? ' warn' : ' err');
+  var healthLabel = healthStatus === 'healthy' ? 'System operational' : (healthStatus === 'degraded' ? 'System degraded' : (healthStatus === 'error' ? 'System error' : 'Health unknown'));
 
-  const heroHtml =
+  var isLab = activeFilter === 'lab';
+  var isAll = activeFilter === 'all';
+
+  var filterHtml =
+    '<div class="filter-row">' +
+      '<button class="filter-btn'+(activeFilter==='production'?' on':'')+'" onclick="setFilter(\'production\')">Primary Experiment</button>' +
+      '<button class="filter-btn'+(activeFilter==='pilot'?' on':'')+'" onclick="setFilter(\'pilot\')">Volatility Pilot</button>' +
+      '<button class="filter-btn lab-filter'+(activeFilter==='lab'?' on':'')+'" onclick="setFilter(\'lab\')">Crypto Lab</button>' +
+      '<button class="filter-btn'+(activeFilter==='all'?' on':'')+'" onclick="setFilter(\'all\')">All Research Books</button>' +
+    '</div>';
+
+  var startHtml = '';
+  if (experimentStart) {
+    var startDate = new Date(experimentStart);
+    var dayCount = Math.floor((Date.now() - startDate.getTime()) / 86400000);
+    startHtml = '<div class="sub" style="margin-top:8px">Experiment started <strong>' +
+      startDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) +
+      '</strong> · Day ' + dayCount + '</div>';
+  }
+
+  var allNote = isAll ? '<div class="note" style="margin-top:10px"><strong>Combined view.</strong> This shows all research books together. Books are independent paper accounts — this is not one combined brokerage.</div>' : '';
+  var labNote = isLab ? '<div class="note" style="margin-top:10px;border-color:#f59e0b;background:#fffbeb;color:#92400e"><strong>Crypto Lab — experimental.</strong> These results are not blended into the Primary Experiment totals.</div>' : '';
+
+  var heroHtml =
     '<section class="hero">' +
       '<div class="card">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">' +
-          '<span class="eyebrow">Primary experiment · ' + bookCount + ' production books</span>' +
-          '<span class="pill">' + openCount + ' open positions</span>' +
+          '<span class="eyebrow">' + esc(viewLabel) + ' · ' + viewBooks.length + ' books</span>' +
+          '<span class="pill' + (isLab ? ' amber' : '') + '">' + viewOpen.length + ' open positions</span>' +
         '</div>' +
-        '<div class="big">' + fmtMoney(primaryEquity) + '</div>' +
-        '<div class="' + signCls(primaryGain) + '" style="font-weight:600;font-size:14px">' +
-          (primaryGain >= 0 ? '+' : '') + fmtMoney(primaryGain) + ' · ' + fmtPct(primaryReturn) + ' production marked return' +
+        '<div class="big">' + fmtMoney(viewEquity) + '</div>' +
+        '<div class="' + signCls(viewGain) + '" style="font-weight:600;font-size:14px">' +
+          (viewGain >= 0 ? '+' : '') + fmtMoney(viewGain) + ' · ' + fmtPct(viewReturn) + ' marked return' +
         '</div>' +
+        startHtml +
         '<div class="health-row">' +
           '<span class="health-dot' + healthDotCls + '"></span>' +
-          healthLabel + ' · ' + totalBookCount + ' total books tracked' +
+          healthLabel + ' · ' + books.length + ' total books tracked' +
         '</div>' +
+        allNote + labNote +
       '</div>' +
       '<div class="card">' +
-        '<div class="eyebrow">Experiment status</div>' +
-        '<div class="today-val">' + totalBookCount + ' books</div>' +
-        '<div class="sub">' + bookCount + ' production' + (pilotBooks.length ? ' · ' + pilotBooks.length + ' pilot' : '') + (labBooks.length ? ' · ' + labBooks.length + ' lab' : '') + '</div>' +
-        '<div class="note">' +
-          '<strong>Important:</strong> Primary totals exclude Crypto Lab. Each book is an independent paper account, not one combined live brokerage.' +
-        '</div>' +
+        '<div class="eyebrow">Made today</div>' +
+        (snapshots.length > 0
+          ? '<div class="today-val ' + signCls(0) + '">—</div><div class="sub">Requires daily snapshots</div>'
+          : '<div class="today-val" style="color:var(--ink-soft)">—</div><div class="sub">Collecting authoritative growth history</div>'
+        ) +
+        '<div class="note">The daily number resets at midnight ET. It includes today\'s realized and unrealized change.</div>' +
       '</div>' +
     '</section>';
 
-  const metricsHtml =
+  var metricsHtml =
     '<section class="metrics">' +
-      '<div class="metric"><div class="eyebrow">Starting Capital</div><div class="value">' + fmtMoney(primaryStarting) + '</div><div class="sub">' + bookCount + ' production books</div></div>' +
-      '<div class="metric"><div class="eyebrow">Realized P/L</div><div class="value ' + signCls(realizedPnl) + '">' + (realizedPnl >= 0 ? '+' : '') + fmtMoney(realizedPnl) + '</div><div class="sub">Production closed trades</div></div>' +
-      '<div class="metric"><div class="eyebrow">Unrealized P/L</div><div class="value ' + signCls(unrealizedPnl) + '">' + (unrealizedPnl >= 0 ? '+' : '') + fmtMoney(unrealizedPnl) + '</div><div class="sub">' + openCount + ' open positions</div></div>' +
-      '<div class="metric"><div class="eyebrow">Total P/L</div><div class="value ' + signCls(primaryGain) + '">' + fmtPct(primaryReturn) + '</div><div class="sub">' + (primaryGain >= 0 ? '+' : '') + fmtMoney(primaryGain) + '</div></div>' +
+      '<div class="metric"><div class="eyebrow">Starting Capital</div><div class="value">' + fmtMoney(viewStarting) + '</div><div class="sub">' + viewBooks.length + ' books × $10,000</div></div>' +
+      '<div class="metric"><div class="eyebrow">Realized Profit</div><div class="value ' + signCls(realizedPnl) + '">' + (realizedPnl >= 0 ? '+' : '') + fmtMoney(realizedPnl) + '</div><div class="sub">From closed trades</div></div>' +
+      '<div class="metric"><div class="eyebrow">Open-Trade Change</div><div class="value ' + signCls(unrealizedPnl) + '">' + (unrealizedPnl >= 0 ? '+' : '') + fmtMoney(unrealizedPnl) + '</div><div class="sub">' + viewOpen.length + ' open positions</div></div>' +
+      '<div class="metric"><div class="eyebrow">Average Daily Growth</div><div class="value" style="color:var(--ink-soft)">—</div><div class="sub">Requires daily snapshots</div></div>' +
     '</section>';
 
-  let leaderHtml = '<div class="section-title">Best-performing production books</div><div class="leader">';
-  top3.forEach((b, i) => {
-    const g = Number(b.growth_pct || 0);
-    const maxG = Math.max(Number(top3[0].growth_pct || 1), 0.01);
-    const barW = maxG > 0 ? Math.round((Math.max(g, 0) / maxG) * 100) : 0;
-    const model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
-    const closedCount = (D.closed_trades || []).filter(c => c.book_key === b.book_key && c.research_valid !== false).length;
+  var chartHtml =
+    '<section class="card chart-card">' +
+      '<div class="chart-top">' +
+        '<div><h2>Compounding growth</h2><div class="sub" style="margin-top:4px">Actual marked equity versus the 1%-per-day reference path</div></div>' +
+        '<div class="controls"><button>7D</button><button class="on">Since start</button><button>Monthly</button></div>' +
+      '</div>' +
+      '<div class="legend"><span>Actual system</span><span class="ref">1% daily reference</span></div>' +
+      '<div class="chart-area">' +
+        '<div class="chart-empty">Collecting authoritative growth history.<br>Chart will populate as daily snapshots accumulate.</div>' +
+      '</div>' +
+      '<div class="note" style="margin-top:12px"><strong>Reference path only</strong> — the 1% line is not a target, promise, or trading instruction. The system must never alter trades or risk-taking to chase this line.</div>' +
+    '</section>';
+
+  var sorted = viewBooks.slice().sort(function(a,b){ return Number(b.growth_pct||0) - Number(a.growth_pct||0); });
+  var top3 = sorted.slice(0, 3);
+
+  var leaderHtml = '<div class="section-title">Best-performing books</div><div class="leader">';
+  top3.forEach(function(b, i) {
+    var g = Number(b.growth_pct || 0);
+    var maxG = Math.max(Number(top3[0].growth_pct || 1), 0.01);
+    var barW = maxG > 0 ? Math.round((Math.max(g, 0) / maxG) * 100) : 0;
+    var model = (b.target_model || 'fixed') === 'volatility' ? '<span class="tag vol">Volatility</span>' : '<span class="tag">Fixed</span>';
+    var closedCount = closedTrades.filter(function(c){ return c.book_key === b.book_key && c.research_valid !== false; }).length;
     leaderHtml +=
       '<div class="card rank">' +
         '<div class="rank-top"><div><h3>' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</h3>' + model + '</div><span class="rank-num">#' + (i + 1) + '</span></div>' +
@@ -243,46 +326,37 @@ function render(D) {
   });
   leaderHtml += '</div>';
 
-  let lowerHtml = '<section class="lower"><div class="card"><h2 class="section-title" style="margin-top:0">Production books by return</h2>';
-  sorted.forEach(b => {
-    const g = Number(b.growth_pct || 0);
-    const model = (b.target_model || 'fixed') === 'volatility' ? ' · VOL' : '';
-    const cls = classifyBook(b);
-    const clsTag = cls === 'pilot' ? ' <span style="color:#6d28d9;font-size:10px;font-weight:700">PILOT</span>' : '';
-    lowerHtml +=
-      '<div class="book-row">' +
-        '<div class="name">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + model + clsTag +
-          '<small>' + fmtMoney(b.total_equity) + ' equity · ' + (b.open_count || 0) + ' open</small>' +
-        '</div>' +
-        '<span class="spark ' + signCls(g) + '">' + (g >= 0 ? '+' : '') + fmtMoney(b.growth_dollars || 0) + '</span>' +
-      '</div>';
-  });
+  var lowerHtml = '<section class="lower">';
+
+  lowerHtml += '<div class="card"><div class="section-title" style="margin-top:0">Daily results</div>';
+  lowerHtml += '<div class="sub" style="margin-bottom:12px">What the experiment gained or lost each day</div>';
+  if (snapshots.length > 0) {
+    lowerHtml += '<div><!-- daily rows from snapshots would go here --></div>';
+  } else {
+    lowerHtml += '<div style="padding:30px 0;text-align:center;color:var(--ink-soft);font-family:\'Spline Sans Mono\',monospace;font-size:12px">Collecting authoritative growth history.<br>Daily results will appear as snapshots accumulate.</div>';
+  }
   lowerHtml += '</div>';
 
-  lowerHtml += '<div class="card"><h2 class="section-title" style="margin-top:0">Experiment summary</h2>';
-  lowerHtml += '<div class="book-row"><div class="name">Production books</div><span class="spark">' + prodBooks.length + '</span></div>';
-  if (pilotBooks.length) lowerHtml += '<div class="book-row"><div class="name">Pilot books (Volatility)</div><span class="spark">' + pilotBooks.length + '</span></div>';
-  lowerHtml += '<div class="book-row"><div class="name">Open positions (production)</div><span class="spark">' + openCount + '</span></div>';
-  lowerHtml += '<div class="book-row"><div class="name">Closed trades (production)</div><span class="spark">' + closedTrades.filter(c => c.research_valid !== false && classifyBook({portfolio: c.portfolio, target_model: c.target_model}) === 'production').length + '</span></div>';
-
-  const fixedBooks = prodBooks.filter(b => (b.target_model || 'fixed') === 'fixed');
-  const fixedEq = fixedBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
-  lowerHtml += '<div class="book-row"><div class="name">Fixed model equity<small>' + fixedBooks.length + ' production books</small></div><span class="spark">' + fmtMoney(fixedEq) + '</span></div>';
-  if (pilotBooks.length > 0) {
-    const pilotEq = pilotBooks.reduce((s, b) => s + Number(b.total_equity || 0), 0);
-    lowerHtml += '<div class="book-row"><div class="name">Volatility model equity<small>' + pilotBooks.length + ' pilot books</small></div><span class="spark">' + fmtMoney(pilotEq) + '</span></div>';
-  }
-
-  if (labBooks.length > 0) {
-    lowerHtml += '<div class="book-row" style="border-top:2px solid #d97706;margin-top:8px;padding-top:12px"><div class="name" style="color:#92400e">Crypto Lab<small>' + labBooks.length + ' books · experimental, not blended into primary</small></div><span class="spark ' + signCls(labGain) + '">' + (labGain >= 0 ? '+' : '') + fmtMoney(labGain) + ' (' + fmtPct(labReturn) + ')</span></div>';
-  }
-
+  lowerHtml += '<div class="card"><div class="section-title" style="margin-top:0">Where growth came from</div>';
+  lowerHtml += '<div class="sub" style="margin-bottom:12px">Best contributors since experiment start</div>';
+  sorted.forEach(function(b) {
+    var g = Number(b.growth_dollars || 0);
+    var cls = classifyBook(b);
+    var clsTag = cls === 'pilot' ? ' <span class="tag vol" style="font-size:9px">PILOT</span>' : (cls === 'lab' ? ' <span class="tag" style="background:#fef3c7;color:#92400e;font-size:9px">LAB</span>' : '');
+    lowerHtml +=
+      '<div class="book-row">' +
+        '<div class="name">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + clsTag +
+          '<small>' + closedTrades.filter(function(c){ return c.book_key === b.book_key && c.research_valid !== false; }).length + ' closed trades</small>' +
+        '</div>' +
+        '<span class="spark ' + signCls(g) + '">' + (g >= 0 ? '+' : '') + fmtMoney(g) + '</span>' +
+      '</div>';
+  });
   lowerHtml += '<div class="note" style="margin-top:16px"><strong>Reference paths only.</strong> Any growth comparisons shown are reference lines, not targets, promises, or forecasts. The system must never alter trading behavior to chase a dashboard reference line.</div>';
   lowerHtml += '</div></section>';
 
-  const footnote = '<div class="footnote"><strong>Model:</strong> ' + esc(D.model || '') + '</div>';
+  var footnote = '<div class="footnote"><strong>Model:</strong> ' + esc(D.model || '') + '</div>';
 
-  document.getElementById('content').innerHTML = heroHtml + metricsHtml + leaderHtml + lowerHtml + footnote;
+  document.getElementById('content').innerHTML = filterHtml + heroHtml + metricsHtml + chartHtml + leaderHtml + lowerHtml + footnote;
 }
 
 loadData();
