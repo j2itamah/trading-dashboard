@@ -262,7 +262,7 @@ function render() {
 
   var startHtml = '';
   if (experimentStart) {
-    var startDate = new Date(experimentStart);
+    var startDate = new Date(experimentStart + 'T12:00:00');
     var dayCount = Math.floor((Date.now() - startDate.getTime()) / 86400000);
     startHtml = '<div class="sub" style="margin-top:8px">Experiment started <strong>' +
       startDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) +

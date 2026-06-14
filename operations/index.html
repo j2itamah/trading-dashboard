@@ -419,7 +419,7 @@ function render(){
   document.querySelectorAll('#exit-switch button').forEach(b=>b.classList.toggle('on', b.dataset.rule===sel.rule));
   document.querySelectorAll('#portfolio-toggle button').forEach(b=>b.classList.toggle('on', b.dataset.strat===sel.strategy));
   document.querySelectorAll('#model-cards .model-card').forEach(b=>b.classList.toggle('on', b.dataset.model===sel.target_model));
-  var pilotBadge = sel.target_model==='volatility' ? '<span class="weekend-pilot-label">Weekend Pilot</span>' : '';
+  var pilotBadge = sel.target_model==='volatility' ? ' <span class="weekend-pilot-label">Weekend Pilot</span>' : '';
   var modelLabel = sel.target_model==='volatility' ? 'Volatility' : 'Fixed';
   document.getElementById('active-label').innerHTML =
     '<strong>'+STRAT_LABELS[sel.strategy]+' · '+RULE_LABEL[sel.rule]+' · '+modelLabel+pilotBadge+'</strong>'+
