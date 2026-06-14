@@ -416,9 +416,9 @@ function groupPanel(title, rows, cols){
 
 function render(){
   document.getElementById('exit-switch').className = 'exit-switch' + (sel.rule==='sell_eod'?' eod':'');
-  document.querySelectorAll('#exit-switch button').forEach(b=>b.classList.toggle('on', b.dataset.rule===sel.rule));
-  document.querySelectorAll('#portfolio-toggle button').forEach(b=>b.classList.toggle('on', b.dataset.strat===sel.strategy));
-  document.querySelectorAll('#model-cards .model-card').forEach(b=>b.classList.toggle('on', b.dataset.model===sel.target_model));
+  document.querySelectorAll('#exit-switch button').forEach(b=>{var on=b.dataset.rule===sel.rule;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  document.querySelectorAll('#portfolio-toggle button').forEach(b=>{var on=b.dataset.strat===sel.strategy;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  document.querySelectorAll('#model-cards .model-card').forEach(b=>{var on=b.dataset.model===sel.target_model;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   var pilotBadge = sel.target_model==='volatility' ? ' <span class="weekend-pilot-label">Weekend Pilot</span>' : '';
   var modelLabel = sel.target_model==='volatility' ? 'Volatility' : 'Fixed';
   document.getElementById('active-label').innerHTML =
@@ -765,7 +765,7 @@ function openTradeModal(t, rt, ri){
   lifecycle += '</div>';
   var atrRows = '';
   if(tmModel==='volatility'){
-    atrRows = tmRow('Target model', '<span style=”color:#6d28d9;font-weight:700”>Volatility (ATR)</span>')+
+    atrRows = tmRow('Target model', '<span style="color:#6d28d9;font-weight:700">Volatility (ATR)</span>')+
       tmRow('ATR %', t.atr_pct_at_entry!=null?(Number(t.atr_pct_at_entry).toFixed(2)+'%'):'—')+
       tmRow('Stop distance', t.stop_distance_pct!=null?(Number(t.stop_distance_pct).toFixed(2)+'%'):'—')+
       tmRow('Target distance', t.target_distance_pct!=null?(Number(t.target_distance_pct).toFixed(2)+'%'):'—')+
@@ -775,20 +775,22 @@ function openTradeModal(t, rt, ri){
   }
   var headlineHtml = '';
   if(t.title){
-    headlineHtml = '<div class=”hl”>”'+esc(t.title)+'”</div>';
+    headlineHtml = '<div class="hl">"'+esc(t.title)+'"</div>';
     if(t.news_url || t.source_url || t.link){
       var href = t.news_url || t.source_url || t.link;
-      try{ new URL(href); headlineHtml += '<a class=”tm-headline-link” href=”'+esc(href)+'” target=”_blank” rel=”noopener noreferrer”>Read original article →</a>'; }catch(e){}
+      try{ new URL(href); headlineHtml += '<a class="tm-headline-link" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Read original article →</a>'; }catch(e){}
     }
   }
-  var ctx = '<details class=”tm-details”><summary>Show research details</summary><div class=”tm-context”>'+tmRow('Book', esc(t.book_key||'—'))+atrRows+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+tmRow('Rule version', esc(t.rule_version||'—'))+headlineHtml+'</div></details>';
+  var ctx = '<details class="tm-details"><summary>Show research details</summary><div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+atrRows+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+tmRow('Rule version', esc(t.rule_version||'—'))+headlineHtml+'</div></details>';
   var navArr = (window.__curRt==='open'?window.__openRows:window.__closedRows)||[]; var ci=window.__curRi;
   var prevDis = (ci>0)?'':'disabled'; var nextDis = (ci>=0 && ci<navArr.length-1)?'':'disabled';
   var foot = '<div class="tm-foot"><button class="tm-btn" '+prevDis+' onclick="tmNav(-1)">‹ Prev</button><button class="tm-btn" id="tm-copy" onclick="tmCopy()">Copy</button><button class="tm-btn" '+nextDis+' onclick="tmNav(1)">Next ›</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>';
   document.getElementById('tm-modal').innerHTML = head + '<div class="tm-body"><div class="tm-cols">'+entryCol+rightCol+'</div>'+banner+lifecycle+ctx+'</div>'+foot;
   document.getElementById('tm-overlay').classList.add('open');
+  window.__tmPrevFocus=document.activeElement;
+  var cls=document.querySelector('#tm-modal .tm-btn:last-child'); if(cls) cls.focus();
 }
-function closeTradeModal(){ document.getElementById('tm-overlay').classList.remove('open'); }
+function closeTradeModal(){ document.getElementById('tm-overlay').classList.remove('open'); if(window.__tmPrevFocus) try{window.__tmPrevFocus.focus();}catch(e){} }
 function tmCopy(){ try{ var t=window.__tmTrade; navigator.clipboard.writeText(JSON.stringify(t,null,2)); var b=document.getElementById('tm-copy'); var o=b.textContent; b.textContent='Copied ✓'; b.classList.add('copied'); setTimeout(function(){b.textContent=o;b.classList.remove('copied');},1400);}catch(e){} }
 function tmNav(d){ var arr=(window.__curRt==='open'?window.__openRows:window.__closedRows)||[]; var ni=(window.__curRi==null?0:window.__curRi)+d; if(arr[ni]) openTradeModal(arr[ni], window.__curRt, ni); }
 document.addEventListener('keydown',function(e){
@@ -796,9 +798,10 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape') closeTradeModal();
   if(open && e.key==='ArrowLeft') tmNav(-1);
   if(open && e.key==='ArrowRight') tmNav(1);
+  if(open && e.key==='Tab'){var m=document.getElementById('tm-modal');var fc=m.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])');if(fc.length){var f=fc[0],l=fc[fc.length-1];if(e.shiftKey){if(document.activeElement===f){e.preventDefault();l.focus();}}else{if(document.activeElement===l){e.preventDefault();f.focus();}}}}
 });
 </script>
 
-<div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()"><div class="tm-modal" id="tm-modal"></div></div>
+<div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()"><div class="tm-modal" id="tm-modal" role="dialog" aria-modal="true" aria-label="Trade details"></div></div>
 </body>
 </html>
