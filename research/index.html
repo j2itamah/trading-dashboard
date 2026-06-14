@@ -569,7 +569,8 @@ function renderHealth() {
     const deployed = Number(b.deployed_capital || 0);
     const drift = Math.abs(eq - fc - deployed);
     const ok = drift <= 0.02;
-    html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + '</td>' +
+    var tmLbl = b.target_model === 'volatility' ? ' · VOL' : ' · Fixed';
+    html += '<tr><td class="booklink">' + esc(STRAT_LABELS[b.portfolio] || b.portfolio || '') + ' · ' + esc(RULE_LABEL[b.exit_rule] || b.exit_rule || '') + tmLbl + '</td>' +
       '<td>' + fmtMoney(eq) + '</td><td>' + fmtMoney(fc) + '</td><td>' + fmtMoney(deployed) + '</td>' +
       '<td class="' + (ok ? '' : 'neg-text') + '">' + fmtMoney(drift) + '</td>' +
       '<td>' + (ok ? '<span class="tag" style="background:var(--green-bg);color:var(--green)">OK</span>' : '<span class="tag" style="background:var(--red-bg);color:var(--red)">DRIFT</span>') + '</td></tr>';

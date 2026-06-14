@@ -419,7 +419,7 @@ function render(){
   document.querySelectorAll('#exit-switch button').forEach(b=>{var on=b.dataset.rule===sel.rule;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   document.querySelectorAll('#portfolio-toggle button').forEach(b=>{var on=b.dataset.strat===sel.strategy;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   document.querySelectorAll('#model-cards .model-card').forEach(b=>{var on=b.dataset.model===sel.target_model;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  var pilotBadge = sel.target_model==='volatility' ? ' <span class="weekend-pilot-label">Weekend Pilot</span>' : '';
+  var pilotBadge = sel.target_model==='volatility' ? ' · <span class="weekend-pilot-label">Weekend Pilot</span>' : '';
   var modelLabel = sel.target_model==='volatility' ? 'Volatility' : 'Fixed';
   document.getElementById('active-label').innerHTML =
     '<strong>'+STRAT_LABELS[sel.strategy]+' · '+RULE_LABEL[sel.rule]+' · '+modelLabel+pilotBadge+'</strong>'+
@@ -692,6 +692,7 @@ loadData();
 
 // ===== Trade detail modal =====
 function tmFmtET(iso){ if(!iso) return '—'; try{ var d=new Date(iso); return d.toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){ return String(iso); } }
+function isUSMarketOpen(iso){ if(!iso) return false; try{ var d=new Date(iso); var fmt=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'2-digit',hour12:false}); var p=fmt.formatToParts(d); var wd='',h=0,m=0; for(var i=0;i<p.length;i++){if(p[i].type==='weekday')wd=p[i].value;if(p[i].type==='hour')h=parseInt(p[i].value);if(p[i].type==='minute')m=parseInt(p[i].value);} if(wd==='Sat'||wd==='Sun') return false; var mins=h*60+m; return mins>=570&&mins<960; }catch(e){return false;} }
 function tmDuration(a,b){ if(!a) return '—'; var end=b?new Date(b):new Date(); var ms=end-new Date(a); if(!isFinite(ms)||ms<0) return '—'; var mins=Math.floor(ms/60000); var d=Math.floor(mins/1440); var hrs=Math.floor((mins%1440)/60); var m=mins%60; var parts=[]; if(d) parts.push(d+'d'); parts.push(hrs+'h'); parts.push(m+'m'); return parts.join(' '); }
 function tmRow(k,v){ return '<div class="tm-kv"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'; }
 function prettyReason(r){ var m={take_profit:'Take profit',stop_loss:'Stop loss',time:'24h time exit',early_exit_stock_threshold:'Early exit (+1% gate)',early_exit_crypto_threshold:'Early exit (+2% gate)',eod:'Legacy EOD (unverified)',target:'Take profit',stop:'Stop loss'}; return m[r]||(r||'—'); }
@@ -707,7 +708,8 @@ function openTradeModal(t, rt, ri){
   var entryCol = '<div class="tm-col"><h4>Entry</h4>'+tmRow('Price', fmtPrice(t.entry_price))+tmRow('Date / Time', tmFmtET(t.entry_time))+tmRow('Capital', fmtMoney(t.stake_amount))+tmRow('Shares', fmtNum(t.shares))+'</div>';
   var rightCol;
   if(isOpen){
-    rightCol = '<div class="tm-col"><h4>Current (Open)</h4>'+tmRow('Last price', t.current_price==null?'—':fmtPrice(t.current_price))+tmRow('Price updated', tmFmtET(t.current_price_at))+tmRow('Held', tmDuration(t.entry_time,null))+tmRow('Exit rule', esc(t.exit_rule||'—'))+'</div>';
+    var mktNote = (assetClass(t)==='stock' && !isUSMarketOpen(t.current_price_at)) ? ' <span style="color:var(--ink-soft);font-size:11px">(market closed)</span>' : '';
+    rightCol = '<div class="tm-col"><h4>Current (Open)</h4>'+tmRow('Last price', t.current_price==null?'—':fmtPrice(t.current_price))+tmRow('Price checked', tmFmtET(t.current_price_at)+mktNote)+tmRow('Held', tmDuration(t.entry_time,null))+tmRow('Exit rule', esc(t.exit_rule||'—'))+'</div>';
   } else {
     rightCol = '<div class="tm-col"><h4>Exit</h4>'+tmRow('Price', fmtPrice(t.exit_price))+tmRow('Date / Time', tmFmtET(t.exit_time))+tmRow('Reason', prettyReason(t.exit_reason)+(t.exit_reason?' <span style="color:var(--ink-soft);font-size:11px">('+esc(t.exit_reason)+')</span>':''))+tmRow('Held', tmDuration(t.entry_time,t.exit_time))+'</div>';
   }
