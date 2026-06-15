@@ -166,6 +166,7 @@ var activeFilter = 'production';
 
 function classifyBook(b) {
   if (b.portfolio === 'crypto_lab') return 'lab';
+  if (b.portfolio === 'full_confluence') return 'fc';
   if (b.target_model === 'volatility') return 'pilot';
   return 'production';
 }
@@ -200,12 +201,15 @@ function render() {
   var prodBooks = books.filter(function(b){ return classifyBook(b) === 'production'; });
   var pilotBooks = books.filter(function(b){ return classifyBook(b) === 'pilot'; });
   var labBooks = books.filter(function(b){ return classifyBook(b) === 'lab'; });
+  var fcBooks = books.filter(function(b){ return classifyBook(b) === 'fc'; });
 
   var viewBooks, viewLabel, viewFilter;
   if (activeFilter === 'production') {
     viewBooks = prodBooks; viewLabel = 'Primary Experiment'; viewFilter = 'production';
   } else if (activeFilter === 'pilot') {
     viewBooks = pilotBooks; viewLabel = 'Volatility Pilot'; viewFilter = 'pilot';
+  } else if (activeFilter === 'fc') {
+    viewBooks = fcBooks; viewLabel = 'Full Confluence ✦'; viewFilter = 'fc';
   } else if (activeFilter === 'lab') {
     viewBooks = labBooks; viewLabel = 'Crypto Lab'; viewFilter = 'lab';
   } else {
@@ -256,6 +260,7 @@ function render() {
     '<div class="filter-row">' +
       '<button class="filter-btn'+(activeFilter==='production'?' on':'')+'" onclick="setFilter(\'production\')">Primary Experiment</button>' +
       '<button class="filter-btn'+(activeFilter==='pilot'?' on':'')+'" onclick="setFilter(\'pilot\')">Volatility Pilot</button>' +
+      (fcBooks.length ? '<button class="filter-btn'+(activeFilter==='fc'?' on':'')+'" onclick="setFilter(\'fc\')">Full Confluence ✦</button>' : '') +
       '<button class="filter-btn lab-filter'+(activeFilter==='lab'?' on':'')+'" onclick="setFilter(\'lab\')">Crypto Lab</button>' +
       '<button class="filter-btn'+(activeFilter==='all'?' on':'')+'" onclick="setFilter(\'all\')">All Research Books</button>' +
     '</div>';

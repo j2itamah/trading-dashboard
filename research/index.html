@@ -379,8 +379,9 @@ function renderCompare() {
     '<div class="mode"><b>Early Exit (' + eodBooks.length + ' books)</b><strong class="' + signCls(eodRet) + '">' + fmtPct(eodRet) + '</strong><div class="sub">' + eodClosed + ' closed</div></div>' +
     '</div></div>';
 
-  const strategies = DATA.strategies || Object.keys(STRAT_LABELS);
-  const prodStrats = strategies.filter(s => s !== 'strict' && s !== 'crypto_lab' && s in STRAT_LABELS);
+  let strategies2 = (DATA.strategies || Object.keys(STRAT_LABELS)).filter(s => s !== 'strict' && s !== 'crypto_lab' && s in STRAT_LABELS);
+  if (strategies2.indexOf('full_confluence') === -1 && (DATA.grid && DATA.grid.full_confluence || DATA.volatility_grid && DATA.volatility_grid.full_confluence)) strategies2.push('full_confluence');
+  const prodStrats = strategies2;
   html += '<div class="card"><h3>By signal gate</h3>';
   prodStrats.forEach(s => {
     const sBooks = books.filter(b => b.portfolio === s);
@@ -411,8 +412,9 @@ function renderSignals() {
   });
   const sigKeys = Object.keys(sigMap).sort((a, b) => new Date(sigMap[b].time || 0) - new Date(sigMap[a].time || 0));
 
-  const strategies = DATA.strategies || Object.keys(STRAT_LABELS);
-  const prodStrats = strategies.filter(s => s !== 'strict' && s in STRAT_LABELS);
+  let strategies = (DATA.strategies || Object.keys(STRAT_LABELS)).filter(s => s !== 'strict' && s in STRAT_LABELS);
+  if (strategies.indexOf('full_confluence') === -1 && (DATA.grid && DATA.grid.full_confluence || DATA.volatility_grid && DATA.volatility_grid.full_confluence)) strategies.push('full_confluence');
+  const prodStrats = strategies;
   const gateCounts = {};
   prodStrats.forEach(s => { gateCounts[s] = 0; });
   allTrades.forEach(tr => {
@@ -437,7 +439,7 @@ function renderSignals() {
   html += '</div>';
 
   html += '<div class="card"><div class="eyebrow">Signal gate funnel</div><div style="margin-top:14px">';
-  const gateOrder = ['news_only', 'news_plus_ta', 'mean_reversion', 'trend_strict', 'crypto_lab'];
+  const gateOrder = ['news_only', 'news_plus_ta', 'mean_reversion', 'trend_strict', 'full_confluence', 'crypto_lab'];
   gateOrder.filter(g => prodStrats.includes(g)).forEach(g => {
     const count = gateCounts[g] || 0;
     html += '<div class="gate"><strong>' + esc(STRAT_LABELS[g] || g) + '</strong><span>' + count + ' trades created</span></div>';

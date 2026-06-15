@@ -273,6 +273,38 @@
 .ops-health-summary{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-soft);margin-left:6px;}
 .ops-err{font-size:12px;color:var(--ink-soft);font-family:'Spline Sans Mono',monospace;}
 @media(max-width:720px){.ops-grid{grid-template-columns:repeat(3,1fr);}}
+
+/* --- redesigned readiness --- */
+.ops-banner{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;margin-bottom:14px;font-weight:600;font-size:15px;}
+.ops-banner.healthy{background:#e6f5ee;color:#0f6b3f;border:1px solid #b8e2cc;}
+.ops-banner.attention{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a;}
+.ops-banner.action{background:#fbeaec;color:#a8323e;border:1px solid #e8a0a8;}
+.ops-banner .obs-icon{font-size:20px;flex-shrink:0;}
+.ops-quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px;}
+.ops-quick .oq{text-align:center;padding:10px 8px;border-radius:10px;background:var(--bg);border:1px solid var(--line);}
+.ops-quick .oq .oq-val{font-family:'Fraunces',serif;font-size:20px;font-weight:600;line-height:1.2;}
+.ops-quick .oq .oq-lab{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+.ops-issues{margin-bottom:14px;}
+.ops-issue{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:6px;font-size:13px;line-height:1.45;}
+.ops-issue.red{background:#fbeaec;border:1px solid #e8a0a8;color:#7a2530;}
+.ops-issue.amber{background:#fff8e5;border:1px solid #e7c46a;color:#6b4c0a;}
+.ops-issue .oi-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.ops-issue .oi-body strong{display:block;font-weight:600;margin-bottom:2px;}
+.ops-issue .oi-body .oi-detail{font-size:12px;opacity:.85;line-height:1.4;}
+.ops-tech-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font:600 12px 'Spline Sans Mono',monospace;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.ops-tech-toggle:hover{background:rgba(0,0,0,.02);}
+.ops-tech-toggle .arrow{transition:transform .2s;font-size:11px;}
+.ops-tech-toggle.expanded .arrow{transform:rotate(90deg);}
+.ops-tech-body{display:none;margin-top:10px;}
+.ops-tech-body.show{display:block;}
+.ops-check-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;}
+.ops-check-row:last-child{border-bottom:none;}
+.ops-check-row .ocr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ops-check-row .ocr-dot.green{background:var(--green);}
+.ops-check-row .ocr-dot.red{background:var(--red);}
+.ops-check-row .ocr-dot.amber{background:#c08a2d;}
+.ops-check-row .ocr-name{flex:1;color:var(--ink-soft);}
+.ops-check-row .ocr-status{font-weight:600;font-family:'Spline Sans Mono',monospace;}
 </style>
 </head>
 <body>
@@ -646,7 +678,8 @@ function toggleSigList(){
 
 function buildPills(){
   const tg=document.getElementById('portfolio-toggle');
-  const strats = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict' && s in STRAT_LABELS);
+  let strats = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict' && s in STRAT_LABELS);
+  if(strats.indexOf('full_confluence')===-1 && (DATA.grid&&DATA.grid.full_confluence || DATA.volatility_grid&&DATA.volatility_grid.full_confluence)) strats.push('full_confluence');
   const prodStrats = strats.filter(s=>s!=='crypto_lab');
   const hasLab = strats.indexOf('crypto_lab')!==-1;
   let html = prodStrats.map(s=>{
@@ -695,6 +728,25 @@ const SB_URL = 'https://alxtkdebryheweqbqlts.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFseHRrZGVicnloZXdlcWJxbHRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI3NzEsImV4cCI6MjA5NjA2ODc3MX0.DG8-RAQnDTpqTKHR7rjL5FWOW9Z-FdVVbBJjRuL18GA';
 const WF_VERSIONS = {};
 
+const CHECK_FRIENDLY = {
+  workflows_active: {name:'Workflows running', explain:'All trading workflows are active and processing on schedule.', failExplain:'One or more trading workflows may be inactive.', action:'Check n8n workflow status.', resolves:'When workflows are reactivated.'},
+  accounting_drift: {name:'Balance accuracy', explain:'Book balances match the sum of all trade activity.', failExplain:'A book balance doesn\'t match its trade history. Trading continues but accounting needs correction.', action:'Run reconciliation to identify the affected book.', resolves:'After manual reconciliation.'},
+  price_coverage: {name:'Price coverage', explain:'All open trades have current price data.', failExplain:'Some open trades are missing current prices. P&L display may be inaccurate.', action:'Prices update automatically every 5 minutes during market hours.', resolves:'At next WF2 price update cycle.'},
+  partial_matched_sets: {name:'Trade group integrity', explain:'All matched trade sets are complete (no orphaned books).', failExplain:'A trade was created in some books but not all. This is unusual and may indicate a failed trade creation.', action:'Check recent signal_decision_events for errors.', resolves:'After investigation.'},
+  fc_books_ready: {name:'Full Confluence books', explain:'All 4 Full Confluence validation books are active and funded.', failExplain:'One or more Full Confluence books are missing or unfunded.', action:'Check book_balances for FC books (IDs 52-55).', resolves:'After book repair.'},
+  overdue_hold24hr: {name:'Overdue trades', explain:'No trades are past their 24-hour hold period.', failExplain:'{count} stock trade(s) waiting to be closed. Stock trades can only close during US market hours (9:30 AM - 4:00 PM ET, Mon-Fri).', action:'No action needed — WF2 will close these automatically when the market opens.', resolves:'Within minutes of the next market open.', expectedOffHours:true},
+  zero_fc_open_trades: {name:'FC clean slate', explain:'No open Full Confluence trades (ready for canary test).', failExplain:'Full Confluence has open trades. This is normal during active validation.', action:'No action needed.', resolves:'When FC trades close naturally.', infoOnly:true},
+  production_books_healthy: {name:'Production books active', explain:'All production strategy books are active.', failExplain:'Some production books may be inactive.', action:'Check book_balances for deactivated production books.', resolves:'After reactivation.'},
+  telegram_logging_nonblocking: {name:'Notifications safe', explain:'Telegram logging is configured to not block trading if it fails.', failExplain:'Telegram logging might block trading if the notification service fails.', action:'Set Telegram nodes to "Continue on fail" in n8n.', resolves:'After workflow update.'},
+  market_hours_gate: {name:'Market hours protection', explain:'Stock trades can only be created during US market hours.', failExplain:'The market hours trigger guard may be disabled. Stock trades could be created outside market hours.', action:'Verify trg_stock_market_hours trigger is active.', resolves:'After trigger is re-enabled.'}
+};
+
+function isMarketClosed(p){
+  if(!p) return false;
+  var sm = String(p.stock_market||'').toLowerCase();
+  return sm.indexOf('closed')>=0 || sm.indexOf('weekend')>=0 || sm.indexOf('holiday')>=0;
+}
+
 async function loadReadiness(){
   var el=document.getElementById('ops-readiness');
   try{
@@ -709,41 +761,94 @@ async function loadReadiness(){
     if(!panelRows.length){el.innerHTML='<div class="ops-panel"><div class="ops-err">No readiness data.</div></div>';return;}
     var p=panelRows[0].panel||panelRows[0];
     var ts=p.checked_at?new Date(p.checked_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'—';
-    var smCls=p.stock_market==='OPEN'?'green':(String(p.stock_market||'').indexOf('weekend')>=0?'muted':'amber');
-    var html='<div class="ops-panel"><h2>Operations Readiness<span class="ops-ts">checked '+ts+'</span></h2>';
-    html+='<div class="ops-grid">';
-    html+='<div class="ops-cell"><div class="oc-label">Stock Mkt</div><div class="oc-val '+smCls+'">'+esc(p.stock_market||'—')+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Crypto</div><div class="oc-val green">'+esc(p.crypto_market||'24/7')+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Stale Prices</div><div class="oc-val '+(p.stale_price_count>0?'red':'green')+'">'+p.stale_price_count+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Acct Drift</div><div class="oc-val '+(p.accounting_drift_count>0?'red':'green')+'">'+p.accounting_drift_count+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Partial Sets</div><div class="oc-val '+(p.partial_set_count>0?'red':'green')+'">'+p.partial_set_count+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Overdue</div><div class="oc-val '+(p.eligible_still_open>0?'amber':'green')+'">'+p.eligible_still_open+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Open Trades</div><div class="oc-val muted">'+p.open_trades+'</div></div>';
-    var bk=p.books||{};
-    html+='<div class="ops-cell"><div class="oc-label">Prod Books</div><div class="oc-val muted">'+(bk.production||0)+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Val Books</div><div class="oc-val muted">'+(bk.validation||0)+'</div></div>';
-    html+='<div class="ops-cell"><div class="oc-label">Archived</div><div class="oc-val muted">'+(bk.archived||0)+'</div></div>';
-    html+='</div>';
-    if(checks.length){
-      var reds=checks.filter(function(c){return c.status==='RED';}).length;
-      var ambers=checks.filter(function(c){return c.status==='AMBER';}).length;
-      var greens=checks.filter(function(c){return c.status==='GREEN';}).length;
-      html+='<div class="ops-health">';
-      checks.forEach(function(c){
-        var cls=c.status==='RED'?'red':(c.status==='AMBER'?'amber':'green');
-        html+='<span class="ops-dot '+cls+'" title="'+esc(c.condition)+': '+esc(c.status)+'"></span>';
-      });
-      html+='<span class="ops-health-summary">'+greens+' green';
-      if(ambers) html+=' · '+ambers+' amber';
-      if(reds) html+=' · '+reds+' red';
-      html+='</span></div>';
+    var mktClosed = isMarketClosed(p);
+
+    var reds=checks.filter(function(c){return c.status==='RED';});
+    var ambers=checks.filter(function(c){return c.status==='AMBER';});
+    var greens=checks.filter(function(c){return c.status==='GREEN';});
+    var issues = reds.concat(ambers);
+
+    var allExpected = issues.length>0 && issues.every(function(c){
+      var f=CHECK_FRIENDLY[c.condition]; return f && f.expectedOffHours && mktClosed;
+    });
+    var overallCls, overallIcon, overallText;
+    if(issues.length===0){
+      overallCls='healthy'; overallIcon='✓'; overallText='Healthy — all systems running normally';
+    } else if(allExpected){
+      overallCls='attention'; overallIcon='◷'; overallText='Waiting for market open — '+issues.length+' item'+(issues.length>1?'s':'')+' will resolve automatically';
+    } else if(reds.length>0){
+      var realReds = reds.filter(function(c){ var f=CHECK_FRIENDLY[c.condition]; return !(f && f.expectedOffHours && mktClosed); });
+      if(realReds.length>0){
+        overallCls='action'; overallIcon='!'; overallText='Action required — '+realReds.length+' issue'+(realReds.length>1?'s need':' needs')+' attention';
+      } else {
+        overallCls='attention'; overallIcon='◷'; overallText='Waiting for market open — expected behavior outside trading hours';
+      }
+    } else {
+      overallCls='attention'; overallIcon='◷'; overallText='Needs attention — '+ambers.length+' item'+(ambers.length>1?'s':'');
     }
-    /* WF version display removed — not for public dashboard */
+
+    var html='<div class="ops-panel">';
+    html+='<h2>System Status<span class="ops-ts">checked '+ts+'</span></h2>';
+    html+='<div class="ops-banner '+overallCls+'"><span class="obs-icon">'+overallIcon+'</span>'+esc(overallText)+'</div>';
+
+    html+='<div class="ops-quick">';
+    var smLabel = p.stock_market==='OPEN'?'Open':'Closed';
+    var smCls = p.stock_market==='OPEN'?'green':'muted';
+    html+='<div class="oq"><div class="oq-val" style="color:var(--'+smCls+')">'+esc(smLabel)+'</div><div class="oq-lab">Stock market</div></div>';
+    html+='<div class="oq"><div class="oq-val" style="color:var(--green)">24/7</div><div class="oq-lab">Crypto</div></div>';
+    html+='<div class="oq"><div class="oq-val">'+p.open_trades+'</div><div class="oq-lab">Open trades</div></div>';
+    var bk=p.books||{};
+    html+='<div class="oq"><div class="oq-val">'+(bk.production||0)+'</div><div class="oq-lab">Main strategies</div></div>';
+    html+='<div class="oq"><div class="oq-val">'+(bk.validation||0)+'</div><div class="oq-lab">Being tested</div></div>';
+    html+='</div>';
+
+    if(issues.length>0){
+      html+='<div class="ops-issues">';
+      issues.forEach(function(c){
+        var f = CHECK_FRIENDLY[c.condition] || {name:c.condition, failExplain:'Check returned '+c.status+'.', action:'Investigate.', resolves:'Unknown.'};
+        var cls = c.status==='RED' ? 'red' : 'amber';
+        var icon = c.status==='RED' ? '⚠' : '◷';
+        var isExpected = f.expectedOffHours && mktClosed;
+        if(isExpected){ cls='amber'; icon='◷'; }
+        var explain = f.failExplain || '';
+        if(explain.indexOf('{count}')>=0){
+          var ct = p.eligible_still_open || p.overdue_count || '?';
+          explain = explain.replace('{count}', ct);
+        }
+        html+='<div class="ops-issue '+cls+'">';
+        html+='<span class="oi-icon">'+icon+'</span>';
+        html+='<div class="oi-body"><strong>'+esc(f.name)+'</strong>';
+        html+='<div class="oi-detail">'+esc(explain)+'</div>';
+        if(f.action) html+='<div class="oi-detail" style="margin-top:4px"><strong style="display:inline">Action:</strong> '+esc(f.action)+'</div>';
+        if(f.resolves) html+='<div class="oi-detail"><strong style="display:inline">Resolves:</strong> '+esc(f.resolves)+'</div>';
+        html+='</div></div>';
+      });
+      html+='</div>';
+    }
+
+    html+='<button class="ops-tech-toggle" id="ops-tech-toggle" onclick="toggleOpsTech()"><span>View technical details ('+checks.length+' checks)</span><span class="arrow">›</span></button>';
+    html+='<div class="ops-tech-body" id="ops-tech-body">';
+    checks.forEach(function(c){
+      var f = CHECK_FRIENDLY[c.condition] || {name:c.condition};
+      var cls = c.status==='RED'?'red':(c.status==='AMBER'?'amber':'green');
+      html+='<div class="ops-check-row"><span class="ocr-dot '+cls+'"></span><span class="ocr-name">'+esc(f.name || c.condition)+'</span><span class="ocr-status" style="color:var(--'+(cls==='green'?'green':(cls==='red'?'red':'gold'))+')">'+(c.status==='GREEN'?'OK':c.status)+'</span></div>';
+    });
+    html+='</div>';
+
     html+='</div>';
     el.innerHTML=html;
   }catch(e){
     el.innerHTML='<div class="ops-panel"><div class="ops-err">Readiness: '+esc(e.message)+'</div></div>';
   }
+}
+
+function toggleOpsTech(){
+  var btn=document.getElementById('ops-tech-toggle');
+  var body=document.getElementById('ops-tech-body');
+  if(!btn||!body) return;
+  var expanded=btn.classList.toggle('expanded');
+  body.classList.toggle('show', expanded);
+  btn.querySelector('span:first-child').textContent = expanded ? 'Hide technical details' : 'View technical details ('+document.querySelectorAll('.ops-check-row').length+' checks)';
 }
 
 async function loadData(){
