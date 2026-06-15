@@ -465,7 +465,7 @@ function render(){
     var waitIcon='📊', waitTitle='No data for this book', waitDetail='This book has not received any trades yet.';
     if(sel.target_model==='volatility'){
       waitIcon='📈'; waitTitle='Waiting for first Volatility trade';
-      waitDetail='ATR-based volatility trades are created when stock signals arrive during US market hours (9:30 AM – 4:00 PM ET, Mon–Fri). Crypto is excluded from the volatility path by design.';
+      waitDetail='ATR-based volatility trades are created when crypto signals arrive with valid CoinGecko ATR data. Stock ATR is not yet available.';
     } else if(sel.strategy==='full_confluence'){
       waitIcon='✦'; waitTitle='Waiting for first Full Confluence trade';
       waitDetail='Full Confluence requires all filters to pass simultaneously (RSI + trend + momentum + volume). Signals are rare by design — this validates that only high-conviction setups enter.';
@@ -810,7 +810,8 @@ async function loadReadiness(){
     }
 
     html+='<div class="od-checks">';
-    checks.forEach(function(c){
+    var shownIssues = new Set(issues.map(function(c){return c.condition;}));
+    checks.filter(function(c){return !shownIssues.has(c.condition);}).forEach(function(c){
       var f = CHECK_FRIENDLY[c.condition] || {name:c.condition};
       var cls = c.status==='RED'?'red':(c.status==='AMBER'?'amber':'green');
       html+='<div class="ops-check-row"><span class="ocr-dot '+cls+'"></span><span class="ocr-name">'+esc(f.name || c.condition)+'</span><span class="ocr-status" style="color:var(--'+(cls==='green'?'green':(cls==='red'?'red':'gold'))+')">'+(c.status==='GREEN'?'OK':c.status)+'</span></div>';
