@@ -179,7 +179,7 @@
 </div>
 
 <script>
-const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
+const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', full_confluence:'Full Confluence ✦', crypto_lab:'Crypto Lab' };
 const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
 const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
@@ -380,7 +380,7 @@ function renderCompare() {
     '</div></div>';
 
   const strategies = DATA.strategies || Object.keys(STRAT_LABELS);
-  const prodStrats = strategies.filter(s => s !== 'strict' && s !== 'crypto_lab');
+  const prodStrats = strategies.filter(s => s !== 'strict' && s !== 'crypto_lab' && s in STRAT_LABELS);
   html += '<div class="card"><h3>By signal gate</h3>';
   prodStrats.forEach(s => {
     const sBooks = books.filter(b => b.portfolio === s);
@@ -412,7 +412,7 @@ function renderSignals() {
   const sigKeys = Object.keys(sigMap).sort((a, b) => new Date(sigMap[b].time || 0) - new Date(sigMap[a].time || 0));
 
   const strategies = DATA.strategies || Object.keys(STRAT_LABELS);
-  const prodStrats = strategies.filter(s => s !== 'strict');
+  const prodStrats = strategies.filter(s => s !== 'strict' && s in STRAT_LABELS);
   const gateCounts = {};
   prodStrats.forEach(s => { gateCounts[s] = 0; });
   allTrades.forEach(tr => {

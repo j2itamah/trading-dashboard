@@ -310,13 +310,13 @@
 <script>
 
 const DATA_URL = '../data.json?t=' + Date.now();
-const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', strict:'Full Confluence', crypto_lab:'Crypto Lab' };
+const STRAT_LABELS = { news_only:'News Only', news_plus_ta:'Trend Gate', mean_reversion:'Mean Revert', trend_strict:'Trend Strict', full_confluence:'Full Confluence ✦', crypto_lab:'Crypto Lab' };
 const STRAT_DESC = {
   news_only:'Takes every qualifying news signal. No filter (baseline).',
   news_plus_ta:'News signals, lightly filtered by RSI.',
   mean_reversion:'Buys oversold dips. RSI + trend confirmation.',
   trend_strict:'Trend-following. Needs price above MA20 + momentum.',
-  strict:'Tightest filter. RSI + trend + momentum + volume.',
+  full_confluence:'VALIDATION — Tightest filter. RSI + trend + momentum + volume confirmation required.',
   crypto_lab:'Experimental crypto-only area with a relaxed signal gate. Creates matched trades across all 4 book combinations for direct Fixed vs Volatility comparison.'
 };
 const RULE_LABEL = { hold_24hr:'24hr Hold', sell_eod:'Early Exit' };
@@ -327,7 +327,7 @@ let sel = {
   rule: localStorage.getItem('dash_rule') || 'hold_24hr',
   target_model: localStorage.getItem('dash_target_model') || 'fixed'
 };
-const VOLATILITY_STRATEGIES = ['news_only','crypto_lab'];
+const VOLATILITY_STRATEGIES = ['news_only','crypto_lab','full_confluence'];
 
 const fmtMoney = n => '$' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtPrice = n => {
@@ -623,7 +623,7 @@ function toggleSigList(){
 
 function buildPills(){
   const tg=document.getElementById('portfolio-toggle');
-  const strats = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict');
+  const strats = (DATA.strategies||Object.keys(STRAT_LABELS)).filter(s=>s!=='strict' && s in STRAT_LABELS);
   const prodStrats = strats.filter(s=>s!=='crypto_lab');
   const hasLab = strats.indexOf('crypto_lab')!==-1;
   let html = prodStrats.map(s=>{
@@ -673,7 +673,7 @@ async function loadData(){
     const r=await fetch('../data.json?t='+Date.now(),{cache:'no-store'});
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
-    if(sel.strategy==='strict'){ sel.strategy='news_only'; localStorage.setItem('dash_strategy','news_only'); }
+    if(sel.strategy==='strict'){ sel.strategy='full_confluence'; localStorage.setItem('dash_strategy','full_confluence'); }
     buildPills(); setUpdated(); render();
   }catch(e){
     document.getElementById('content').innerHTML='<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
