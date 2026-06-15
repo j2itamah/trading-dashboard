@@ -252,6 +252,27 @@
 .nav-link:hover{color:var(--ink);}
 .nav-link.on{background:var(--accent);color:#fff;}
 @media(max-width:640px){.site-nav{position:fixed;bottom:0;left:0;right:0;border-radius:0;z-index:100;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel);box-shadow:0 -2px 10px rgba(0,0,0,.08);}body{padding-bottom:70px !important;}}
+
+/* --- operations readiness panel --- */
+.ops-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 22px;box-shadow:var(--shadow);margin-bottom:18px;}
+.ops-panel h2{font-family:'Spline Sans Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);font-weight:600;margin:0 0 14px;display:flex;align-items:center;justify-content:space-between;}
+.ops-panel h2 .ops-ts{font-size:10px;letter-spacing:0;text-transform:none;font-weight:400;}
+.ops-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.ops-cell{text-align:center;padding:8px 4px;border-radius:10px;background:var(--bg);}
+.ops-cell .oc-label{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-soft);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ops-cell .oc-val{font-family:'Spline Sans Mono',monospace;font-size:15px;font-weight:700;margin-top:4px;line-height:1;}
+.ops-cell .oc-val.green{color:var(--green);}
+.ops-cell .oc-val.red{color:var(--red);}
+.ops-cell .oc-val.amber{color:#c08a2d;}
+.ops-cell .oc-val.muted{color:var(--ink-soft);}
+.ops-health{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:center;}
+.ops-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.ops-dot.green{background:var(--green);}
+.ops-dot.red{background:var(--red);}
+.ops-dot.amber{background:#c08a2d;}
+.ops-health-summary{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-soft);margin-left:6px;}
+.ops-err{font-size:12px;color:var(--ink-soft);font-family:'Spline Sans Mono',monospace;}
+@media(max-width:720px){.ops-grid{grid-template-columns:repeat(3,1fr);}}
 </style>
 </head>
 <body>
@@ -271,6 +292,8 @@
       <strong id="upd-date">—</strong>
     </div>
   </header>
+
+  <div id="ops-readiness"></div>
 
   <div class="snapshot-warning" id="snapshot-warning"></div>
 
@@ -668,6 +691,61 @@ function setUpdated(){
   }
 }
 
+const SB_URL = 'https://alxtkdebryheweqbqlts.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFseHRrZGVicnloZXdlcWJxbHRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI3NzEsImV4cCI6MjA5NjA2ODc3MX0.DG8-RAQnDTpqTKHR7rjL5FWOW9Z-FdVVbBJjRuL18GA';
+const WF_VERSIONS = {WF1:'8fa42df6',WF2:'df890007',WF3:'85c047df',Publisher:'64e344fd'};
+
+async function loadReadiness(){
+  var el=document.getElementById('ops-readiness');
+  try{
+    var hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+    var [panelRes,checksRes]=await Promise.all([
+      fetch(SB_URL+'/rest/v1/ops_readiness_panel?select=*',{headers:hdrs}),
+      fetch(SB_URL+'/rest/v1/monday_readiness?select=*&order=status',{headers:hdrs})
+    ]);
+    if(!panelRes.ok||!checksRes.ok) throw new Error('API '+panelRes.status+'/'+checksRes.status);
+    var panelRows=await panelRes.json();
+    var checks=await checksRes.json();
+    if(!panelRows.length){el.innerHTML='<div class="ops-panel"><div class="ops-err">No readiness data.</div></div>';return;}
+    var p=panelRows[0].panel||panelRows[0];
+    var ts=p.checked_at?new Date(p.checked_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'—';
+    var smCls=p.stock_market==='OPEN'?'green':(String(p.stock_market||'').indexOf('weekend')>=0?'muted':'amber');
+    var html='<div class="ops-panel"><h2>Operations Readiness<span class="ops-ts">checked '+ts+'</span></h2>';
+    html+='<div class="ops-grid">';
+    html+='<div class="ops-cell"><div class="oc-label">Stock Mkt</div><div class="oc-val '+smCls+'">'+esc(p.stock_market||'—')+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Crypto</div><div class="oc-val green">'+esc(p.crypto_market||'24/7')+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Stale Prices</div><div class="oc-val '+(p.stale_price_count>0?'red':'green')+'">'+p.stale_price_count+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Acct Drift</div><div class="oc-val '+(p.accounting_drift_count>0?'red':'green')+'">'+p.accounting_drift_count+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Partial Sets</div><div class="oc-val '+(p.partial_set_count>0?'red':'green')+'">'+p.partial_set_count+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Overdue</div><div class="oc-val '+(p.eligible_still_open>0?'amber':'green')+'">'+p.eligible_still_open+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Open Trades</div><div class="oc-val muted">'+p.open_trades+'</div></div>';
+    var bk=p.books||{};
+    html+='<div class="ops-cell"><div class="oc-label">Prod Books</div><div class="oc-val muted">'+(bk.production||0)+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Val Books</div><div class="oc-val muted">'+(bk.validation||0)+'</div></div>';
+    html+='<div class="ops-cell"><div class="oc-label">Archived</div><div class="oc-val muted">'+(bk.archived||0)+'</div></div>';
+    html+='</div>';
+    if(checks.length){
+      var reds=checks.filter(function(c){return c.status==='RED';}).length;
+      var ambers=checks.filter(function(c){return c.status==='AMBER';}).length;
+      var greens=checks.filter(function(c){return c.status==='GREEN';}).length;
+      html+='<div class="ops-health">';
+      checks.forEach(function(c){
+        var cls=c.status==='RED'?'red':(c.status==='AMBER'?'amber':'green');
+        html+='<span class="ops-dot '+cls+'" title="'+esc(c.condition)+': '+esc(c.detail)+'"></span>';
+      });
+      html+='<span class="ops-health-summary">'+greens+' green';
+      if(ambers) html+=' · '+ambers+' amber';
+      if(reds) html+=' · '+reds+' red';
+      html+='</span></div>';
+    }
+    html+='<div style="margin-top:8px;font-size:10px;color:var(--ink-soft);font-family:\'Spline Sans Mono\',monospace">WF versions: '+Object.entries(WF_VERSIONS).map(function(e){return e[0]+' '+e[1];}).join(' · ')+'</div>';
+    html+='</div>';
+    el.innerHTML=html;
+  }catch(e){
+    el.innerHTML='<div class="ops-panel"><div class="ops-err">Readiness: '+esc(e.message)+'</div></div>';
+  }
+}
+
 async function loadData(){
   try{
     const r=await fetch('../data.json?t='+Date.now(),{cache:'no-store'});
@@ -687,6 +765,7 @@ window.addEventListener('touchend',e=>{ const h=document.getElementById('ptr-hin
 
 wireSwitch();
 wireModelCards();
+loadReadiness();
 loadData();
 
 
