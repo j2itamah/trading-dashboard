@@ -693,7 +693,7 @@ function setUpdated(){
 
 const SB_URL = 'https://alxtkdebryheweqbqlts.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFseHRrZGVicnloZXdlcWJxbHRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI3NzEsImV4cCI6MjA5NjA2ODc3MX0.DG8-RAQnDTpqTKHR7rjL5FWOW9Z-FdVVbBJjRuL18GA';
-const WF_VERSIONS = {WF1:'8fa42df6',WF2:'df890007',WF3:'85c047df',Publisher:'64e344fd'};
+const WF_VERSIONS = {};
 
 async function loadReadiness(){
   var el=document.getElementById('ops-readiness');
@@ -701,7 +701,7 @@ async function loadReadiness(){
     var hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
     var [panelRes,checksRes]=await Promise.all([
       fetch(SB_URL+'/rest/v1/ops_readiness_panel?select=*',{headers:hdrs}),
-      fetch(SB_URL+'/rest/v1/monday_readiness?select=*&order=status',{headers:hdrs})
+      fetch(SB_URL+'/rest/v1/dashboard_readiness?select=*&order=status',{headers:hdrs})
     ]);
     if(!panelRes.ok||!checksRes.ok) throw new Error('API '+panelRes.status+'/'+checksRes.status);
     var panelRows=await panelRes.json();
@@ -731,14 +731,14 @@ async function loadReadiness(){
       html+='<div class="ops-health">';
       checks.forEach(function(c){
         var cls=c.status==='RED'?'red':(c.status==='AMBER'?'amber':'green');
-        html+='<span class="ops-dot '+cls+'" title="'+esc(c.condition)+': '+esc(c.detail)+'"></span>';
+        html+='<span class="ops-dot '+cls+'" title="'+esc(c.condition)+': '+esc(c.status)+'"></span>';
       });
       html+='<span class="ops-health-summary">'+greens+' green';
       if(ambers) html+=' · '+ambers+' amber';
       if(reds) html+=' · '+reds+' red';
       html+='</span></div>';
     }
-    html+='<div style="margin-top:8px;font-size:10px;color:var(--ink-soft);font-family:\'Spline Sans Mono\',monospace">WF versions: '+Object.entries(WF_VERSIONS).map(function(e){return e[0]+' '+e[1];}).join(' · ')+'</div>';
+    /* WF version display removed — not for public dashboard */
     html+='</div>';
     el.innerHTML=html;
   }catch(e){
