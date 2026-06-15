@@ -253,58 +253,37 @@
 .nav-link.on{background:var(--accent);color:#fff;}
 @media(max-width:640px){.site-nav{position:fixed;bottom:0;left:0;right:0;border-radius:0;z-index:100;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel);box-shadow:0 -2px 10px rgba(0,0,0,.08);}body{padding-bottom:70px !important;}}
 
-/* --- operations readiness panel --- */
-.ops-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 22px;box-shadow:var(--shadow);margin-bottom:18px;}
-.ops-panel h2{font-family:'Spline Sans Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);font-weight:600;margin:0 0 14px;display:flex;align-items:center;justify-content:space-between;}
-.ops-panel h2 .ops-ts{font-size:10px;letter-spacing:0;text-transform:none;font-weight:400;}
-.ops-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
-.ops-cell{text-align:center;padding:8px 4px;border-radius:10px;background:var(--bg);}
-.ops-cell .oc-label{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-soft);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ops-cell .oc-val{font-family:'Spline Sans Mono',monospace;font-size:15px;font-weight:700;margin-top:4px;line-height:1;}
-.ops-cell .oc-val.green{color:var(--green);}
-.ops-cell .oc-val.red{color:var(--red);}
-.ops-cell .oc-val.amber{color:#c08a2d;}
-.ops-cell .oc-val.muted{color:var(--ink-soft);}
-.ops-health{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:center;}
-.ops-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
-.ops-dot.green{background:var(--green);}
-.ops-dot.red{background:var(--red);}
-.ops-dot.amber{background:#c08a2d;}
-.ops-health-summary{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-soft);margin-left:6px;}
-.ops-err{font-size:12px;color:var(--ink-soft);font-family:'Spline Sans Mono',monospace;}
-@media(max-width:720px){.ops-grid{grid-template-columns:repeat(3,1fr);}}
-
-/* --- redesigned readiness --- */
-.ops-banner{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;margin-bottom:14px;font-weight:600;font-size:15px;}
-.ops-banner.healthy{background:#e6f5ee;color:#0f6b3f;border:1px solid #b8e2cc;}
-.ops-banner.attention{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a;}
-.ops-banner.action{background:#fbeaec;color:#a8323e;border:1px solid #e8a0a8;}
-.ops-banner .obs-icon{font-size:20px;flex-shrink:0;}
-.ops-quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px;}
-.ops-quick .oq{text-align:center;padding:10px 8px;border-radius:10px;background:var(--bg);border:1px solid var(--line);}
-.ops-quick .oq .oq-val{font-family:'Fraunces',serif;font-size:20px;font-weight:600;line-height:1.2;}
-.ops-quick .oq .oq-lab{font-size:11px;color:var(--ink-soft);margin-top:2px;}
-.ops-issues{margin-bottom:14px;}
-.ops-issue{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:6px;font-size:13px;line-height:1.45;}
-.ops-issue.red{background:#fbeaec;border:1px solid #e8a0a8;color:#7a2530;}
-.ops-issue.amber{background:#fff8e5;border:1px solid #e7c46a;color:#6b4c0a;}
-.ops-issue .oi-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
-.ops-issue .oi-body strong{display:block;font-weight:600;margin-bottom:2px;}
-.ops-issue .oi-body .oi-detail{font-size:12px;opacity:.85;line-height:1.4;}
-.ops-tech-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font:600 12px 'Spline Sans Mono',monospace;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
-.ops-tech-toggle:hover{background:rgba(0,0,0,.02);}
-.ops-tech-toggle .arrow{transition:transform .2s;font-size:11px;}
-.ops-tech-toggle.expanded .arrow{transform:rotate(90deg);}
-.ops-tech-body{display:none;margin-top:10px;}
-.ops-tech-body.show{display:block;}
-.ops-check-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;}
-.ops-check-row:last-child{border-bottom:none;}
-.ops-check-row .ocr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+/* --- compact status banner --- */
+.ops-strip{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;margin-bottom:18px;font:600 13px 'Spline Sans',sans-serif;cursor:pointer;transition:all .15s;user-select:none;}
+.ops-strip:hover{filter:brightness(.97);}
+.ops-strip.healthy{background:#e6f5ee;color:#0f6b3f;border:1px solid #b8e2cc;}
+.ops-strip.attention{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a;}
+.ops-strip.action{background:#fbeaec;color:#a8323e;border:1px solid #e8a0a8;}
+.ops-strip .os-icon{font-size:16px;flex-shrink:0;}
+.ops-strip .os-text{flex:1;}
+.ops-strip .os-meta{font:500 11px 'Spline Sans Mono',monospace;opacity:.7;margin-left:auto;white-space:nowrap;}
+.ops-strip .os-arrow{font-size:11px;opacity:.5;transition:transform .2s;margin-left:4px;}
+.ops-strip.expanded .os-arrow{transform:rotate(90deg);}
+.ops-detail{display:none;margin:-12px 0 18px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:0 0 12px 12px;box-shadow:var(--shadow);}
+.ops-detail.show{display:block;}
+.ops-detail .od-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:10px;}
+.ops-detail .od-cell{text-align:center;padding:8px 4px;border-radius:8px;background:var(--bg);}
+.ops-detail .od-val{font:700 15px 'Spline Sans Mono',monospace;line-height:1.2;}
+.ops-detail .od-lab{font-size:10px;color:var(--ink-soft);margin-top:2px;}
+.ops-detail .od-checks{border-top:1px solid var(--line);padding-top:8px;}
+.ops-check-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;}
+.ops-check-row .ocr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .ops-check-row .ocr-dot.green{background:var(--green);}
 .ops-check-row .ocr-dot.red{background:var(--red);}
 .ops-check-row .ocr-dot.amber{background:#c08a2d;}
 .ops-check-row .ocr-name{flex:1;color:var(--ink-soft);}
 .ops-check-row .ocr-status{font-weight:600;font-family:'Spline Sans Mono',monospace;}
+.ops-err{font-size:12px;color:var(--ink-soft);font-family:'Spline Sans Mono',monospace;}
+/* waiting state for empty books */
+.book-waiting{text-align:center;padding:48px 24px;color:var(--ink-soft);}
+.book-waiting .bw-icon{font-size:28px;margin-bottom:12px;}
+.book-waiting .bw-title{font:600 16px 'Spline Sans',sans-serif;color:var(--ink);margin-bottom:6px;}
+.book-waiting .bw-detail{font:400 13px 'Spline Sans Mono',monospace;line-height:1.5;max-width:400px;margin:0 auto;}
 </style>
 </head>
 <body>
@@ -482,7 +461,18 @@ function render(){
 
   const b = book();
   const c = document.getElementById('content');
-  if(!b){ c.innerHTML='<div class="status err">No data for this book.</div>'; return; }
+  if(!b){
+    var waitIcon='📊', waitTitle='No data for this book', waitDetail='This book has not received any trades yet.';
+    if(sel.target_model==='volatility'){
+      waitIcon='📈'; waitTitle='Waiting for first Volatility trade';
+      waitDetail='ATR-based volatility trades are created when stock signals arrive during US market hours (9:30 AM – 4:00 PM ET, Mon–Fri). Crypto is excluded from the volatility path by design.';
+    } else if(sel.strategy==='full_confluence'){
+      waitIcon='✦'; waitTitle='Waiting for first Full Confluence trade';
+      waitDetail='Full Confluence requires all filters to pass simultaneously (RSI + trend + momentum + volume). Signals are rare by design — this validates that only high-conviction setups enter.';
+    }
+    c.innerHTML='<div class="book-waiting"><div class="bw-icon">'+waitIcon+'</div><div class="bw-title">'+waitTitle+'</div><div class="bw-detail">'+waitDetail+'</div></div>';
+    return;
+  }
 
   const a = b.analytics || {};
   const o = a.OVERALL || {};
@@ -758,14 +748,13 @@ async function loadReadiness(){
     if(!panelRes.ok||!checksRes.ok) throw new Error('API '+panelRes.status+'/'+checksRes.status);
     var panelRows=await panelRes.json();
     var checks=await checksRes.json();
-    if(!panelRows.length){el.innerHTML='<div class="ops-panel"><div class="ops-err">No readiness data.</div></div>';return;}
+    if(!panelRows.length){el.innerHTML='<div class="ops-strip healthy"><span class="os-icon">—</span><span class="os-text">No readiness data</span></div>';return;}
     var p=panelRows[0].panel||panelRows[0];
-    var ts=p.checked_at?new Date(p.checked_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'—';
+    var ts=p.checked_at?new Date(p.checked_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
     var mktClosed = isMarketClosed(p);
 
     var reds=checks.filter(function(c){return c.status==='RED';});
     var ambers=checks.filter(function(c){return c.status==='AMBER';});
-    var greens=checks.filter(function(c){return c.status==='GREEN';});
     var issues = reds.concat(ambers);
 
     var allExpected = issues.length>0 && issues.every(function(c){
@@ -773,82 +762,73 @@ async function loadReadiness(){
     });
     var overallCls, overallIcon, overallText;
     if(issues.length===0){
-      overallCls='healthy'; overallIcon='✓'; overallText='Healthy — all systems running normally';
+      overallCls='healthy'; overallIcon='✓'; overallText='All systems healthy';
     } else if(allExpected){
-      overallCls='attention'; overallIcon='◷'; overallText='Waiting for market open — '+issues.length+' item'+(issues.length>1?'s':'')+' will resolve automatically';
+      overallCls='attention'; overallIcon='◷'; overallText='Waiting for market open';
     } else if(reds.length>0){
       var realReds = reds.filter(function(c){ var f=CHECK_FRIENDLY[c.condition]; return !(f && f.expectedOffHours && mktClosed); });
       if(realReds.length>0){
-        overallCls='action'; overallIcon='!'; overallText='Action required — '+realReds.length+' issue'+(realReds.length>1?'s need':' needs')+' attention';
+        overallCls='action'; overallIcon='!'; overallText=realReds.length+' issue'+(realReds.length>1?'s':'')+' need'+(realReds.length>1?'':'s')+' attention';
       } else {
-        overallCls='attention'; overallIcon='◷'; overallText='Waiting for market open — expected behavior outside trading hours';
+        overallCls='attention'; overallIcon='◷'; overallText='Waiting for market open';
       }
     } else {
-      overallCls='attention'; overallIcon='◷'; overallText='Needs attention — '+ambers.length+' item'+(ambers.length>1?'s':'');
+      overallCls='attention'; overallIcon='◷'; overallText=ambers.length+' item'+(ambers.length>1?'s':'')+' to watch';
     }
 
-    var html='<div class="ops-panel">';
-    html+='<h2>System Status<span class="ops-ts">checked '+ts+'</span></h2>';
-    html+='<div class="ops-banner '+overallCls+'"><span class="obs-icon">'+overallIcon+'</span>'+esc(overallText)+'</div>';
+    var metaParts = [];
+    metaParts.push(p.open_trades+' open');
+    if(p.stock_market==='OPEN') metaParts.push('mkt open');
+    if(ts) metaParts.push(ts);
 
-    html+='<div class="ops-quick">';
+    var html='<div class="ops-strip '+overallCls+'" id="ops-strip" onclick="toggleOpsDetail()">';
+    html+='<span class="os-icon">'+overallIcon+'</span>';
+    html+='<span class="os-text">'+esc(overallText)+'</span>';
+    html+='<span class="os-meta">'+metaParts.join(' · ')+'</span>';
+    html+='<span class="os-arrow">›</span>';
+    html+='</div>';
+
+    html+='<div class="ops-detail" id="ops-detail">';
+    html+='<div class="od-grid">';
     var smLabel = p.stock_market==='OPEN'?'Open':'Closed';
     var smCls = p.stock_market==='OPEN'?'green':'muted';
-    html+='<div class="oq"><div class="oq-val" style="color:var(--'+smCls+')">'+esc(smLabel)+'</div><div class="oq-lab">Stock market</div></div>';
-    html+='<div class="oq"><div class="oq-val" style="color:var(--green)">24/7</div><div class="oq-lab">Crypto</div></div>';
-    html+='<div class="oq"><div class="oq-val">'+p.open_trades+'</div><div class="oq-lab">Open trades</div></div>';
+    html+='<div class="od-cell"><div class="od-val" style="color:var(--'+smCls+')">'+esc(smLabel)+'</div><div class="od-lab">Stock mkt</div></div>';
+    html+='<div class="od-cell"><div class="od-val">'+p.open_trades+'</div><div class="od-lab">Open trades</div></div>';
     var bk=p.books||{};
-    html+='<div class="oq"><div class="oq-val">'+(bk.production||0)+'</div><div class="oq-lab">Main strategies</div></div>';
-    html+='<div class="oq"><div class="oq-val">'+(bk.validation||0)+'</div><div class="oq-lab">Being tested</div></div>';
+    html+='<div class="od-cell"><div class="od-val">'+(bk.production||0)+'</div><div class="od-lab">Production</div></div>';
+    html+='<div class="od-cell"><div class="od-val">'+(bk.validation||0)+'</div><div class="od-lab">Validation</div></div>';
     html+='</div>';
 
     if(issues.length>0){
-      html+='<div class="ops-issues">';
       issues.forEach(function(c){
-        var f = CHECK_FRIENDLY[c.condition] || {name:c.condition, failExplain:'Check returned '+c.status+'.', action:'Investigate.', resolves:'Unknown.'};
-        var cls = c.status==='RED' ? 'red' : 'amber';
-        var icon = c.status==='RED' ? '⚠' : '◷';
+        var f = CHECK_FRIENDLY[c.condition] || {name:c.condition};
         var isExpected = f.expectedOffHours && mktClosed;
-        if(isExpected){ cls='amber'; icon='◷'; }
-        var explain = f.failExplain || '';
-        if(explain.indexOf('{count}')>=0){
-          var ct = p.eligible_still_open || p.overdue_count || '?';
-          explain = explain.replace('{count}', ct);
-        }
-        html+='<div class="ops-issue '+cls+'">';
-        html+='<span class="oi-icon">'+icon+'</span>';
-        html+='<div class="oi-body"><strong>'+esc(f.name)+'</strong>';
-        html+='<div class="oi-detail">'+esc(explain)+'</div>';
-        if(f.action) html+='<div class="oi-detail" style="margin-top:4px"><strong style="display:inline">Action:</strong> '+esc(f.action)+'</div>';
-        if(f.resolves) html+='<div class="oi-detail"><strong style="display:inline">Resolves:</strong> '+esc(f.resolves)+'</div>';
-        html+='</div></div>';
+        var cls = isExpected ? 'amber' : (c.status==='RED'?'red':'amber');
+        var icon = isExpected ? '◷' : (c.status==='RED'?'⚠':'◷');
+        html+='<div class="ops-check-row"><span class="ocr-dot '+cls+'"></span><span class="ocr-name">'+esc(f.name || c.condition)+'</span><span class="ocr-status" style="color:var(--'+(cls==='red'?'red':'gold')+')">'+(isExpected?'expected':c.status)+'</span></div>';
       });
-      html+='</div>';
     }
 
-    html+='<button class="ops-tech-toggle" id="ops-tech-toggle" onclick="toggleOpsTech()"><span>View technical details ('+checks.length+' checks)</span><span class="arrow">›</span></button>';
-    html+='<div class="ops-tech-body" id="ops-tech-body">';
+    html+='<div class="od-checks">';
     checks.forEach(function(c){
       var f = CHECK_FRIENDLY[c.condition] || {name:c.condition};
       var cls = c.status==='RED'?'red':(c.status==='AMBER'?'amber':'green');
       html+='<div class="ops-check-row"><span class="ocr-dot '+cls+'"></span><span class="ocr-name">'+esc(f.name || c.condition)+'</span><span class="ocr-status" style="color:var(--'+(cls==='green'?'green':(cls==='red'?'red':'gold'))+')">'+(c.status==='GREEN'?'OK':c.status)+'</span></div>';
     });
-    html+='</div>';
+    html+='</div></div>';
 
-    html+='</div>';
     el.innerHTML=html;
   }catch(e){
-    el.innerHTML='<div class="ops-panel"><div class="ops-err">Readiness: '+esc(e.message)+'</div></div>';
+    el.innerHTML='<div class="ops-strip attention"><span class="os-icon">—</span><span class="os-text">Status unavailable</span><span class="os-meta">'+esc(e.message)+'</span></div>';
   }
 }
 
-function toggleOpsTech(){
-  var btn=document.getElementById('ops-tech-toggle');
-  var body=document.getElementById('ops-tech-body');
-  if(!btn||!body) return;
-  var expanded=btn.classList.toggle('expanded');
-  body.classList.toggle('show', expanded);
-  btn.querySelector('span:first-child').textContent = expanded ? 'Hide technical details' : 'View technical details ('+document.querySelectorAll('.ops-check-row').length+' checks)';
+function toggleOpsDetail(){
+  var strip=document.getElementById('ops-strip');
+  var detail=document.getElementById('ops-detail');
+  if(!strip||!detail) return;
+  var expanded=strip.classList.toggle('expanded');
+  detail.classList.toggle('show', expanded);
 }
 
 async function loadData(){
