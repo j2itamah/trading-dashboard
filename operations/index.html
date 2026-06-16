@@ -893,7 +893,8 @@ function openTradeModal(t, rt, ri){
   if(isOpen){
     var scaleCur=Number(t.unrealized_pnl_percent||0);
     var scaleMin=-Number(ts.sl_r||0.01), scaleMax=Number(ts.tp_r||0.01);
-    var scalePos=Math.max(0,Math.min(100,((scaleCur-scaleMin)/(scaleMax-scaleMin))*100));
+    var curPrice=Number(t.current_price||t.entry_price||0);
+    var scalePos=(ts.tp!==ts.sl)?Math.max(0,Math.min(100,((curPrice-ts.sl)/(ts.tp-ts.sl))*100)):50;
     lifecycle += '<div class="tm-scale"><div class="tm-scale-labels"><span>Stop '+(scaleMin*100).toFixed(1)+'%</span><span>Current '+(scaleCur>=0?'+':'')+(scaleCur*100).toFixed(2)+'%</span><span>Target +'+(scaleMax*100).toFixed(1)+'%</span></div><div class="tm-scale-track"><span class="tm-scale-loss"></span><span class="tm-scale-neutral"></span><span class="tm-scale-profit"></span><i class="tm-scale-dot" style="left:'+scalePos+'%"></i></div></div>';
   }
   if(t.period_high!=null && t.period_low!=null && t.entry_price){
