@@ -80,6 +80,17 @@
 
 
 /* --- spacing polish: more breathing room --- */
+.daily-pnl { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 24px; margin-bottom:18px; box-shadow:var(--shadow); }
+.dp-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+.dp-title { font-family:'Spline Sans Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-soft); font-weight:600; }
+.dp-total { font-family:'Fraunces',serif; font-size:clamp(20px,3.5vw,28px); font-weight:600; letter-spacing:-0.5px; }
+.dp-pct { font-family:'Spline Sans Mono',monospace; font-size:14px; font-weight:600; }
+.dp-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.dp-item { display:flex; flex-direction:column; gap:2px; }
+.dp-label { font-family:'Spline Sans Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.8px; color:var(--ink-soft); }
+.dp-val { font-family:'Spline Sans Mono',monospace; font-size:15px; font-weight:700; }
+.dp-sub { font-family:'Spline Sans Mono',monospace; font-size:11px; color:var(--ink-soft); }
+@media (max-width:640px){ .dp-row{ grid-template-columns:repeat(2,1fr); gap:10px; } .dp-header{ flex-direction:column; gap:4px; } }
 .kpis { margin-bottom: 18px !important; gap: 16px !important; }
 .grid { gap: 18px !important; margin-top: 18px !important; }
 .panel { padding: 24px !important; }
@@ -501,6 +512,29 @@ function render(){
       '</div>'+
     '</div>';
 
+  var todayStr = new Date().toLocaleDateString('en-CA', {timeZone:'America/New_York'});
+  var todayClosed = closedRows.filter(function(t){ return t.exit_time && t.exit_time.slice(0,10) === todayStr; });
+  var todayOpened = positions.filter(function(t){ return t.entry_time && t.entry_time.slice(0,10) === todayStr; });
+  var realizedToday = todayClosed.reduce(function(s,t){ return s + Number(t.pnl_dollars||0); }, 0);
+  var unrealizedNow = positions.reduce(function(s,t){ return s + Number(t.unrealized_pnl_dollars||0); }, 0);
+  var totalToday = realizedToday + unrealizedNow;
+  var startBal = Number(b.starting_balance || 10000);
+  var todayPct = startBal > 0 ? (totalToday / startBal) : 0;
+
+  const dailyPnl =
+    '<div class="daily-pnl">'+
+      '<div class="dp-header">'+
+        '<span class="dp-title">Today\'s P&L</span>'+
+        '<span class="dp-total '+signCls(totalToday)+'">'+(totalToday>=0?'+':'')+fmtMoney(totalToday)+' <span class="dp-pct">'+(todayPct>=0?'+':'')+(todayPct*100).toFixed(2)+'%</span></span>'+
+      '</div>'+
+      '<div class="dp-row">'+
+        '<div class="dp-item"><span class="dp-label">Realized today</span><span class="dp-val '+signCls(realizedToday)+'">'+(realizedToday>=0?'+':'')+fmtMoney(realizedToday)+'</span><span class="dp-sub">'+todayClosed.length+' closed</span></div>'+
+        '<div class="dp-item"><span class="dp-label">Unrealized (open)</span><span class="dp-val '+signCls(unrealizedNow)+'">'+(unrealizedNow>=0?'+':'')+fmtMoney(unrealizedNow)+'</span><span class="dp-sub">'+positions.length+' open</span></div>'+
+        '<div class="dp-item"><span class="dp-label">Since start</span><span class="dp-val '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+'</span><span class="dp-sub">'+fmtPct(b.growth_pct)+'</span></div>'+
+        '<div class="dp-item"><span class="dp-label">New today</span><span class="dp-val">'+todayOpened.length+'</span><span class="dp-sub">opened</span></div>'+
+      '</div>'+
+    '</div>';
+
   const kpis =
     '<div class="kpis">'+
       kpiCard('Win Rate', noTrades?'—':((o.win_rate_pct==null?'—':Number(o.win_rate_pct).toFixed(0)+'%')), '', (b.closed.count||0)+' closed'+(b.open_count?(' · '+b.open_count+' open'):''))+
@@ -619,7 +653,7 @@ function render(){
       '<div class="row"><div class="name">Losers</div><div class="metrics"><div class="metric"><div class="m-val neg-text">'+minsLabel(ht.avg_loss_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
     '</div></div>';
 
-  c.innerHTML = labWarn + eq + kpis + caveat + grid + holdPanel;
+  c.innerHTML = labWarn + eq + dailyPnl + kpis + caveat + grid + holdPanel;
     c.querySelectorAll('.trade-clk').forEach(function(el){
       var open = function(){
         var rt = el.getAttribute('data-rt'); var ri = parseInt(el.getAttribute('data-ri'),10);
