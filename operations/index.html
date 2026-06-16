@@ -938,7 +938,19 @@ function renderSignalQuality(){
       }
     });
     var volMissing=g.hasFixed && !g.hasVol && g.trades.some(function(t){ return volStratSet.has(t.portfolio); });
-    if(volMissing) bookTags.push('<span class="sq-book-tag missing">VOL MISSING</span>');
+    var volReason='';
+    if(volMissing){
+      var assetUp=(g.asset||'').toUpperCase();
+      for(var vi=0;vi<VOL_EVENTS.length;vi++){
+        var ve=VOL_EVENTS[vi];
+        if((ve.asset||'').toUpperCase()===assetUp && ve.outcome && ve.outcome.indexOf('volatility_rejected')===0){
+          volReason=ve.reason||ve.outcome.replace('volatility_rejected_','');
+          break;
+        }
+      }
+      if(volReason) bookTags.push('<span class="sq-book-tag missing" title="'+esc(volReason)+'">VOL REJECTED</span>');
+      else bookTags.push('<span class="sq-book-tag missing">VOL MISSING</span>');
+    }
 
     var headlineHtml=esc(g.title||'—');
     if(g.news_url) headlineHtml='<a href="'+esc(g.news_url)+'" target="_blank" rel="noopener">'+headlineHtml+'</a>';
@@ -961,7 +973,10 @@ function renderSignalQuality(){
     html+='<div class="sq-kv"><span class="sq-k">Reasoning</span><span class="sq-v" style="color:var(--ink-soft);font-style:italic">not yet captured</span></div>';
     html+='</div>';
     html+='<div class="sq-books">'+bookTags.join('')+'</div>';
-    if(volMissing) html+='<div class="sq-missing-warn">Fixed trades exist for news_only but no Volatility sibling found</div>';
+    if(volMissing){
+      if(volReason) html+='<div class="sq-missing-warn">Vol gate rejected: '+esc(volReason)+'</div>';
+      else html+='<div class="sq-missing-warn">Fixed trades exist but no Volatility sibling — no historical rejection log available</div>';
+    }
     html+='</div>';
   });
 
@@ -984,9 +999,18 @@ function toggleOpsDetail(){
   detail.classList.toggle('show', expanded);
 }
 
+var VOL_EVENTS=[];
+var SB_URL='https://alxtkdebryheweqbqlts.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFseHRrZGVicnloZXdlcWJxbHRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI3NzEsImV4cCI6MjA5NjA2ODc3MX0.DG8-RAQnDTpqTKHR7rjL5FWOW9Z-FdVVbBJjRuL18GA';
+async function loadVolEvents(){
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/signal_decision_events?stage=eq.volatility_gate&order=created_at.desc&limit=200',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(r.ok) VOL_EVENTS=await r.json();
+  }catch(e){}
+}
 async function loadData(){
   try{
-    const r=await fetch('../data.json?t='+Date.now(),{cache:'no-store'});
+    const [r]=await Promise.all([fetch('../data.json?t='+Date.now(),{cache:'no-store'}), loadVolEvents()]);
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
     if(sel.strategy==='strict'){ sel.strategy='full_confluence'; localStorage.setItem('dash_strategy','full_confluence'); }
