@@ -225,7 +225,7 @@
 .model-card.on.volatility{border-color:#7c3aed;background:#f3eefe;color:#6d28d9;}
 .model-card .pilot-tag{position:absolute;top:-8px;right:-6px;font:700 8.5px/1 'Spline Sans Mono',monospace;background:#7c3aed;color:#fff;padding:3px 7px;border-radius:6px;letter-spacing:.4px;white-space:nowrap;}
 .toggle-btn.disabled{opacity:.38;cursor:not-allowed;pointer-events:none;}
-.weekend-pilot-label{display:inline-block;font:700 10px/1 'Spline Sans Mono',monospace;background:#f3eefe;color:#7c3aed;border:1px solid #ddd6fe;padding:4px 10px;border-radius:8px;margin-left:8px;vertical-align:middle;letter-spacing:.3px;}
+.vol-pilot-label{display:inline-block;font:700 10px/1 'Spline Sans Mono',monospace;background:#f3eefe;color:#7c3aed;border:1px solid #ddd6fe;padding:4px 10px;border-radius:8px;margin-left:8px;vertical-align:middle;letter-spacing:.3px;}
 .volatility-detail{font:500 11px/1.3 'Spline Sans Mono',monospace;color:#7c3aed;margin-top:4px;}
 @media(max-width:640px){.model-section{margin:24px 0 0;}.model-cards{flex-direction:row;gap:8px;}.model-card{padding:9px 14px;font-size:12px;}.model-card .pilot-tag{font-size:7.5px;padding:2px 5px;top:-7px;right:-4px;}}
 
@@ -453,7 +453,7 @@ function render(){
   document.querySelectorAll('#exit-switch button').forEach(b=>{var on=b.dataset.rule===sel.rule;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   document.querySelectorAll('#portfolio-toggle button').forEach(b=>{var on=b.dataset.strat===sel.strategy;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   document.querySelectorAll('#model-cards .model-card').forEach(b=>{var on=b.dataset.model===sel.target_model;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  var pilotBadge = sel.target_model==='volatility' ? ' · <span class="weekend-pilot-label">Weekend Pilot</span>' : '';
+  var pilotBadge = sel.target_model==='volatility' ? ' · <span class="vol-pilot-label">Volatility Pilot</span>' : '';
   var modelLabel = sel.target_model==='volatility' ? 'Volatility' : 'Fixed';
   document.getElementById('active-label').innerHTML =
     '<strong>'+STRAT_LABELS[sel.strategy]+' · '+RULE_LABEL[sel.rule]+' · '+modelLabel+pilotBadge+'</strong>'+
@@ -465,7 +465,7 @@ function render(){
     var waitIcon='📊', waitTitle='No data for this book', waitDetail='This book has not received any trades yet.';
     if(sel.target_model==='volatility'){
       waitIcon='📈'; waitTitle='Waiting for first Volatility trade';
-      waitDetail='ATR-based volatility trades are created when crypto signals arrive with valid CoinGecko ATR data. Stock ATR is not yet available.';
+      waitDetail='ATR-based volatility trades use CoinGecko ATR for crypto and Yahoo Finance ATR for stocks. Trades are created when signals pass volatility evaluation.';
     } else if(sel.strategy==='full_confluence'){
       waitIcon='✦'; waitTitle='Waiting for first Full Confluence trade';
       waitDetail='Full Confluence requires all filters to pass simultaneously (RSI + trend + momentum + volume). Signals are rare by design — this validates that only high-conviction setups enter.';
