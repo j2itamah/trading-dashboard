@@ -782,30 +782,9 @@ function toggleSigList(){
 
 var TE_STATE = {status:'all',period:'all',model:'all',sort:'newest',search:''};
 function openTradeExplorer(){
-  var g = DATA && DATA.grid || {};
-  var vg = DATA && DATA.volatility_grid || {};
   var all = [];
-  var seen = {};
-  function collect(grid){
-    Object.keys(grid).forEach(function(strat){
-      var rules = grid[strat];
-      Object.keys(rules).forEach(function(rule){
-        var d = rules[rule];
-        if(!d) return;
-        if(d.open_positions) d.open_positions.forEach(function(t){
-          var k = (t.trade_id||t.asset)+'-'+(t.entry_time||'');
-          if(seen[k]) return; seen[k]=1;
-          t._status='OPEN'; t._strat=strat; all.push(t);
-        });
-        if(d.closed_trades) d.closed_trades.forEach(function(t){
-          var k = (t.trade_id||t.asset)+'-'+(t.entry_time||'');
-          if(seen[k]) return; seen[k]=1;
-          t._status='CLOSED'; t._strat=strat; all.push(t);
-        });
-      });
-    });
-  }
-  collect(g); collect(vg);
+  (DATA.open_positions||[]).forEach(function(t){ t._status='OPEN'; all.push(t); });
+  (DATA.closed_trades||[]).forEach(function(t){ t._status='CLOSED'; all.push(t); });
   window.__teAll = all;
   TE_STATE = {status:'all',period:'all',model:'all',sort:'newest',search:''};
   renderTradeExplorer();
