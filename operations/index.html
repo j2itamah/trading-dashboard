@@ -707,7 +707,8 @@ function render(){
   }
   sigPanel += '</div>';
 
-  var teBtn = '<div style="text-align:center;margin:4px 0"><button class="te-btn" onclick="openTradeExplorer()">Trade Explorer — '+allTrades.length+' trades across all books</button></div>';
+  var teTotalCount = (DATA.open_positions||[]).length + (DATA.closed_trades||[]).length;
+  var teBtn = '<div style="text-align:center;margin:4px 0"><button class="te-btn" onclick="openTradeExplorer()">Trade Explorer — '+teTotalCount+' trades across all books</button></div>';
 
   const grid =
     '<div class="grid">'+
@@ -869,6 +870,8 @@ function renderTradeExplorer(){
       +'<div class="te-pct '+signCls(pct)+'">'+(pct>=0?'+':'')+pctDisp+'%</div></div></div>';
   }).join('');
   document.getElementById('te-panel').innerHTML = head + filters + count + '<div class="te-body">'+rows+'</div>';
+  var si = document.querySelector('#te-panel input[type="text"]');
+  if(si && st.search){ si.value = st.search; si.focus(); si.setSelectionRange(st.search.length, st.search.length); }
 }
 function teOpenTrade(idx){
   var all = window.__teAll || [];
