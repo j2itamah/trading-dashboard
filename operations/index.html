@@ -558,7 +558,36 @@ function render(){
       waitIcon='✦'; waitTitle='Waiting for first Full Confluence trade';
       waitDetail='Full Confluence requires all filters to pass simultaneously (RSI + trend + momentum + volume). Signals are rare by design — this validates that only high-conviction setups enter.';
     }
-    c.innerHTML='<div class="book-waiting"><div class="bw-icon">'+waitIcon+'</div><div class="bw-title">'+waitTitle+'</div><div class="bw-detail">'+waitDetail+'</div></div>';
+    var fcPanel='';
+    if(sel.strategy==='full_confluence' && FC_EVENTS.length>0){
+      var passed=FC_EVENTS.filter(function(e){return e.outcome==='fc_passed'});
+      var rejected=FC_EVENTS.filter(function(e){return e.outcome!=='fc_passed'&&e.outcome!=='fc_skipped_crypto'});
+      var crypto=FC_EVENTS.filter(function(e){return e.outcome==='fc_skipped_crypto'});
+      fcPanel='<div style="margin-top:16px;text-align:left;max-width:700px;margin-left:auto;margin-right:auto">';
+      fcPanel+='<div style="font-weight:600;margin-bottom:8px;font-size:14px">FC Gate Activity ('+FC_EVENTS.length+' evaluations)</div>';
+      fcPanel+='<div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap">';
+      fcPanel+='<span style="background:var(--pos-bg,#e8f5e9);color:var(--pos-text,#2e7d32);padding:3px 10px;border-radius:4px;font-size:13px">Passed: '+passed.length+'</span>';
+      fcPanel+='<span style="background:var(--neg-bg,#ffebee);color:var(--neg-text,#c62828);padding:3px 10px;border-radius:4px;font-size:13px">TA Rejected: '+rejected.length+'</span>';
+      fcPanel+='<span style="background:var(--zero-bg,#f5f5f5);color:var(--zero-text,#757575);padding:3px 10px;border-radius:4px;font-size:13px">Crypto Skip: '+crypto.length+'</span>';
+      fcPanel+='</div>';
+      var showEvents=FC_EVENTS.filter(function(e){return e.outcome!=='fc_skipped_crypto'}).slice(0,20);
+      if(showEvents.length>0){
+        fcPanel+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+        fcPanel+='<tr style="border-bottom:1px solid var(--border,#ddd)"><th style="text-align:left;padding:4px">Time</th><th style="text-align:left;padding:4px">Asset</th><th style="text-align:left;padding:4px">Dir</th><th style="text-align:left;padding:4px">Result</th><th style="text-align:left;padding:4px">Reason</th></tr>';
+        for(var fi=0;fi<showEvents.length;fi++){
+          var fe=showEvents[fi];
+          var dt=fe.created_at?new Date(fe.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
+          var cls=fe.outcome==='fc_passed'?'pos-text':'neg-text';
+          var label=fe.outcome==='fc_passed'?'PASSED':fe.outcome==='fc_rejected_ta_fail'?'TA FAIL':'MISSING TA';
+          fcPanel+='<tr style="border-bottom:1px solid var(--border,#eee)"><td style="padding:4px">'+esc(dt)+'</td><td style="padding:4px;font-weight:600">'+esc(fe.asset||'')+'</td><td style="padding:4px">'+esc(fe.direction||'')+'</td><td style="padding:4px" class="'+cls+'">'+label+'</td><td style="padding:4px;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(fe.reason||'')+'">'+esc(fe.reason||'')+'</td></tr>';
+        }
+        fcPanel+='</table>';
+      }
+      fcPanel+='</div>';
+    } else if(sel.strategy==='full_confluence'){
+      fcPanel='<div style="margin-top:16px;text-align:center;color:var(--zero-text,#999);font-size:13px">No FC gate events yet — logging starts on next WF1 execution.</div>';
+    }
+    c.innerHTML='<div class="book-waiting"><div class="bw-icon">'+waitIcon+'</div><div class="bw-title">'+waitTitle+'</div><div class="bw-detail">'+waitDetail+'</div>'+fcPanel+'</div>';
     return;
   }
 
@@ -1202,9 +1231,16 @@ async function loadVolEvents(){
     if(r.ok) VOL_EVENTS=await r.json();
   }catch(e){}
 }
+var FC_EVENTS=[];
+async function loadFCEvents(){
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/signal_decision_events?stage=eq.strict_filter&order=created_at.desc&limit=100',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(r.ok) FC_EVENTS=await r.json();
+  }catch(e){}
+}
 async function loadData(){
   try{
-    const [r]=await Promise.all([fetch('../data.json?t='+Date.now(),{cache:'no-store'}), loadVolEvents()]);
+    const [r]=await Promise.all([fetch('../data.json?t='+Date.now(),{cache:'no-store'}), loadVolEvents(), loadFCEvents()]);
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
     if(sel.strategy==='strict'){ sel.strategy='full_confluence'; localStorage.setItem('dash_strategy','full_confluence'); }
