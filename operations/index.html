@@ -512,6 +512,18 @@ function render(){
       '</div>'+
     '</div>';
 
+  const kpis =
+    '<div class="kpis">'+
+      kpiCard('Win Rate', noTrades?'—':((o.win_rate_pct==null?'—':Number(o.win_rate_pct).toFixed(0)+'%')), '', (b.closed.count||0)+' closed'+(b.open_count?(' · '+b.open_count+' open'):''))+
+      kpiCard('Realized P/L %', noTrades?'—':fmtPct(o.total_pnl_pct), signCls(o.total_pnl_pct))+
+      kpiCard('Realized P/L $', noTrades?'—':((o.total_pnl_dollars>=0?'+':'')+fmtMoney(o.total_pnl_dollars)), signCls(o.total_pnl_dollars))+
+      kpiCard('Reward / Risk', noTrades?'—':(o.reward_risk_ratio==null?'—':Number(o.reward_risk_ratio).toFixed(2)), '', 'avg win / avg loss')+
+    '</div>';
+
+  const caveat = lowSample ? '<div class="footnote">⚠ small sample ('+b.closed.count+' trade'+(b.closed.count===1?'':'s')+') — not yet meaningful</div>' : '';
+
+  const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.research_valid !== false).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); const dataIssueRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.research_valid === false); window.__openRows = positions; window.__closedRows = closedRows;
+
   var todayStr = new Date().toLocaleDateString('en-CA', {timeZone:'America/New_York'});
   var todayClosed = closedRows.filter(function(t){ return t.exit_time && t.exit_time.slice(0,10) === todayStr; });
   var todayOpened = positions.filter(function(t){ return t.entry_time && t.entry_time.slice(0,10) === todayStr; });
@@ -520,8 +532,7 @@ function render(){
   var totalToday = realizedToday + unrealizedNow;
   var startBal = Number(b.starting_balance || 10000);
   var todayPct = startBal > 0 ? (totalToday / startBal) : 0;
-
-  const dailyPnl =
+  var dailyPnl =
     '<div class="daily-pnl">'+
       '<div class="dp-header">'+
         '<span class="dp-title">Today\'s P&L</span>'+
@@ -535,17 +546,6 @@ function render(){
       '</div>'+
     '</div>';
 
-  const kpis =
-    '<div class="kpis">'+
-      kpiCard('Win Rate', noTrades?'—':((o.win_rate_pct==null?'—':Number(o.win_rate_pct).toFixed(0)+'%')), '', (b.closed.count||0)+' closed'+(b.open_count?(' · '+b.open_count+' open'):''))+
-      kpiCard('Realized P/L %', noTrades?'—':fmtPct(o.total_pnl_pct), signCls(o.total_pnl_pct))+
-      kpiCard('Realized P/L $', noTrades?'—':((o.total_pnl_dollars>=0?'+':'')+fmtMoney(o.total_pnl_dollars)), signCls(o.total_pnl_dollars))+
-      kpiCard('Reward / Risk', noTrades?'—':(o.reward_risk_ratio==null?'—':Number(o.reward_risk_ratio).toFixed(2)), '', 'avg win / avg loss')+
-    '</div>';
-
-  const caveat = lowSample ? '<div class="footnote">⚠ small sample ('+b.closed.count+' trade'+(b.closed.count===1?'':'s')+') — not yet meaningful</div>' : '';
-
-  const positions = (DATA.open_positions||[]).filter(p => p.book_key === b.book_key); const closedRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.research_valid !== false).sort(function(x,y){return new Date(y.exit_time||0) - new Date(x.exit_time||0);}); const dataIssueRows = (DATA.closed_trades||[]).filter(p => p.book_key === b.book_key && p.research_valid === false); window.__openRows = positions; window.__closedRows = closedRows;
   var OPEN_PREVIEW = 5;
   let posPanel = '<div class="panel"><h2>Open Positions ('+positions.length+')</h2>';
   if(!positions.length) posPanel += '<div class="zero-text" style="font-size:13px;color:var(--ink-soft)">No open positions.</div>';
