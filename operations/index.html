@@ -427,6 +427,7 @@
     <div class="status">Loading…</div>
   </div>
   <div id="signal-quality" class="sq-wrap"></div>
+  <div id="fc-gate-panel"></div>
 </div>
 
 <script>
@@ -941,7 +942,7 @@ function buildPills(){
     html += '<span class="lab-divider"></span><button class="toggle-btn lab-btn'+(sel.strategy==='crypto_lab'?' on':'')+'" data-strat="crypto_lab">🧪 Crypto Lab</button>';
   }
   tg.innerHTML = html;
-  tg.querySelectorAll('button:not(.disabled)').forEach(btn=>btn.addEventListener('click',()=>{ sel.strategy=btn.dataset.strat; localStorage.setItem('dash_strategy',sel.strategy); render(); }));
+  tg.querySelectorAll('button:not(.disabled)').forEach(btn=>btn.addEventListener('click',()=>{ sel.strategy=btn.dataset.strat; localStorage.setItem('dash_strategy',sel.strategy); render(); renderFCGate(); }));
 }
 
 function wireModelCards(){
@@ -1083,6 +1084,40 @@ async function loadReadiness(){
   }catch(e){
     el.innerHTML='<div class="ops-strip attention"><span class="os-icon">—</span><span class="os-text">Status unavailable</span><span class="os-meta">'+esc(e.message)+'</span></div>';
   }
+}
+
+function renderFCGate(){
+  var el=document.getElementById('fc-gate-panel'); if(!el) return;
+  if(sel.strategy!=='full_confluence'){el.innerHTML='';return;}
+  var h='';
+  if(FC_EVENTS.length>0){
+    var passed=FC_EVENTS.filter(function(e){return e.outcome==='fc_passed'});
+    var rejected=FC_EVENTS.filter(function(e){return e.outcome!=='fc_passed'&&e.outcome!=='fc_skipped_crypto'});
+    var crypto=FC_EVENTS.filter(function(e){return e.outcome==='fc_skipped_crypto'});
+    h+='<div class="panel" style="margin-top:12px"><h2>FC Gate Activity <span style="font-weight:400;font-size:13px;color:var(--zero-text,#999)">('+FC_EVENTS.length+' evaluations)</span></h2>';
+    h+='<div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap">';
+    h+='<span style="background:var(--pos-bg,#e8f5e9);color:var(--pos-text,#2e7d32);padding:3px 10px;border-radius:4px;font-size:13px">Passed: '+passed.length+'</span>';
+    h+='<span style="background:var(--neg-bg,#ffebee);color:var(--neg-text,#c62828);padding:3px 10px;border-radius:4px;font-size:13px">TA Rejected: '+rejected.length+'</span>';
+    h+='<span style="background:var(--zero-bg,#f5f5f5);color:var(--zero-text,#757575);padding:3px 10px;border-radius:4px;font-size:13px">Crypto Skip: '+crypto.length+'</span>';
+    h+='</div>';
+    var show=FC_EVENTS.filter(function(e){return e.outcome!=='fc_skipped_crypto'}).slice(0,20);
+    if(show.length>0){
+      h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+      h+='<tr style="border-bottom:1px solid var(--border,#ddd)"><th style="text-align:left;padding:4px">Time</th><th style="text-align:left;padding:4px">Asset</th><th style="text-align:left;padding:4px">Dir</th><th style="text-align:left;padding:4px">Result</th><th style="text-align:left;padding:4px">Reason</th></tr>';
+      for(var i=0;i<show.length;i++){
+        var fe=show[i];
+        var dt=fe.created_at?new Date(fe.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
+        var cls=fe.outcome==='fc_passed'?'pos-text':'neg-text';
+        var label=fe.outcome==='fc_passed'?'PASSED':fe.outcome==='fc_rejected_ta_fail'?'TA FAIL':'MISSING TA';
+        h+='<tr style="border-bottom:1px solid var(--border,#eee)"><td style="padding:4px">'+esc(dt)+'</td><td style="padding:4px;font-weight:600">'+esc(fe.asset||'')+'</td><td style="padding:4px">'+esc(fe.direction||'')+'</td><td style="padding:4px" class="'+cls+'">'+label+'</td><td style="padding:4px;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(fe.reason||'')+'">'+esc(fe.reason||'')+'</td></tr>';
+      }
+      h+='</table>';
+    }
+    h+='</div>';
+  } else {
+    h='<div class="panel" style="margin-top:12px"><h2>FC Gate Activity</h2><div style="text-align:center;color:var(--zero-text,#999);font-size:13px;padding:12px 0">No FC gate events yet — logging starts on next WF1 execution.</div></div>';
+  }
+  el.innerHTML=h;
 }
 
 function renderSignalQuality(){
@@ -1244,7 +1279,7 @@ async function loadData(){
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
     if(sel.strategy==='strict'){ sel.strategy='full_confluence'; localStorage.setItem('dash_strategy','full_confluence'); }
-    buildPills(); setUpdated(); render(); renderSignalQuality();
+    buildPills(); setUpdated(); render(); renderSignalQuality(); renderFCGate();
   }catch(e){
     document.getElementById('content').innerHTML='<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
   }finally{  }
