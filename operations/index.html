@@ -91,6 +91,37 @@
 .dp-val { font-family:'Spline Sans Mono',monospace; font-size:15px; font-weight:700; }
 .dp-sub { font-family:'Spline Sans Mono',monospace; font-size:11px; color:var(--ink-soft); }
 @media (max-width:640px){ .dp-row{ grid-template-columns:repeat(2,1fr); gap:10px; } .dp-header{ flex-direction:column; gap:4px; } }
+
+.sq-wrap { margin-top:28px; }
+.sq-toggle { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px 24px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow); }
+.sq-toggle:hover { border-color:var(--accent); }
+.sq-toggle-title { font-family:'Spline Sans Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-soft); font-weight:600; }
+.sq-toggle-meta { font-family:'Spline Sans Mono',monospace; font-size:12px; color:var(--ink-soft); }
+.sq-toggle .arrow { display:inline-block; transition:transform .2s; font-size:14px; margin-left:8px; }
+.sq-toggle.open .arrow { transform:rotate(90deg); }
+.sq-body { display:none; margin-top:12px; }
+.sq-body.show { display:block; }
+.sq-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:10px; box-shadow:var(--shadow); }
+.sq-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+.sq-asset { font-family:'Fraunces',serif; font-size:18px; font-weight:700; }
+.sq-dir { font-family:'Spline Sans Mono',monospace; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px; }
+.sq-dir.buy { background:#d4edda; color:#155724; }
+.sq-dir.sell { background:#f8d7da; color:#721c24; }
+.sq-conf { font-family:'Spline Sans Mono',monospace; font-size:12px; color:var(--ink-soft); }
+.sq-headline { font-size:13px; line-height:1.4; margin:8px 0 4px; }
+.sq-headline a { color:var(--accent); text-decoration:underline; }
+.sq-headline a:hover { opacity:.8; }
+.sq-meta { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; margin-top:10px; font-family:'Spline Sans Mono',monospace; font-size:11px; }
+.sq-kv { display:flex; flex-direction:column; gap:1px; }
+.sq-k { font-size:9px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); }
+.sq-v { font-weight:600; }
+.sq-books { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+.sq-book-tag { font-family:'Spline Sans Mono',monospace; font-size:10px; padding:2px 6px; border-radius:4px; background:var(--line); color:var(--ink); }
+.sq-book-tag.vol { background:#e8d5f5; color:#6b21a8; }
+.sq-book-tag.missing { background:#fee2e2; color:#991b1b; font-weight:700; }
+.sq-missing-warn { font-family:'Spline Sans Mono',monospace; font-size:10px; color:#991b1b; margin-top:4px; font-weight:600; }
+@media (max-width:640px){ .sq-meta{ grid-template-columns:1fr 1fr; } .sq-head{ flex-direction:column; } }
+
 .kpis { margin-bottom: 18px !important; gap: 16px !important; }
 .grid { gap: 18px !important; margin-top: 18px !important; }
 .panel { padding: 24px !important; }
@@ -350,6 +381,7 @@
   <div id="content">
     <div class="status">Loading…</div>
   </div>
+  <div id="signal-quality" class="sq-wrap"></div>
 </div>
 
 <script>
@@ -858,6 +890,92 @@ async function loadReadiness(){
   }
 }
 
+function renderSignalQuality(){
+  var el=document.getElementById('signal-quality'); if(!el||!DATA) return;
+  var all=(DATA.open_positions||[]).concat(DATA.closed_trades||[]);
+  var bySignal={};
+  all.forEach(function(t){
+    var sid=t.signal_id||t.trade_id||('unknown_'+t.row_id);
+    if(!bySignal[sid]) bySignal[sid]={signal_id:sid,asset:'',title:'',source:'',news_url:'',confidence:0,direction:'',entry_price:0,entry_time:'',trades:[],hasFixed:false,hasVol:false,portfolios:new Set()};
+    var g=bySignal[sid];
+    if(!g.asset) g.asset=t.asset;
+    if(!g.title) g.title=t.title;
+    if(!g.source) g.source=t.source;
+    if(!g.news_url && t.news_url) g.news_url=t.news_url;
+    if(!g.confidence) g.confidence=t.confidence;
+    if(!g.direction) g.direction=t.direction;
+    if(!g.entry_price) g.entry_price=t.entry_price;
+    if(!g.entry_time || t.entry_time<g.entry_time) g.entry_time=t.entry_time;
+    if(t.target_model==='fixed') g.hasFixed=true;
+    if(t.target_model==='volatility') g.hasVol=true;
+    g.portfolios.add(t.portfolio);
+    g.trades.push(t);
+  });
+  var signals=Object.values(bySignal).sort(function(a,b){ return (b.entry_time||'').localeCompare(a.entry_time||''); });
+  var recent=signals.slice(0,30);
+  var volStratSet=new Set(['news_only','full_confluence']);
+  var missingVol=0;
+  recent.forEach(function(g){ if(g.hasFixed && !g.hasVol && g.trades.some(function(t){ return volStratSet.has(t.portfolio); })) missingVol++; });
+
+  var html='<div class="sq-toggle" onclick="toggleSignalQuality()">'+
+    '<span class="sq-toggle-title">Signal Quality Diagnostic</span>'+
+    '<span class="sq-toggle-meta">'+recent.length+' recent signals'+(missingVol>0?' · <span style="color:#991b1b">'+missingVol+' missing vol sibling</span>':' · all vol siblings present')+' <span class="arrow">›</span></span>'+
+  '</div>';
+  html+='<div class="sq-body" id="sq-body">';
+
+  recent.forEach(function(g){
+    var pnl=0, openCnt=0, closedCnt=0;
+    var bookTags=[];
+    var seen={};
+    g.trades.forEach(function(t){
+      pnl += Number(t.unrealized_pnl_dollars||t.pnl_dollars||0);
+      if(t.status==='OPEN') openCnt++; else closedCnt++;
+      var bk=t.portfolio+'·'+t.exit_rule+'·'+t.target_model;
+      if(!seen[bk]){
+        seen[bk]=true;
+        var cls=t.target_model==='volatility'?' vol':'';
+        bookTags.push('<span class="sq-book-tag'+cls+'">'+esc(t.portfolio)+' '+esc(t.exit_rule)+' '+esc(t.target_model)+'</span>');
+      }
+    });
+    var volMissing=g.hasFixed && !g.hasVol && g.trades.some(function(t){ return volStratSet.has(t.portfolio); });
+    if(volMissing) bookTags.push('<span class="sq-book-tag missing">VOL MISSING</span>');
+
+    var headlineHtml=esc(g.title||'—');
+    if(g.news_url) headlineHtml='<a href="'+esc(g.news_url)+'" target="_blank" rel="noopener">'+headlineHtml+'</a>';
+
+    var etFmt='—';
+    if(g.entry_time){ try{ etFmt=new Date(g.entry_time).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){} }
+
+    html+='<div class="sq-card">';
+    html+='<div class="sq-head">';
+    html+='<span><span class="sq-asset">'+esc(g.asset)+'</span> <span class="sq-dir '+(g.direction==='SELL'||g.direction==='SHORT'?'sell':'buy')+'">'+esc(g.direction)+'</span> <span class="sq-conf">conf '+Number(g.confidence||0).toFixed(2)+'</span></span>';
+    html+='<span class="sq-conf '+signCls(pnl)+'" style="font-weight:700">'+(pnl>=0?'+':'')+fmtMoney(pnl)+'</span>';
+    html+='</div>';
+    html+='<div class="sq-headline">'+headlineHtml+'</div>';
+    html+='<div class="sq-meta">';
+    html+='<div class="sq-kv"><span class="sq-k">Source</span><span class="sq-v">'+esc(g.source||'—')+'</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Entry</span><span class="sq-v">'+fmtPrice(g.entry_price)+'</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Entry time</span><span class="sq-v">'+etFmt+'</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Trades</span><span class="sq-v">'+g.trades.length+' ('+openCnt+' open, '+closedCnt+' closed)</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Signal ID</span><span class="sq-v" style="font-size:9px;word-break:break-all">'+esc(g.signal_id)+'</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Reasoning</span><span class="sq-v" style="color:var(--ink-soft);font-style:italic">not yet captured</span></div>';
+    html+='</div>';
+    html+='<div class="sq-books">'+bookTags.join('')+'</div>';
+    if(volMissing) html+='<div class="sq-missing-warn">Fixed trades exist for news_only but no Volatility sibling found</div>';
+    html+='</div>';
+  });
+
+  html+='</div>';
+  el.innerHTML=html;
+}
+function toggleSignalQuality(){
+  var toggle=document.querySelector('.sq-toggle');
+  var body=document.getElementById('sq-body');
+  if(!toggle||!body) return;
+  toggle.classList.toggle('open');
+  body.classList.toggle('show');
+}
+
 function toggleOpsDetail(){
   var strip=document.getElementById('ops-strip');
   var detail=document.getElementById('ops-detail');
@@ -872,7 +990,7 @@ async function loadData(){
     DATA=await r.json();
     if(!DATA.strategies) DATA.strategies=Object.keys(STRAT_LABELS);
     if(sel.strategy==='strict'){ sel.strategy='full_confluence'; localStorage.setItem('dash_strategy','full_confluence'); }
-    buildPills(); setUpdated(); render();
+    buildPills(); setUpdated(); render(); renderSignalQuality();
   }catch(e){
     document.getElementById('content').innerHTML='<div class="status err">Could not load data.json — '+esc(e.message)+'</div>';
   }finally{  }
