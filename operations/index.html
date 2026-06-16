@@ -120,7 +120,17 @@
 .sq-book-tag.vol { background:#e8d5f5; color:#6b21a8; }
 .sq-book-tag.missing { background:#fee2e2; color:#991b1b; font-weight:700; }
 .sq-missing-warn { font-family:'Spline Sans Mono',monospace; font-size:10px; color:#991b1b; margin-top:4px; font-weight:600; }
-@media (max-width:640px){ .sq-meta{ grid-template-columns:1fr 1fr; } .sq-head{ flex-direction:column; } }
+.sq-trades-table { width:100%; border-collapse:collapse; margin-top:10px; font-family:'Spline Sans Mono',monospace; font-size:11px; }
+.sq-trades-table th { text-align:left; font-size:9px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); padding:4px 6px; border-bottom:1px solid var(--line); font-weight:600; }
+.sq-trades-table td { padding:4px 6px; border-bottom:1px solid var(--line); }
+.sq-trades-table tr:last-child td { border-bottom:none; }
+.sq-status-tag { font-size:9px; padding:1px 5px; border-radius:3px; font-weight:700; }
+.sq-status-tag.open { background:#d4edda; color:#155724; }
+.sq-status-tag.closed { background:var(--line); color:var(--ink-soft); }
+.sq-exit-tag { font-size:9px; padding:1px 5px; border-radius:3px; background:var(--accent-bg); color:var(--accent); }
+.sq-not-captured { color:var(--ink-soft); font-style:italic; font-size:10px; }
+.sq-section-label { font-size:9px; text-transform:uppercase; letter-spacing:.8px; color:var(--ink-soft); font-weight:600; margin-top:12px; margin-bottom:4px; }
+@media (max-width:640px){ .sq-meta{ grid-template-columns:1fr 1fr; } .sq-head{ flex-direction:column; } .sq-trades-table { font-size:10px; } .sq-trades-table th, .sq-trades-table td { padding:3px 4px; } }
 
 .kpis { margin-bottom: 18px !important; gap: 16px !important; }
 .grid { gap: 18px !important; margin-top: 18px !important; }
@@ -958,20 +968,50 @@ function renderSignalQuality(){
     var etFmt='—';
     if(g.entry_time){ try{ etFmt=new Date(g.entry_time).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){} }
 
+    var bestPrice=0;
+    g.trades.forEach(function(t){
+      if(t.status==='OPEN' && t.current_price) bestPrice=t.current_price;
+      else if(t.status==='CLOSED' && t.exit_price && !bestPrice) bestPrice=t.exit_price;
+    });
+    var assetClass=g.trades[0]&&g.trades[0].asset_class||'—';
+
     html+='<div class="sq-card">';
     html+='<div class="sq-head">';
-    html+='<span><span class="sq-asset">'+esc(g.asset)+'</span> <span class="sq-dir '+(g.direction==='SELL'||g.direction==='SHORT'?'sell':'buy')+'">'+esc(g.direction)+'</span> <span class="sq-conf">conf '+Number(g.confidence||0).toFixed(2)+'</span></span>';
+    html+='<span><span class="sq-asset">'+esc(g.asset)+'</span> <span class="sq-dir '+(g.direction==='SELL'||g.direction==='SHORT'?'sell':'buy')+'">'+esc(g.direction)+'</span> <span class="sq-conf">conf '+Number(g.confidence||0).toFixed(2)+'</span> <span class="sq-conf">'+esc(assetClass)+'</span></span>';
     html+='<span class="sq-conf '+signCls(pnl)+'" style="font-weight:700">'+(pnl>=0?'+':'')+fmtMoney(pnl)+'</span>';
     html+='</div>';
     html+='<div class="sq-headline">'+headlineHtml+'</div>';
     html+='<div class="sq-meta">';
     html+='<div class="sq-kv"><span class="sq-k">Source</span><span class="sq-v">'+esc(g.source||'—')+'</span></div>';
-    html+='<div class="sq-kv"><span class="sq-k">Entry</span><span class="sq-v">'+fmtPrice(g.entry_price)+'</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Entry price</span><span class="sq-v">'+fmtPrice(g.entry_price)+'</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Current / Exit</span><span class="sq-v">'+fmtPrice(bestPrice)+'</span></div>';
     html+='<div class="sq-kv"><span class="sq-k">Entry time</span><span class="sq-v">'+etFmt+'</span></div>';
     html+='<div class="sq-kv"><span class="sq-k">Trades</span><span class="sq-v">'+g.trades.length+' ('+openCnt+' open, '+closedCnt+' closed)</span></div>';
-    html+='<div class="sq-kv"><span class="sq-k">Signal ID</span><span class="sq-v" style="font-size:9px;word-break:break-all">'+esc(g.signal_id)+'</span></div>';
-    html+='<div class="sq-kv"><span class="sq-k">Reasoning</span><span class="sq-v" style="color:var(--ink-soft);font-style:italic">not yet captured</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Published time</span><span class="sq-not-captured">not yet captured</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Price at headline</span><span class="sq-not-captured">not yet captured</span></div>';
+    html+='<div class="sq-kv"><span class="sq-k">Reasoning</span><span class="sq-not-captured">not yet captured</span></div>';
     html+='</div>';
+
+    html+='<div class="sq-section-label">Trade Detail</div>';
+    html+='<table class="sq-trades-table"><thead><tr><th>Book</th><th>Status</th><th>Entry</th><th>Now / Exit</th><th>P&L $</th><th>P&L %</th><th>Exit Reason</th></tr></thead><tbody>';
+    g.trades.forEach(function(t){
+      var tPnl=Number(t.unrealized_pnl_dollars||t.pnl_dollars||0);
+      var tPct=Number(t.unrealized_pnl_percent||t.pnl_percent||0);
+      var curOrExit=t.status==='CLOSED'?t.exit_price:t.current_price;
+      var exitR=t.exit_reason||'—';
+      var statusCls=t.status==='OPEN'?'open':'closed';
+      html+='<tr>';
+      html+='<td>'+esc(t.exit_rule)+' · '+esc(t.target_model)+'</td>';
+      html+='<td><span class="sq-status-tag '+statusCls+'">'+t.status+'</span></td>';
+      html+='<td>'+fmtPrice(t.entry_price)+'</td>';
+      html+='<td>'+fmtPrice(curOrExit)+'</td>';
+      html+='<td class="'+signCls(tPnl)+'">'+(tPnl>=0?'+':'')+fmtMoney(tPnl)+'</td>';
+      html+='<td class="'+signCls(tPct)+'">'+(tPct>=0?'+':'')+(tPct*100).toFixed(2)+'%</td>';
+      html+='<td>'+(t.status==='CLOSED'?'<span class="sq-exit-tag">'+esc(exitR)+'</span>':'—')+'</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table>';
+
     html+='<div class="sq-books">'+bookTags.join('')+'</div>';
     if(volMissing){
       if(volReason) html+='<div class="sq-missing-warn">Vol gate rejected: '+esc(volReason)+'</div>';
