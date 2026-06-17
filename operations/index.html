@@ -371,6 +371,41 @@
 .book-waiting .bw-icon{font-size:28px;margin-bottom:12px;}
 .book-waiting .bw-title{font:600 16px 'Spline Sans',sans-serif;color:var(--ink);margin-bottom:6px;}
 .book-waiting .bw-detail{font:400 13px 'Spline Sans Mono',monospace;line-height:1.5;max-width:400px;margin:0 auto;}
+
+/* === broker-style compact layout === */
+.selector-bar{display:flex;align-items:center;gap:8px;margin:0 0 16px;flex-wrap:wrap;}
+.selector-bar .exit-switch-wrap{margin:0;}
+.selector-bar .portfolio-toggle{margin:0;}
+.selector-bar .model-section{margin:0;text-align:left;}
+.selector-bar .model-section-label{display:none;}
+.selector-bar .model-cards{gap:6px;}
+.selector-bar .model-card{padding:7px 12px;font-size:12px;}
+.selector-bar .model-card .mc-icon{width:16px;height:16px;}
+.selector-bar .model-card .pilot-tag{font-size:7px;padding:2px 4px;top:-6px;right:-3px;}
+.hero-pnl{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.hero-pnl .hp-main{display:flex;flex-direction:column;gap:4px;}
+.hero-pnl .hp-label{font:600 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft);}
+.hero-pnl .hp-total{font-family:'Fraunces',serif;font-size:clamp(30px,5.5vw,44px);font-weight:600;letter-spacing:-1px;line-height:1.05;}
+.hero-pnl .hp-pct{font:600 16px/1 'Spline Sans Mono',monospace;margin-top:2px;}
+.hero-pnl .hp-stats{display:flex;gap:24px;}
+.hero-pnl .hp-stat{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.hero-pnl .hp-stat .val{font:600 15px/1.2 'Spline Sans Mono',monospace;}
+.hero-pnl .hp-stat .lab{font:500 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);}
+.metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:14px;}
+.mr-stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
+.mr-stat .mr-lab{font:600 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);}
+.mr-stat .mr-val{font-family:'Fraunces',serif;font-size:clamp(16px,2.2vw,22px);font-weight:600;margin-top:6px;letter-spacing:-.5px;}
+.mr-stat .mr-sub{font:400 11px/1.3 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:3px;}
+.analytics-wrap{margin-top:14px;}
+.analytics-toggle-btn{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 20px;width:100%;text-align:left;cursor:pointer;font:600 13px 'Spline Sans',sans-serif;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);transition:all .15s;}
+.analytics-toggle-btn:hover{border-color:var(--accent);}
+.analytics-toggle-btn .arrow{transition:transform .2s;font-size:11px;}
+.analytics-toggle-btn.expanded .arrow{transform:rotate(90deg);}
+.analytics-body{display:none;margin-top:12px;}
+.analytics-body.show{display:block;}
+.sel-label{font:600 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft);margin-right:2px;white-space:nowrap;}
+@media(max-width:720px){.metrics-row{grid-template-columns:repeat(3,1fr);}.hero-pnl{flex-direction:column;align-items:stretch;}.hero-pnl .hp-stats{justify-content:space-between;}}
+@media(max-width:520px){.metrics-row{grid-template-columns:repeat(2,1fr);}.selector-bar{gap:6px;}}
 </style>
 </head>
 <body>
@@ -397,31 +432,31 @@
 
   <div class="ptr-hint" id="ptr-hint">↓ pull to refresh</div>
 
-  <div class="exit-switch-wrap">
-    <div class="exit-switch" id="exit-switch">
-      <span class="thumb"></span>
-      <button data-rule="hold_24hr" class="on">24hr Hold</button>
-      <button data-rule="sell_eod">Early Exit</button>
+  <div class="selector-bar">
+    <div class="exit-switch-wrap">
+      <div class="exit-switch" id="exit-switch">
+        <span class="thumb"></span>
+        <button data-rule="hold_24hr" class="on">24hr Hold</button>
+        <button data-rule="sell_eod">Early Exit</button>
+      </div>
+    </div>
+    <div class="portfolio-toggle" id="portfolio-toggle"></div>
+    <div class="model-section" id="model-section">
+      <div class="model-section-label">Target Model</div>
+      <div class="model-cards" id="model-cards">
+        <button class="model-card fixed on" data-model="fixed">
+          <svg class="mc-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="16" height="2" rx="1" fill="currentColor"/><rect x="2" y="12" width="16" height="2" rx="1" fill="currentColor"/></svg>
+          Fixed
+        </button>
+        <button class="model-card volatility" data-model="volatility">
+          <svg class="mc-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="1,14 4,10 7,13 10,5 13,11 16,7 19,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          Volatility
+          <span class="pilot-tag">PILOT</span>
+        </button>
+      </div>
     </div>
   </div>
-
-  <div class="portfolio-toggle" id="portfolio-toggle"></div>
-
-  <div class="model-section" id="model-section">
-    <div class="model-section-label">Target Model</div>
-    <div class="model-cards" id="model-cards">
-      <button class="model-card fixed on" data-model="fixed">
-        <svg class="mc-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="6" width="16" height="2" rx="1" fill="currentColor"/><rect x="2" y="12" width="16" height="2" rx="1" fill="currentColor"/></svg>
-        Fixed
-      </button>
-      <button class="model-card volatility" data-model="volatility">
-        <svg class="mc-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="1,14 4,10 7,13 10,5 13,11 16,7 19,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-        Volatility
-        <span class="pilot-tag">PILOT</span>
-      </button>
-    </div>
-  </div>
-  <div id="active-label"></div>
+  <div id="active-label" style="display:none"></div>
 
   <div id="content">
     <div class="status">Loading…</div>
@@ -602,29 +637,14 @@ function render(){
   const prodThreshold = DATA && DATA.config && DATA.config.production_threshold != null ? DATA.config.production_threshold : 0.65;
   const labWarn = isLab ? '<div class="lab-warning"><span class="lw-icon">🧪</span>Crypto Lab — exploratory signal gate (confidence ≥ '+labThreshold.toFixed(2)+' vs production '+prodThreshold.toFixed(2)+'). Results are not blended into production strategy totals.</div>' : '';
 
-  const eq =
-    '<div class="equity-summary">'+
-      '<div class="eq-card">'+
-        '<div class="eq-label">Marked Equity</div>'+
-        '<div class="eq-equity">'+fmtMoney(b.total_equity)+'</div>'+
-        '<div class="eq-growth '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+' · '+fmtPct(b.growth_pct)+'</div>'+
-        ''+
-      '</div>'+
-      '<div class="eq-card split-card">'+
-        '<div class="split-bar"><span class="cash" style="width:'+(b.cash_pct||0)+'%"></span><span class="inv" style="width:'+(b.invested_pct||0)+'%"></span></div>'+
-        '<div class="split-legend">'+
-          '<div class="lg cash"><span class="k">Available Cash</span><span class="v">'+fmtMoney(b.free_cash)+'</span></div>'+
-          '<div class="lg inv" style="text-align:right"><span class="k" style="justify-content:flex-end">Invested</span><span class="v">'+fmtMoney((DATA.open_positions||[]).filter(function(p){return p.book_key===b.book_key;}).reduce(function(s,p){return s+Number(p.stake_amount||0);},0))+'</span></div>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-  const kpis =
-    '<div class="kpis">'+
-      kpiCard('Win Rate', noTrades?'—':((o.win_rate_pct==null?'—':Number(o.win_rate_pct).toFixed(0)+'%')), '', (b.closed.count||0)+' closed'+(b.open_count?(' · '+b.open_count+' open'):''))+
-      kpiCard('Realized P/L %', noTrades?'—':fmtPct(o.total_pnl_pct), signCls(o.total_pnl_pct))+
-      kpiCard('Realized P/L $', noTrades?'—':((o.total_pnl_dollars>=0?'+':'')+fmtMoney(o.total_pnl_dollars)), signCls(o.total_pnl_dollars))+
-      kpiCard('Reward / Risk', noTrades?'—':(o.reward_risk_ratio==null?'—':Number(o.reward_risk_ratio).toFixed(2)), '', 'avg win / avg loss')+
+  var investedAmt = (DATA.open_positions||[]).filter(function(p){return p.book_key===b.book_key;}).reduce(function(s,p){return s+Number(p.stake_amount||0);},0);
+  var metricsRow =
+    '<div class="metrics-row">'+
+      '<div class="mr-stat"><span class="mr-lab">Equity</span><div class="mr-val">'+fmtMoney(b.total_equity)+'</div><div class="mr-sub '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+' ('+fmtPct(b.growth_pct)+')</div></div>'+
+      '<div class="mr-stat"><span class="mr-lab">Cash</span><div class="mr-val">'+fmtMoney(b.free_cash)+'</div></div>'+
+      '<div class="mr-stat"><span class="mr-lab">Invested</span><div class="mr-val">'+fmtMoney(investedAmt)+'</div><div class="mr-sub">'+(b.open_count||0)+' open</div></div>'+
+      '<div class="mr-stat"><span class="mr-lab">Win Rate</span><div class="mr-val">'+(noTrades?'—':(o.win_rate_pct==null?'—':Number(o.win_rate_pct).toFixed(0)+'%'))+'</div><div class="mr-sub">'+(b.closed.count||0)+' closed</div></div>'+
+      '<div class="mr-stat"><span class="mr-lab">Realized P&L</span><div class="mr-val '+signCls(o.total_pnl_dollars)+'">'+(noTrades?'—':((o.total_pnl_dollars>=0?'+':'')+fmtMoney(o.total_pnl_dollars)))+'</div><div class="mr-sub">'+(noTrades?'':fmtPct(o.total_pnl_pct))+'</div></div>'+
     '</div>';
 
   const caveat = lowSample ? '<div class="footnote">⚠ small sample ('+b.closed.count+' trade'+(b.closed.count===1?'':'s')+') — not yet meaningful</div>' : '';
@@ -639,17 +659,17 @@ function render(){
   var totalToday = realizedToday + unrealizedNow;
   var startBal = Number(b.starting_balance || 10000);
   var todayPct = startBal > 0 ? (totalToday / startBal) : 0;
-  var dailyPnl =
-    '<div class="daily-pnl">'+
-      '<div class="dp-header">'+
-        '<span class="dp-title">Today\'s P&L</span>'+
-        '<span class="dp-total '+signCls(totalToday)+'">'+(totalToday>=0?'+':'')+fmtMoney(totalToday)+' <span class="dp-pct">'+(todayPct>=0?'+':'')+(todayPct*100).toFixed(2)+'%</span></span>'+
+  var heroPnl =
+    '<div class="hero-pnl">'+
+      '<div class="hp-main">'+
+        '<span class="hp-label">Today\'s P&L</span>'+
+        '<span class="hp-total '+signCls(totalToday)+'">'+(totalToday>=0?'+':'')+fmtMoney(totalToday)+'</span>'+
+        '<span class="hp-pct '+signCls(todayPct)+'">'+(todayPct>=0?'+':'')+(todayPct*100).toFixed(2)+'%</span>'+
       '</div>'+
-      '<div class="dp-row">'+
-        '<div class="dp-item"><span class="dp-label">Realized today</span><span class="dp-val '+signCls(realizedToday)+'">'+(realizedToday>=0?'+':'')+fmtMoney(realizedToday)+'</span><span class="dp-sub">'+todayClosed.length+' closed</span></div>'+
-        '<div class="dp-item"><span class="dp-label">Unrealized (open)</span><span class="dp-val '+signCls(unrealizedNow)+'">'+(unrealizedNow>=0?'+':'')+fmtMoney(unrealizedNow)+'</span><span class="dp-sub">'+positions.length+' open</span></div>'+
-        '<div class="dp-item"><span class="dp-label">Since start</span><span class="dp-val '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+'</span><span class="dp-sub">'+fmtPct(b.growth_pct)+'</span></div>'+
-        '<div class="dp-item"><span class="dp-label">New today</span><span class="dp-val">'+todayOpened.length+'</span><span class="dp-sub">opened</span></div>'+
+      '<div class="hp-stats">'+
+        '<div class="hp-stat"><span class="val '+signCls(realizedToday)+'">'+(realizedToday>=0?'+':'')+fmtMoney(realizedToday)+'</span><span class="lab">Realized ('+todayClosed.length+')</span></div>'+
+        '<div class="hp-stat"><span class="val '+signCls(unrealizedNow)+'">'+(unrealizedNow>=0?'+':'')+fmtMoney(unrealizedNow)+'</span><span class="lab">Unrealized ('+positions.length+')</span></div>'+
+        '<div class="hp-stat"><span class="val '+signCls(b.growth_dollars)+'">'+(b.growth_dollars>=0?'+':'')+fmtMoney(b.growth_dollars)+'</span><span class="lab">Since start</span></div>'+
       '</div>'+
     '</div>';
 
@@ -748,23 +768,28 @@ function render(){
       teBtn+
       dataPanel+
       sigPanel+
-      groupPanel('By Asset', a.BY_ASSET, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
-      groupPanel('By Direction', a.BY_DIRECTION, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_win_pct',lab:'avg win',fmt:'pct',sign:1,zeroAs:'—'}])+
-      groupPanel('By Source', a.BY_SOURCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
-      groupPanel('By Confidence', a.BY_CONFIDENCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
-      groupPanel('By Exit Reason', a.BY_EXIT_REASON, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
-      groupPanel('By Hour', a.BY_HOUR, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
     '</div>';
 
   const ht = a.AVG_HOLD_TIME || {};
-  const holdPanel = noTrades ? '' :
-    '<div class="grid"><div class="panel"><h2>Avg Hold Time</h2>'+
-      '<div class="row"><div class="name">Overall</div><div class="metrics"><div class="metric"><div class="m-val">'+minsLabel(ht.avg_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
-      '<div class="row"><div class="name">Winners</div><div class="metrics"><div class="metric"><div class="m-val pos-text">'+minsLabel(ht.avg_win_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
-      '<div class="row"><div class="name">Losers</div><div class="metrics"><div class="metric"><div class="m-val neg-text">'+minsLabel(ht.avg_loss_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
-    '</div></div>';
+  var analyticsHtml = noTrades ? '' :
+    '<div class="analytics-wrap">'+
+      '<button class="analytics-toggle-btn" onclick="toggleAnalytics()"><span>Analytics Breakdown (by asset, direction, source, confidence, exit, hour, hold time)</span><span class="arrow">›</span></button>'+
+      '<div class="analytics-body" id="analytics-body"><div class="grid">'+
+        groupPanel('By Asset', a.BY_ASSET, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'total_pnl_pct',lab:'p/l %',fmt:'pct',sign:1}])+
+        groupPanel('By Direction', a.BY_DIRECTION, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_win_pct',lab:'avg win',fmt:'pct',sign:1,zeroAs:'—'}])+
+        groupPanel('By Source', a.BY_SOURCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
+        groupPanel('By Confidence', a.BY_CONFIDENCE, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
+        groupPanel('By Exit Reason', a.BY_EXIT_REASON, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
+        groupPanel('By Hour', a.BY_HOUR, [{k:'win_rate_pct',lab:'win',fmt:'wr'},{k:'avg_pnl_pct',lab:'avg p/l',fmt:'pct',sign:1}])+
+        '<div class="panel"><h2>Avg Hold Time</h2>'+
+          '<div class="row"><div class="name">Overall</div><div class="metrics"><div class="metric"><div class="m-val">'+minsLabel(ht.avg_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
+          '<div class="row"><div class="name">Winners</div><div class="metrics"><div class="metric"><div class="m-val pos-text">'+minsLabel(ht.avg_win_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
+          '<div class="row"><div class="name">Losers</div><div class="metrics"><div class="metric"><div class="m-val neg-text">'+minsLabel(ht.avg_loss_minutes)+'</div><div class="m-lab">avg</div></div></div></div>'+
+        '</div>'+
+      '</div></div>'+
+    '</div>';
 
-  c.innerHTML = labWarn + eq + dailyPnl + kpis + caveat + grid + holdPanel;
+  c.innerHTML = labWarn + heroPnl + metricsRow + caveat + grid + analyticsHtml;
     c.querySelectorAll('.trade-clk').forEach(function(el){
       var open = function(){
         var rt = el.getAttribute('data-rt'); var ri = parseInt(el.getAttribute('data-ri'),10);
@@ -802,6 +827,12 @@ function toggleSigChildren(idx){
   el.style.display = el.style.display==='none' ? 'block' : 'none';
   var sigList=document.getElementById('sig-list');
   if(sigList) sigList.style.maxHeight=sigList.scrollHeight+'px';
+}
+function toggleAnalytics(){
+  var btn=document.querySelector('.analytics-toggle-btn'), body=document.getElementById('analytics-body');
+  if(!btn||!body) return;
+  var expanded=btn.classList.toggle('expanded');
+  body.classList.toggle('show',expanded);
 }
 function toggleSigList(){
   var list=document.getElementById('sig-list'), btn=document.getElementById('sig-toggle');
