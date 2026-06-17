@@ -326,6 +326,8 @@
 /* --- clickable headline link --- */
 .tm-headline-link{display:inline-block;margin-top:10px;font-size:13px;color:#2563eb;text-decoration:none;word-break:break-all;}
 .tm-headline-link:hover{text-decoration:underline;}
+.tm-link-unverified{display:inline-block;margin-top:10px;font-size:12px;color:var(--ink-soft);font-family:'Spline Sans Mono',monospace;font-style:italic;}
+.sq-link-unverified{font-size:11px;color:var(--ink-soft);font-style:italic;}
 
 /* --- trade list search --- */
 .trade-search{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:10px;font:400 13px 'Spline Sans',sans-serif;margin-bottom:10px;outline:none;background:var(--bg);}
@@ -497,6 +499,16 @@ const fmtPct = n => (n>0?'+':'') + Number(n||0).toFixed(2) + '%';
 const fmtNum = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:4});
 const signCls = n => n>0?'pos-text':(n<0?'neg-text':'zero-text');
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const URL_FIX_CUTOFF = '2026-06-16T15:00:00Z';
+function isLinkVerified(title, url, entryTime) {
+  if (!url) return 'missing';
+  if (entryTime && entryTime >= URL_FIX_CUTOFF) return 'verified';
+  if (!title) return 'unverified';
+  var words = title.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(function(w){ return w.length > 3; });
+  if (words.length === 0) return 'verified';
+  var ul = url.toLowerCase(), matched = words.filter(function(w){ return ul.indexOf(w) >= 0; });
+  return (matched.length / words.length >= 0.25) ? 'verified' : 'unverified';
+}
 const minsLabel = m => { if(m==null) return '—'; var total=Math.round(m), h=Math.floor(total/60), mm=total%60; return h>0?(h+'h '+mm+'m'):(mm+'m'); };
 function nonWeekendHours(iso){
   if(!iso) return 0;
@@ -1214,7 +1226,9 @@ function renderSignalQuality(){
     }
 
     var headlineHtml=esc(g.title||'—');
-    if(g.news_url) headlineHtml='<a href="'+esc(g.news_url)+'" target="_blank" rel="noopener">'+headlineHtml+'</a>';
+    var linkStatus=isLinkVerified(g.title, g.news_url, g.entry_time);
+    if(linkStatus==='verified') headlineHtml='<a href="'+esc(g.news_url)+'" target="_blank" rel="noopener">'+headlineHtml+'</a>';
+    else if(linkStatus==='unverified') headlineHtml+=' <span class="sq-link-unverified">(article link unverified)</span>';
 
     var etFmt='—';
     if(g.entry_time){ try{ etFmt=new Date(g.entry_time).toLocaleString('en-US',{timeZone:'America/New_York',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' ET'; }catch(e){} }
@@ -1416,9 +1430,14 @@ function openTradeModal(t, rt, ri){
   var headlineHtml = '';
   if(t.title){
     headlineHtml = '<div class="hl">"'+esc(t.title)+'"</div>';
-    if(t.news_url || t.source_url || t.link){
-      var href = t.news_url || t.source_url || t.link;
+    var href = t.news_url || t.source_url || t.link || '';
+    var lnkSt = isLinkVerified(t.title, href, t.entry_time);
+    if(lnkSt==='verified' && href){
       try{ new URL(href); headlineHtml += '<a class="tm-headline-link" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Read original article →</a>'; }catch(e){}
+    } else if(lnkSt==='unverified'){
+      headlineHtml += '<span class="tm-link-unverified">Article link unverified (legacy trade)</span>';
+    } else if(lnkSt==='missing'){
+      headlineHtml += '<span class="tm-link-unverified">No article link available</span>';
     }
   }
   var ctx = '<details class="tm-details"><summary>Show research details</summary><div class="tm-context">'+tmRow('Book', esc(t.book_key||'—'))+atrRows+tmRow('Source', esc(t.source||'—'))+tmRow('Confidence', (t.confidence==null?'—':t.confidence))+tmRow('Rule version', esc(t.rule_version||'—'))+headlineHtml+'</div></details>';
