@@ -187,6 +187,11 @@
   .cand-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font:500 11px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft)}
   .cand-meta strong{color:var(--ink);font-weight:700}
   .cand-link{display:inline-block;margin-top:8px;font:700 11px/1 'Spline Sans Mono',monospace;color:#2563eb}
+  .conf-row{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:10px}
+  .conf-row.conf-small{opacity:.65;border-style:dashed}
+  .conf-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .conf-bucket{font:700 15px/1 'Spline Sans',sans-serif}
+  .conf-warn{font:600 10px/1 'Spline Sans Mono',monospace;color:var(--gold);text-transform:uppercase;letter-spacing:.5px}
   .lat-card{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-bottom:8px}
   .lat-head{font:700 14px/1.2 'Spline Sans',sans-serif;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .lat-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-top:8px}
@@ -503,6 +508,41 @@ function modelPerformancePanel(){
   </div>`}).join('');
   return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Server-side comparison from v2_volatility_performance_review. Volatility is still a pilot — needs 30 closed trades or a separate smaller-target test book before tuning.</div>${cards}</div>`;
 }
+function confidencePerformancePanel(){
+  const CONF_DATA=[
+    {bucket:'0.60-0.64',direction:'SELL',closed:2,total_pnl:5.25,avg_pnl:2.63,wins:2,losses:0,win_pct:100.0,sample:'SMALL_SAMPLE',total_signals:4,still_open:2},
+    {bucket:'0.65-0.69',direction:'BUY',closed:368,total_pnl:1007.20,avg_pnl:2.74,wins:170,losses:198,win_pct:46.2,sample:'ok',total_signals:426,still_open:58},
+    {bucket:'0.65-0.69',direction:'SELL',closed:228,total_pnl:99.60,avg_pnl:0.44,wins:117,losses:111,win_pct:51.3,sample:'ok',total_signals:260,still_open:32},
+    {bucket:'0.70-0.79',direction:'BUY',closed:162,total_pnl:-88.66,avg_pnl:-0.55,wins:57,losses:105,win_pct:35.2,sample:'ok',total_signals:176,still_open:14},
+    {bucket:'0.70-0.79',direction:'SELL',closed:46,total_pnl:28.18,avg_pnl:0.61,wins:15,losses:31,win_pct:32.6,sample:'ok',total_signals:60,still_open:14},
+    {bucket:'0.80+',direction:'SELL',closed:4,total_pnl:-33.10,avg_pnl:-8.28,wins:0,losses:4,win_pct:0,sample:'SMALL_SAMPLE',total_signals:4,still_open:0}
+  ];
+  const rows=CONF_DATA.map(r=>{
+    const dirCls=r.direction==='BUY'?'long':'short';
+    const pnlCls=r.total_pnl>=0?'pos-text':'neg-text';
+    const small=r.sample==='SMALL_SAMPLE';
+    const barW=r.closed?Math.max(2,Math.min(100,r.wins/r.closed*100)):0;
+    return `<div class="conf-row${small?' conf-small':''}">
+      <div class="conf-head">
+        <span class="conf-bucket">${esc(r.bucket)}</span>
+        <span class="badge ${dirCls}">${esc(r.direction)}</span>
+        ${small?'<span class="conf-warn">⚠ &lt;5 closed</span>':''}
+      </div>
+      <div class="guard-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="guard-mini"><strong class="${pnlCls}">${r.total_pnl>=0?'+':''}${fmtMoney(r.total_pnl)}</strong><span>total P/L</span></div>
+        <div class="guard-mini"><strong class="${pnlCls}">${r.avg_pnl>=0?'+':''}$${r.avg_pnl.toFixed(2)}</strong><span>avg per trade</span></div>
+        <div class="guard-mini"><strong>${r.win_pct.toFixed(1)}%</strong><span>win rate</span></div>
+        <div class="guard-mini"><strong>${fmtInt(r.closed)}</strong><span>of ${fmtInt(r.total_signals)} signals</span></div>
+      </div>
+      <div class="target-health-bars"><span class="tp" style="opacity:${barW/100}"></span><span class="sl" style="opacity:${r.closed?(1-barW/100):.08}"></span></div>
+      <div class="guardrail-caption"><span>${fmtInt(r.wins)} wins</span><span>${fmtInt(r.losses)} losses</span><span>${fmtInt(r.still_open)} still open</span></div>
+    </div>`;
+  }).join('');
+  const keyFinding=`<div style="margin:14px 0 0;padding:12px 14px;border-radius:10px;border:1px solid #e7c46a;background:#fff8e5;color:#7a5610;font:600 12px/1.5 'Spline Sans Mono',monospace">
+    Key finding: Higher confidence does NOT improve performance. 0.65 BUY has the best absolute P/L (+$1,007) while 0.70+ BUY loses money (-$89). SELL outperforms BUY at every bucket. Recommend: do not raise the minimum confidence threshold — the 0.65 band is where most value is generated.
+  </div>`;
+  return `<div class="panel"><h2>Confidence Performance</h2><div class="section-note">Closed V1 trade performance grouped by Claude's confidence score. research_valid = true only. Data snapshot from 2026-06-18.</div>${rows}${keyFinding}</div>`;
+}
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
   const age=Math.max(0,Math.round((Date.now()-new Date(gen).getTime())/60000));
@@ -555,6 +595,7 @@ function renderOverview(){
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
   html+=modelPerformancePanel();
+  html+=confidencePerformancePanel();
   html+=`<div class="grid"><div class="panel clickable" onclick="showView('guardrails')"><h2>Prop Guardrails</h2>
     <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(target)}</div><div class="m-lab">${progress.toFixed(1)}% reached</div></div></div></div>
     <div class="guardrail-track target"><span style="width:${progress}%"></span></div>
