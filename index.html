@@ -454,6 +454,36 @@ function targetHealthPanel(trades, model){
     <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
   </div>`;
 }
+function modelPerformancePanel(){
+  const trades=allTrades();
+  const rows=['fixed','volatility'].map(model=>{
+    const rs=trades.filter(t=>modelOf(t)===model);
+    const open=rs.filter(t=>t.status==='OPEN');
+    const closed=rs.filter(t=>t.status==='CLOSED');
+    const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
+    const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
+    const timed=closed.filter(t=>['time','sell_eod'].includes(exitReasonClass(t.exit_reason))).length;
+    const realized=closed.reduce((sum,t)=>sum+Number(t.realized_pnl||0),0);
+    const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
+    const tpRate=closed.length?tp/closed.length*100:0;
+    const status=model==='volatility'
+      ? (closed.length<30?'Collecting evidence':tpRate<15?'Review TP/SL':'Healthy sample')
+      : (realized>=0?'Working better today':'Needs watch');
+    return {model,open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized,tpRate,status};
+  });
+  const cards=rows.map(r=>`<div class="account-guard">
+    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(r.status)}</div></div><span class="account-guard-status ${r.realized>=0?'':'bad'}">${r.realized>=0?'ahead':'behind'}</span></div>
+    <div class="guard-grid">
+      <div class="guard-mini"><strong class="${signCls(r.realized)}">${r.realized>=0?'+':''}${fmtMoney(r.realized)}</strong><span>realized</span></div>
+      <div class="guard-mini"><strong class="${signCls(r.unrealized)}">${r.unrealized>=0?'+':''}${fmtMoney(r.unrealized)}</strong><span>open P/L</span></div>
+      <div class="guard-mini"><strong>${fmtInt(r.tp)}</strong><span>take profits</span></div>
+      <div class="guard-mini"><strong>${fmtInt(r.sl)}</strong><span>stop losses</span></div>
+    </div>
+    <div class="target-health-bars"><span class="tp" style="opacity:${r.closed?r.tp/r.closed:.08}"></span><span class="sl" style="opacity:${r.closed?r.sl/r.closed:.08}"></span><span class="time" style="opacity:${r.closed?r.timed/r.closed:.08}"></span></div>
+    <div class="guardrail-caption"><span>${fmtInt(r.tp)} TP</span><span>${fmtInt(r.sl)} SL</span><span>${fmtInt(r.timed)} time</span></div>
+  </div>`).join('');
+  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">This is the current lesson from today's books. Volatility is still a pilot until it has 30 closed trades or a separate smaller-target test book.</div>${cards}</div>`;
+}
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
   const age=Math.max(0,Math.round((Date.now()-new Date(gen).getTime())/60000));
@@ -503,6 +533,7 @@ function renderOverview(){
     ${kpi('Open Trades', fmtInt(s.total_open_count), '', `${fmtInt(s.total_closed_count)} closed`)}
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
+  html+=modelPerformancePanel();
   html+=`<div class="grid"><div class="panel clickable" onclick="showView('guardrails')"><h2>Prop Guardrails</h2>
     <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(target)}</div><div class="m-lab">${progress.toFixed(1)}% reached</div></div></div></div>
     <div class="guardrail-track target"><span style="width:${progress}%"></span></div>
@@ -636,6 +667,7 @@ function renderOperations(){
     ${kpi('Unrealized', `${Number(b.unrealized_pnl||0)>=0?'+':''}${fmtMoney(b.unrealized_pnl||0)}`, signCls(b.unrealized_pnl))}
     ${kpi('Realized', `${Number(b.realized_pnl||0)>=0?'+':''}${fmtMoney(b.realized_pnl||0)}`, signCls(b.realized_pnl))}
   </div>`;
+  html+=modelPerformancePanel();
   // --- Book Expansion Readiness Panel ---
   const shadow=DATA?.shadow_health||{};
   const allOpen=openPositions();
