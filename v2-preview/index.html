@@ -3,1728 +3,447 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>V2 Trading Command Center</title>
+<title>Trading Analyst — V2 Operations</title>
 <style>
-:root {
-  --bg: #0f1419;
-  --panel: #171d24;
-  --panel-soft: #1d242c;
-  --border: #2b343e;
-  --text: #eef3f8;
-  --muted: #a2adba;
-  --green: #35c77b;
-  --red: #ff6b6b;
-  --yellow: #f4c95d;
-  --blue: #65a9ff;
-  --purple: #b89cff;
-  --shadow: 0 16px 48px rgba(0, 0, 0, .22);
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background:
-    linear-gradient(180deg, rgba(101,169,255,.05), transparent 280px),
-    var(--bg);
-  color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 14px;
-  letter-spacing: 0;
-}
-button { font: inherit; }
-a { color: var(--blue); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.wrap { max-width: 1180px; margin: 0 auto; padding: 24px 18px 56px; }
-.topbar {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
-h2 { margin: 0; font-size: 18px; }
-h3 { margin: 0 0 8px; font-size: 15px; font-weight: 680; }
-.sub { color: var(--muted); margin-top: 6px; font-size: 13px; }
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 7px 11px;
-  background: var(--panel);
-  color: var(--muted);
-  white-space: nowrap;
-}
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(53,199,123,.14); }
-.dot.bad { background: var(--red); box-shadow: 0 0 0 4px rgba(255,107,107,.14); }
-.stale-banner { background: rgba(248,81,73,0.1); border: 1px solid var(--red); color: #ff9b9b; padding: 8px 16px; border-radius: 8px; margin-bottom: 12px; display: none; font-size: 13px; }
-.pull-indicator {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  text-align: center; padding: 8px; font-size: 12px; font-weight: 600;
-  background: var(--panel); color: var(--muted); border-bottom: 1px solid var(--border);
-  transform: translateY(-100%); transition: transform .2s ease;
-}
-.pull-indicator.visible { transform: translateY(0); }
-.pull-indicator.refreshing { color: var(--blue); }
-.pull-indicator.error { color: var(--red); }
-.refresh-btn {
-  background: none; border: 1px solid var(--border); border-radius: 6px;
-  color: var(--muted); padding: 4px 10px; font-size: 12px; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 4px; transition: color .15s;
-}
-.refresh-btn:hover { color: var(--text); border-color: var(--blue); }
-.refresh-btn.spinning svg { animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Navigation */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  gap: 4px;
-  padding: 6px;
-  margin: 0 0 18px;
-  background: rgba(15,20,25,.92);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  backdrop-filter: blur(12px);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.nav::-webkit-scrollbar { display: none; }
-.nav button {
-  border: 0;
-  color: var(--muted);
-  background: transparent;
-  padding: 8px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-size: 13px;
-  min-height: 40px;
-}
-.nav button.active { color: var(--text); background: var(--panel-soft); }
-
-/* Cards and grid */
-.grid { display: grid; gap: 12px; }
-.summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.two-grid { grid-template-columns: 1.15fr .85fr; }
-.three-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: var(--shadow);
-}
-.card.soft { background: var(--panel-soft); box-shadow: none; }
-.card.clickable { cursor: pointer; transition: border-color .15s, background .15s; }
-.card.clickable:hover { border-color: #405061; background: #1a2129; }
-.label {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-  margin-bottom: 7px;
-  text-transform: uppercase;
-  letter-spacing: .02em;
-}
-.value { font-size: 28px; line-height: 1.05; font-weight: 760; }
-.value.small { font-size: 20px; }
-.value.good { color: var(--green); }
-.value.bad { color: var(--red); }
-.meta { color: var(--muted); font-size: 12px; margin-top: 7px; line-height: 1.45; }
-.section {
-  display: none;
-  margin-top: 0;
-  scroll-margin-top: 76px;
-}
-.section.active { display: block; }
-.section-head {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-.section-note { color: var(--muted); font-size: 12px; }
-
-/* Bars and charts */
-.bar { height: 10px; background: #28313b; border-radius: 999px; overflow: hidden; }
-.bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--green), var(--blue)); }
-.split { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: #28313b; }
-.split .a { background: var(--green); }
-.split .b { background: var(--blue); }
-.split .c { background: var(--purple); }
-.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; color: var(--muted); font-size: 12px; }
-.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
-
-/* Flow strip */
-.flow-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-.flow-item { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,.025); }
-.flow-item strong { display: block; font-size: 20px; }
-
-/* Badges and chips */
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-.chip, .filter-btn, .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  border-radius: 999px;
-  padding: 4px 9px;
-  font-size: 12px;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  background: rgba(255,255,255,.025);
-}
-.filter-btn { cursor: pointer; min-height: 36px; }
-.filter-btn.active { color: var(--text); background: var(--panel-soft); border-color: #405061; }
-.badge.long, .badge.good { color: var(--green); background: rgba(53,199,123,.11); border-color: rgba(53,199,123,.26); }
-.badge.short, .badge.bad { color: var(--red); background: rgba(255,107,107,.10); border-color: rgba(255,107,107,.24); }
-.badge.warn { color: var(--yellow); background: rgba(244,201,93,.10); border-color: rgba(244,201,93,.24); }
-.badge.info { color: var(--blue); background: rgba(101,169,255,.10); border-color: rgba(101,169,255,.24); }
-.badge.purple { color: var(--purple); background: rgba(184,156,255,.10); border-color: rgba(184,156,255,.24); }
-
-/* Row cards */
-.position-list, .x-list, .latency-list, .signal-list { display: grid; gap: 9px; }
-.row-card {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 13px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--panel);
-  cursor: pointer;
-}
-.row-card:hover { border-color: #405061; background: #1a2129; }
-.asset-line { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.asset { font-weight: 760; font-size: 16px; }
-.row-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
-.pnl { font-weight: 760; }
-.pnl.pos { color: var(--green); }
-.pnl.neg { color: var(--red); }
-.chev { color: var(--muted); font-size: 18px; }
-
-/* Timeline */
-.timeline {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-  margin-top: 10px;
-}
-.timeline::before {
-  content: "";
-  position: absolute;
-  top: 9px;
-  left: 8px;
-  right: 8px;
-  height: 2px;
-  background: var(--border);
-}
-.step { position: relative; z-index: 1; color: var(--muted); font-size: 11px; }
-.step::before { content: ""; display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--blue); margin-bottom: 5px; border: 3px solid var(--panel); }
-
-/* X cards */
-.x-card { padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
-.x-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
-.x-text { line-height: 1.45; color: #dce6f0; }
-.empty { color: var(--muted); padding: 24px; text-align: center; border: 1px dashed var(--border); border-radius: 8px; }
-.show-more { display: block; width: 100%; padding: 10px; margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--blue); cursor: pointer; text-align: center; font-size: 13px; min-height: 40px; }
-.show-more:hover { background: var(--panel-soft); }
-
-/* Modal */
-.modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  place-items: start center;
-  background: rgba(0,0,0,.58);
-  z-index: 50;
-  overflow: auto;
-  padding: 32px 14px;
-}
-.modal.open { display: grid; }
-.modal-panel {
-  width: min(720px, 100%);
-  max-height: calc(100vh - 64px);
-  display: flex;
-  flex-direction: column;
-  background: #12181f;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 24px 80px rgba(0,0,0,.45);
-}
-.modal-head { display: flex; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.modal-title { font-size: 22px; font-weight: 780; }
-.modal-close { border: 0; background: transparent; color: var(--muted); font-size: 24px; cursor: pointer; min-width: 40px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
-.modal-body { padding: 18px; overflow-y: auto; flex: 1; }
-.kv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.kv { padding: 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
-.kv .k { color: var(--muted); font-size: 11px; margin-bottom: 4px; text-transform: uppercase; }
-.kv .v { font-weight: 680; }
-.warn-box { margin-top: 12px; padding: 12px; border: 1px solid rgba(244,201,93,.32); border-radius: 8px; background: rgba(244,201,93,.08); color: #ffe0a3; font-size: 13px; }
-.info-box { margin-top: 12px; padding: 12px; border: 1px solid rgba(101,169,255,.24); border-radius: 8px; background: rgba(101,169,255,.06); color: #a8ceff; font-size: 13px; }
-
-/* Book table */
-.book-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-.book-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; }
-.book-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
-
-/* Book cards grid */
-.books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
-.book-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
-.book-stat { text-align: center; }
-.book-stat .stat-val { font-size: 18px; font-weight: 720; }
-.book-stat .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-/* TP/SL Range bar */
-.range-bar-wrap { margin-top: 8px; }
-.range-bar-wrap.large { margin: 16px 0; }
-.range-bar {
-  position: relative;
-  height: 8px;
-  background: #28313b;
-  border-radius: 999px;
-  overflow: visible;
-}
-.range-bar-wrap.large .range-bar { height: 12px; }
-.range-bar-fill-loss {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  background: rgba(255,107,107,.35);
-  border-radius: 999px 0 0 999px;
-}
-.range-bar-fill-profit {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  background: rgba(53,199,123,.35);
-  border-radius: 0 999px 999px 0;
-}
-.range-bar-current {
-  position: absolute;
-  top: 50%;
-  width: 4px;
-  height: 18px;
-  transform: translate(-50%, -50%);
-  background: var(--text);
-  border-radius: 2px;
-  z-index: 2;
-}
-.range-bar-wrap.large .range-bar-current { width: 5px; height: 26px; }
-.range-bar-entry {
-  position: absolute;
-  top: 50%;
-  width: 2px;
-  height: 14px;
-  transform: translate(-50%, -50%);
-  background: var(--muted);
-  z-index: 1;
-}
-.range-bar-wrap.large .range-bar-entry { height: 20px; }
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-.range-bar-wrap.large .range-labels { font-size: 12px; margin-top: 6px; }
-.range-labels .rl-left { color: var(--red); }
-.range-labels .rl-right { color: var(--green); }
-.range-labels .rl-center { color: var(--muted); }
-.range-bar-waiting {
-  height: 8px;
-  background: repeating-linear-gradient(90deg, #28313b 0px, #28313b 8px, #333d49 8px, #333d49 16px);
-  border-radius: 999px;
-  position: relative;
-}
-.range-bar-wrap.large .range-bar-waiting { height: 12px; }
-.range-waiting-label {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 4px;
-  text-align: center;
-  font-style: italic;
-}
-
-/* Crypto lab */
-.crypto-disclaimer {
-  padding: 12px 16px;
-  border: 1px solid rgba(244,201,93,.24);
-  border-radius: 8px;
-  background: rgba(244,201,93,.06);
-  color: var(--yellow);
-  font-size: 13px;
-  margin-bottom: 14px;
-  line-height: 1.5;
-}
-
-/* Signal row */
-.signal-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--panel);
-}
-.signal-row:hover { border-color: #405061; background: #1a2129; }
-
-/* Back button */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--blue);
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 13px;
-  margin-bottom: 14px;
-  min-height: 40px;
-}
-.back-btn:hover { background: var(--panel-soft); }
-
-/* Detail sections */
-.detail-section { margin-top: 18px; }
-.detail-section h3 { margin-bottom: 10px; }
-
-/* Responsive */
-@media (max-width: 760px) {
-  .wrap { padding: 16px 10px 40px; }
-  .topbar { align-items: flex-start; flex-direction: column; }
-  .summary-grid, .two-grid, .three-grid { grid-template-columns: 1fr; }
-  .flow-strip { grid-template-columns: repeat(3, 1fr); }
-  .row-card { grid-template-columns: 1fr; }
-  .signal-row { grid-template-columns: 1fr; }
-  .kv-grid { grid-template-columns: 1fr; }
-  .value { font-size: 24px; }
-  .book-table { font-size: 12px; }
-  .book-table th, .book-table td { padding: 6px 6px; }
-  .books-grid { grid-template-columns: 1fr; }
-  .book-card-stats { grid-template-columns: repeat(3, 1fr); }
-  .section-head { flex-direction: column; align-items: flex-start; }
-}
-@media (max-width: 400px) {
-  .nav { gap: 2px; padding: 4px; }
-  .nav button { padding: 6px 8px; font-size: 12px; }
-  .flow-strip { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Filter groups */
-.filter-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.filter-group-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 650; letter-spacing: .02em; margin-right: 2px; white-space: nowrap; }
-.book-filters-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
-.model-info { font-size: 12px; color: var(--muted); line-height: 1.5; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel-soft); margin-bottom: 12px; }
-
-/* Signal group cards */
-.signal-group-card { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); overflow: hidden; }
-.signal-group-head { padding: 14px; border-bottom: 1px solid var(--border); }
-.signal-group-head:hover { background: #1a2129; }
-.signal-children { background: var(--panel-soft); }
-.signal-child { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; cursor: pointer; }
-.signal-child:hover { background: rgba(255,255,255,.03); }
-.signal-no-trades { padding: 10px 14px; color: var(--muted); font-size: 12px; font-style: italic; border-top: 1px solid var(--border); }
-
-/* Modal sections */
-.modal-section { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
-.modal-section-title { font-size: 12px; font-weight: 650; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; letter-spacing: .02em; }
-
-/* Latency explain */
-.latency-status-explain { font-size: 12px; color: var(--muted); margin-top: 4px; font-style: italic; }
-
-/* Better mobile range labels */
-@media (max-width: 760px) {
-  .filter-group { gap: 4px; }
-  .book-filters-wrap { gap: 8px; padding: 8px; }
-  .signal-child { flex-direction: column; align-items: flex-start; }
-}
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spline+Sans+Mono:wght@400;500;600&family=Spline+Sans:wght@400;500;600;700&display=swap');
+  :root {
+    --bg:#f4f3ee; --panel:#ffffff; --ink:#1a1d1a; --ink-soft:#6b7269;
+    --line:#e4e2d8; --green:#1d9d6b; --green-bg:#e6f5ee; --red:#d6485a;
+    --red-bg:#fbeaec; --accent:#3a5a78; --accent-bg:#eaf0f5; --gold:#c08a2d;
+    --purple:#6d28d9; --purple-bg:#f3eefe;
+    --shadow:0 1px 2px rgba(26,29,26,.04),0 8px 24px rgba(26,29,26,.05);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+    font-family:'Spline Sans',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    padding:28px 22px 70px;
+    background-image:radial-gradient(circle at 1px 1px,rgba(26,29,26,.025) 1px,transparent 0);
+    background-size:22px 22px;
+  }
+  button,input{font:inherit}
+  a{color:#2563eb;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1120px;margin:0 auto}
+  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20}
+  .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:10px 20px;cursor:pointer;white-space:nowrap}
+  .nav-link:hover{color:var(--ink)}
+  .nav-link.on{background:var(--accent);color:#fff}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .title-block h1{font-family:'Fraunces',serif;font-size:34px;font-weight:600;letter-spacing:-.5px;display:flex;gap:12px;align-items:center;margin:0}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-bg)}
+  .sub-h{font:500 13px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:5px}
+  .updated{text-align:right;font:12px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  .updated strong{display:block;color:var(--ink);font-size:13px}
+  .refresh-btn{border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;margin-top:6px}
+  .refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .snapshot-warning{display:none;margin:0 0 18px;padding:11px 14px;border:1px solid #e7c46a;border-radius:10px;background:#fff8e5;color:#7a5610;font:600 12px/1.45 'Spline Sans Mono',monospace}
+  .lab-warning,.vol-warning{margin:0 0 18px;padding:12px 14px;border-radius:12px;font:600 12px/1.45 'Spline Sans Mono',monospace}
+  .lab-warning{border:1px solid #d97706;background:#fffbeb;color:#92400e}
+  .vol-warning{border:1px solid #ddd6fe;background:var(--purple-bg);color:var(--purple)}
+  .view{display:none}
+  .view.on{display:block}
+  .equity-summary{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin:0 0 18px}
+  .eq-card,.panel,.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .eq-card{padding:22px 24px}
+  .eq-label,.label,.panel h2{font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
+  .eq-equity{font-family:'Fraunces',serif;font-size:clamp(30px,5vw,44px);font-weight:600;letter-spacing:-1px;line-height:1.05;margin-top:7px}
+  .eq-growth{font:700 14px/1.4 'Spline Sans Mono',monospace;margin-top:8px}
+  .split-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:14px 0 12px;background:var(--line)}
+  .split-bar .cash{background:linear-gradient(90deg,var(--green),#3bbd8a)}
+  .split-bar .inv{background:linear-gradient(90deg,var(--accent),#5b7e9e)}
+  .split-legend{display:flex;justify-content:space-between;gap:14px;font-size:12px}
+  .split-legend .k{display:block;font:700 10.5px/1.2 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);margin-bottom:4px}
+  .split-legend .v{font-weight:700;font-size:15px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+  .kpi{padding:18px 20px;overflow:hidden}
+  .kpi .value{font-family:'Fraunces',serif;font-size:clamp(23px,4vw,36px);font-weight:600;letter-spacing:-.8px;line-height:1.05;margin-top:8px;overflow-wrap:anywhere}
+  .kpi .sub{font:12px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:8px}
+  .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;margin-top:18px}
+  .three-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+  .panel{padding:22px}
+  .panel h2{margin:0 0 16px;display:flex;align-items:center;gap:8px}
+  .panel h2:before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .exit-switch-wrap{display:flex;justify-content:center;margin:4px 0 16px}
+  .exit-switch{position:relative;display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;box-shadow:var(--shadow)}
+  .exit-switch .thumb{position:absolute;top:4px;left:4px;height:calc(100% - 8px);width:calc(50% - 4px);background:var(--accent);border-radius:9px;transition:transform .22s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(58,90,120,.35)}
+  .exit-switch.eod .thumb{transform:translateX(100%)}
+  .exit-switch button{position:relative;z-index:1;border:none;background:transparent;font-weight:700;font-size:13px;color:var(--ink-soft);padding:9px 26px;cursor:pointer;border-radius:9px;white-space:nowrap;min-width:120px}
+  .exit-switch button.on{color:#fff}
+  .portfolio-toggle{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:6px;box-shadow:var(--shadow);margin:0 auto 18px;max-width:100%}
+  .toggle-btn{font-size:13px;font-weight:700;color:var(--ink-soft);background:transparent;border:none;border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+  .toggle-btn.on{background:var(--accent-bg);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  .toggle-btn.disabled{opacity:.4;cursor:not-allowed}
+  .model-section{text-align:center;margin:20px 0 18px}
+  .model-section-label{font:700 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.8px;color:var(--ink-soft);margin-bottom:10px}
+  .model-cards{display:inline-flex;gap:10px}
+  .model-card{display:flex;align-items:center;gap:9px;padding:10px 20px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);cursor:pointer;transition:all .18s ease;font-weight:700;font-size:13px;color:var(--ink-soft);box-shadow:var(--shadow);position:relative}
+  .model-card.on.fixed{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+  .model-card.on.volatility{border-color:var(--purple);background:var(--purple-bg);color:var(--purple)}
+  .pilot-tag{position:absolute;top:-8px;right:-6px;font:700 8px/1 'Spline Sans Mono',monospace;background:var(--purple);color:#fff;padding:3px 7px;border-radius:6px;letter-spacing:.4px}
+  #active-label{text-align:center;font:12px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin:12px 0 22px}
+  #active-label strong{font:700 14px/1.2 'Spline Sans',sans-serif;color:var(--ink)}
+  .pos-text{color:var(--green)} .neg-text{color:var(--red)} .zero-text{color:var(--ink-soft)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .name{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .tag,.badge{font:700 10px/1 'Spline Sans Mono',monospace;padding:4px 8px;border-radius:7px;letter-spacing:.3px;border:1px solid var(--line);background:var(--accent-bg);color:var(--accent)}
+  .badge.long,.badge.good{background:var(--green-bg);color:var(--green);border-color:#b8e2cc}
+  .badge.short,.badge.bad{background:var(--red-bg);color:var(--red);border-color:#e8a0a8}
+  .badge.vol{background:var(--purple-bg);color:var(--purple);border-color:#ddd6fe}
+  .badge.warn{background:#fff8e5;color:#7a5610;border-color:#e7c46a}
+  .metrics{display:flex;gap:18px;align-items:center}
+  .metric{text-align:right}
+  .m-val{font:700 14px/1.2 'Spline Sans Mono',monospace}
+  .m-lab{font-size:10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+  .pos-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .pos-row:hover{background:rgba(0,0,0,.025)}
+  .pos-row:last-child{border-bottom:none}
+  .asset-line{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pos-meta{font:12px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:4px}
+  .pos-pnl{text-align:right;font-weight:800}
+  .mini-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:7px}
+  .mini-track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--gold))}
+  .closed-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft);margin:12px 0 10px;display:flex;justify-content:space-between;align-items:center}
+  .trade-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;margin-bottom:10px;outline:none;background:var(--bg)}
+  .empty{padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);font:13px/1.5 'Spline Sans Mono',monospace;background:rgba(255,255,255,.45)}
+  .lat-row,.signal-row,.x-row{padding:12px 0;border-bottom:1px solid var(--line)}
+  .lat-row:last-child,.signal-row:last-child,.x-row:last-child{border-bottom:none}
+  .headline{font-weight:700;line-height:1.35}
+  .small{font:12px/1.45 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  .tm-overlay{position:fixed;inset:0;background:rgba(20,22,28,.55);display:none;align-items:flex-start;justify-content:center;z-index:9999;overflow-y:auto;padding:40px 16px}
+  .tm-overlay.open{display:flex}
+  .tm-modal{background:var(--panel);border-radius:16px;max-width:720px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.28);overflow:hidden}
+  .tm-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .tm-head h3{margin:0;font-size:24px;letter-spacing:-.01em}
+  .tm-sub{font:12px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+  .tm-close{background:none;border:none;font-size:26px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:4px 8px;border-radius:8px}
+  .tm-close:hover{background:rgba(0,0,0,.06)}
+  .tm-body{padding:20px 24px}
+  .tm-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .tm-section{margin-bottom:18px}
+  .tm-section h4{margin:0 0 10px;font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+  .tm-kv{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--line)}
+  .tm-kv .k{color:var(--ink-soft)}
+  .tm-kv .v{font-weight:700;text-align:right}
+  .tm-pnl-banner{margin:0 0 16px;padding:14px 16px;border-radius:12px;text-align:center;font-size:24px;font-weight:800}
+  .tm-pnl-banner.pos-text{background:var(--green-bg)}
+  .tm-pnl-banner.neg-text{background:var(--red-bg)}
+  .tm-pnl-banner.zero-text{background:#f3f3f3}
+  .tm-foot{padding:14px 24px;border-top:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap}
+  .tm-btn{font-size:13px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+  @media(max-width:760px){
+    body{padding:20px 14px 76px}
+    .site-nav{position:fixed;bottom:0;left:0;right:0;top:auto;border-radius:0;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel)}
+    .nav-link{flex:1;padding:12px 6px}
+    header{align-items:flex-start}
+    .title-block h1{font-size:28px}
+    .updated{text-align:left}
+    .equity-summary,.grid,.three-grid{grid-template-columns:1fr}
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .portfolio-toggle{border-radius:14px}
+    .toggle-btn{flex:1 1 30%;text-align:center;font-size:12px;padding:9px 8px}
+    .exit-switch button{padding:9px 16px;min-width:104px}
+    .model-card{padding:9px 14px;font-size:12px}
+    .metrics{gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .pos-row{grid-template-columns:1fr}
+    .pos-pnl{text-align:left}
+    .tm-overlay{padding:0}
+    .tm-modal{border-radius:0;max-width:100%;min-height:100vh;min-height:100dvh}
+    .tm-cols{grid-template-columns:1fr}
+    .tm-head,.tm-body,.tm-foot{padding-left:18px;padding-right:18px}
+  }
+  @media(max-width:390px){
+    .kpi{padding:15px}
+    .kpi .value{font-size:22px}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="topbar">
-    <div>
-      <h1>V2 Trading Command Center</h1>
-      <div class="sub" id="subtitle">Loading V2 data...</div>
+  <nav class="site-nav" aria-label="Dashboard views">
+    <button class="nav-link" data-view="overview">Overview</button>
+    <button class="nav-link" data-view="research">Research</button>
+    <button class="nav-link on" data-view="operations">Operations</button>
+  </nav>
+
+  <header>
+    <div class="title-block">
+      <h1><span class="dot"></span>Trading Analyst</h1>
+      <div class="sub-h">V2 ledger command view. Old dashboard feel, new ledger math.</div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <button class="refresh-btn" id="refresh-btn" title="Refresh data">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        Refresh
-      </button>
-      <div class="status-pill"><span class="dot" id="health-dot"></span><span id="health-pill">Checking health</span></div>
+    <div class="updated">
+      <span>Last updated</span>
+      <strong id="upd-date">—</strong>
+      <button class="refresh-btn" id="refresh-btn">Refresh</button>
     </div>
   </header>
 
-  <div id="pull-indicator" class="pull-indicator"></div>
-  <div id="stale-banner" class="stale-banner"></div>
+  <div class="snapshot-warning" id="snapshot-warning"></div>
 
-  <nav class="nav" aria-label="Dashboard sections">
-    <button class="active" data-jump="command">Command</button>
-    <button data-jump="books">Books</button>
-    <button data-jump="book-detail" id="nav-book-detail" style="display:none">Book Detail</button>
-    <button data-jump="positions">Positions</button>
-    <button data-jump="signals">Signals</button>
-    <button data-jump="latency">Latency</button>
-    <button data-jump="crypto">Crypto Lab</button>
-    <button data-jump="health">Health</button>
-  </nav>
-
-  <main id="app">
-    <!-- COMMAND -->
-    <section class="section active" id="command">
-      <div class="grid summary-grid" id="summary"></div>
-      <div class="grid two-grid" style="margin-top:12px">
-        <div class="card" id="progress-card"></div>
-        <div class="card" id="exposure-card"></div>
+  <section id="view-overview" class="view"></section>
+  <section id="view-research" class="view"></section>
+  <section id="view-operations" class="view on">
+    <div class="exit-switch-wrap">
+      <div class="exit-switch" id="exit-switch">
+        <span class="thumb"></span>
+        <button data-rule="hold_24hr" class="on">24hr Hold</button>
+        <button data-rule="sell_eod">Early Exit</button>
       </div>
-      <div class="card" style="margin-top:12px">
-        <div class="flow-strip" id="flow-strip"></div>
+    </div>
+    <div class="portfolio-toggle" id="portfolio-toggle"></div>
+    <div class="model-section">
+      <div class="model-section-label">Target Model</div>
+      <div class="model-cards" id="model-cards">
+        <button class="model-card fixed on" data-model="fixed">Fixed</button>
+        <button class="model-card volatility" data-model="volatility">Volatility <span class="pilot-tag">PILOT</span></button>
       </div>
-    </section>
-
-    <!-- BOOKS -->
-    <section class="section" id="books">
-      <div class="section-head">
-        <div>
-          <h2>Books</h2>
-          <div class="section-note">Per-book metrics from official baseline. Click a card for detail.</div>
-        </div>
-      </div>
-      <div class="book-filters-wrap" id="book-filters"></div>
-      <div id="book-model-info"></div>
-      <div class="books-grid" id="books-grid"></div>
-    </section>
-
-    <!-- BOOK DETAIL -->
-    <section class="section" id="book-detail">
-      <button class="back-btn" data-jump-back="books">&#8592; Back to Books</button>
-      <div id="book-detail-content"></div>
-    </section>
-
-    <!-- POSITIONS -->
-    <section class="section" id="positions">
-      <div class="section-head">
-        <div>
-          <h2>Positions</h2>
-          <div class="section-note">Click any row for full detail.</div>
-        </div>
-        <div class="filters" id="position-filters"></div>
-      </div>
-      <div class="position-list" id="positions-list"></div>
-    </section>
-
-    <!-- SIGNALS -->
-    <section class="section" id="signals">
-      <div class="section-head">
-        <div>
-          <h2>Signals</h2>
-          <div class="section-note">Recent signals received by the system.</div>
-        </div>
-      </div>
-      <div class="signal-list" id="signals-list"></div>
-    </section>
-
-    <!-- LATENCY -->
-    <section class="section" id="latency">
-      <div class="section-head">
-        <div>
-          <h2>Latency</h2>
-          <div class="section-note">News timing, shadow timing, and price-at-news capture gaps.</div>
-        </div>
-      </div>
-      <div class="grid three-grid" id="latency-summary"></div>
-      <div class="latency-list" id="latency-list" style="margin-top:12px"></div>
-    </section>
-
-    <!-- CRYPTO LAB -->
-    <section class="section" id="crypto">
-      <div class="section-head">
-        <div>
-          <h2>Crypto Lab / X <span class="badge warn">Research Only</span></h2>
-        </div>
-        <div class="filters" id="x-filters"></div>
-      </div>
-      <div class="crypto-disclaimer">Research-only proving lane. Not included in $20K account totals. Does not write public.trades or broker orders.</div>
-      <div class="grid three-grid" id="crypto-summary"></div>
-      <div class="x-list" id="x-list" style="margin-top:12px"></div>
-    </section>
-
-    <!-- HEALTH -->
-    <section class="section" id="health">
-      <div class="section-head">
-        <div>
-          <h2>Health</h2>
-          <div class="section-note">Technical checks live below the trading story.</div>
-        </div>
-      </div>
-      <div class="grid three-grid" id="health-grid"></div>
-      <div class="grid three-grid" id="shadow-grid" style="margin-top:12px"></div>
-    </section>
-  </main>
+    </div>
+    <div id="active-label"></div>
+    <div id="operations-content"><div class="empty">Loading V2 data...</div></div>
+  </section>
 </div>
 
-<div class="modal" id="trade-modal" role="dialog" aria-modal="true">
-  <div class="modal-panel">
-    <div class="modal-head">
-      <div>
-        <div class="modal-title" id="modal-title"></div>
-        <div class="sub" id="modal-sub"></div>
-      </div>
-      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
-    </div>
-    <div class="modal-body" id="modal-body"></div>
-  </div>
+<div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()">
+  <div class="tm-modal" id="tm-modal" role="dialog" aria-modal="true" aria-label="Trade details"></div>
 </div>
 
 <script>
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-
-/* --- Formatters --- */
-const fmt = (n, d=2) => n == null || Number.isNaN(Number(n)) ? '—' : Number(n).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
-const money = n => n == null || Number.isNaN(Number(n)) ? '—' : `${Number(n) >= 0 ? '+$' : '-$'}${fmt(Math.abs(n))}`;
-const dollar = n => n == null || Number.isNaN(Number(n)) ? '—' : `$${fmt(n)}`;
-const pct = n => n == null || Number.isNaN(Number(n)) ? '—' : `${(Number(n) * 100).toFixed(2)}%`;
-const pctRaw = n => n == null || Number.isNaN(Number(n)) ? '—' : `${Number(n).toFixed(2)}%`;
-const ts = s => s ? new Date(s).toLocaleString() : '—';
-const tsShort = s => {
-  if (!s) return '—';
-  const d = new Date(s);
-  return d.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + d.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+let DATA=null;
+let CURRENT_VIEW=localStorage.getItem('v2_old_view') || 'operations';
+let sel={
+  portfolio:localStorage.getItem('v2_old_portfolio') || 'news_only',
+  lifecycle:localStorage.getItem('v2_old_lifecycle') || 'hold_24hr',
+  model:localStorage.getItem('v2_old_model') || 'fixed'
 };
-const seconds = s => {
-  if (s == null || Number.isNaN(Number(s))) return '—';
-  const n = Math.abs(Number(s));
-  if (n < 60) return `${Math.round(n)}s`;
-  if (n < 3600) return `${Math.round(n / 60)}m`;
-  return `${(n / 3600).toFixed(1)}h`;
-};
-const clsPnl = n => Number(n) >= 0 ? 'pos' : 'neg';
-const hasVal = n => n != null && !Number.isNaN(Number(n));
-function latencyStatusLabel(status) {
-  if (status === 'ok') return 'Price at news captured';
-  if (status === 'missing_news_reference_price') return 'Timing exists, but price at news was not captured';
-  if (status === 'missing_news_event_time') return 'Cannot measure — news event time missing';
-  if (status === 'missing_entry_time') return 'Cannot measure — trade entry time missing';
-  return status || 'Unknown';
+let OPEN_EXPANDED=false, CLOSED_EXPANDED=false;
+let OPEN_SEARCH='', CLOSED_SEARCH='';
+
+const STRAT_LABELS={news_only:'News Only',news_plus_ta:'Trend Gate',mean_reversion:'Mean Revert',trend_strict:'Trend Strict',full_confluence:'Full Confluence',crypto_lab:'Crypto Lab'};
+const LIFE_LABELS={hold_24hr:'24hr Hold',sell_eod:'Early Exit'};
+const fmtMoney=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtPrice=n=>n==null?'—':'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:Math.abs(Number(n))<1?4:2,maximumFractionDigits:Math.abs(Number(n))<1?4:2});
+const fmtPct=n=>(Number(n||0)>0?'+':'')+Number(n||0).toFixed(2)+'%';
+const fmtInt=n=>Number(n||0).toLocaleString('en-US');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const signCls=n=>Number(n||0)>0?'pos-text':(Number(n||0)<0?'neg-text':'zero-text');
+const shortTime=iso=>iso?new Date(iso).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'—';
+const secondsLabel=s=>s==null?'—':(Math.abs(Number(s))<60?Math.round(Number(s))+'s':Math.round(Number(s)/60)+'m');
+const rows=a=>Array.isArray(a)?a:[];
+const officialBooks=()=>rows(DATA?.official_books).length?rows(DATA.official_books):rows(DATA?.prop_books).length?rows(DATA.prop_books):rows(DATA?.book_metrics);
+const openPositions=()=>rows(DATA?.open_positions);
+const closedTrades=()=>rows(DATA?.closed_trades);
+const allTrades=()=>openPositions().concat(closedTrades());
+function bookLabel(b){return `${STRAT_LABELS[b?.portfolio]||b?.portfolio||'Book'} · ${LIFE_LABELS[b?.lifecycle]||b?.lifecycle||'Lifecycle'} · ${(b?.target_model||'model')}`;}
+function selectedBook(){return officialBooks().find(b=>(b.portfolio||'')===sel.portfolio && (b.lifecycle||'')===sel.lifecycle && (b.target_model||b.classification||'')===sel.model)}
+function modelOf(r){return r.target_model||r.model||r.classification||'fixed'}
+function pnlOf(t){return t.status==='CLOSED' ? Number(t.realized_pnl||0) : Number(t.computed_unrealized_pnl ?? t.unrealized_pnl ?? 0)}
+function pctOf(t){return t.status==='CLOSED' ? Number(t.computed_realized_pnl_pct ?? (Number(t.realized_pnl_percent||0)*100)) : Number(t.computed_unrealized_pnl_pct ?? (Number(t.unrealized_pnl_percent||0)*100))}
+function brokerLabel(s){return s==='paper_filled'?'Broker: paper filled':s==='submitted'?'Broker: submitted':s==='cancelled'?'Broker: cancelled':'Broker: not mirrored'}
+function articleUrl(t){
+  const sig=rows(DATA?.signals).find(s=>s.id===t.signal_id);
+  return t.news_url || t.source_url || sig?.news_url || sig?.raw_payload?.source_url || t.raw_payload?.source_url || null;
 }
-
-/* --- Helpers --- */
-function median(values) {
-  const xs = values.filter(v => v != null && !Number.isNaN(Number(v))).map(Number).sort((a,b) => a-b);
-  if (!xs.length) return null;
-  const mid = Math.floor(xs.length / 2);
-  return xs.length % 2 ? xs[mid] : (xs[mid - 1] + xs[mid]) / 2;
+function latencyFor(t){return rows(DATA?.latency).find(l=>l.v2_trade_intent_id===t.id || (l.signal_id===t.signal_id && l.asset===t.asset))}
+function freshness(){
+  const gen=DATA?.generated_at; if(!gen) return;
+  const age=Math.max(0,Math.round((Date.now()-new Date(gen).getTime())/60000));
+  document.getElementById('upd-date').textContent=new Date(gen).toLocaleString();
+  const warn=document.getElementById('snapshot-warning');
+  if(age>20){warn.style.display='block'; warn.textContent=`Data is ${age}m old. Pull/refresh if publisher has not updated yet.`}
+  else {warn.style.display='none'}
 }
-
-function prettyBookName(bookKey) {
-  if (!bookKey) return '—';
-  return bookKey
-    .replace(/^v2_/, '')
-    .replace(/_/g, ' ')
-    .replace(/\b(news only)\b/i, 'News Only')
-    .replace(/\b(hold)\b/i, '')
-    .replace(/\b(24hr)\b/i, '24hr')
-    .replace(/\b(fixed)\b/i, 'Fixed')
-    .replace(/\b(volatility)\b/i, 'Volatility')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .split(' ')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
-    .replace(/News Only 24hr Fixed/i, 'News Only · 24hr · Fixed')
-    .replace(/News Only 24hr Volatility/i, 'News Only · 24hr · Volatility');
-}
-
-function heldDuration(entryTime, exitTime) {
-  if (!entryTime) return '—';
-  const start = new Date(entryTime);
-  const end = exitTime ? new Date(exitTime) : new Date();
-  const diffMs = end - start;
-  if (diffMs < 0) return '—';
-  const hrs = Math.floor(diffMs / 3600000);
-  const mins = Math.floor((diffMs % 3600000) / 60000);
-  if (hrs > 0) return `${hrs}h ${mins}m`;
-  return `${mins}m`;
-}
-
-function card(label, value, meta='', kind='') {
-  return `<div class="card"><div class="label">${label}</div><div class="value ${kind}">${value}</div>${meta ? `<div class="meta">${meta}</div>` : ''}</div>`;
-}
-
-/* --- TP/SL Range Bar --- */
-function rangeBar(trade, large) {
-  const isBuy = String(trade.direction).toUpperCase() === 'BUY';
-  const entry = Number(trade.entry_price);
-  const tp = Number(trade.take_profit_price);
-  const sl = Number(trade.stop_loss_price);
-  const current = trade.current_price != null ? Number(trade.current_price) : (trade.exit_price != null ? Number(trade.exit_price) : null);
-  const isMissing = trade.current_price_status === 'missing_mark' && current == null;
-  const isClosed = trade.status === 'CLOSED' || trade._kind === 'closed';
-  const cls = large ? 'range-bar-wrap large' : 'range-bar-wrap';
-
-  if (!hasVal(entry) || !hasVal(tp) || !hasVal(sl)) return '';
-
-  // For the bar: left is min(sl,tp), right is max(sl,tp)
-  let leftPrice, rightPrice, leftLabel, rightLabel, leftColor, rightColor;
-  if (isBuy) {
-    leftPrice = sl; rightPrice = tp;
-    leftLabel = 'SL'; rightLabel = 'TP';
-    leftColor = 'rl-left'; rightColor = 'rl-right';
-  } else {
-    leftPrice = tp; rightPrice = sl;
-    leftLabel = 'TP'; rightLabel = 'SL';
-    leftColor = 'rl-right'; rightColor = 'rl-left';
-  }
-
-  const range = rightPrice - leftPrice;
-  if (range <= 0) return '';
-  const entryPct = ((entry - leftPrice) / range) * 100;
-
-  if (isMissing && !isClosed) {
-    return `<div class="${cls}">
-      <div class="range-bar-waiting"></div>
-      <div class="range-waiting-label">Waiting for mark</div>
-      <div class="range-labels">
-        <span class="${leftColor}">${leftLabel} ${dollar(leftPrice)}</span>
-        <span class="rl-center">Entry ${dollar(entry)}</span>
-        <span class="${rightColor}">${rightLabel} ${dollar(rightPrice)}</span>
-      </div>
-    </div>`;
-  }
-
-  let currentPct = null;
-  if (current != null) {
-    currentPct = Math.max(0, Math.min(100, ((current - leftPrice) / range) * 100));
-  }
-
-  // Fill zones
-  let fillHtml = '';
-  if (isBuy) {
-    // Loss zone: left to entry
-    fillHtml += `<div class="range-bar-fill-loss" style="left:0;width:${entryPct}%"></div>`;
-    // Profit zone: entry to right
-    fillHtml += `<div class="range-bar-fill-profit" style="left:${entryPct}%;width:${100-entryPct}%"></div>`;
-  } else {
-    // Profit zone: left to entry
-    fillHtml += `<div class="range-bar-fill-profit" style="left:0;width:${entryPct}%"></div>`;
-    // Loss zone: entry to right
-    fillHtml += `<div class="range-bar-fill-loss" style="left:${entryPct}%;width:${100-entryPct}%"></div>`;
-  }
-
-  let markers = `<div class="range-bar-entry" style="left:${entryPct}%"></div>`;
-  if (currentPct != null) {
-    markers += `<div class="range-bar-current" style="left:${currentPct}%"></div>`;
-  }
-
-  const currentLabel = current != null ? (isClosed ? `Exit ${dollar(current)}` : `Current ${dollar(current)}`) : '';
-
-  return `<div class="${cls}">
-    <div class="range-bar">${fillHtml}${markers}</div>
-    <div class="range-labels">
-      <span class="${leftColor}">${leftLabel} ${dollar(leftPrice)}</span>
-      <span class="rl-center">${currentLabel || `Entry ${dollar(entry)}`}</span>
-      <span class="${rightColor}">${rightLabel} ${dollar(rightPrice)}</span>
+function kpi(label,value,cls='',sub=''){return `<div class="kpi"><div class="label">${label}</div><div class="value ${cls}">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`}
+function equityBlock(summary){
+  const start=Number(summary?.total_starting_balance||20000);
+  const equity=Number(summary?.total_marked_equity||start);
+  const deployed=Number(summary?.total_deployed_cost||0);
+  const cash=Number(summary?.total_free_cash||0);
+  const pnl=Number(summary?.total_since_start_pnl ?? summary?.total_official_since_baseline_pnl ?? (equity-start));
+  const cashPct=Math.max(0,Math.min(100,(cash/(cash+deployed||1))*100));
+  const invPct=Math.max(0,Math.min(100,100-cashPct));
+  return `<div class="equity-summary">
+    <div class="eq-card">
+      <div class="eq-label">Official Marked Equity</div>
+      <div class="eq-equity">${fmtMoney(equity)}</div>
+      <div class="eq-growth ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)} total · ${fmtPct((pnl/(start||1))*100)}</div>
+    </div>
+    <div class="eq-card">
+      <div class="eq-label">Cash / Deployed</div>
+      <div class="split-bar"><span class="cash" style="width:${cashPct}%"></span><span class="inv" style="width:${invPct}%"></span></div>
+      <div class="split-legend"><div><span class="k">Available Cash</span><span class="v">${fmtMoney(cash)}</span></div><div style="text-align:right"><span class="k">Deployed</span><span class="v">${fmtMoney(deployed)}</span></div></div>
     </div>
   </div>`;
 }
-
-function progressBadge(trade) {
-  const p = trade.progress_to_target_pct;
-  if (!hasVal(p)) return '';
-  const n = Number(p);
-  const cls = n >= 50 ? 'good' : n >= 0 ? 'info' : 'bad';
-  return `<span class="badge ${cls}" title="Progress toward take profit: 0%=entry, 100%=TP, negative=toward SL">${pctRaw(n)} to TP</span>`;
+function renderOverview(){
+  const s=DATA?.official_summary||DATA?.prop_summary||{};
+  const health=DATA?.health||{};
+  const shadow=DATA?.shadow_health||{};
+  const today=Number(s.total_today_marked_pnl_approx ?? s.total_today_realized_pnl ?? 0);
+  const total=Number(s.total_since_start_pnl ?? s.total_official_since_baseline_pnl ?? 0);
+  const target=Number((DATA?.prop_summary||{}).total_profit_target_dollars||2000);
+  const progress=target?Math.max(0,Math.min(100,(total/target)*100)):0;
+  let html=equityBlock(s);
+  html+=`<div class="kpis">
+    ${kpi('Today P/L', `${today>=0?'+':''}${fmtMoney(today)}`, signCls(today), 'Marked approximation')}
+    ${kpi('Total P/L', `${total>=0?'+':''}${fmtMoney(total)}`, signCls(total), 'Since start/baseline')}
+    ${kpi('Open Trades', fmtInt(s.total_open_count), '', `${fmtInt(s.total_closed_count)} closed`)}
+    ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
+  </div>`;
+  html+=`<div class="grid"><div class="panel"><h2>Prop Guardrails</h2>
+    <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(target)}</div><div class="m-lab">${progress.toFixed(1)}%</div></div></div></div>
+    <div class="mini-track"><span style="width:${progress}%"></span></div>
+    <div class="row"><div class="name">Daily Loss Buffer</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney((DATA?.prop_summary||{}).total_max_daily_loss_dollars||1000)}</div><div class="m-lab">limit</div></div></div></div>
+    <div class="row"><div class="name">Accounts</div><div class="metrics"><div class="metric"><div class="m-val">${fmtInt(s.account_count||2)}</div><div class="m-lab">${s.accounts_not_ok||0} not ok</div></div></div></div>
+  </div><div class="panel"><h2>System</h2>
+    <div class="row"><div class="name">Shadow Trigger</div><div class="metrics"><div class="metric"><div class="m-val ${shadow.shadow_status==='OK'?'pos-text':'neg-text'}">${esc(shadow.shadow_status||'—')}</div><div class="m-lab">${fmtInt(shadow.audit_success)} success</div></div></div></div>
+    <div class="row"><div class="name">Close Mirror</div><div class="metrics"><div class="metric"><div class="m-val pos-text">${closedTrades().filter(t=>t.exit_time&&t.exit_price!=null).length}/${closedTrades().length}</div><div class="m-lab">closed mirrored</div></div></div></div>
+    <div class="row"><div class="name">Marked Open</div><div class="metrics"><div class="metric"><div class="m-val">${openPositions().filter(t=>t.current_price_status==='ok'||t.current_price!=null).length}/${openPositions().length}</div><div class="m-lab">positions</div></div></div></div>
+  </div></div>`;
+  document.getElementById('view-overview').innerHTML=html;
 }
-
-let DATA = null;
-let SELECTED_BOOK = null;
-let BOOK_FILTERS = { lifecycle: 'All', strategy: 'All', model: 'All' };
-
-/* --- Freshness --- */
-function renderFreshness(data) {
-  const genAt = data.generated_at ? new Date(data.generated_at) : null;
-  const ageMin = genAt ? Math.round((Date.now() - genAt.getTime()) / 60000) : null;
-  const bannerEl = $('#stale-banner');
-  if (ageMin != null && ageMin > 60) {
-    bannerEl.textContent = `WARNING: Data is ${ageMin} minutes old (generated ${genAt.toLocaleString()}). Publisher may not be running.`;
-    bannerEl.style.display = 'block';
-  } else if (ageMin != null && ageMin > 20) {
-    bannerEl.textContent = `Data is ${ageMin}m old — next publisher run expected soon.`;
-    bannerEl.style.display = 'block';
-    bannerEl.style.borderColor = 'var(--yellow)';
-    bannerEl.style.background = 'rgba(244,201,93,0.08)';
-    bannerEl.style.color = 'var(--yellow)';
-  }
+function renderSelectors(){
+  const books=officialBooks();
+  const portfolios=[...new Set(books.map(b=>b.portfolio).filter(Boolean))];
+  const pt=document.getElementById('portfolio-toggle');
+  pt.innerHTML=portfolios.map(p=>`<button class="toggle-btn ${p===sel.portfolio?'on':''}" data-portfolio="${esc(p)}">${esc(STRAT_LABELS[p]||p)}</button>`).join('');
+  const ex=document.getElementById('exit-switch');
+  ex.className='exit-switch'+(sel.lifecycle==='sell_eod'?' eod':'');
+  ex.querySelectorAll('button').forEach(b=>{const on=b.dataset.rule===sel.lifecycle;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  document.querySelectorAll('#model-cards .model-card').forEach(b=>{const on=b.dataset.model===sel.model;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
 }
-
-/* --- Command --- */
-function renderSummary(data) {
-  const os = data.official_summary || {};
-  const ps = data.prop_summary || {};
-  const books = data.book_metrics || [];
-  const hasOfficial = Object.keys(os).length > 0;
-
-  const totalStart = hasOfficial ? Number(os.total_starting_balance || 0) : Number(ps.total_starting_balance || books.reduce((s,b)=>s+Number(b.starting_balance||0),0));
-  const equity = hasOfficial ? Number(os.total_marked_equity || 0) : Number(ps.total_marked_equity || books.reduce((s,b)=>s+Number(b.marked_equity||0),0));
-  const sinceBaseline = hasOfficial ? Number(os.total_official_since_baseline_pnl || 0) : Number(ps.total_since_start_pnl || (equity - totalStart));
-  const today = Number(ps.total_today_realized_pnl || (hasOfficial ? os.total_today_realized_pnl : 0) || 0);
-  const target = Number(ps.total_profit_target_dollars || totalStart * .10);
-  const progress = target ? Math.max(0, Math.min(100, sinceBaseline / target * 100)) : 0;
-  const deployed = Number(ps.total_deployed_cost || (hasOfficial ? os.total_deployed_cost : 0) || 0);
-  const free = Number(ps.total_free_cash || (hasOfficial ? os.total_free_cash : 0) || 0);
-  const deployPct = equity ? Math.max(0, Math.min(100, deployed / equity * 100)) : 0;
-  const freePct = Math.max(0, 100 - deployPct);
-  const acctNotOk = hasOfficial ? Number(os.accounts_not_ok || 0) : Number(ps.accounts_not_ok || 0);
-
-  const sinceLabel = hasOfficial ? 'since official baseline' : 'since start (fallback)';
-  const baselineKey = hasOfficial ? os.baseline_key : null;
-
-  const brokerOpen = (data.open_positions || []).filter(t => t.broker_mirror_status === 'paper_filled').length;
-  const brokerTotal = (data.open_positions || []).length;
-  const brokerSummary = brokerOpen > 0 ? `${brokerOpen}/${brokerTotal} paper filled` : `${brokerTotal} open, 0 filled`;
-
-  $('#summary').innerHTML = [
-    card('Today P&L', money(today), 'realized today', today >= 0 ? 'good' : 'bad'),
-    card('Since Official Start', money(sinceBaseline), sinceLabel, sinceBaseline >= 0 ? 'good' : 'bad'),
-    card('Total Equity', dollar(equity), `${pct((equity - totalStart) / (totalStart || 1))} total return`),
-    card('Prop Guardrails', acctNotOk === 0 ? 'ALL OK' : `${acctNotOk} flags`, `Daily limit ${dollar(ps.total_max_daily_loss_dollars || 0)} · Total limit ${dollar(ps.total_max_total_loss_dollars || 0)}`, acctNotOk === 0 ? 'good' : 'bad')
-  ].join('');
-
-  $('#progress-card').innerHTML = `
-    <div class="label">Progress To Prop Target</div>
-    <div class="value small">${money(sinceBaseline)} / ${dollar(target)}</div>
-    <div class="bar" style="margin-top:14px"><span style="width:${progress}%"></span></div>
-    <div class="meta">${progress.toFixed(1)}% to target${baselineKey ? ` · Baseline: ${baselineKey}` : ''}</div>
-  `;
-
-  $('#exposure-card').innerHTML = `
-    <div class="label">Cash / Exposure</div>
-    <div class="value small">${dollar(free)} free</div>
-    <div class="split" style="margin-top:14px"><span class="a" style="width:${freePct}%"></span><span class="b" style="width:${deployPct}%"></span></div>
-    <div class="legend"><span><i style="background:var(--green)"></i>Free cash ${dollar(free)}</span><span><i style="background:var(--blue)"></i>Deployed ${dollar(deployed)}</span></div>
-    <div class="meta" style="margin-top:8px">Broker mirror: ${brokerSummary}</div>
-  `;
-
-  $('#flow-strip').innerHTML = [
-    ['Open', data.open_positions?.length || 0],
-    ['Closed', data.closed_trades?.length || 0],
-    ['Signals', data.signals?.length || 0],
-    ['X Posts', data.crypto_lab_x?.length || 0],
-    ['Latency', data.latency?.length || 0]
-  ].map(([k,v]) => `<div class="flow-item"><strong>${v}</strong><span class="meta">${k}</span></div>`).join('');
+function tradeRow(t){
+  const pnl=pnlOf(t), pct=pctOf(t), dir=(t.direction||'').toUpperCase();
+  const mark=t.current_price_status==='missing_mark'||t.current_price==null?'Waiting for mark':`Current ${fmtPrice(t.current_price)}`;
+  const progress=Math.max(0,Math.min(100,Number(t.progress_to_target_pct||0)));
+  return `<div class="pos-row" data-trade-id="${t.id}">
+    <div>
+      <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span><span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span><span class="badge">${esc(t.lifecycle||'')}</span></div>
+      <div class="pos-meta">Entry ${fmtPrice(t.entry_price)} · ${mark} · ${brokerLabel(t.broker_mirror_status)}</div>
+      ${t.status==='OPEN' && t.current_price!=null?`<div class="mini-track"><span style="width:${progress}%"></span></div>`:''}
+    </div>
+    <div class="pos-pnl ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
+  </div>`;
 }
-
-/* --- Books Grid --- */
-function inferStrategy(bookKey) {
-  if (!bookKey) return 'Unknown';
-  const k = bookKey.toLowerCase();
-  if (k.includes('full_confluence')) return 'Full Confluence';
-  if (k.includes('trend_strict')) return 'Trend Strict';
-  if (k.includes('trend_gate')) return 'Trend Gate';
-  if (k.includes('mean_revert')) return 'Mean Revert';
-  if (k.includes('news_only')) return 'News Only';
-  if (k.includes('crypto_lab')) return 'Crypto Lab';
-  return 'News Only';
-}
-
-function renderBookFilters(books) {
-  const lifecycles = ['All', ...new Set(books.map(b => b.lifecycle || '—').filter(Boolean))];
-  const strategies = ['All', ...new Set(books.map(b => inferStrategy(b.book_key)))];
-  const models = ['All', ...new Set(books.map(b => b.target_model || '—').filter(Boolean))];
-
-  const chipGroup = (label, key, options) => {
-    return `<div class="filter-group">
-      <span class="filter-group-label">${label}:</span>
-      ${options.map(o => `<button class="filter-btn ${BOOK_FILTERS[key] === o ? 'active' : ''}" data-book-filter-key="${key}" data-book-filter-val="${o}">${o}</button>`).join('')}
-    </div>`;
-  };
-
-  $('#book-filters').innerHTML = [
-    chipGroup('Lifecycle', 'lifecycle', lifecycles),
-    chipGroup('Strategy', 'strategy', strategies),
-    chipGroup('Model', 'model', models)
-  ].join('');
-
-  const activeModel = BOOK_FILTERS.model;
-  if (activeModel === 'fixed') {
-    $('#book-model-info').innerHTML = '<div class="model-info">Fixed model: Stocks +4% target / -2% stop. Crypto +10% target / -5% stop.</div>';
-  } else if (activeModel === 'volatility') {
-    $('#book-model-info').innerHTML = '<div class="model-info">Volatility model: ATR-based targets. Stop = 1.5x ATR%, capped at 15%. Target = 2x stop. Missing ATR means reject, not fixed fallback.</div>';
-  } else {
-    $('#book-model-info').innerHTML = '';
-  }
-}
-
-function renderBooks(data) {
-  const ob = data.official_books || [];
-  const pb = data.prop_books || [];
-  const books = ob.length ? ob : pb;
-  const isOfficial = ob.length > 0;
-  const open = data.open_positions || [];
-  const closed = data.closed_trades || [];
-
-  if (!books.length) {
-    $('#book-filters').innerHTML = '';
-    $('#book-model-info').innerHTML = '';
-    $('#books-grid').innerHTML = '<div class="empty">No book data available.</div>';
+function renderOperations(){
+  renderSelectors();
+  const b=selectedBook();
+  const active=document.getElementById('active-label');
+  if(!b){
+    active.innerHTML=`<strong>${esc(STRAT_LABELS[sel.portfolio]||sel.portfolio)} · ${esc(LIFE_LABELS[sel.lifecycle]||sel.lifecycle)} · ${esc(sel.model)}</strong><div>Book not deployed yet. This appears after book expansion.</div>`;
+    document.getElementById('operations-content').innerHTML='<div class="empty">This book is not deployed in V2 yet.</div>';
     return;
   }
-
-  renderBookFilters(books);
-
-  const filtered = books.filter(b => {
-    if (BOOK_FILTERS.lifecycle !== 'All' && b.lifecycle !== BOOK_FILTERS.lifecycle) return false;
-    if (BOOK_FILTERS.strategy !== 'All' && inferStrategy(b.book_key) !== BOOK_FILTERS.strategy) return false;
-    if (BOOK_FILTERS.model !== 'All' && b.target_model !== BOOK_FILTERS.model) return false;
-    return true;
-  });
-
-  if (!filtered.length) {
-    $('#books-grid').innerHTML = '<div class="empty">No V2 book is active for this combination yet.</div>';
-    return;
+  active.innerHTML=`<strong>${bookLabel(b)}</strong><div>${esc(b.book_key)} · ${esc(b.prop_status||b.official_status||'ok')}</div>`;
+  let html='';
+  if(sel.portfolio==='crypto_lab') html+=`<div class="lab-warning">Crypto Lab is research-only and does not count toward official account totals.</div>`;
+  if(sel.model==='volatility' && Number(b.open_count||0)===0){
+    const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
+    html+=`<div class="vol-warning">Volatility is waiting on ATR repair/proof. Recent V2 rejections show ATR data missing${recent?`: ${esc(recent)}`:''}. Fixed trades continue; volatility is not falling back to fixed.</div>`;
   }
-
-  const html = filtered.map(b => {
-    const pnl = isOfficial ? b.official_since_baseline_pnl : b.since_start_pnl;
-    const statusVal = isOfficial ? (b.official_status || '—') : (b.prop_status || '—');
-    const statusCls = statusVal === 'ok' ? 'good' : (String(statusVal).includes('breach') ? 'bad' : 'warn');
-    const modelCls = b.target_model === 'fixed' ? 'info' : 'warn';
-    const strategy = inferStrategy(b.book_key);
-    const bookOpen = open.filter(t => t.book_key === b.book_key).length;
-    const bookClosed = closed.filter(t => t.book_key === b.book_key).length;
-    const bookClosedAll = b.closed_count || bookClosed;
-    const winCount = closed.filter(t => t.book_key === b.book_key && Number(t.realized_pnl) > 0).length;
-    const winRate = bookClosedAll > 0 ? ((winCount / bookClosedAll) * 100).toFixed(0) : '—';
-    const todayPnl = hasVal(b.today_realized_pnl) ? money(b.today_realized_pnl) : '—';
-    const markedOpen = open.filter(t => t.book_key === b.book_key && t.current_price != null).length;
-    const waitingMark = bookOpen - markedOpen;
-
-    return `<div class="card clickable" data-book-key="${b.book_key}">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
-        <div>
-          <div class="asset" style="font-size:15px">${prettyBookName(b.book_key)}</div>
-          <div class="meta">${b.book_key}</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span class="badge">${strategy}</span>
-          <span class="badge">${b.lifecycle || '—'}</span>
-          <span class="badge ${modelCls}">${b.target_model || '—'}</span>
-          <span class="badge ${statusCls}">${statusVal}</span>
-        </div>
-      </div>
-      <div class="book-card-stats">
-        <div class="book-stat">
-          <div class="stat-val">${dollar(b.marked_equity)}</div>
-          <div class="stat-label">Equity</div>
-        </div>
-        <div class="book-stat">
-          <div class="stat-val pnl ${clsPnl(pnl)}">${money(pnl)}</div>
-          <div class="stat-label">${isOfficial ? 'Since Baseline' : 'Since Start'}</div>
-        </div>
-        <div class="book-stat">
-          <div class="stat-val">${todayPnl}</div>
-          <div class="stat-label">Today P&L</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--muted)">
-        <span>Open: <strong style="color:var(--text)">${bookOpen}</strong></span>
-        <span>Closed: <strong style="color:var(--text)">${bookClosedAll}</strong></span>
-        <span>Win Rate: <strong style="color:var(--text)">${winRate}%</strong></span>
-        ${waitingMark > 0 ? `<span>Marked: <strong style="color:var(--yellow)">${markedOpen}/${bookOpen}</strong></span>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-
-  $('#books-grid').innerHTML = html;
+  html+=`<div class="equity-summary"><div class="eq-card"><div class="eq-label">Selected Book Equity</div><div class="eq-equity">${fmtMoney(b.marked_equity||b.equity||b.starting_balance)}</div><div class="eq-growth ${signCls(b.since_start_pnl)}">${Number(b.since_start_pnl||0)>=0?'+':''}${fmtMoney(b.since_start_pnl||0)} since start · ${fmtPct(Number(b.since_start_return||0)*100)}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized</div></div></div>`;
+  html+=`<div class="kpis">
+    ${kpi('Open', fmtInt(b.open_count), '', `${fmtInt(b.today_opened_count)} opened today`)}
+    ${kpi('Closed', fmtInt(b.closed_count), '', `${fmtInt(b.today_closed_count)} closed today`)}
+    ${kpi('Unrealized', `${Number(b.unrealized_pnl||0)>=0?'+':''}${fmtMoney(b.unrealized_pnl||0)}`, signCls(b.unrealized_pnl))}
+    ${kpi('Realized', `${Number(b.realized_pnl||0)>=0?'+':''}${fmtMoney(b.realized_pnl||0)}`, signCls(b.realized_pnl))}
+  </div>`;
+  const bookOpen=openPositions().filter(t=>t.book_key===b.book_key);
+  const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key);
+  const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
+  const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
+  html+=`<div class="grid"><div class="panel"><h2>Open Positions</h2>`;
+  if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
+  else {
+    if(OPEN_EXPANDED) html+=`<input class="trade-search" id="open-search" placeholder="Search open positions..." value="${esc(OPEN_SEARCH)}">`;
+    html+=(OPEN_EXPANDED?openFiltered:bookOpen.slice(0,6)).map(tradeRow).join('');
+    if(bookOpen.length>6) html+=`<button class="closed-toggle" id="toggle-open"><span>${OPEN_EXPANDED?'Collapse':'Show all '+bookOpen.length+' positions'}</span><span>›</span></button>`;
+  }
+  html+=`</div><div class="panel"><h2>Closed Trades</h2>`;
+  if(!bookClosed.length) html+='<div class="empty">No closed trades for this selected book.</div>';
+  else {
+    if(CLOSED_EXPANDED) html+=`<input class="trade-search" id="closed-search" placeholder="Search closed trades..." value="${esc(CLOSED_SEARCH)}">`;
+    html+=(CLOSED_EXPANDED?closedFiltered:bookClosed.slice(0,6)).map(tradeRow).join('');
+    if(bookClosed.length>6) html+=`<button class="closed-toggle" id="toggle-closed"><span>${CLOSED_EXPANDED?'Collapse':'Show all '+bookClosed.length+' trades'}</span><span>›</span></button>`;
+  }
+  html+='</div></div>';
+  document.getElementById('operations-content').innerHTML=html;
 }
-
-/* --- Book Detail --- */
-function renderBookDetail(bookKey) {
-  SELECTED_BOOK = bookKey;
-  const ob = DATA.official_books || [];
-  const pb = DATA.prop_books || [];
-  const books = ob.length ? ob : pb;
-  const book = books.find(b => b.book_key === bookKey);
-  if (!book) {
-    $('#book-detail-content').innerHTML = '<div class="empty">Book not found.</div>';
-    return;
-  }
-
-  const isOfficial = ob.length > 0;
-  const pnl = isOfficial ? book.official_since_baseline_pnl : book.since_start_pnl;
-  const statusVal = isOfficial ? (book.official_status || '—') : (book.prop_status || '—');
-  const statusCls = statusVal === 'ok' ? 'good' : (String(statusVal).includes('breach') ? 'bad' : 'warn');
-  const modelCls = book.target_model === 'fixed' ? 'info' : 'warn';
-
-  const open = (DATA.open_positions || []).filter(t => t.book_key === bookKey);
-  const closed = (DATA.closed_trades || []).filter(t => t.book_key === bookKey);
-  const signals = (DATA.signals || []).filter(s => {
-    const payload = s.raw_payload || {};
-    return payload.source_signal_key && closed.some(t => t.signal_id === s.id) ||
-           open.some(t => t.signal_id === s.id) ||
-           (s.asset && open.some(t => t.asset === s.asset));
-  });
-
-  // Strategy explanation
-  const isFixed = book.target_model === 'fixed';
-  const strategy = inferStrategy(bookKey);
-  const strategyText = isFixed
-    ? 'Fixed rules: Stocks +4% target / -2% stop. Crypto +10% target / -5% stop.'
-    : 'Volatility rules: ATR-based targets. Stop = 1.5x ATR%, capped at 15%. Target = 2x stop. Missing ATR means reject, not fixed fallback.';
-
-  const markedOpen = open.filter(t => t.current_price != null).length;
-  const waitingMark = open.length - markedOpen;
-
-  let html = `
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+function renderResearch(){
+  const lat=rows(DATA?.latency).slice(0,12);
+  const sigs=rows(DATA?.signals).slice(0,10);
+  const x=rows(DATA?.crypto_lab_x).slice(0,8);
+  const rej=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,8);
+  let html=`<div class="lab-warning">Crypto Lab is research-only and does not count toward official account totals.</div>`;
+  html+=`<div class="grid"><div class="panel"><h2>News-to-Trade Latency</h2>${lat.map(l=>`<div class="lat-row"><div class="headline">${esc(l.asset)} ${esc(l.direction)} · ${esc(l.source||'')}</div><div class="small">${esc(l.headline||'')}</div><div class="small">News to trade: ${secondsLabel(l.news_to_trade_seconds)} · Move before entry: ${l.price_move_before_entry_pct==null?'missing reference price':fmtPct(l.price_move_before_entry_pct)}</div>${l.news_url?`<a href="${esc(l.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No latency rows yet.</div>'}</div>`;
+  html+=`<div class="panel"><h2>Volatility Rejections</h2>${rej.map(r=>`<div class="lat-row"><div class="headline">${esc((r.details&&r.details.asset)||'Unknown')} · ${esc(r.reason)}</div><div class="small">${shortTime(r.created_at)} · ATR ${esc((r.details&&r.details.atr_percent)||'missing')}</div></div>`).join('')||'<div class="empty">No recent volatility rejections.</div>'}</div></div>`;
+  html+=`<div class="grid"><div class="panel"><h2>Signals</h2>${sigs.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${esc(s.source||'')}</div><div class="small">${esc(s.headline||'')}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No signals yet.</div>'}</div>`;
+  html+=`<div class="panel"><h2>Crypto Lab / X</h2>${x.map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
+  document.getElementById('view-research').innerHTML=html;
+}
+function showView(v){
+  CURRENT_VIEW=v; localStorage.setItem('v2_old_view',v);
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));
+}
+function openTradeModal(id){
+  const t=allTrades().find(x=>String(x.id)===String(id)); if(!t) return;
+  const pnl=pnlOf(t), pct=pctOf(t), lat=latencyFor(t), url=articleUrl(t), dir=(t.direction||'').toUpperCase();
+  const html=`<div class="tm-head"><div><h3>${esc(t.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span></h3><div class="tm-sub">${esc(t.portfolio||'')} · ${esc(t.lifecycle||'')} · ${esc(t.status||'')}</div></div><button class="tm-close" onclick="closeTradeModal()">×</button></div>
+  <div class="tm-body">
+    <div class="tm-pnl-banner ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
+    <div class="tm-cols">
       <div>
-        <h2>${prettyBookName(bookKey)}</h2>
-        <div class="meta">${bookKey}</div>
+        <div class="tm-section"><h4>Trade</h4>${kv('Entry',fmtPrice(t.entry_price))}${kv('Current',t.current_price==null?'Waiting for mark':fmtPrice(t.current_price))}${kv('Exit',t.exit_price==null?'—':fmtPrice(t.exit_price))}${kv('Shares',Number(t.shares||0).toFixed(4))}${kv('Stake',fmtMoney(t.stake_amount))}</div>
+        <div class="tm-section"><h4>Lifecycle TP/SL</h4>${kv(dir==='BUY'?'Take Profit (above entry)':'Take Profit (below entry)',fmtPrice(t.take_profit_price))}${kv(dir==='BUY'?'Stop Loss (below entry)':'Stop Loss (above entry)',fmtPrice(t.stop_loss_price))}${kv('Exit reason',t.exit_reason||'—')}${kv('Broker',brokerLabel(t.broker_mirror_status))}</div>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <span class="badge">${strategy}</span>
-        <span class="badge">${book.lifecycle || '—'}</span>
-        <span class="badge ${modelCls}">${book.target_model || '—'}</span>
-        <span class="badge ${statusCls}">${statusVal}</span>
-        ${book.classification ? `<span class="badge purple">${book.classification}</span>` : ''}
-        ${book.experiment_phase ? `<span class="badge">${book.experiment_phase}</span>` : ''}
+      <div>
+        <div class="tm-section"><h4>Volatility Model</h4>${kv('ATR value',t.atr_value??'—')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Vol stop',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Vol target',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
+        <div class="tm-section"><h4>Latency</h4>${kv('News to trade',secondsLabel(lat?.news_to_trade_seconds))}${kv('Captured to V2',secondsLabel(lat?.received_to_v2_shadow_seconds))}${kv('Move before entry',lat?.price_move_before_entry_pct==null?'Missing reference price':fmtPct(lat.price_move_before_entry_pct))}${kv('Entry time',shortTime(t.entry_time))}</div>
       </div>
     </div>
-
-    <div class="model-info" style="margin-bottom:14px">${strategyText}</div>
-    <div class="meta" style="margin-bottom:14px">Selected book metrics. Command tab shows total official account metrics.</div>
-
-    <div class="grid three-grid">
-      ${card('Starting Balance', dollar(book.starting_balance), 'initial capital')}
-      ${card('Equity', dollar(book.marked_equity), `return ${pct(book.marked_return)}`, Number(book.marked_return) >= 0 ? 'good' : 'bad')}
-      ${card('Deployed', dollar(book.deployed_cost), `free cash ${dollar(book.free_cash)}`)}
-    </div>
-
-    <div class="grid three-grid" style="margin-top:12px">
-      ${card(isOfficial ? 'Since Baseline' : 'Since Start', money(pnl), isOfficial ? `baseline: ${book.baseline_key || '—'}` : '', Number(pnl) >= 0 ? 'good' : 'bad')}
-      ${card('Today P&L', hasVal(book.today_realized_pnl) ? money(book.today_realized_pnl) : '—', `opened today: ${book.today_opened_count || 0} · closed today: ${book.today_closed_count || 0}`)}
-      ${card('Prop Buffer', dollar(book.prop_total_loss_buffer), `daily limit ${dollar(book.prop_max_daily_loss_dollars)} · total limit ${dollar(book.prop_max_total_loss_dollars)}`)}
-    </div>
-  `;
-
-  // Open positions
-  const MAX_OPEN = 5;
-  const openShown = open.slice(0, MAX_OPEN);
-  html += `<div class="detail-section"><h3>Open Positions (${open.length})${waitingMark > 0 ? ` <span class="badge warn" style="font-size:11px;vertical-align:middle">Marked ${markedOpen}/${open.length}</span>` : ''}</h3>`;
-  if (open.length) {
-    html += '<div class="position-list" id="book-open-list">' + openShown.map((t, i) => tradeRow(t, 'open', `book-open-${i}`)).join('') + '</div>';
-    if (open.length > MAX_OPEN) {
-      html += `<button class="show-more" id="book-show-all-open">Show all ${open.length} positions</button>`;
-    }
-  } else {
-    html += '<div class="empty">No open positions in this book.</div>';
-  }
-  html += '</div>';
-
-  // Closed trades
-  const MAX_CLOSED = 10;
-  const closedShown = closed.slice(0, MAX_CLOSED);
-  html += `<div class="detail-section"><h3>Closed Trades (${closed.length})</h3>`;
-  if (closed.length) {
-    html += '<div class="position-list" id="book-closed-list">' + closedShown.map((t, i) => tradeRow(t, 'closed', `book-closed-${i}`)).join('') + '</div>';
-    if (closed.length > MAX_CLOSED) {
-      html += `<button class="show-more" id="book-show-all-closed">Show all ${closed.length} trades</button>`;
-    }
-  } else {
-    html += '<div class="empty">No closed trades in this book.</div>';
-  }
-  html += '</div>';
-
-  // Signals for this book
-  html += `<div class="detail-section"><h3>Related Signals</h3>`;
-  if (signals.length) {
-    html += '<div class="signal-list">' + signals.slice(0, 5).map(s => signalRow(s)).join('') + '</div>';
-  } else {
-    html += '<div class="empty">No directly related signals found.</div>';
-  }
-  html += '</div>';
-
-  $('#book-detail-content').innerHTML = html;
-
-  // Store trades for click handling
-  window.__bookOpenTrades = open;
-  window.__bookClosedTrades = closed;
-  window.__bookClosedAll = closed;
+    <div class="tm-section"><h4>News</h4><div class="small">${esc(lat?.headline || rows(DATA?.signals).find(s=>s.id===t.signal_id)?.headline || 'No headline available')}</div>${url?`<p><a href="${esc(url)}" target="_blank" rel="noopener">Read original article</a></p>`:'<p class="small">Source link unavailable</p>'}</div>
+  </div>
+  <div class="tm-foot"><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>`;
+  document.getElementById('tm-modal').innerHTML=html;
+  document.getElementById('tm-overlay').classList.add('open');
 }
-
-/* --- Trade row builder --- */
-function tradeRow(t, kind, idPrefix) {
-  const pnlVal = kind === 'open' ? (t.computed_unrealized_pnl || t.unrealized_pnl) : t.realized_pnl;
-  const pnlPctVal = kind === 'open' ? t.computed_unrealized_pnl_pct : t.computed_realized_pnl_pct;
-  const dirClass = String(t.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
-  const modelCls = t.target_model === 'fixed' ? 'info' : 'warn';
-  const mirrorBadge = t.broker_mirror_status === 'paper_filled'
-    ? '<span class="badge good" title="Broker mirror status is separate from trade status. Shows whether this V2 trade has been mirrored to a paper broker/simulator.">Broker: paper filled</span>'
-    : t.broker_mirror_status === 'pending'
-    ? '<span class="badge warn" title="Broker mirror status is separate from trade status. Shows whether this V2 trade has been mirrored to a paper broker/simulator.">Broker: pending</span>'
-    : '<span class="badge" title="Broker mirror status is separate from trade status. Shows whether this V2 trade has been mirrored to a paper broker/simulator.">Broker: not mirrored</span>';
-
-  const pnlPctStr = hasVal(pnlPctVal) ? ` (${pctRaw(pnlPctVal)})` : '';
-
-  let subText;
-  if (kind === 'open') {
-    subText = `Entry ${dollar(t.entry_price)} · TP ${dollar(t.take_profit_price)} · SL ${dollar(t.stop_loss_price)}`;
-  } else {
-    subText = `Entry ${dollar(t.entry_price)} · Exit ${dollar(t.exit_price)} · ${t.exit_reason || '—'}`;
-  }
-
-  return `<div class="row-card" data-trade-id="${t.id}" data-trade-kind="${kind}">
-    <div>
-      <div class="asset-line">
-        <span class="asset">${t.asset || '—'}</span>
-        <span class="badge ${dirClass}">${t.direction || '—'}</span>
-        <span class="badge ${modelCls}">${t.target_model || '—'}</span>
-        ${mirrorBadge}
-        ${progressBadge(t)}
-      </div>
-      <div class="row-sub">${subText}</div>
-      ${kind === 'open' ? rangeBar(t, false) : ''}
-    </div>
-    <div>
-      <div class="pnl ${clsPnl(pnlVal)}">${money(pnlVal)}${pnlPctStr}</div>
-      <div class="row-sub">Stake ${dollar(t.stake_amount)} · ${kind === 'open' ? tsShort(t.entry_time) : tsShort(t.exit_time)}</div>
-    </div>
-    <div class="chev">›</div>
-  </div>`;
-}
-
-/* --- Positions --- */
-function renderPositions(data, filter='all') {
-  const open = data.open_positions || [];
-  const closed = data.closed_trades || [];
-  const all = [...open.map(t => ({...t, _kind:'open'})), ...closed.map(t => ({...t, _kind:'closed'}))];
-  const filtered = all.filter(t => {
-    if (filter === 'all') return true;
-    if (filter === 'open') return t._kind === 'open';
-    if (filter === 'closed') return t._kind === 'closed';
-    if (filter === 'fixed' || filter === 'volatility') return t.target_model === filter;
-    return true;
+function kv(k,v){return `<div class="tm-kv"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`}
+function closeTradeModal(){document.getElementById('tm-overlay').classList.remove('open')}
+function bind(){
+  document.querySelectorAll('.nav-link').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+  document.getElementById('refresh-btn').onclick=()=>load();
+  document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
+  document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
+  document.addEventListener('click',e=>{
+    const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
+    const tr=e.target.closest('[data-trade-id]'); if(tr){openTradeModal(tr.dataset.tradeId); return}
+    if(e.target.closest('#toggle-open')){OPEN_EXPANDED=!OPEN_EXPANDED; renderOperations(); return}
+    if(e.target.closest('#toggle-closed')){CLOSED_EXPANDED=!CLOSED_EXPANDED; renderOperations(); return}
   });
-  const MAX = 10;
-  const shown = filtered.slice(0, MAX);
-
-  $('#position-filters').innerHTML = ['all','open','closed','fixed','volatility'].map(f =>
-    `<button class="filter-btn ${f===filter?'active':''}" data-position-filter="${f}">${f} ${f==='open'?`(${open.length})`:f==='closed'?`(${closed.length})`:''}</button>`
-  ).join('');
-
-  let html = shown.length ? shown.map(t => tradeRow(t, t._kind, `pos-${t.id}`)).join('') : `<div class="empty">No trades match "${filter}".</div>`;
-
-  if (filtered.length > MAX) {
-    html += `<button class="show-more" data-show-all="${filter}">Show all ${filtered.length} trades</button>`;
-  }
-
-  $('#positions-list').innerHTML = html;
-  window.__visibleTrades = shown;
-  window.__allFilteredTrades = filtered;
+  document.addEventListener('input',e=>{if(e.target.id==='open-search'){OPEN_SEARCH=e.target.value; renderOperations()} if(e.target.id==='closed-search'){CLOSED_SEARCH=e.target.value; renderOperations()}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeTradeModal()});
 }
-
-/* --- Signals --- */
-function signalRow(s) {
-  const dirClass = String(s.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
-  const conf = hasVal(s.confidence) ? (Number(s.confidence) * 100).toFixed(0) + '%' : '—';
-  const confCls = hasVal(s.confidence) && Number(s.confidence) >= 0.7 ? 'good' : hasVal(s.confidence) && Number(s.confidence) >= 0.5 ? 'info' : 'warn';
-  const headline = s.headline || '—';
-  const url = s.news_url || (s.raw_payload && s.raw_payload.source_url) || null;
-  const headlineHtml = url ? `<a href="${url}" target="_blank" rel="noopener">${headline}</a>` : headline;
-
-  return `<div class="signal-row">
-    <div>
-      <div class="asset-line">
-        <span class="asset">${s.asset || '—'}</span>
-        <span class="badge ${dirClass}">${s.direction || '—'}</span>
-      </div>
-    </div>
-    <div>
-      <div style="font-size:13px;line-height:1.4;word-break:break-word">${headlineHtml}</div>
-      <div class="row-sub">${s.source || '—'} · ${tsShort(s.received_at)} · <span class="badge ${confCls}" style="font-size:11px">conf ${conf}</span></div>
-    </div>
-    <div>
-      ${s.link_verified ? '<span class="badge good">verified</span>' : `<span class="badge">${s.link_verification_status || 'unverified'}</span>`}
-    </div>
-  </div>`;
+function ensureValidSelection(){
+  const books=officialBooks();
+  if(!books.length) return;
+  if(!books.some(b=>b.portfolio===sel.portfolio)) sel.portfolio=books[0].portfolio;
+  if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)) sel.lifecycle=books.find(b=>b.portfolio===sel.portfolio)?.lifecycle||'hold_24hr';
+  if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle && b.target_model===sel.model)) sel.model=books.find(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)?.target_model||'fixed';
 }
-
-function renderSignals(data) {
-  const signals = data.signals || [];
-  const allTrades = [...(data.open_positions || []).map(t => ({...t, _kind:'open'})), ...(data.closed_trades || []).map(t => ({...t, _kind:'closed'}))];
-  const latencyRows = data.latency || [];
-
-  const grouped = new Map();
-  signals.forEach(s => {
-    if (!grouped.has(s.id)) grouped.set(s.id, { signal: s, trades: [] });
-  });
-  allTrades.forEach(t => {
-    if (t.signal_id && grouped.has(t.signal_id)) {
-      grouped.get(t.signal_id).trades.push(t);
-    }
-  });
-
-  const groups = [...grouped.values()];
-  const MAX = 10;
-  const shown = groups.slice(0, MAX);
-
-  if (!shown.length) {
-    $('#signals-list').innerHTML = '<div class="empty">No signals yet.</div>';
-    return;
-  }
-
-  let html = shown.map(g => {
-    const s = g.signal;
-    const dirClass = String(s.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
-    const conf = hasVal(s.confidence) ? (Number(s.confidence) * 100).toFixed(0) + '%' : '—';
-    const confCls = hasVal(s.confidence) && Number(s.confidence) >= 0.7 ? 'good' : hasVal(s.confidence) && Number(s.confidence) >= 0.5 ? 'info' : 'warn';
-    const headline = s.headline || '—';
-    const url = s.news_url || (s.raw_payload && s.raw_payload.source_url) || null;
-    const headlineHtml = url ? `<a href="${url}" target="_blank" rel="noopener">Read original article</a>` : '<span style="color:var(--muted);font-size:12px">Source link unavailable</span>';
-    const latRow = latencyRows.find(l => l.signal_id === s.id);
-    const latSummary = latRow ? `News to trade: ${seconds(latRow.news_to_trade_seconds)}` : '';
-
-    let childrenHtml = '';
-    if (g.trades.length) {
-      childrenHtml = g.trades.map(t => {
-        const isOpen = t._kind === 'open';
-        const pnlVal = isOpen ? (t.computed_unrealized_pnl || t.unrealized_pnl) : t.realized_pnl;
-        const modelCls = t.target_model === 'fixed' ? 'info' : 'warn';
-        const mirrorBadge = t.broker_mirror_status === 'paper_filled' ? '<span class="badge good" style="font-size:11px">paper filled</span>' : '';
-        return `<div class="signal-child" data-trade-id="${t.id}" data-trade-kind="${t._kind}">
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <span class="badge ${modelCls}" style="font-size:11px">${t.target_model || '—'}</span>
-            <span class="badge" style="font-size:11px">${t.lifecycle || '—'}</span>
-            <span class="badge ${isOpen ? 'info' : ''}" style="font-size:11px">${isOpen ? 'OPEN' : 'CLOSED'}</span>
-            ${mirrorBadge}
-          </div>
-          <div style="display:flex;gap:12px;align-items:center">
-            <span>Entry ${dollar(t.entry_price)}</span>
-            <span>${isOpen ? `Current ${t.current_price != null ? dollar(t.current_price) : 'waiting'}` : `Exit ${dollar(t.exit_price)}`}</span>
-            <span class="pnl ${clsPnl(pnlVal)}">${money(pnlVal)}</span>
-            <span class="chev">›</span>
-          </div>
-        </div>`;
-      }).join('');
-    } else {
-      childrenHtml = '<div class="signal-no-trades">No V2 trade created</div>';
-    }
-
-    return `<div class="signal-group-card">
-      <div class="signal-group-head">
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-          <div class="asset-line">
-            <span class="asset">${s.asset || '—'}</span>
-            <span class="badge ${dirClass}">${s.direction || '—'}</span>
-            <span class="badge ${confCls}" style="font-size:11px">conf ${conf}</span>
-            ${s.link_verified ? '<span class="badge good" style="font-size:11px">verified</span>' : ''}
-          </div>
-          <div class="meta">${g.trades.length} trade${g.trades.length !== 1 ? 's' : ''} · ${s.source || '—'} · ${tsShort(s.received_at)}</div>
-        </div>
-        <div style="font-size:13px;line-height:1.4;margin-top:6px;word-break:break-word">${headline}</div>
-        <div style="display:flex;gap:12px;margin-top:4px;font-size:12px;color:var(--muted)">${headlineHtml}${latSummary ? ` · ${latSummary}` : ''}</div>
-      </div>
-      <div class="signal-children">${childrenHtml}</div>
-    </div>`;
-  }).join('');
-
-  if (groups.length > MAX) {
-    html += `<button class="show-more" id="show-all-signals">Show all ${groups.length} signals</button>`;
-  }
-
-  $('#signals-list').innerHTML = html;
-  window.__allSignals = signals;
-  window.__allSignalGroups = groups;
+function renderAll(){
+  freshness(); ensureValidSelection(); renderOverview(); renderResearch(); renderOperations(); showView(CURRENT_VIEW);
 }
-
-/* --- Latency --- */
-function latencyCard(r) {
-  const statusOk = r.latency_price_status === 'ok';
-  return `<div class="card soft">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
-      <div class="asset-line"><span class="asset">${r.asset || '—'}</span><span class="badge">${r.source || '—'}</span></div>
-      <span class="badge ${statusOk ? 'good' : 'warn'}" style="font-size:11px">${statusOk ? 'ok' : r.latency_price_status || '—'}</span>
-    </div>
-    <div class="kv-grid" style="margin-top:10px">
-      <div class="kv"><div class="k">News age before trade</div><div class="v">${seconds(r.news_to_trade_seconds)}</div></div>
-      <div class="kv"><div class="k">Captured → V2</div><div class="v">${seconds(r.received_to_v2_shadow_seconds)}</div></div>
-      <div class="kv"><div class="k">Price at news</div><div class="v">${hasVal(r.news_reference_price) ? dollar(r.news_reference_price) : '<span style="color:var(--yellow)">Not captured</span>'}</div></div>
-      <div class="kv"><div class="k">Entry price</div><div class="v">${dollar(r.entry_price)}</div></div>
-      <div class="kv"><div class="k">Move before entry</div><div class="v">${hasVal(r.price_move_before_entry_pct) ? pct(r.price_move_before_entry_pct) : '<span style="color:var(--muted)">Unavailable</span>'}</div></div>
-      <div class="kv"><div class="k">Status</div><div class="v" style="font-size:12px">${latencyStatusLabel(r.latency_price_status)}</div></div>
-    </div>
-    ${!statusOk ? `<div class="latency-status-explain">${latencyStatusLabel(r.latency_price_status)}</div>` : ''}
-  </div>`;
+async function load(){
+  const res=await fetch('data.v2.json?ts='+Date.now(),{cache:'no-store'});
+  if(!res.ok) throw new Error('Failed to load data.v2.json');
+  DATA=await res.json();
+  renderAll();
 }
-
-function renderLatency(data) {
-  const rows = data.latency || [];
-  const medTrade = median(rows.map(r => r.news_to_trade_seconds));
-  const medShadow = median(rows.map(r => r.received_to_v2_shadow_seconds));
-  const withMove = rows.filter(r => r.price_move_before_entry_pct != null).length;
-  const missingPrice = rows.filter(r => r.latency_price_status === 'missing_news_reference_price').length;
-  const missingEvent = rows.filter(r => r.latency_price_status === 'missing_news_event_time').length;
-  const missingEntry = rows.filter(r => r.latency_price_status === 'missing_entry_time').length;
-
-  let captureNote = `${missingPrice} missing price-at-news`;
-  if (missingEvent) captureNote += ` · ${missingEvent} missing news time`;
-  if (missingEntry) captureNote += ` · ${missingEntry} missing entry time`;
-
-  $('#latency-summary').innerHTML = [
-    card('Median News → Trade', seconds(medTrade), `${rows.length} tracked rows`),
-    card('Median Captured → V2', seconds(medShadow), 'shadow/publisher timing'),
-    card('Price at News Capture', `${withMove}/${rows.length}`, captureNote, missingPrice ? 'bad' : 'good')
-  ].join('');
-  const MAX_LAT = 6;
-  let html = rows.slice(0, MAX_LAT).map(r => latencyCard(r)).join('');
-  if (!rows.length) html = '<div class="empty">No latency rows yet.</div>';
-  if (rows.length > MAX_LAT) {
-    html += `<button class="show-more" id="show-all-latency">Show all ${rows.length} latency rows</button>`;
-  }
-  $('#latency-list').innerHTML = html;
-  window.__allLatencyRows = rows;
-}
-
-/* --- Crypto Lab --- */
-function renderCryptoLab(data, filter='all') {
-  const allRows = data.crypto_lab_x || [];
-  const rows = allRows.filter(x => filter === 'all' || String(x.source_quality_bucket) === filter || (x.detected_assets || []).includes(filter));
-  const MAX_X = 6;
-  const shown = rows.slice(0, MAX_X);
-  const filters = ['all','high','medium','low','BTC','ETH','SOL'];
-  $('#x-filters').innerHTML = filters.map(f => `<button class="filter-btn ${f===filter?'active':''}" data-x-filter="${f}">${f}</button>`).join('');
-
-  // Summary cards
-  const highQ = allRows.filter(x => x.source_quality_bucket === 'high').length;
-  const medQ = allRows.filter(x => x.source_quality_bucket === 'medium').length;
-  const lowQ = allRows.filter(x => x.source_quality_bucket === 'low').length;
-  const allAssets = [...new Set(allRows.flatMap(x => x.detected_assets || []))];
-  const allFlags = allRows.flatMap(x => x.quality_flags || []);
-  const flagCounts = {};
-  allFlags.forEach(f => { flagCounts[f] = (flagCounts[f] || 0) + 1; });
-
-  $('#crypto-summary').innerHTML = [
-    card('X Source Runs', `${allRows.length}`, `high: ${highQ} · medium: ${medQ} · low: ${lowQ}`),
-    card('Assets Detected', allAssets.join(', ') || '—', `${allAssets.length} unique assets`),
-    card('Quality Flags', `${allFlags.length}`, Object.entries(flagCounts).map(([k,v]) => `${k}: ${v}`).join(', ') || 'none')
-  ].join('');
-
-  let html = shown.length ? shown.map(x => `
-    <div class="x-card">
-      <div class="x-head">
-        <div class="asset-line">${(x.detected_assets || []).map(a => `<span class="chip">${a}</span>`).join('') || '<span class="chip">needs asset</span>'}<span class="badge ${x.source_quality_bucket==='high'?'good':x.source_quality_bucket==='medium'?'info':'warn'}">${x.source_quality_bucket || 'unproven'}</span></div>
-        <div class="meta">${seconds(x.latency_seconds)} · @${x.author_handle || 'unknown'}</div>
-      </div>
-      <div class="x-text">${x.text_preview || x.raw_text || '—'}</div>
-      <div class="legend">${(x.quality_flags || []).map(f => `<span class="badge warn">${f}</span>`).join('') || '<span class="meta">No quality flags</span>'}<span class="meta">Engagement ${fmt(x.engagement_score,0)}</span></div>
-    </div>
-  `).join('') : '<div class="empty">No Crypto Lab rows match this filter.</div>';
-  if (rows.length > MAX_X) {
-    html += `<button class="show-more" data-show-all-x="${filter}">Show all ${rows.length} posts</button>`;
-  }
-  $('#x-list').innerHTML = html;
-}
-
-/* --- Health --- */
-function renderHealth(data) {
-  const h = data.health || {};
-  const sh = data.shadow_health || {};
-  const ob = data.official_baseline || {};
-  const dot = $('#health-dot');
-  const pill = $('#health-pill');
-
-  if (h.accounting_ok) {
-    pill.textContent = 'Health OK';
-    dot.classList.remove('bad');
-  } else {
-    pill.textContent = 'Health Issue';
-    dot.classList.add('bad');
-  }
-
-  const genAt = data.generated_at ? new Date(data.generated_at) : null;
-  const ageMin = genAt ? Math.round((Date.now() - genAt.getTime()) / 60000) : null;
-  const ageStr = ageMin != null ? (ageMin <= 1 ? 'just now' : `${ageMin}m ago`) : 'unknown';
-
-  $('#subtitle').textContent = `Updated ${ageStr} · ${data.open_positions?.length || 0} open · ${data.closed_trades?.length || 0} closed · ${data.crypto_lab_x?.length || 0} X posts`;
-
-  $('#health-grid').innerHTML = [
-    card('Accounting', h.accounting_ok ? 'OK' : 'DRIFT', `drift ${h.books_with_drift ?? '—'} · checked ${ts(h.checked_at)}`, h.accounting_ok ? 'good' : 'bad'),
-    card('Official Baseline', ob.baseline_key || 'none', `captured ${ts(ob.captured_at)}`, ob.baseline_key ? 'good' : ''),
-    card('Publisher', data.generated_at ? 'Running' : 'Unknown', `generated ${ts(data.generated_at)} · ${ageStr}`)
-  ].join('');
-
-  const shStatus = sh.shadow_status || 'unknown';
-  const shClass = shStatus === 'OK' ? 'good' : (String(shStatus).startsWith('CRITICAL') ? 'bad' : '');
-  $('#shadow-grid').innerHTML = [
-    card('Shadow Trigger', shStatus, `trigger: ${sh.trigger_status || '?'} · RLS: ${sh.audit_rls_enabled === false ? 'disabled' : 'enabled'}`, shClass),
-    card('Audit Log', `${sh.total_audit_rows || 0} rows`, `success: ${sh.audit_success || 0} · errors: ${sh.audit_errors || 0}`),
-    card('Shadow Coverage', `${sh.v2_shadow_intents || 0} shadows`, `prod open: ${sh.production_open_trades || 0} · last hour: ${sh.trades_last_hour || 0}`)
-  ].join('');
-}
-
-/* --- Trade Modal --- */
-function openTrade(t) {
-  const latency = (DATA.latency || []).find(l => l.signal_id && t.signal_id && l.signal_id === t.signal_id)
-    || (DATA.latency || []).find(l => l.asset === t.asset);
-  const obBook = (DATA.official_books || []).find(b => b.book_key === t.book_key);
-  const isOpen = t._kind === 'open' || t.status === 'OPEN';
-  const isClosed = !isOpen;
-  const pnlVal = isOpen ? (t.computed_unrealized_pnl || t.unrealized_pnl) : t.realized_pnl;
-  const pnlPctVal = isOpen ? t.computed_unrealized_pnl_pct : t.computed_realized_pnl_pct;
-
-  $('#modal-title').textContent = `${t.asset || '—'} ${t.direction || ''}`;
-  $('#modal-sub').textContent = `${t.status || t._kind || '—'} · ${prettyBookName(t.book_key)} · ${t.asset_class || '—'}`;
-
-  let html = '';
-
-  // Large range bar
-  html += rangeBar({...t, _kind: isOpen ? 'open' : 'closed'}, true);
-
-  // Progress info
-  if (hasVal(t.progress_to_target_pct)) {
-    const p = Number(t.progress_to_target_pct);
-    html += `<div class="info-box" style="margin-top:8px">Progress to target: <strong>${pctRaw(p)}</strong> (0% = entry, 100% = TP, negative = toward SL)</div>`;
-  }
-
-  // Book and strategy
-  html += `<div style="margin-top:14px;margin-bottom:6px">
-    <div class="label">Book &amp; Strategy</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
-      <span class="badge ${t.target_model==='fixed'?'info':'warn'}">${t.target_model || '—'}</span>
-      ${t.classification ? `<span class="badge purple">${t.classification}</span>` : ''}
-      ${t.experiment_phase ? `<span class="badge">${t.experiment_phase}</span>` : ''}
-      ${t.portfolio ? `<span class="badge">${t.portfolio}</span>` : ''}
-    </div>
-    <div class="meta">${t.book_key || '—'}${hasVal(t.book_starting_balance) ? ` · Book starting balance: ${dollar(t.book_starting_balance)}` : ''}</div>
-  </div>`;
-
-  // Trade section
-  html += `<div class="modal-section" style="margin-top:12px;padding-top:0;border-top:none">
-    <div class="modal-section-title">Trade</div>
-    <div class="kv-grid">
-      <div class="kv"><div class="k">Entry Price</div><div class="v">${dollar(t.entry_price)}</div></div>
-      <div class="kv"><div class="k">Entry Time</div><div class="v">${ts(t.entry_time)}</div></div>
-      <div class="kv"><div class="k">${isClosed ? 'Exit Price' : 'Current Price'}</div><div class="v">${isClosed ? dollar(t.exit_price) : (t.current_price != null ? dollar(t.current_price) : (t.current_price_status === 'missing_mark' ? '<span class="badge warn">Waiting for mark</span>' : '—'))}</div></div>
-      <div class="kv"><div class="k">${isClosed ? 'Exit Time' : 'Held Duration'}</div><div class="v">${isClosed ? ts(t.exit_time) : heldDuration(t.entry_time)}</div></div>
-      <div class="kv"><div class="k">${isOpen ? 'Unrealized P&L' : 'Realized P&L'}</div><div class="v pnl ${clsPnl(pnlVal)}">${money(pnlVal)}${hasVal(pnlPctVal) ? ` (${pctRaw(pnlPctVal)})` : ''}</div></div>
-      <div class="kv"><div class="k">Stake / Shares</div><div class="v">${dollar(t.stake_amount)} · ${fmt(t.shares, 6)}</div></div>
-      ${t.exit_reason ? `<div class="kv"><div class="k">Exit Reason</div><div class="v">${t.exit_reason}</div></div>` : ''}
-      ${isClosed ? `<div class="kv"><div class="k">Held Duration</div><div class="v">${heldDuration(t.entry_time, t.exit_time)}</div></div>` : ''}
-    </div>
-  </div>`;
-
-  // Lifecycle / TP-SL section
-  const isBuy = String(t.direction).toUpperCase() === 'BUY';
-  const tpLabel = isBuy ? 'Take Profit (above entry)' : 'Take Profit (below entry)';
-  const slLabel = isBuy ? 'Stop Loss (below entry)' : 'Stop Loss (above entry)';
-  html += `<div class="modal-section">
-    <div class="modal-section-title">Lifecycle — TP / SL</div>
-    <div class="kv-grid">
-      <div class="kv"><div class="k">${tpLabel}</div><div class="v" style="color:var(--green)">${dollar(t.take_profit_price)}${hasVal(t.distance_to_tp_pct) ? ` <span style="font-size:12px;color:var(--muted)">(${pctRaw(t.distance_to_tp_pct)} from entry)</span>` : ''}</div></div>
-      <div class="kv"><div class="k">${slLabel}</div><div class="v" style="color:var(--red)">${dollar(t.stop_loss_price)}${hasVal(t.distance_to_sl_pct) ? ` <span style="font-size:12px;color:var(--muted)">(${pctRaw(t.distance_to_sl_pct)} from entry)</span>` : ''}</div></div>
-    </div>
-    ${t.target_model === 'fixed' ? `<div class="model-info" style="margin-top:8px">${t.asset_class === 'crypto' ? 'Fixed rules: Crypto +10% target / -5% stop.' : 'Fixed rules: Stocks +4% target / -2% stop.'}</div>` : ''}
-  </div>`;
-
-  // Volatility section
-  if (t.target_model === 'volatility' || hasVal(t.atr_value) || hasVal(t.atr_percent)) {
-    html += `<div class="modal-section">
-      <div class="modal-section-title">Volatility Model</div>
-      <div class="kv-grid">
-        <div class="kv"><div class="k">ATR Value</div><div class="v">${hasVal(t.atr_value) ? dollar(t.atr_value) : '<span style="color:var(--muted)">Not captured</span>'}</div></div>
-        <div class="kv"><div class="k">ATR Percent</div><div class="v">${hasVal(t.atr_percent) ? pctRaw(t.atr_percent) : '<span style="color:var(--muted)">Not captured</span>'}</div></div>
-        <div class="kv"><div class="k">Volatility Stop %</div><div class="v">${hasVal(t.volatility_stop_percent) ? pctRaw(t.volatility_stop_percent) : '<span style="color:var(--muted)">Not set</span>'}</div></div>
-        <div class="kv"><div class="k">Volatility Target %</div><div class="v">${hasVal(t.volatility_target_percent) ? pctRaw(t.volatility_target_percent) : '<span style="color:var(--muted)">Not set</span>'}</div></div>
-        ${t.target_source ? `<div class="kv"><div class="k">Target Source</div><div class="v">${t.target_source}</div></div>` : ''}
-      </div>
-      <div class="model-info" style="margin-top:8px">Volatility rules: Stop = 1.5x ATR%, capped at 15%. Target = 2x stop. Missing ATR means reject, not fixed fallback.</div>
-    </div>`;
-  }
-
-  // Broker mirror section
-  html += `<div class="modal-section">
-    <div class="modal-section-title">Broker Mirror</div>
-    <div style="padding:8px 0">${
-      t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">Paper filled</span> <span class="meta">This V2 trade has been mirrored to a paper broker/simulator.</span>' :
-      t.broker_mirror_status === 'pending' ? '<span class="badge warn">Pending</span> <span class="meta">Broker mirror request is pending.</span>' :
-      '<span class="badge">Not mirrored</span> <span class="meta">This trade has not been sent to any broker.</span>'
-    }</div>
-  </div>`;
-
-  // News / article section
-  const signal = (DATA.signals || []).find(s => s.id === t.signal_id);
-  const articleUrl = t.news_url || (signal && signal.news_url) || (signal && signal.raw_payload && signal.raw_payload.source_url) || null;
-  const articleHeadline = t.news_title || (signal && signal.headline) || null;
-  html += `<div class="modal-section">
-    <div class="modal-section-title">News</div>
-    <div class="kv-grid">
-      <div class="kv"><div class="k">Source</div><div class="v">${(signal && signal.source) || '—'}</div></div>
-      <div class="kv"><div class="k">Confidence</div><div class="v">${signal && hasVal(signal.confidence) ? (Number(signal.confidence) * 100).toFixed(0) + '%' : '—'}</div></div>
-    </div>
-    ${articleHeadline ? `<div style="margin-top:8px;font-size:13px;line-height:1.45;word-break:break-word">${articleHeadline}</div>` : ''}
-    <div style="margin-top:6px">${articleUrl ? `<a href="${articleUrl}" target="_blank" rel="noopener" style="color:var(--blue)">Read original article</a>` : '<span style="color:var(--muted);font-size:12px">Source link unavailable</span>'}</div>
-  </div>`;
-
-  // Latency section
-  html += `<div class="modal-section">
-    <div class="modal-section-title">Latency</div>`;
-  if (latency) {
-    html += `<div class="kv-grid">
-      <div class="kv"><div class="k">News age before trade</div><div class="v">${seconds(latency.news_to_trade_seconds)}</div></div>
-      <div class="kv"><div class="k">Captured → V2</div><div class="v">${seconds(latency.received_to_v2_shadow_seconds)}</div></div>
-      <div class="kv"><div class="k">Price at news</div><div class="v">${hasVal(latency.news_reference_price) ? dollar(latency.news_reference_price) : '<span style="color:var(--yellow)">Not captured</span>'}</div></div>
-      <div class="kv"><div class="k">Entry price</div><div class="v">${dollar(latency.entry_price)}</div></div>
-      <div class="kv"><div class="k">Move before entry</div><div class="v">${hasVal(latency.price_move_before_entry_pct) ? pct(latency.price_move_before_entry_pct) : '<span style="color:var(--muted)">Unavailable</span>'}</div></div>
-      <div class="kv"><div class="k">Status</div><div class="v"><span class="badge ${latency.latency_price_status === 'ok' ? 'good' : 'warn'}">${latencyStatusLabel(latency.latency_price_status)}</span></div></div>
-    </div>`;
-  } else {
-    html += '<div style="color:var(--muted);font-size:13px">No latency data available for this trade.</div>';
-  }
-  html += '</div>';
-
-  // Book context
-  if (obBook) {
-    html += `<div class="meta" style="margin-top:12px">Book baseline P&L: ${money(obBook.official_since_baseline_pnl)} · Status: ${obBook.official_status}</div>`;
-  }
-
-  $('#modal-body').innerHTML = html;
-  $('#trade-modal').classList.add('open');
-}
-
-/* --- Navigation --- */
-function showPage(pageId, push = true) {
-  const target = document.getElementById(pageId) ? pageId : 'command';
-  $$('.section').forEach(s => s.classList.toggle('active', s.id === target));
-  $$('.nav button').forEach(b => b.classList.toggle('active', b.dataset.jump === target));
-
-  // Show/hide Book Detail nav button
-  const bdNav = $('#nav-book-detail');
-  if (target === 'book-detail') {
-    bdNav.style.display = '';
-  } else if (target !== 'book-detail') {
-    bdNav.style.display = 'none';
-  }
-
-  if (push) {
-    const nextHash = target === 'command' ? '' : `#${target}`;
-    const nextUrl = `${location.pathname}${location.search}${nextHash}`;
-    history.pushState({page: target}, '', nextUrl);
-  }
-  window.scrollTo({top: 0, behavior: 'auto'});
-}
-
-/* --- Wiring --- */
-function wire() {
-  // Nav buttons
-  $$('.nav button').forEach(b => b.addEventListener('click', () => showPage(b.dataset.jump)));
-  window.addEventListener('popstate', () => showPage(location.hash.replace('#', '') || 'command', false));
-
-  // Global click delegation
-  document.addEventListener('click', e => {
-    // Book filter
-    const bf = e.target.closest('[data-book-filter-key]');
-    if (bf) { BOOK_FILTERS[bf.dataset.bookFilterKey] = bf.dataset.bookFilterVal; renderBooks(DATA); return; }
-
-    // Position filter
-    const pf = e.target.closest('[data-position-filter]');
-    if (pf) { renderPositions(DATA, pf.dataset.positionFilter); return; }
-
-    // X filter
-    const xf = e.target.closest('[data-x-filter]');
-    if (xf) { renderCryptoLab(DATA, xf.dataset.xFilter); return; }
-
-    // Book card click -> Book Detail
-    const bookCard = e.target.closest('[data-book-key]');
-    if (bookCard && !e.target.closest('.row-card')) {
-      renderBookDetail(bookCard.dataset.bookKey);
-      showPage('book-detail');
-      return;
-    }
-
-    // Back to books
-    const backBtn = e.target.closest('[data-jump-back]');
-    if (backBtn) { showPage(backBtn.dataset.jumpBack); return; }
-
-    // Trade row click -> Modal
-    const row = e.target.closest('.row-card[data-trade-id]');
-    if (row) {
-      const tradeId = Number(row.dataset.tradeId);
-      const allTrades = [
-        ...(DATA.open_positions || []).map(t => ({...t, _kind:'open'})),
-        ...(DATA.closed_trades || []).map(t => ({...t, _kind:'closed'}))
-      ];
-      const trade = allTrades.find(t => t.id === tradeId);
-      if (trade) openTrade(trade);
-      return;
-    }
-
-    // Show all positions
-    const showAll = e.target.closest('[data-show-all]');
-    if (showAll) {
-      const items = window.__allFilteredTrades || [];
-      window.__visibleTrades = items;
-      $('#positions-list').innerHTML = items.map(t => tradeRow(t, t._kind, `pos-${t.id}`)).join('');
-      return;
-    }
-
-    // Show all X posts
-    const showAllX = e.target.closest('[data-show-all-x]');
-    if (showAllX) {
-      const allRows = DATA.crypto_lab_x || [];
-      const filter = showAllX.dataset.showAllX;
-      const rows = allRows.filter(x => filter === 'all' || String(x.source_quality_bucket) === filter || (x.detected_assets || []).includes(filter));
-      let html = rows.map(x => `
-        <div class="x-card">
-          <div class="x-head">
-            <div class="asset-line">${(x.detected_assets || []).map(a => `<span class="chip">${a}</span>`).join('') || '<span class="chip">needs asset</span>'}<span class="badge ${x.source_quality_bucket==='high'?'good':x.source_quality_bucket==='medium'?'info':'warn'}">${x.source_quality_bucket || 'unproven'}</span></div>
-            <div class="meta">${seconds(x.latency_seconds)} · @${x.author_handle || 'unknown'}</div>
-          </div>
-          <div class="x-text">${x.text_preview || x.raw_text || '—'}</div>
-          <div class="legend">${(x.quality_flags || []).map(f => `<span class="badge warn">${f}</span>`).join('') || '<span class="meta">No quality flags</span>'}<span class="meta">Engagement ${fmt(x.engagement_score,0)}</span></div>
-        </div>
-      `).join('');
-      $('#x-list').innerHTML = html;
-      return;
-    }
-
-    // Signal child trade click -> Modal
-    const sigChild = e.target.closest('.signal-child[data-trade-id]');
-    if (sigChild) {
-      const tradeId = Number(sigChild.dataset.tradeId);
-      const allTrades = [
-        ...(DATA.open_positions || []).map(t => ({...t, _kind:'open'})),
-        ...(DATA.closed_trades || []).map(t => ({...t, _kind:'closed'}))
-      ];
-      const trade = allTrades.find(t => t.id === tradeId);
-      if (trade) openTrade(trade);
-      return;
-    }
-
-    // Show all signals (grouped)
-    if (e.target.closest('#show-all-signals')) {
-      renderSignals(DATA);
-      const el = e.target.closest('#show-all-signals');
-      if (el) el.remove();
-      return;
-    }
-
-    // Show all latency
-    if (e.target.closest('#show-all-latency')) {
-      const rows = window.__allLatencyRows || [];
-      $('#latency-list').innerHTML = rows.map(r => latencyCard(r)).join('');
-      return;
-    }
-
-    // Show all open in book detail
-    if (e.target.closest('#book-show-all-open')) {
-      const openTrades = window.__bookOpenTrades || [];
-      const el = $('#book-open-list');
-      if (el) el.innerHTML = openTrades.map((t, i) => tradeRow(t, 'open', `book-open-${i}`)).join('');
-      e.target.closest('#book-show-all-open').remove();
-      return;
-    }
-
-    // Show all closed in book detail
-    if (e.target.closest('#book-show-all-closed')) {
-      const closed = window.__bookClosedAll || [];
-      const el = $('#book-closed-list');
-      if (el) el.innerHTML = closed.map((t, i) => tradeRow(t, 'closed', `book-closed-${i}`)).join('');
-      e.target.closest('#book-show-all-closed').remove();
-      return;
-    }
-  });
-
-  // Modal close
-  $('#modal-close').addEventListener('click', () => $('#trade-modal').classList.remove('open'));
-  $('#trade-modal').addEventListener('click', e => { if (e.target.id === 'trade-modal') $('#trade-modal').classList.remove('open'); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#trade-modal').classList.remove('open'); });
-}
-
-/* --- Refresh --- */
-async function refreshDashboardData(reason) {
-  const btn = $('#refresh-btn');
-  const ind = $('#pull-indicator');
-  btn.classList.add('spinning');
-  ind.textContent = 'Refreshing...';
-  ind.className = 'pull-indicator visible refreshing';
-  try {
-    const res = await fetch('data.v2.json?ts=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    DATA = await res.json();
-    renderFreshness(DATA);
-    renderSummary(DATA);
-    renderBooks(DATA);
-    renderPositions(DATA);
-    renderSignals(DATA);
-    renderLatency(DATA);
-    renderCryptoLab(DATA);
-    renderHealth(DATA);
-    ind.textContent = 'Updated ' + new Date().toLocaleTimeString();
-    ind.className = 'pull-indicator visible';
-    setTimeout(() => ind.classList.remove('visible'), 2000);
-  } catch (err) {
-    console.error('[refresh]', reason, err);
-    ind.textContent = 'Refresh failed — ' + err.message;
-    ind.className = 'pull-indicator visible error';
-    setTimeout(() => ind.classList.remove('visible'), 4000);
-  }
-  btn.classList.remove('spinning');
-}
-
-(function initPullToRefresh() {
-  let startY = null, dist = 0;
-  const ind = $('#pull-indicator');
-  window.addEventListener('touchstart', e => {
-    if (window.scrollY === 0 && e.touches.length === 1) { startY = e.touches[0].clientY; dist = 0; }
-  }, { passive: true });
-  window.addEventListener('touchmove', e => {
-    if (startY == null) return;
-    dist = e.touches[0].clientY - startY;
-    if (dist > 12) {
-      ind.textContent = dist >= 70 ? 'Release to refresh' : 'Pull to refresh';
-      ind.className = 'pull-indicator visible';
-    }
-  }, { passive: true });
-  window.addEventListener('touchend', () => {
-    if (startY != null && dist >= 70) refreshDashboardData('pull');
-    else if (ind.classList.contains('visible')) { ind.classList.remove('visible'); }
-    startY = null; dist = 0;
-  }, { passive: true });
-})();
-
-/* --- Load --- */
-async function load() {
-  const res = await fetch('data.v2.json');
-  DATA = await res.json();
-  renderFreshness(DATA);
-  renderSummary(DATA);
-  renderBooks(DATA);
-  renderPositions(DATA);
-  renderSignals(DATA);
-  renderLatency(DATA);
-  renderCryptoLab(DATA);
-  renderHealth(DATA);
-  wire();
-  showPage(location.hash.replace('#', '') || 'command', false);
-  $('#refresh-btn').addEventListener('click', () => refreshDashboardData('button'));
-}
-load().catch(err => {
-  $('#app').innerHTML = `<div class="empty">Failed to load data.v2.json: ${err.message}</div>`;
+bind();
+load().catch(err=>{
+  document.getElementById('operations-content').innerHTML=`<div class="empty">Could not load data.v2.json: ${esc(err.message)}</div>`;
 });
 </script>
 </body>
