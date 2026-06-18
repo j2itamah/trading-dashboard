@@ -28,6 +28,10 @@
   .wrap{max-width:1120px;margin:0 auto}
   .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20}
   .nav-current{display:none;border:0;background:var(--accent);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:11px 14px;cursor:pointer;width:100%;justify-content:space-between;align-items:center}
+  .nav-current-main{display:inline-flex;align-items:center;gap:10px}
+  .hamburger{display:inline-grid;gap:4px;width:18px}
+  .hamburger i{display:block;height:2px;border-radius:999px;background:currentColor}
+  .nav-menu-word{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.8px;opacity:.78}
   .nav-list{display:flex;gap:6px;justify-content:center;overflow-x:auto}
   .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:10px 20px;cursor:pointer;white-space:nowrap}
   .nav-link:hover{color:var(--ink)}
@@ -274,7 +278,7 @@
 <body>
 <div class="wrap">
   <nav class="site-nav" id="site-nav" aria-label="Dashboard views">
-    <button class="nav-current" id="nav-current" type="button"><span id="nav-current-label">Operations</span><span>⌄</span></button>
+    <button class="nav-current" id="nav-current" type="button"><span class="nav-current-main"><span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span id="nav-current-label">Operations</span></span><span class="nav-menu-word">Menu</span></button>
     <div class="nav-list">
       <button class="nav-link" data-view="overview">Overview</button>
       <button class="nav-link" data-view="guardrails">Guardrails</button>
