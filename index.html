@@ -459,8 +459,18 @@ function targetHealthPanel(trades, model){
   </div>`;
 }
 function modelPerformancePanel(){
-  const trades=allTrades();
+  const vr=DATA?.volatility_review||[];
+  const vrMap={};
+  vr.forEach(r=>{vrMap[r.target_model]=r});
   const rows=['fixed','volatility'].map(model=>{
+    const db=vrMap[model];
+    if(db){
+      const timed=(db.other_exits||0);
+      return {model,open:db.open_count,closed:db.closed_count,tp:db.tp_hits,sl:db.sl_hits,timed,
+        realized:db.realized_pnl,unrealized:db.unrealized_pnl,tpRate:db.tp_hit_rate_pct||0,slRate:db.sl_hit_rate_pct||0,
+        status:db.review_status,atr:db.avg_atr_percent,stopPct:db.avg_stop_pct,targetPct:db.avg_target_pct};
+    }
+    const trades=allTrades();
     const rs=trades.filter(t=>modelOf(t)===model);
     const open=rs.filter(t=>t.status==='OPEN');
     const closed=rs.filter(t=>t.status==='CLOSED');
@@ -470,13 +480,14 @@ function modelPerformancePanel(){
     const realized=closed.reduce((sum,t)=>sum+Number(t.realized_pnl||0),0);
     const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
     const tpRate=closed.length?tp/closed.length*100:0;
-    const status=model==='volatility'
-      ? (closed.length<30?'Collecting evidence':tpRate<15?'Review TP/SL':'Healthy sample')
-      : (realized>=0?'Working better today':'Needs watch');
-    return {model,open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized,tpRate,status};
+    return {model,open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized,tpRate,slRate:0,status:'',atr:null,stopPct:null,targetPct:null};
   });
-  const cards=rows.map(r=>`<div class="account-guard">
-    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(r.status)}</div></div><span class="account-guard-status ${r.realized>=0?'':'bad'}">${r.realized>=0?'ahead':'behind'}</span></div>
+  const statusLabel=s=>({collecting_evidence:'Collecting evidence',review_target_distance:'Review target distance',underperforming:'Underperforming',ok:'On track'}[s]||s||'');
+  const cards=rows.map(r=>{
+    const sampleBar=r.model==='volatility'?`<div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>Sample progress</span><span>${fmtInt(r.closed)} / 30 closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:var(--purple);width:${Math.min(100,r.closed/30*100)}%"></div></div></div>`:'';
+    const atrRow=r.atr!=null?`<div style="margin-top:8px;padding:8px 10px;background:var(--purple-bg);border-radius:8px;font:500 11px/1.5 'Spline Sans Mono',monospace;color:var(--purple)">ATR ${fmtPct(r.atr)} · Stop ${fmtPct(r.stopPct)} · Target ${fmtPct(r.targetPct)}</div>`:'';
+    return `<div class="account-guard">
+    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(statusLabel(r.status))}</div></div><span class="account-guard-status ${r.realized>=0?'':'bad'}">${r.realized>=0?'ahead':'behind'}</span></div>
     <div class="guard-grid">
       <div class="guard-mini"><strong class="${signCls(r.realized)}">${r.realized>=0?'+':''}${fmtMoney(r.realized)}</strong><span>realized</span></div>
       <div class="guard-mini"><strong class="${signCls(r.unrealized)}">${r.unrealized>=0?'+':''}${fmtMoney(r.unrealized)}</strong><span>open P/L</span></div>
@@ -485,8 +496,9 @@ function modelPerformancePanel(){
     </div>
     <div class="target-health-bars"><span class="tp" style="opacity:${r.closed?r.tp/r.closed:.08}"></span><span class="sl" style="opacity:${r.closed?r.sl/r.closed:.08}"></span><span class="time" style="opacity:${r.closed?r.timed/r.closed:.08}"></span></div>
     <div class="guardrail-caption"><span>${fmtInt(r.tp)} TP</span><span>${fmtInt(r.sl)} SL</span><span>${fmtInt(r.timed)} time</span></div>
-  </div>`).join('');
-  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">This is the current lesson from today's books. Volatility is still a pilot until it has 30 closed trades or a separate smaller-target test book.</div>${cards}</div>`;
+    ${sampleBar}${atrRow}
+  </div>`}).join('');
+  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Server-side comparison from v2_volatility_performance_review. Volatility is still a pilot — needs 30 closed trades or a separate smaller-target test book before tuning.</div>${cards}</div>`;
 }
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
