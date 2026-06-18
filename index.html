@@ -154,6 +154,25 @@
   .closed-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft);margin:12px 0 10px;display:flex;justify-content:space-between;align-items:center}
   .trade-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;margin-bottom:10px;outline:none;background:var(--bg)}
   .empty{padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);font:13px/1.5 'Spline Sans Mono',monospace;background:rgba(255,255,255,.45)}
+  .cand-card{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);margin-bottom:10px}
+  .cand-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  .cand-asset{font:700 16px/1.2 'Spline Sans',sans-serif}
+  .cand-status{font:800 10px/1 'Spline Sans Mono',monospace;padding:5px 9px;border-radius:999px;letter-spacing:.4px;text-transform:uppercase}
+  .cand-status.candidate{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a}
+  .cand-status.opened{background:var(--green-bg);color:var(--green);border:1px solid #b8e2cc}
+  .cand-status.rejected{background:var(--red-bg);color:var(--red);border:1px solid #e8a0a8}
+  .cand-status.pending_trade{background:var(--accent-bg);color:var(--accent);border:1px solid #bfd0dd}
+  .cand-status.closed{background:#f7f6f0;color:var(--ink-soft);border:1px solid var(--line)}
+  .cand-headline{font:13px/1.45 'Spline Sans',sans-serif;color:var(--ink-soft);margin:8px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .cand-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font:500 11px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  .cand-meta strong{color:var(--ink);font-weight:700}
+  .cand-link{display:inline-block;margin-top:8px;font:700 11px/1 'Spline Sans Mono',monospace;color:#2563eb}
+  .lat-card{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-bottom:8px}
+  .lat-head{font:700 14px/1.2 'Spline Sans',sans-serif;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .lat-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-top:8px}
+  .lat-metric{font:500 11px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  .lat-metric strong{display:block;font:700 14px/1.2 'Spline Sans',sans-serif;color:var(--ink)}
+  .lat-ref{font:500 10px/1.3 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:4px;font-style:italic}
   .lat-row,.signal-row,.x-row{padding:12px 0;border-bottom:1px solid var(--line)}
   .lat-row:last-child,.signal-row:last-child,.x-row:last-child{border-bottom:none}
   .headline{font-weight:700;line-height:1.35}
@@ -303,6 +322,8 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const signCls=n=>Number(n||0)>0?'pos-text':(Number(n||0)<0?'neg-text':'zero-text');
 const shortTime=iso=>iso?new Date(iso).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'—';
 const secondsLabel=s=>s==null?'—':(Math.abs(Number(s))<60?Math.round(Number(s))+'s':Math.round(Number(s)/60)+'m');
+const timeAgo=ts=>{if(!ts)return'—';const d=Date.now()-new Date(ts).getTime();if(d<0)return'just now';if(d<60000)return'<1m ago';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'};
+const refLabel=src=>src==='news_time_quote'?'Move since news':src==='candidate_observed_price'?'Move since first seen':'Reference price missing';
 const rows=a=>Array.isArray(a)?a:[];
 const officialBooks=()=>rows(DATA?.official_books).length?rows(DATA.official_books):rows(DATA?.prop_books).length?rows(DATA.prop_books):rows(DATA?.book_metrics);
 const openPositions=()=>rows(DATA?.open_positions);
@@ -574,24 +595,42 @@ function renderOperations(){
   document.getElementById('operations-content').innerHTML=html;
 }
 function renderResearch(){
-  const lat=rows(DATA?.latency).slice(0,12);
+  const cands=rows(DATA?.candidates);
+  const lat=rows(DATA?.latency).slice(0,15);
   const sigs=rows(DATA?.signals).slice(0,10);
-  const openKeys=new Set(openPositions().map(t=>`${t.asset}|${t.direction}|${t.signal_id||''}`));
-  const candidateRows=rows(DATA?.signals).slice(0,18).map(s=>{
-    const related=rows(DATA?.latency).filter(l=>l.asset===s.asset && l.direction===s.direction && (l.headline||'')===(s.headline||''));
-    const openCount=related.filter(l=>l.status==='OPEN').length;
-    const closedCount=related.filter(l=>l.status==='CLOSED').length;
-    const pending=openCount===0 && closedCount===0;
-    return {...s, openCount, closedCount, pending};
-  });
   const x=rows(DATA?.crypto_lab_x).slice(0,8);
   const rej=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,8);
-  let html=`<div class="lab-warning">Crypto Lab is research-only and does not count toward official account totals.</div>`;
-  html+=`<div class="panel"><h2>Candidate Signals</h2>${candidateRows.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${s.pending?'<span class="badge">candidate pending</span>':`<span class="badge long">${fmtInt(s.openCount)} open</span>`}</div><div class="small">${esc(s.headline||'')}</div><div class="small">Confidence ${s.confidence==null?'—':Number(s.confidence).toFixed(2)} · Received ${shortTime(s.received_at)}${s.closedCount?` · ${fmtInt(s.closedCount)} closed`:''}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No candidate signals yet.</div>'}</div>`;
-  html+=`<div class="grid"><div class="panel"><h2>News-to-Trade Latency</h2>${lat.map(l=>`<div class="lat-row"><div class="headline">${esc(l.asset)} ${esc(l.direction)} · ${esc(l.source||'')}</div><div class="small">${esc(l.headline||'')}</div><div class="small">News to trade: ${secondsLabel(l.news_to_trade_seconds)} · Move before entry: ${l.price_move_before_entry_pct==null?'missing reference price':fmtPct(l.price_move_before_entry_pct)}</div>${l.news_url?`<a href="${esc(l.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No latency rows yet.</div>'}</div>`;
-  html+=`<div class="panel"><h2>Volatility Rejections</h2>${rej.map(r=>`<div class="lat-row"><div class="headline">${esc((r.details&&r.details.asset)||'Unknown')} · ${esc(r.reason)}</div><div class="small">${shortTime(r.created_at)} · ATR ${esc((r.details&&r.details.atr_percent)||'missing')}</div></div>`).join('')||'<div class="empty">No recent volatility rejections.</div>'}</div></div>`;
-  html+=`<div class="grid"><div class="panel"><h2>Signals</h2>${sigs.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${esc(s.source||'')}</div><div class="small">${esc(s.headline||'')}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No signals yet.</div>'}</div>`;
-  html+=`<div class="panel"><h2>Crypto Lab / X</h2>${x.map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
+  let html='';
+  // Candidate Queue from v2_signal_candidates
+  html+=`<div class="panel"><h2>Candidate Queue</h2><div class="section-note">${cands.length} candidate${cands.length===1?'':'s'} from WF1 high-confidence alerts. Candidates appear here before becoming trades.</div>`;
+  if(!cands.length) html+='<div class="empty">No candidates yet. Waiting for the next high-confidence signal from WF1.</div>';
+  else html+=cands.map(c=>{
+    const st=c.display_status||c.status||'candidate';
+    const dir=(c.direction||'').toUpperCase();
+    const price=c.candidate_price!=null?'$'+Number(c.candidate_price).toFixed(2):'not captured yet';
+    const conf=c.confidence!=null?Number(c.confidence).toFixed(2):'not captured yet';
+    const age=timeAgo(c.seen_at);
+    const rejR=c.rejection_reason?`<div class="cand-meta" style="color:var(--red)">Rejected: ${esc(c.rejection_reason)}</div>`:'';
+    return `<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span></div><span class="cand-status ${esc(st)}">${esc(st.replace('_',' '))}</span></div><div class="cand-headline">${esc(c.headline||'No headline')}</div><div class="cand-meta"><span>Confidence <strong>${conf}</strong></span><span>Price <strong>${price}</strong></span><span>${esc(age)}</span><span>${esc(c.source||'')}</span></div>${rejR}${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`;
+  }).join('');
+  html+='</div>';
+  // News-to-Trade Latency with direction-adjusted move
+  html+=`<div class="panel"><h2>News-to-Trade Latency</h2><div class="section-note">How fast signals reach entry, and how much price moved before we got in.</div>`;
+  if(!lat.length) html+='<div class="empty">No latency rows yet.</div>';
+  else html+=lat.map(l=>{
+    const dir=(l.direction||'').toUpperCase();
+    const refSrc=l.price_reference_source||'';
+    const rawMove=l.price_move_before_entry_pct;
+    const adjMove=l.direction_adjusted_move_before_entry_pct;
+    const moveLabel=rawMove==null?'not captured yet':fmtPct(rawMove);
+    const adjLabel=adjMove==null?'not captured yet':(Number(adjMove)>=0?fmtPct(adjMove)+' favorable':fmtPct(adjMove)+' adverse');
+    return `<div class="lat-card"><div class="lat-head">${esc(l.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="small">${esc(l.source||'')}</span></div><div class="lat-metrics"><div class="lat-metric"><strong>${secondsLabel(l.news_to_trade_seconds)}</strong>News to trade</div><div class="lat-metric"><strong>${moveLabel}</strong>${esc(refLabel(refSrc))}</div><div class="lat-metric"><strong>${adjLabel}</strong>Direction-adjusted</div></div>${l.news_url?`<a class="cand-link" href="${esc(l.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`;
+  }).join('');
+  html+='</div>';
+  // Volatility Rejections + Signals + Crypto Lab in grids
+  html+=`<div class="grid"><div class="panel"><h2>Volatility Rejections</h2>${rej.map(r=>`<div class="lat-row"><div class="headline">${esc((r.details&&r.details.asset)||'Unknown')} · ${esc(r.reason)}</div><div class="small">${shortTime(r.created_at)} · ATR ${esc((r.details&&r.details.atr_percent)||'missing')}</div></div>`).join('')||'<div class="empty">No recent volatility rejections.</div>'}</div>`;
+  html+=`<div class="panel"><h2>Signals</h2>${sigs.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${esc(s.source||'')}</div><div class="small">${esc(s.headline||'')}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No signals yet.</div>'}</div></div>`;
+  html+=`<div class="panel"><h2>Crypto Lab / X</h2>${x.map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div>`;
   document.getElementById('view-research').innerHTML=html;
 }
 function showView(v){
