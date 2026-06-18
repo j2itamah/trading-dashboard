@@ -143,6 +143,9 @@
   .target-health-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
   .target-health-title{font-weight:800}
   .target-health-rate{font:800 22px/1 'Fraunces',serif}
+  .target-health-sample{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}
+  .target-health-sample span{border:1px solid rgba(35,31,26,.08);background:rgba(255,255,255,.58);border-radius:10px;padding:8px 9px;font:700 11px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft)}
+  .target-health-sample strong{display:block;color:var(--ink);font:800 17px/1.1 'Fraunces',serif;text-transform:none;margin-bottom:2px}
   .target-health-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
   .target-health-bars span{height:8px;border-radius:999px;background:var(--line);display:block}
   .target-health-bars .tp{background:var(--green)}
@@ -368,15 +371,18 @@ function spendRuleInfo(t){
 }
 function targetStats(trades){
   const closed=trades.filter(t=>t.status==='CLOSED');
+  const open=trades.filter(t=>t.status==='OPEN');
   const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
   const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
   const timed=closed.filter(t=>['time','sell_eod'].includes(exitReasonClass(t.exit_reason))).length;
   const rate=closed.length?tp/closed.length*100:0;
-  return {closed:closed.length,tp,sl,timed,rate};
+  const realized=closed.reduce((sum,t)=>sum+Number(t.realized_pnl||0),0);
+  const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
+  return {closed:closed.length,open:open.length,tp,sl,timed,rate,realized,unrealized};
 }
 function targetHealthPanel(trades, model){
   const s=targetStats(trades);
-  if(!s.closed) return `<div class="target-health"><div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">No closed trades yet for this selected book.</div></div><div class="target-health-rate">—</div></div></div>`;
+  if(!s.closed) return `<div class="target-health"><div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">${fmtInt(s.open)} open positions. No closed trades yet for this selected book.</div></div><div class="target-health-rate">—</div></div></div>`;
   const cls=s.rate>=35?'good':s.rate>=15?'warn':'bad';
   const note=s.rate===0
     ? 'No take-profits yet. Watch whether the target is too far for this model.'
@@ -386,6 +392,12 @@ function targetHealthPanel(trades, model){
   const modelNote=model==='volatility' && s.tp===0 ? ' Volatility target may need review after a larger sample.' : '';
   return `<div class="target-health ${cls}">
     <div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">${esc(note+modelNote)}</div></div><div class="target-health-rate">${s.rate.toFixed(0)}%</div></div>
+    <div class="target-health-sample">
+      <span><strong>${fmtInt(s.open)}</strong> open</span>
+      <span><strong>${fmtInt(s.closed)}</strong> closed</span>
+      <span class="${signCls(s.unrealized)}">${Number(s.unrealized)>=0?'+':''}${fmtMoney(s.unrealized)} open P/L</span>
+      <span class="${signCls(s.realized)}">${Number(s.realized)>=0?'+':''}${fmtMoney(s.realized)} realized</span>
+    </div>
     <div class="target-health-bars"><span class="tp" style="opacity:${s.tp?s.tp/s.closed:.08}"></span><span class="sl" style="opacity:${s.sl?s.sl/s.closed:.08}"></span><span class="time" style="opacity:${s.timed?s.timed/s.closed:.08}"></span></div>
     <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
   </div>`;
@@ -543,7 +555,7 @@ function renderOperations(){
   const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key);
   const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
   const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
-  html+=targetHealthPanel(bookClosed, sel.model);
+  html+=targetHealthPanel(bookOpen.concat(bookClosed), sel.model);
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
