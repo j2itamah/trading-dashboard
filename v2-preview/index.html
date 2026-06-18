@@ -42,6 +42,9 @@
   .sub-h{font:500 13px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:5px}
   .updated{text-align:right;font:12px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft)}
   .updated strong{display:block;color:var(--ink);font-size:13px}
+  .updated.fresh strong{color:var(--green)}
+  .updated.warn strong{color:var(--gold,#d97706)}
+  .updated.stale strong{color:var(--red)}
   .refresh-btn{border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;margin-top:6px}
   .refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
   .snapshot-warning{display:none;margin:0 0 18px;padding:11px 14px;border:1px solid #e7c46a;border-radius:10px;background:#fff8e5;color:#7a5610;font:600 12px/1.45 'Spline Sans Mono',monospace}
@@ -504,6 +507,8 @@ function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
   const age=Math.max(0,Math.round((Date.now()-new Date(gen).getTime())/60000));
   document.getElementById('upd-date').textContent=new Date(gen).toLocaleString();
+  const upd=document.querySelector('.updated');
+  if(upd){upd.classList.remove('fresh','warn','stale');upd.classList.add(age<=10?'fresh':age<=20?'warn':'stale')}
   const warn=document.getElementById('snapshot-warning');
   if(age>20){warn.style.display='block'; warn.textContent=`Data is ${age}m old. Pull/refresh if publisher has not updated yet.`}
   else {warn.style.display='none'}
@@ -705,7 +710,7 @@ function renderOperations(){
   </div>`;
 
   const bookOpen=openPositions().filter(t=>t.book_key===b.book_key);
-  const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key);
+  const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key).sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
   const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
   const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
   html+=targetHealthPanel(bookOpen.concat(bookClosed), sel.model);
@@ -880,6 +885,7 @@ bind();
 load().catch(err=>{
   document.getElementById('operations-content').innerHTML=`<div class="empty">Could not load data.v2.json: ${esc(err.message)}</div>`;
 });
+setInterval(()=>load().catch(()=>{}),60000);
 </script>
 </body>
 </html>
