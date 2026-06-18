@@ -422,6 +422,35 @@ h3 { margin: 0 0 8px; font-size: 15px; font-weight: 680; }
   .nav button { padding: 6px 8px; font-size: 12px; }
   .flow-strip { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Filter groups */
+.filter-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.filter-group-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 650; letter-spacing: .02em; margin-right: 2px; white-space: nowrap; }
+.book-filters-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
+.model-info { font-size: 12px; color: var(--muted); line-height: 1.5; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel-soft); margin-bottom: 12px; }
+
+/* Signal group cards */
+.signal-group-card { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); overflow: hidden; }
+.signal-group-head { padding: 14px; border-bottom: 1px solid var(--border); }
+.signal-group-head:hover { background: #1a2129; }
+.signal-children { background: var(--panel-soft); }
+.signal-child { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; cursor: pointer; }
+.signal-child:hover { background: rgba(255,255,255,.03); }
+.signal-no-trades { padding: 10px 14px; color: var(--muted); font-size: 12px; font-style: italic; border-top: 1px solid var(--border); }
+
+/* Modal sections */
+.modal-section { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+.modal-section-title { font-size: 12px; font-weight: 650; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; letter-spacing: .02em; }
+
+/* Latency explain */
+.latency-status-explain { font-size: 12px; color: var(--muted); margin-top: 4px; font-style: italic; }
+
+/* Better mobile range labels */
+@media (max-width: 760px) {
+  .filter-group { gap: 4px; }
+  .book-filters-wrap { gap: 8px; padding: 8px; }
+  .signal-child { flex-direction: column; align-items: flex-start; }
+}
 </style>
 </head>
 <body>
@@ -475,6 +504,8 @@ h3 { margin: 0 0 8px; font-size: 15px; font-weight: 680; }
           <div class="section-note">Per-book metrics from official baseline. Click a card for detail.</div>
         </div>
       </div>
+      <div class="book-filters-wrap" id="book-filters"></div>
+      <div id="book-model-info"></div>
       <div class="books-grid" id="books-grid"></div>
     </section>
 
@@ -584,6 +615,13 @@ const seconds = s => {
 };
 const clsPnl = n => Number(n) >= 0 ? 'pos' : 'neg';
 const hasVal = n => n != null && !Number.isNaN(Number(n));
+function latencyStatusLabel(status) {
+  if (status === 'ok') return 'Price at news captured';
+  if (status === 'missing_news_reference_price') return 'Timing exists, but price at news was not captured';
+  if (status === 'missing_news_event_time') return 'Cannot measure — news event time missing';
+  if (status === 'missing_entry_time') return 'Cannot measure — trade entry time missing';
+  return status || 'Unknown';
+}
 
 /* --- Helpers --- */
 function median(values) {
@@ -715,6 +753,7 @@ function progressBadge(trade) {
 
 let DATA = null;
 let SELECTED_BOOK = null;
+let BOOK_FILTERS = { lifecycle: 'All', strategy: 'All', model: 'All' };
 
 /* --- Freshness --- */
 function renderFreshness(data) {
@@ -791,6 +830,46 @@ function renderSummary(data) {
 }
 
 /* --- Books Grid --- */
+function inferStrategy(bookKey) {
+  if (!bookKey) return 'Unknown';
+  const k = bookKey.toLowerCase();
+  if (k.includes('full_confluence')) return 'Full Confluence';
+  if (k.includes('trend_strict')) return 'Trend Strict';
+  if (k.includes('trend_gate')) return 'Trend Gate';
+  if (k.includes('mean_revert')) return 'Mean Revert';
+  if (k.includes('news_only')) return 'News Only';
+  if (k.includes('crypto_lab')) return 'Crypto Lab';
+  return 'News Only';
+}
+
+function renderBookFilters(books) {
+  const lifecycles = ['All', ...new Set(books.map(b => b.lifecycle || '—').filter(Boolean))];
+  const strategies = ['All', ...new Set(books.map(b => inferStrategy(b.book_key)))];
+  const models = ['All', ...new Set(books.map(b => b.target_model || '—').filter(Boolean))];
+
+  const chipGroup = (label, key, options) => {
+    return `<div class="filter-group">
+      <span class="filter-group-label">${label}:</span>
+      ${options.map(o => `<button class="filter-btn ${BOOK_FILTERS[key] === o ? 'active' : ''}" data-book-filter-key="${key}" data-book-filter-val="${o}">${o}</button>`).join('')}
+    </div>`;
+  };
+
+  $('#book-filters').innerHTML = [
+    chipGroup('Lifecycle', 'lifecycle', lifecycles),
+    chipGroup('Strategy', 'strategy', strategies),
+    chipGroup('Model', 'model', models)
+  ].join('');
+
+  const activeModel = BOOK_FILTERS.model;
+  if (activeModel === 'fixed') {
+    $('#book-model-info').innerHTML = '<div class="model-info">Fixed model: Stocks +4% target / -2% stop. Crypto +10% target / -5% stop.</div>';
+  } else if (activeModel === 'volatility') {
+    $('#book-model-info').innerHTML = '<div class="model-info">Volatility model: ATR-based targets. Stop = 1.5x ATR%, capped at 15%. Target = 2x stop. Missing ATR means reject, not fixed fallback.</div>';
+  } else {
+    $('#book-model-info').innerHTML = '';
+  }
+}
+
 function renderBooks(data) {
   const ob = data.official_books || [];
   const pb = data.prop_books || [];
@@ -800,21 +879,40 @@ function renderBooks(data) {
   const closed = data.closed_trades || [];
 
   if (!books.length) {
+    $('#book-filters').innerHTML = '';
+    $('#book-model-info').innerHTML = '';
     $('#books-grid').innerHTML = '<div class="empty">No book data available.</div>';
     return;
   }
 
-  const html = books.map(b => {
+  renderBookFilters(books);
+
+  const filtered = books.filter(b => {
+    if (BOOK_FILTERS.lifecycle !== 'All' && b.lifecycle !== BOOK_FILTERS.lifecycle) return false;
+    if (BOOK_FILTERS.strategy !== 'All' && inferStrategy(b.book_key) !== BOOK_FILTERS.strategy) return false;
+    if (BOOK_FILTERS.model !== 'All' && b.target_model !== BOOK_FILTERS.model) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    $('#books-grid').innerHTML = '<div class="empty">No V2 book is active for this combination yet.</div>';
+    return;
+  }
+
+  const html = filtered.map(b => {
     const pnl = isOfficial ? b.official_since_baseline_pnl : b.since_start_pnl;
     const statusVal = isOfficial ? (b.official_status || '—') : (b.prop_status || '—');
     const statusCls = statusVal === 'ok' ? 'good' : (String(statusVal).includes('breach') ? 'bad' : 'warn');
     const modelCls = b.target_model === 'fixed' ? 'info' : 'warn';
+    const strategy = inferStrategy(b.book_key);
     const bookOpen = open.filter(t => t.book_key === b.book_key).length;
     const bookClosed = closed.filter(t => t.book_key === b.book_key).length;
     const bookClosedAll = b.closed_count || bookClosed;
     const winCount = closed.filter(t => t.book_key === b.book_key && Number(t.realized_pnl) > 0).length;
     const winRate = bookClosedAll > 0 ? ((winCount / bookClosedAll) * 100).toFixed(0) : '—';
     const todayPnl = hasVal(b.today_realized_pnl) ? money(b.today_realized_pnl) : '—';
+    const markedOpen = open.filter(t => t.book_key === b.book_key && t.current_price != null).length;
+    const waitingMark = bookOpen - markedOpen;
 
     return `<div class="card clickable" data-book-key="${b.book_key}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
@@ -823,6 +921,8 @@ function renderBooks(data) {
           <div class="meta">${b.book_key}</div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge">${strategy}</span>
+          <span class="badge">${b.lifecycle || '—'}</span>
           <span class="badge ${modelCls}">${b.target_model || '—'}</span>
           <span class="badge ${statusCls}">${statusVal}</span>
         </div>
@@ -845,6 +945,7 @@ function renderBooks(data) {
         <span>Open: <strong style="color:var(--text)">${bookOpen}</strong></span>
         <span>Closed: <strong style="color:var(--text)">${bookClosedAll}</strong></span>
         <span>Win Rate: <strong style="color:var(--text)">${winRate}%</strong></span>
+        ${waitingMark > 0 ? `<span>Marked: <strong style="color:var(--yellow)">${markedOpen}/${bookOpen}</strong></span>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -881,9 +982,13 @@ function renderBookDetail(bookKey) {
 
   // Strategy explanation
   const isFixed = book.target_model === 'fixed';
+  const strategy = inferStrategy(bookKey);
   const strategyText = isFixed
-    ? 'Fixed TP/SL model: take-profit and stop-loss distances are set as fixed percentages from entry price, regardless of current volatility.'
-    : 'Volatility (ATR) model: take-profit and stop-loss distances scale with the asset\'s recent Average True Range, adapting to current market conditions.';
+    ? 'Fixed rules: Stocks +4% target / -2% stop. Crypto +10% target / -5% stop.'
+    : 'Volatility rules: ATR-based targets. Stop = 1.5x ATR%, capped at 15%. Target = 2x stop. Missing ATR means reject, not fixed fallback.';
+
+  const markedOpen = open.filter(t => t.current_price != null).length;
+  const waitingMark = open.length - markedOpen;
 
   let html = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px">
@@ -891,7 +996,9 @@ function renderBookDetail(bookKey) {
         <h2>${prettyBookName(bookKey)}</h2>
         <div class="meta">${bookKey}</div>
       </div>
-      <div style="display:flex;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="badge">${strategy}</span>
+        <span class="badge">${book.lifecycle || '—'}</span>
         <span class="badge ${modelCls}">${book.target_model || '—'}</span>
         <span class="badge ${statusCls}">${statusVal}</span>
         ${book.classification ? `<span class="badge purple">${book.classification}</span>` : ''}
@@ -899,7 +1006,8 @@ function renderBookDetail(bookKey) {
       </div>
     </div>
 
-    <div class="info-box" style="margin-top:0;margin-bottom:14px">${strategyText}</div>
+    <div class="model-info" style="margin-bottom:14px">${strategyText}</div>
+    <div class="meta" style="margin-bottom:14px">Selected book metrics. Command tab shows total official account metrics.</div>
 
     <div class="grid three-grid">
       ${card('Starting Balance', dollar(book.starting_balance), 'initial capital')}
@@ -915,9 +1023,14 @@ function renderBookDetail(bookKey) {
   `;
 
   // Open positions
-  html += `<div class="detail-section"><h3>Open Positions (${open.length})</h3>`;
+  const MAX_OPEN = 5;
+  const openShown = open.slice(0, MAX_OPEN);
+  html += `<div class="detail-section"><h3>Open Positions (${open.length})${waitingMark > 0 ? ` <span class="badge warn" style="font-size:11px;vertical-align:middle">Marked ${markedOpen}/${open.length}</span>` : ''}</h3>`;
   if (open.length) {
-    html += '<div class="position-list">' + open.map((t, i) => tradeRow(t, 'open', `book-open-${i}`)).join('') + '</div>';
+    html += '<div class="position-list" id="book-open-list">' + openShown.map((t, i) => tradeRow(t, 'open', `book-open-${i}`)).join('') + '</div>';
+    if (open.length > MAX_OPEN) {
+      html += `<button class="show-more" id="book-show-all-open">Show all ${open.length} positions</button>`;
+    }
   } else {
     html += '<div class="empty">No open positions in this book.</div>';
   }
@@ -1031,7 +1144,7 @@ function signalRow(s) {
   const conf = hasVal(s.confidence) ? (Number(s.confidence) * 100).toFixed(0) + '%' : '—';
   const confCls = hasVal(s.confidence) && Number(s.confidence) >= 0.7 ? 'good' : hasVal(s.confidence) && Number(s.confidence) >= 0.5 ? 'info' : 'warn';
   const headline = s.headline || '—';
-  const url = s.news_url || null;
+  const url = s.news_url || (s.raw_payload && s.raw_payload.source_url) || null;
   const headlineHtml = url ? `<a href="${url}" target="_blank" rel="noopener">${headline}</a>` : headline;
 
   return `<div class="signal-row">
@@ -1053,42 +1166,132 @@ function signalRow(s) {
 
 function renderSignals(data) {
   const signals = data.signals || [];
-  const MAX = 20;
-  const shown = signals.slice(0, MAX);
-  let html = shown.length ? shown.map(s => signalRow(s)).join('') : '<div class="empty">No signals yet.</div>';
-  if (signals.length > MAX) {
-    html += `<button class="show-more" id="show-all-signals">Show all ${signals.length} signals</button>`;
+  const allTrades = [...(data.open_positions || []).map(t => ({...t, _kind:'open'})), ...(data.closed_trades || []).map(t => ({...t, _kind:'closed'}))];
+  const latencyRows = data.latency || [];
+
+  const grouped = new Map();
+  signals.forEach(s => {
+    if (!grouped.has(s.id)) grouped.set(s.id, { signal: s, trades: [] });
+  });
+  allTrades.forEach(t => {
+    if (t.signal_id && grouped.has(t.signal_id)) {
+      grouped.get(t.signal_id).trades.push(t);
+    }
+  });
+
+  const groups = [...grouped.values()];
+  const MAX = 10;
+  const shown = groups.slice(0, MAX);
+
+  if (!shown.length) {
+    $('#signals-list').innerHTML = '<div class="empty">No signals yet.</div>';
+    return;
   }
+
+  let html = shown.map(g => {
+    const s = g.signal;
+    const dirClass = String(s.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
+    const conf = hasVal(s.confidence) ? (Number(s.confidence) * 100).toFixed(0) + '%' : '—';
+    const confCls = hasVal(s.confidence) && Number(s.confidence) >= 0.7 ? 'good' : hasVal(s.confidence) && Number(s.confidence) >= 0.5 ? 'info' : 'warn';
+    const headline = s.headline || '—';
+    const url = s.news_url || (s.raw_payload && s.raw_payload.source_url) || null;
+    const headlineHtml = url ? `<a href="${url}" target="_blank" rel="noopener">Read original article</a>` : '<span style="color:var(--muted);font-size:12px">Source link unavailable</span>';
+    const latRow = latencyRows.find(l => l.signal_id === s.id);
+    const latSummary = latRow ? `News to trade: ${seconds(latRow.news_to_trade_seconds)}` : '';
+
+    let childrenHtml = '';
+    if (g.trades.length) {
+      childrenHtml = g.trades.map(t => {
+        const isOpen = t._kind === 'open';
+        const pnlVal = isOpen ? (t.computed_unrealized_pnl || t.unrealized_pnl) : t.realized_pnl;
+        const modelCls = t.target_model === 'fixed' ? 'info' : 'warn';
+        const mirrorBadge = t.broker_mirror_status === 'paper_filled' ? '<span class="badge good" style="font-size:11px">paper filled</span>' : '';
+        return `<div class="signal-child" data-trade-id="${t.id}" data-trade-kind="${t._kind}">
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <span class="badge ${modelCls}" style="font-size:11px">${t.target_model || '—'}</span>
+            <span class="badge" style="font-size:11px">${t.lifecycle || '—'}</span>
+            <span class="badge ${isOpen ? 'info' : ''}" style="font-size:11px">${isOpen ? 'OPEN' : 'CLOSED'}</span>
+            ${mirrorBadge}
+          </div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <span>Entry ${dollar(t.entry_price)}</span>
+            <span>${isOpen ? `Current ${t.current_price != null ? dollar(t.current_price) : 'waiting'}` : `Exit ${dollar(t.exit_price)}`}</span>
+            <span class="pnl ${clsPnl(pnlVal)}">${money(pnlVal)}</span>
+            <span class="chev">›</span>
+          </div>
+        </div>`;
+      }).join('');
+    } else {
+      childrenHtml = '<div class="signal-no-trades">No V2 trade created</div>';
+    }
+
+    return `<div class="signal-group-card">
+      <div class="signal-group-head">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div class="asset-line">
+            <span class="asset">${s.asset || '—'}</span>
+            <span class="badge ${dirClass}">${s.direction || '—'}</span>
+            <span class="badge ${confCls}" style="font-size:11px">conf ${conf}</span>
+            ${s.link_verified ? '<span class="badge good" style="font-size:11px">verified</span>' : ''}
+          </div>
+          <div class="meta">${g.trades.length} trade${g.trades.length !== 1 ? 's' : ''} · ${s.source || '—'} · ${tsShort(s.received_at)}</div>
+        </div>
+        <div style="font-size:13px;line-height:1.4;margin-top:6px;word-break:break-word">${headline}</div>
+        <div style="display:flex;gap:12px;margin-top:4px;font-size:12px;color:var(--muted)">${headlineHtml}${latSummary ? ` · ${latSummary}` : ''}</div>
+      </div>
+      <div class="signal-children">${childrenHtml}</div>
+    </div>`;
+  }).join('');
+
+  if (groups.length > MAX) {
+    html += `<button class="show-more" id="show-all-signals">Show all ${groups.length} signals</button>`;
+  }
+
   $('#signals-list').innerHTML = html;
   window.__allSignals = signals;
+  window.__allSignalGroups = groups;
 }
 
 /* --- Latency --- */
+function latencyCard(r) {
+  const statusOk = r.latency_price_status === 'ok';
+  return `<div class="card soft">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
+      <div class="asset-line"><span class="asset">${r.asset || '—'}</span><span class="badge">${r.source || '—'}</span></div>
+      <span class="badge ${statusOk ? 'good' : 'warn'}" style="font-size:11px">${statusOk ? 'ok' : r.latency_price_status || '—'}</span>
+    </div>
+    <div class="kv-grid" style="margin-top:10px">
+      <div class="kv"><div class="k">News age before trade</div><div class="v">${seconds(r.news_to_trade_seconds)}</div></div>
+      <div class="kv"><div class="k">Captured → V2</div><div class="v">${seconds(r.received_to_v2_shadow_seconds)}</div></div>
+      <div class="kv"><div class="k">Price at news</div><div class="v">${hasVal(r.news_reference_price) ? dollar(r.news_reference_price) : '<span style="color:var(--yellow)">Not captured</span>'}</div></div>
+      <div class="kv"><div class="k">Entry price</div><div class="v">${dollar(r.entry_price)}</div></div>
+      <div class="kv"><div class="k">Move before entry</div><div class="v">${hasVal(r.price_move_before_entry_pct) ? pct(r.price_move_before_entry_pct) : '<span style="color:var(--muted)">Unavailable</span>'}</div></div>
+      <div class="kv"><div class="k">Status</div><div class="v" style="font-size:12px">${latencyStatusLabel(r.latency_price_status)}</div></div>
+    </div>
+    ${!statusOk ? `<div class="latency-status-explain">${latencyStatusLabel(r.latency_price_status)}</div>` : ''}
+  </div>`;
+}
+
 function renderLatency(data) {
   const rows = data.latency || [];
   const medTrade = median(rows.map(r => r.news_to_trade_seconds));
   const medShadow = median(rows.map(r => r.received_to_v2_shadow_seconds));
   const withMove = rows.filter(r => r.price_move_before_entry_pct != null).length;
   const missingPrice = rows.filter(r => r.latency_price_status === 'missing_news_reference_price').length;
+  const missingEvent = rows.filter(r => r.latency_price_status === 'missing_news_event_time').length;
+  const missingEntry = rows.filter(r => r.latency_price_status === 'missing_entry_time').length;
+
+  let captureNote = `${missingPrice} missing price-at-news`;
+  if (missingEvent) captureNote += ` · ${missingEvent} missing news time`;
+  if (missingEntry) captureNote += ` · ${missingEntry} missing entry time`;
+
   $('#latency-summary').innerHTML = [
-    card('Median News to Trade', seconds(medTrade), `${rows.length} tracked rows`),
-    card('Median Captured to V2', seconds(medShadow), 'shadow/publisher timing'),
-    card('Price at News', `${withMove}/${rows.length}`, `${missingPrice} missing price-at-news`, missingPrice ? 'bad' : 'good')
+    card('Median News → Trade', seconds(medTrade), `${rows.length} tracked rows`),
+    card('Median Captured → V2', seconds(medShadow), 'shadow/publisher timing'),
+    card('Price at News Capture', `${withMove}/${rows.length}`, captureNote, missingPrice ? 'bad' : 'good')
   ].join('');
   const MAX_LAT = 6;
-  let html = rows.slice(0, MAX_LAT).map(r => `
-    <div class="card soft">
-      <div class="asset-line"><span class="asset">${r.asset || '—'}</span><span class="badge">${r.source || '—'}</span><span class="badge ${r.latency_price_status === 'ok' ? 'good' : 'warn'}">${r.latency_price_status || '—'}</span></div>
-      <div class="timeline">
-        <div class="step">News<br>${ts(r.news_event_time)}</div>
-        <div class="step">Captured<br>${seconds(r.news_to_received_seconds)}</div>
-        <div class="step">Trade<br>${seconds(r.news_to_trade_seconds)}</div>
-        <div class="step">V2<br>${seconds(r.received_to_v2_shadow_seconds)}</div>
-      </div>
-      <div class="meta">Entry ${dollar(r.entry_price)} · Price at news ${dollar(r.news_reference_price)} · Move before entry ${pct(r.price_move_before_entry_pct)}</div>
-      ${r.news_reference_price == null ? '<div class="warn-box">Price at news not captured yet.</div>' : ''}
-    </div>
-  `).join('');
+  let html = rows.slice(0, MAX_LAT).map(r => latencyCard(r)).join('');
   if (!rows.length) html = '<div class="empty">No latency rows yet.</div>';
   if (rows.length > MAX_LAT) {
     html += `<button class="show-more" id="show-all-latency">Show all ${rows.length} latency rows</button>`;
@@ -1210,44 +1413,93 @@ function openTrade(t) {
     <div class="meta">${t.book_key || '—'}${hasVal(t.book_starting_balance) ? ` · Book starting balance: ${dollar(t.book_starting_balance)}` : ''}</div>
   </div>`;
 
-  // KV grid
-  html += `<div class="kv-grid" style="margin-top:12px">
-    <div class="kv"><div class="k">Entry Price</div><div class="v">${dollar(t.entry_price)}</div></div>
-    <div class="kv"><div class="k">Entry Time</div><div class="v">${ts(t.entry_time)}</div></div>
-    <div class="kv"><div class="k">${isClosed ? 'Exit Price' : 'Current Price'}</div><div class="v">${isClosed ? dollar(t.exit_price) : (t.current_price != null ? dollar(t.current_price) : (t.current_price_status === 'missing_mark' ? '<span class="badge warn">Waiting for mark</span>' : '—'))}</div></div>
-    <div class="kv"><div class="k">${isClosed ? 'Exit Time' : 'Held Duration'}</div><div class="v">${isClosed ? ts(t.exit_time) : heldDuration(t.entry_time)}</div></div>
-    <div class="kv"><div class="k">P&L</div><div class="v pnl ${clsPnl(pnlVal)}">${money(pnlVal)}${hasVal(pnlPctVal) ? ` (${pctRaw(pnlPctVal)})` : ''}</div></div>
-    <div class="kv"><div class="k">Stake / Shares</div><div class="v">${dollar(t.stake_amount)} · ${fmt(t.shares, 6)}</div></div>
-    <div class="kv"><div class="k">Take Profit</div><div class="v">${dollar(t.take_profit_price)}${hasVal(t.distance_to_tp_pct) ? ` (${pctRaw(t.distance_to_tp_pct)} from entry)` : ''}</div></div>
-    <div class="kv"><div class="k">Stop Loss</div><div class="v">${dollar(t.stop_loss_price)}${hasVal(t.distance_to_sl_pct) ? ` (${pctRaw(t.distance_to_sl_pct)} from entry)` : ''}</div></div>
-    <div class="kv"><div class="k">Broker Mirror</div><div class="v">${
-      t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">Broker: paper filled</span>' :
-      t.broker_mirror_status === 'pending' ? '<span class="badge warn">Broker: pending</span>' :
-      '<span class="badge">Broker: not mirrored</span>'
-    }</div></div>
-    <div class="kv"><div class="k">ATR / Volatility</div><div class="v">${hasVal(t.atr_percent) ? `ATR ${fmt(t.atr_percent, 4)}` : 'No ATR'}${hasVal(t.volatility_stop_percent) ? ` · stop ${pct(t.volatility_stop_percent)}` : ''}${hasVal(t.volatility_target_percent) ? ` · target ${pct(t.volatility_target_percent)}` : ''}</div></div>
-    ${t.exit_reason ? `<div class="kv"><div class="k">Exit Reason</div><div class="v">${t.exit_reason}</div></div>` : ''}
-    ${isClosed ? `<div class="kv"><div class="k">Held Duration</div><div class="v">${heldDuration(t.entry_time, t.exit_time)}</div></div>` : ''}
+  // Trade section
+  html += `<div class="modal-section" style="margin-top:12px;padding-top:0;border-top:none">
+    <div class="modal-section-title">Trade</div>
+    <div class="kv-grid">
+      <div class="kv"><div class="k">Entry Price</div><div class="v">${dollar(t.entry_price)}</div></div>
+      <div class="kv"><div class="k">Entry Time</div><div class="v">${ts(t.entry_time)}</div></div>
+      <div class="kv"><div class="k">${isClosed ? 'Exit Price' : 'Current Price'}</div><div class="v">${isClosed ? dollar(t.exit_price) : (t.current_price != null ? dollar(t.current_price) : (t.current_price_status === 'missing_mark' ? '<span class="badge warn">Waiting for mark</span>' : '—'))}</div></div>
+      <div class="kv"><div class="k">${isClosed ? 'Exit Time' : 'Held Duration'}</div><div class="v">${isClosed ? ts(t.exit_time) : heldDuration(t.entry_time)}</div></div>
+      <div class="kv"><div class="k">${isOpen ? 'Unrealized P&L' : 'Realized P&L'}</div><div class="v pnl ${clsPnl(pnlVal)}">${money(pnlVal)}${hasVal(pnlPctVal) ? ` (${pctRaw(pnlPctVal)})` : ''}</div></div>
+      <div class="kv"><div class="k">Stake / Shares</div><div class="v">${dollar(t.stake_amount)} · ${fmt(t.shares, 6)}</div></div>
+      ${t.exit_reason ? `<div class="kv"><div class="k">Exit Reason</div><div class="v">${t.exit_reason}</div></div>` : ''}
+      ${isClosed ? `<div class="kv"><div class="k">Held Duration</div><div class="v">${heldDuration(t.entry_time, t.exit_time)}</div></div>` : ''}
+    </div>
   </div>`;
 
-  // News article
-  if (t.news_title || t.news_url) {
-    html += `<div style="margin-top:12px;padding:10px;background:var(--panel);border:1px solid var(--border);border-radius:8px">
-      <div class="label">News Article</div>
-      <div style="font-size:13px;line-height:1.45;word-break:break-word">${
-        t.news_url ? `<a href="${t.news_url}" target="_blank" rel="noopener" style="color:var(--blue)">${t.news_title || t.news_url}</a>` : (t.news_title || '—')
-      }</div>
+  // Lifecycle / TP-SL section
+  const isBuy = String(t.direction).toUpperCase() === 'BUY';
+  const tpLabel = isBuy ? 'Take Profit (above entry)' : 'Take Profit (below entry)';
+  const slLabel = isBuy ? 'Stop Loss (below entry)' : 'Stop Loss (above entry)';
+  html += `<div class="modal-section">
+    <div class="modal-section-title">Lifecycle — TP / SL</div>
+    <div class="kv-grid">
+      <div class="kv"><div class="k">${tpLabel}</div><div class="v" style="color:var(--green)">${dollar(t.take_profit_price)}${hasVal(t.distance_to_tp_pct) ? ` <span style="font-size:12px;color:var(--muted)">(${pctRaw(t.distance_to_tp_pct)} from entry)</span>` : ''}</div></div>
+      <div class="kv"><div class="k">${slLabel}</div><div class="v" style="color:var(--red)">${dollar(t.stop_loss_price)}${hasVal(t.distance_to_sl_pct) ? ` <span style="font-size:12px;color:var(--muted)">(${pctRaw(t.distance_to_sl_pct)} from entry)</span>` : ''}</div></div>
+    </div>
+    ${t.target_model === 'fixed' ? `<div class="model-info" style="margin-top:8px">${t.asset_class === 'crypto' ? 'Fixed rules: Crypto +10% target / -5% stop.' : 'Fixed rules: Stocks +4% target / -2% stop.'}</div>` : ''}
+  </div>`;
+
+  // Volatility section
+  if (t.target_model === 'volatility' || hasVal(t.atr_value) || hasVal(t.atr_percent)) {
+    html += `<div class="modal-section">
+      <div class="modal-section-title">Volatility Model</div>
+      <div class="kv-grid">
+        <div class="kv"><div class="k">ATR Value</div><div class="v">${hasVal(t.atr_value) ? dollar(t.atr_value) : '<span style="color:var(--muted)">Not captured</span>'}</div></div>
+        <div class="kv"><div class="k">ATR Percent</div><div class="v">${hasVal(t.atr_percent) ? pctRaw(t.atr_percent) : '<span style="color:var(--muted)">Not captured</span>'}</div></div>
+        <div class="kv"><div class="k">Volatility Stop %</div><div class="v">${hasVal(t.volatility_stop_percent) ? pctRaw(t.volatility_stop_percent) : '<span style="color:var(--muted)">Not set</span>'}</div></div>
+        <div class="kv"><div class="k">Volatility Target %</div><div class="v">${hasVal(t.volatility_target_percent) ? pctRaw(t.volatility_target_percent) : '<span style="color:var(--muted)">Not set</span>'}</div></div>
+        ${t.target_source ? `<div class="kv"><div class="k">Target Source</div><div class="v">${t.target_source}</div></div>` : ''}
+      </div>
+      <div class="model-info" style="margin-top:8px">Volatility rules: Stop = 1.5x ATR%, capped at 15%. Target = 2x stop. Missing ATR means reject, not fixed fallback.</div>
     </div>`;
   }
 
-  // Latency info
-  if (latency) {
-    html += `<div class="warn-box">Latency: news to trade ${seconds(latency.news_to_trade_seconds)}, captured to V2 ${seconds(latency.received_to_v2_shadow_seconds)}, move before entry ${pct(latency.price_move_before_entry_pct)} (${latency.latency_price_status}).</div>`;
-  }
+  // Broker mirror section
+  html += `<div class="modal-section">
+    <div class="modal-section-title">Broker Mirror</div>
+    <div style="padding:8px 0">${
+      t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">Paper filled</span> <span class="meta">This V2 trade has been mirrored to a paper broker/simulator.</span>' :
+      t.broker_mirror_status === 'pending' ? '<span class="badge warn">Pending</span> <span class="meta">Broker mirror request is pending.</span>' :
+      '<span class="badge">Not mirrored</span> <span class="meta">This trade has not been sent to any broker.</span>'
+    }</div>
+  </div>`;
 
-  // Book baseline P&L
+  // News / article section
+  const signal = (DATA.signals || []).find(s => s.id === t.signal_id);
+  const articleUrl = t.news_url || (signal && signal.news_url) || (signal && signal.raw_payload && signal.raw_payload.source_url) || null;
+  const articleHeadline = t.news_title || (signal && signal.headline) || null;
+  html += `<div class="modal-section">
+    <div class="modal-section-title">News</div>
+    <div class="kv-grid">
+      <div class="kv"><div class="k">Source</div><div class="v">${(signal && signal.source) || '—'}</div></div>
+      <div class="kv"><div class="k">Confidence</div><div class="v">${signal && hasVal(signal.confidence) ? (Number(signal.confidence) * 100).toFixed(0) + '%' : '—'}</div></div>
+    </div>
+    ${articleHeadline ? `<div style="margin-top:8px;font-size:13px;line-height:1.45;word-break:break-word">${articleHeadline}</div>` : ''}
+    <div style="margin-top:6px">${articleUrl ? `<a href="${articleUrl}" target="_blank" rel="noopener" style="color:var(--blue)">Read original article</a>` : '<span style="color:var(--muted);font-size:12px">Source link unavailable</span>'}</div>
+  </div>`;
+
+  // Latency section
+  html += `<div class="modal-section">
+    <div class="modal-section-title">Latency</div>`;
+  if (latency) {
+    html += `<div class="kv-grid">
+      <div class="kv"><div class="k">News age before trade</div><div class="v">${seconds(latency.news_to_trade_seconds)}</div></div>
+      <div class="kv"><div class="k">Captured → V2</div><div class="v">${seconds(latency.received_to_v2_shadow_seconds)}</div></div>
+      <div class="kv"><div class="k">Price at news</div><div class="v">${hasVal(latency.news_reference_price) ? dollar(latency.news_reference_price) : '<span style="color:var(--yellow)">Not captured</span>'}</div></div>
+      <div class="kv"><div class="k">Entry price</div><div class="v">${dollar(latency.entry_price)}</div></div>
+      <div class="kv"><div class="k">Move before entry</div><div class="v">${hasVal(latency.price_move_before_entry_pct) ? pct(latency.price_move_before_entry_pct) : '<span style="color:var(--muted)">Unavailable</span>'}</div></div>
+      <div class="kv"><div class="k">Status</div><div class="v"><span class="badge ${latency.latency_price_status === 'ok' ? 'good' : 'warn'}">${latencyStatusLabel(latency.latency_price_status)}</span></div></div>
+    </div>`;
+  } else {
+    html += '<div style="color:var(--muted);font-size:13px">No latency data available for this trade.</div>';
+  }
+  html += '</div>';
+
+  // Book context
   if (obBook) {
-    html += `<div class="meta" style="margin-top:8px">Book baseline P&L: ${money(obBook.official_since_baseline_pnl)} · Status: ${obBook.official_status}</div>`;
+    html += `<div class="meta" style="margin-top:12px">Book baseline P&L: ${money(obBook.official_since_baseline_pnl)} · Status: ${obBook.official_status}</div>`;
   }
 
   $('#modal-body').innerHTML = html;
@@ -1284,6 +1536,10 @@ function wire() {
 
   // Global click delegation
   document.addEventListener('click', e => {
+    // Book filter
+    const bf = e.target.closest('[data-book-filter-key]');
+    if (bf) { BOOK_FILTERS[bf.dataset.bookFilterKey] = bf.dataset.bookFilterVal; renderBooks(DATA); return; }
+
     // Position filter
     const pf = e.target.closest('[data-position-filter]');
     if (pf) { renderPositions(DATA, pf.dataset.positionFilter); return; }
@@ -1346,29 +1602,40 @@ function wire() {
       return;
     }
 
-    // Show all signals
+    // Signal child trade click -> Modal
+    const sigChild = e.target.closest('.signal-child[data-trade-id]');
+    if (sigChild) {
+      const tradeId = Number(sigChild.dataset.tradeId);
+      const allTrades = [
+        ...(DATA.open_positions || []).map(t => ({...t, _kind:'open'})),
+        ...(DATA.closed_trades || []).map(t => ({...t, _kind:'closed'}))
+      ];
+      const trade = allTrades.find(t => t.id === tradeId);
+      if (trade) openTrade(trade);
+      return;
+    }
+
+    // Show all signals (grouped)
     if (e.target.closest('#show-all-signals')) {
-      const all = window.__allSignals || [];
-      $('#signals-list').innerHTML = all.map(s => signalRow(s)).join('');
+      renderSignals(DATA);
+      const el = e.target.closest('#show-all-signals');
+      if (el) el.remove();
       return;
     }
 
     // Show all latency
     if (e.target.closest('#show-all-latency')) {
       const rows = window.__allLatencyRows || [];
-      $('#latency-list').innerHTML = rows.map(r => `
-        <div class="card soft">
-          <div class="asset-line"><span class="asset">${r.asset || '—'}</span><span class="badge">${r.source || '—'}</span><span class="badge ${r.latency_price_status === 'ok' ? 'good' : 'warn'}">${r.latency_price_status || '—'}</span></div>
-          <div class="timeline">
-            <div class="step">News<br>${ts(r.news_event_time)}</div>
-            <div class="step">Captured<br>${seconds(r.news_to_received_seconds)}</div>
-            <div class="step">Trade<br>${seconds(r.news_to_trade_seconds)}</div>
-            <div class="step">V2<br>${seconds(r.received_to_v2_shadow_seconds)}</div>
-          </div>
-          <div class="meta">Entry ${dollar(r.entry_price)} · Price at news ${dollar(r.news_reference_price)} · Move before entry ${pct(r.price_move_before_entry_pct)}</div>
-          ${r.news_reference_price == null ? '<div class="warn-box">Price at news not captured yet.</div>' : ''}
-        </div>
-      `).join('');
+      $('#latency-list').innerHTML = rows.map(r => latencyCard(r)).join('');
+      return;
+    }
+
+    // Show all open in book detail
+    if (e.target.closest('#book-show-all-open')) {
+      const openTrades = window.__bookOpenTrades || [];
+      const el = $('#book-open-list');
+      if (el) el.innerHTML = openTrades.map((t, i) => tradeRow(t, 'open', `book-open-${i}`)).join('');
+      e.target.closest('#book-show-all-open').remove();
       return;
     }
 
