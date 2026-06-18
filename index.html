@@ -65,6 +65,11 @@
   .panel{padding:22px}
   .panel h2{margin:0 0 16px;display:flex;align-items:center;gap:8px}
   .panel h2:before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .panel.open-panel{border-color:#cfe8dc;background:linear-gradient(180deg,#fff,#fbfffd)}
+  .panel.open-panel h2:before{background:var(--green)}
+  .panel.closed-panel{border-color:#ead7d9;background:linear-gradient(180deg,#fff,#fffafa)}
+  .panel.closed-panel h2:before{background:var(--red)}
+  .section-note{font:12px/1.45 'Spline Sans Mono',monospace;color:var(--ink-soft);margin:-8px 0 14px}
   .exit-switch-wrap{display:flex;justify-content:center;margin:4px 0 16px}
   .exit-switch{position:relative;display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px;box-shadow:var(--shadow)}
   .exit-switch .thumb{position:absolute;top:4px;left:4px;height:calc(100% - 8px);width:calc(50% - 4px);background:var(--accent);border-radius:9px;transition:transform .22s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(58,90,120,.35)}
@@ -100,7 +105,10 @@
   .pos-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
   .pos-row:hover{background:rgba(0,0,0,.025)}
   .pos-row:last-child{border-bottom:none}
-  .pos-row.closed{align-items:start}
+  .pos-row.open{border-left:3px solid #b8e2cc;padding-left:10px;border-radius:10px}
+  .pos-row.closed{align-items:start;border-left:3px solid #e8a0a8;padding-left:10px;border-radius:10px;background:rgba(251,234,236,.28);margin-bottom:4px}
+  .pos-row.closed.take_profit{border-left-color:#b8e2cc;background:rgba(230,245,238,.35)}
+  .pos-row.closed.time,.pos-row.closed.sell_eod{border-left-color:#bfd0dd;background:rgba(234,240,245,.42)}
   .asset-line{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .pos-meta{font:12px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:4px}
   .reason-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
@@ -128,6 +136,18 @@
   .guardrail-track.target span{background:linear-gradient(90deg,#6ee7b7,var(--green))}
   .guardrail-track.loss span{background:linear-gradient(90deg,#fca5a5,var(--red))}
   .guardrail-caption{display:flex;justify-content:space-between;gap:12px;font:700 10.5px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+  .target-health{border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 18px;background:#fbfaf6}
+  .target-health.warn{background:#fff8e5;border-color:#e7c46a}
+  .target-health.bad{background:var(--red-bg);border-color:#e8a0a8}
+  .target-health.good{background:var(--green-bg);border-color:#b8e2cc}
+  .target-health-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .target-health-title{font-weight:800}
+  .target-health-rate{font:800 22px/1 'Fraunces',serif}
+  .target-health-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+  .target-health-bars span{height:8px;border-radius:999px;background:var(--line);display:block}
+  .target-health-bars .tp{background:var(--green)}
+  .target-health-bars .sl{background:var(--red)}
+  .target-health-bars .time{background:var(--accent)}
   .closed-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft);margin:12px 0 10px;display:flex;justify-content:space-between;align-items:center}
   .trade-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;margin-bottom:10px;outline:none;background:var(--bg)}
   .empty{padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);font:13px/1.5 'Spline Sans Mono',monospace;background:rgba(255,255,255,.45)}
@@ -309,6 +329,7 @@ function exitReasonClass(reason){
   if(r.includes('stop')) return 'stop_loss';
   if(r.includes('profit')||r.includes('target')) return 'take_profit';
   if(r.includes('eod')||r.includes('end')) return 'sell_eod';
+  if(r.includes('time')) return 'time';
   return '';
 }
 function pricePathValue(t){
@@ -344,6 +365,30 @@ function spendRuleInfo(t){
   const exact=t.pre_trade_free_cash!=null || t.available_cash_before_trade!=null;
   const ok=pct!=null && Math.abs(pct-10)<=1.25;
   return {spent, pct, exact, ok};
+}
+function targetStats(trades){
+  const closed=trades.filter(t=>t.status==='CLOSED');
+  const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
+  const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
+  const timed=closed.filter(t=>['time','sell_eod'].includes(exitReasonClass(t.exit_reason))).length;
+  const rate=closed.length?tp/closed.length*100:0;
+  return {closed:closed.length,tp,sl,timed,rate};
+}
+function targetHealthPanel(trades, model){
+  const s=targetStats(trades);
+  if(!s.closed) return `<div class="target-health"><div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">No closed trades yet for this selected book.</div></div><div class="target-health-rate">—</div></div></div>`;
+  const cls=s.rate>=35?'good':s.rate>=15?'warn':'bad';
+  const note=s.rate===0
+    ? 'No take-profits yet. Watch whether the target is too far for this model.'
+    : s.rate<20
+      ? 'Low take-profit rate. Review target distance before expanding this model.'
+      : 'Take-profits are showing up; keep monitoring sample size.';
+  const modelNote=model==='volatility' && s.tp===0 ? ' Volatility target may need review after a larger sample.' : '';
+  return `<div class="target-health ${cls}">
+    <div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">${esc(note+modelNote)}</div></div><div class="target-health-rate">${s.rate.toFixed(0)}%</div></div>
+    <div class="target-health-bars"><span class="tp" style="opacity:${s.tp?s.tp/s.closed:.08}"></span><span class="sl" style="opacity:${s.sl?s.sl/s.closed:.08}"></span><span class="time" style="opacity:${s.timed?s.timed/s.closed:.08}"></span></div>
+    <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
+  </div>`;
 }
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
@@ -442,7 +487,7 @@ function tradeRow(t){
   const meta=closed
     ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span></div>`
     : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div>${url?`<div class="compact-meta"><a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a></div>`:''}`;
-  return `<div class="pos-row ${closed?'closed':'open'}" data-trade-id="${t.id}">
+  return `<div class="pos-row ${closed?'closed '+reasonClass:'open'}" data-trade-id="${t.id}">
     <div>
       <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span>${modelBadge}${closed?`<span class="badge">${esc(t.lifecycle||'')}</span>`:''}</div>
       ${meta}
@@ -498,14 +543,15 @@ function renderOperations(){
   const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key);
   const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
   const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
-  html+=`<div class="grid"><div class="panel"><h2>Open Positions</h2>`;
+  html+=targetHealthPanel(bookClosed, sel.model);
+  html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
     if(OPEN_EXPANDED) html+=`<input class="trade-search" id="open-search" placeholder="Search open positions..." value="${esc(OPEN_SEARCH)}">`;
     html+=(OPEN_EXPANDED?openFiltered:bookOpen.slice(0,6)).map(tradeRow).join('');
     if(bookOpen.length>6) html+=`<button class="closed-toggle" id="toggle-open"><span>${OPEN_EXPANDED?'Collapse':'Show all '+bookOpen.length+' positions'}</span><span>›</span></button>`;
   }
-  html+=`</div><div class="panel"><h2>Closed Trades</h2>`;
+  html+=`</div><div class="panel closed-panel"><h2>Closed Trades</h2><div class="section-note">Resolved trades: close reason first, then where the exit landed against stop loss and target.</div>`;
   if(!bookClosed.length) html+='<div class="empty">No closed trades for this selected book.</div>';
   else {
     if(CLOSED_EXPANDED) html+=`<input class="trade-search" id="closed-search" placeholder="Search closed trades..." value="${esc(CLOSED_SEARCH)}">`;
