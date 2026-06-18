@@ -109,6 +109,12 @@
   .reason-pill.take_profit{background:var(--green-bg);color:var(--green);border-color:#b8e2cc}
   .reason-pill.sell_eod,.reason-pill.eod{background:var(--accent-bg);color:var(--accent);border-color:#bfd0dd}
   .article-chip{display:inline-flex;margin-top:7px;font:700 11px/1 'Spline Sans Mono',monospace;color:#2563eb}
+  .spend-line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:8px;padding:10px 12px;border-radius:12px;background:#fbfaf6;border:1px solid var(--line)}
+  .spend-label{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft)}
+  .spend-value{font:800 18px/1 'Fraunces',serif;color:var(--ink)}
+  .rule-chip{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.45px;padding:6px 8px;border-radius:999px;border:1px solid #b8e2cc;background:var(--green-bg);color:var(--green);white-space:nowrap}
+  .rule-chip.warn{border-color:#e7c46a;background:#fff8e5;color:#7a5610}
+  .compact-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .pos-pnl{text-align:right;font-weight:800}
   .mini-track{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:9px;display:grid;grid-template-columns:1fr 1fr;position:relative}
   .mini-track .loss-zone{background:linear-gradient(90deg,#f8c8ce,var(--red-bg))}
@@ -329,6 +335,16 @@ function pricePathBar(t, compact=false){
 function tradeHigh(t){return t.high_price ?? t.high_since_entry ?? t.max_price ?? t.session_high ?? null}
 function tradeLow(t){return t.low_price ?? t.low_since_entry ?? t.min_price ?? t.session_low ?? null}
 function latencyFor(t){return rows(DATA?.latency).find(l=>l.v2_trade_intent_id===t.id || (l.signal_id===t.signal_id && l.asset===t.asset))}
+function bookForTrade(t){return officialBooks().find(b=>b.book_key===t.book_key || b.book_id===t.book_id)}
+function spendRuleInfo(t){
+  const spent=Number(t.stake_amount||0);
+  const book=bookForTrade(t);
+  const base=Number(t.pre_trade_free_cash ?? t.available_cash_before_trade ?? book?.starting_balance ?? t.book_starting_balance ?? 0);
+  const pct=base>0?(spent/base)*100:null;
+  const exact=t.pre_trade_free_cash!=null || t.available_cash_before_trade!=null;
+  const ok=pct!=null && Math.abs(pct-10)<=1.25;
+  return {spent, pct, exact, ok};
+}
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
   const age=Math.max(0,Math.round((Date.now()-new Date(gen).getTime())/60000));
@@ -417,18 +433,18 @@ function atrInfoTag(t){
 }
 function tradeRow(t){
   const pnl=pnlOf(t), pct=pctOf(t), dir=(t.direction||'').toUpperCase();
-  const mark=t.current_price_status==='missing_mark'||t.current_price==null?'Waiting for mark':`Current ${fmtPrice(t.current_price)}`;
-  const rejTag=volRejectTag(t);
-  const atrTag=atrInfoTag(t);
   const url=articleUrl(t);
   const closed=t.status==='CLOSED';
   const reasonClass=exitReasonClass(t.exit_reason);
+  const spend=spendRuleInfo(t);
+  const modelBadge=`<span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span>`;
+  const sizingLabel=spend.exact && spend.pct!=null ? `${spend.pct.toFixed(1)}% of cash` : '10% check pending';
   const meta=closed
     ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span></div>`
-    : `<div class="pos-meta">Entry ${fmtPrice(t.entry_price)} · ${mark}</div>${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}`;
+    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div>${url?`<div class="compact-meta"><a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a></div>`:''}`;
   return `<div class="pos-row ${closed?'closed':'open'}" data-trade-id="${t.id}">
     <div>
-      <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span><span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span>${rejTag}${atrTag}<span class="badge">${esc(t.lifecycle||'')}</span></div>
+      <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span>${modelBadge}${closed?`<span class="badge">${esc(t.lifecycle||'')}</span>`:''}</div>
       ${meta}
       ${pricePathBar(t,true)}
     </div>
@@ -530,6 +546,7 @@ function openTradeModal(id){
   const pnl=pnlOf(t), pct=pctOf(t), lat=latencyFor(t), url=articleUrl(t), dir=(t.direction||'').toUpperCase();
   const closed=t.status==='CLOSED';
   const high=tradeHigh(t), low=tradeLow(t);
+  const spend=spendRuleInfo(t);
   const reasonClass=exitReasonClass(t.exit_reason);
   const outcomeTitle=closed?exitReasonLabel(t.exit_reason):(t.current_price==null?'Waiting for mark':'Open position');
   const outcomeSub=closed?`Exited ${shortTime(t.exit_time)}`:`Entered ${shortTime(t.entry_time)}`;
@@ -543,7 +560,8 @@ function openTradeModal(id){
     <div class="tm-cols">
       <div>
         <div class="tm-section"><h4>Price Path</h4>${pricePathBar(t,false)}${kv('Entry',fmtPrice(t.entry_price))}${kv(closed?'Exit':'Current',closed?fmtPrice(t.exit_price):(t.current_price==null?'Waiting for mark':fmtPrice(t.current_price)))}${kv('High reached',high==null?'Not tracked yet':fmtPrice(high))}${kv('Low reached',low==null?'Not tracked yet':fmtPrice(low))}</div>
-        <div class="tm-section"><h4>Risk / Target</h4>${kv(dir==='BUY'?'Take Profit (above entry)':'Take Profit (below entry)',fmtPrice(t.take_profit_price))}${kv(dir==='BUY'?'Stop Loss (below entry)':'Stop Loss (above entry)',fmtPrice(t.stop_loss_price))}${kv('Shares',Number(t.shares||0).toFixed(4))}${kv('Stake',fmtMoney(t.stake_amount))}</div>
+        <div class="tm-section"><h4>Spend / Sizing</h4>${kv('Amount spent',fmtMoney(spend.spent))}${kv('Sizing check',spend.pct==null?'Unknown':`${spend.pct.toFixed(1)}% ${spend.exact?'of available cash':'of book size'}`)}${kv('10% rule source',spend.exact?'pre-trade cash captured':'needs pre-trade cash field')}${kv('Shares',Number(t.shares||0).toFixed(4))}</div>
+        <div class="tm-section"><h4>Risk / Target</h4>${kv(dir==='BUY'?'Take Profit (above entry)':'Take Profit (below entry)',fmtPrice(t.take_profit_price))}${kv(dir==='BUY'?'Stop Loss (below entry)':'Stop Loss (above entry)',fmtPrice(t.stop_loss_price))}</div>
       </div>
       <div>
         <div class="tm-section"><h4>Volatility Model</h4>${kv('Model source',t.target_source||t.atr_source||'—')}${kv('ATR source',t.atr_source||t.target_source||'—')}${kv('ATR timestamp',t.atr_source_timestamp?shortTime(t.atr_source_timestamp):'—')}${kv('ATR value',t.atr_value??'—')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Vol stop',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Vol target',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
