@@ -340,7 +340,7 @@ function renderOperations(){
   if(sel.portfolio==='crypto_lab') html+=`<div class="lab-warning">Crypto Lab is research-only and does not count toward official account totals.</div>`;
   if(sel.model==='volatility' && Number(b.open_count||0)===0){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
-    html+=`<div class="vol-warning">Volatility is waiting on ATR repair/proof. Recent V2 rejections show ATR data missing${recent?`: ${esc(recent)}`:''}. Fixed trades continue; volatility is not falling back to fixed.</div>`;
+    html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
   html+=`<div class="equity-summary"><div class="eq-card"><div class="eq-label">Selected Book Equity</div><div class="eq-equity">${fmtMoney(b.marked_equity||b.equity||b.starting_balance)}</div><div class="eq-growth ${signCls(b.since_start_pnl)}">${Number(b.since_start_pnl||0)>=0?'+':''}${fmtMoney(b.since_start_pnl||0)} since start · ${fmtPct(Number(b.since_start_return||0)*100)}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized</div></div></div>`;
   html+=`<div class="kpis">
@@ -399,7 +399,7 @@ function openTradeModal(id){
         <div class="tm-section"><h4>Lifecycle TP/SL</h4>${kv(dir==='BUY'?'Take Profit (above entry)':'Take Profit (below entry)',fmtPrice(t.take_profit_price))}${kv(dir==='BUY'?'Stop Loss (below entry)':'Stop Loss (above entry)',fmtPrice(t.stop_loss_price))}${kv('Exit reason',t.exit_reason||'—')}${kv('Broker',brokerLabel(t.broker_mirror_status))}</div>
       </div>
       <div>
-        <div class="tm-section"><h4>Volatility Model</h4>${kv('ATR value',t.atr_value??'—')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Vol stop',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Vol target',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
+        <div class="tm-section"><h4>Volatility Model</h4>${kv('Model source',t.target_source||t.atr_source||'—')}${kv('ATR source',t.atr_source||t.target_source||'—')}${kv('ATR timestamp',t.atr_source_timestamp?shortTime(t.atr_source_timestamp):'—')}${kv('ATR value',t.atr_value??'—')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Vol stop',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Vol target',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
         <div class="tm-section"><h4>Latency</h4>${kv('News to trade',secondsLabel(lat?.news_to_trade_seconds))}${kv('Captured to V2',secondsLabel(lat?.received_to_v2_shadow_seconds))}${kv('Move before entry',lat?.price_move_before_entry_pct==null?'Missing reference price':fmtPct(lat.price_move_before_entry_pct))}${kv('Entry time',shortTime(t.entry_time))}</div>
       </div>
     </div>
