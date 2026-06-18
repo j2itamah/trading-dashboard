@@ -492,7 +492,10 @@ function modelPerformancePanel(){
   });
   const statusLabel=s=>({collecting_evidence:'Collecting evidence',review_target_distance:'Review target distance',underperforming:'Underperforming',ok:'On track'}[s]||s||'');
   const cards=rows.map(r=>{
-    const sampleBar=r.model==='volatility'?`<div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>Sample progress</span><span>${fmtInt(r.closed)} / 30 closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:var(--purple);width:${Math.min(100,r.closed/30*100)}%"></div></div></div>`:'';
+    const sampleGoal=r.model==='volatility'?30:40;
+    const sampleLabel=r.model==='volatility'?'Sample progress':'Closed sample';
+    const sampleColor=r.model==='volatility'?'var(--purple)':'var(--green)';
+    const sampleBar=`<div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>${sampleLabel}</span><span>${fmtInt(r.closed)} / ${sampleGoal} closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:${sampleColor};width:${Math.min(100,r.closed/sampleGoal*100)}%"></div></div></div>`;
     const atrRow=r.atr!=null?`<div style="margin-top:8px;padding:8px 10px;background:var(--purple-bg);border-radius:8px;font:500 11px/1.5 'Spline Sans Mono',monospace;color:var(--purple)">ATR ${fmtPct(r.atr)} · Stop ${fmtPct(r.stopPct)} · Target ${fmtPct(r.targetPct)}</div>`:'';
     return `<div class="account-guard">
     <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(statusLabel(r.status))}</div></div><span class="account-guard-status ${r.realized>=0?'':'bad'}">${r.realized>=0?'ahead':'behind'}</span></div>
