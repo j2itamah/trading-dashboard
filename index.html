@@ -26,7 +26,9 @@
   a{color:#2563eb;text-decoration:none}
   a:hover{text-decoration:underline}
   .wrap{max-width:1120px;margin:0 auto}
-  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20;overflow-x:auto}
+  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20}
+  .nav-current{display:none;border:0;background:var(--accent);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:11px 14px;cursor:pointer;width:100%;justify-content:space-between;align-items:center}
+  .nav-list{display:flex;gap:6px;justify-content:center;overflow-x:auto}
   .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:10px 20px;cursor:pointer;white-space:nowrap}
   .nav-link:hover{color:var(--ink)}
   .nav-link.on{background:var(--accent);color:#fff}
@@ -203,7 +205,7 @@
   .tm-kv{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--line)}
   .tm-kv .k{color:var(--ink-soft)}
   .tm-kv .v{font-weight:700;text-align:right}
-  .tm-focus{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+  .tm-focus{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 16px}
   .focus-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfaf6}
   .focus-card.good{background:var(--green-bg);border-color:#b8e2cc}
   .focus-card.bad{background:var(--red-bg);border-color:#e8a0a8}
@@ -225,8 +227,11 @@
   .tm-index{font:700 11px/1.3 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.45px}
   @media(max-width:760px){
     body{padding:20px 14px 76px}
-    .site-nav{position:fixed;bottom:0;left:0;right:0;top:auto;border-radius:0;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel)}
-    .nav-link{flex:0 0 auto;min-width:92px;padding:12px 6px}
+    .site-nav{top:8px;border-radius:16px;margin-bottom:18px;display:block}
+    .nav-current{display:flex}
+    .nav-list{display:none;margin-top:6px;overflow:visible;flex-direction:column}
+    .site-nav.open .nav-list{display:flex}
+    .nav-link{width:100%;text-align:left;padding:12px 14px}
     header{align-items:flex-start}
     .title-block h1{font-size:28px}
     .updated{text-align:left}
@@ -241,7 +246,7 @@
     .pos-pnl{text-align:left}
     .tm-overlay{padding:0}
     .tm-modal{border-radius:0;max-width:100%;min-height:100vh;min-height:100dvh}
-    .tm-cols{grid-template-columns:1fr}
+    .tm-cols,.tm-focus{grid-template-columns:1fr}
     .tm-head,.tm-body,.tm-foot{padding-left:18px;padding-right:18px}
   }
   .vol-reject-tag{display:inline-flex;align-items:center;gap:4px;font:600 9.5px/1 'Spline Sans Mono',monospace;padding:3px 7px;border-radius:6px;background:#fff8e5;color:#7a5610;border:1px solid #e7c46a;letter-spacing:.2px;white-space:nowrap}
@@ -268,12 +273,15 @@
 </head>
 <body>
 <div class="wrap">
-  <nav class="site-nav" aria-label="Dashboard views">
-    <button class="nav-link" data-view="overview">Overview</button>
-    <button class="nav-link" data-view="research">Research</button>
-    <button class="nav-link" data-view="guardrails">Guardrails</button>
-    <button class="nav-link" data-view="crypto">Crypto Lab</button>
-    <button class="nav-link on" data-view="operations">Operations</button>
+  <nav class="site-nav" id="site-nav" aria-label="Dashboard views">
+    <button class="nav-current" id="nav-current" type="button"><span id="nav-current-label">Operations</span><span>⌄</span></button>
+    <div class="nav-list">
+      <button class="nav-link" data-view="overview">Overview</button>
+      <button class="nav-link" data-view="guardrails">Guardrails</button>
+      <button class="nav-link" data-view="crypto">Crypto Lab</button>
+      <button class="nav-link on" data-view="operations">Operations</button>
+      <button class="nav-link" data-view="research">Research</button>
+    </div>
   </nav>
 
   <header>
@@ -504,9 +512,9 @@ function renderOverview(){
     <div class="guardrail-caption"><span>${fmtMoney(dailyLossUsed)} loss used</span><span>${fmtMoney(dailyLossLimit)} limit</span></div>
     <div class="row"><div class="name">Accounts</div><div class="metrics"><div class="metric"><div class="m-val">${fmtInt(s.account_count||2)}</div><div class="m-lab">${s.accounts_not_ok||0} not ok · tap for detail</div></div></div></div>
   </div><div class="panel"><h2>System</h2>
-    <div class="row"><div class="name">Shadow Trigger</div><div class="metrics"><div class="metric"><div class="m-val ${shadow.shadow_status==='OK'?'pos-text':'neg-text'}">${esc(shadow.shadow_status||'—')}</div><div class="m-lab">${fmtInt(shadow.audit_success)} success</div></div></div></div>
-    <div class="row"><div class="name">Close Mirror</div><div class="metrics"><div class="metric"><div class="m-val pos-text">${closedTrades().filter(t=>t.exit_time&&t.exit_price!=null).length}/${closedTrades().length}</div><div class="m-lab">closed mirrored</div></div></div></div>
-    <div class="row"><div class="name">Marked Open</div><div class="metrics"><div class="metric"><div class="m-val">${openPositions().filter(t=>t.current_price_status==='ok'||t.current_price!=null).length}/${openPositions().length}</div><div class="m-lab">positions</div></div></div></div>
+    <div class="row"><div class="name">New Trades Captured</div><div class="metrics"><div class="metric"><div class="m-val ${shadow.shadow_status==='OK'?'pos-text':'neg-text'}">${esc(shadow.shadow_status||'—')}</div><div class="m-lab">${fmtInt(shadow.audit_success)} saved to V2</div></div></div></div>
+    <div class="row"><div class="name">Closed Trades Synced</div><div class="metrics"><div class="metric"><div class="m-val pos-text">${closedTrades().filter(t=>t.exit_time&&t.exit_price!=null).length}/${closedTrades().length}</div><div class="m-lab">exit reason + P/L</div></div></div></div>
+    <div class="row"><div class="name">Live Prices Updated</div><div class="metrics"><div class="metric"><div class="m-val">${openPositions().filter(t=>t.current_price_status==='ok'||t.current_price!=null).length}/${openPositions().length}</div><div class="m-lab">open positions</div></div></div></div>
   </div></div>`;
   document.getElementById('view-overview').innerHTML=html;
 }
@@ -582,14 +590,20 @@ function atrInfoTag(t){
 function tradeRow(t){
   const pnl=pnlOf(t), pct=pctOf(t), dir=(t.direction||'').toUpperCase();
   const url=articleUrl(t);
+  const lat=latencyFor(t);
   const closed=t.status==='CLOSED';
   const reasonClass=exitReasonClass(t.exit_reason);
   const spend=spendRuleInfo(t);
   const modelBadge=`<span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span>`;
   const sizingLabel=spend.exact && spend.pct!=null ? `${spend.pct.toFixed(1)}% of cash` : '10% check pending';
+  const adjMove=latencyAdjustedMove(lat);
+  const timingBits=[];
+  if(lat?.news_to_trade_seconds!=null) timingBits.push(`Timing ${secondsLabel(lat.news_to_trade_seconds)}`);
+  if(adjMove!=null) timingBits.push(`${Number(adjMove)>=0?'+':''}${Number(adjMove).toFixed(2)}% before entry`);
+  const timingChip=timingBits.length?`<span class="tag">${esc(timingBits.join(' · '))}</span>`:'<span class="tag">Timing pending</span>';
   const meta=closed
-    ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span></div>`
-    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div>${url?`<div class="compact-meta"><a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a></div>`:''}`;
+    ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span>${timingChip}</div>`
+    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta">${timingChip}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}</div>`;
   return `<div class="pos-row ${closed?'closed '+reasonClass:'open'}" data-trade-id="${t.id}">
     <div>
       <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span>${modelBadge}${closed?`<span class="badge">${esc(t.lifecycle||'')}</span>`:''}</div>
@@ -635,7 +649,7 @@ function renderOperations(){
   const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
   html+=`<div class="expansion-panel"><h2>Book Expansion Readiness</h2>
     <div class="expansion-grid">
-      <div class="expansion-stat"><div class="exp-label">Shadow Trigger</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
+      <div class="expansion-stat"><div class="exp-label">Trade Capture</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
       <div class="expansion-stat"><div class="exp-label">Volatility Open</div><div class="exp-value">${fmtInt(volOpenCount)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Mixed Sibling Proof</div><div class="exp-value">${esc(latestMixedProof)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Status</div><div class="exp-value"><span class="expansion-badge ${expansionReady?'ready':'not-ready'}">${expansionReady?'Ready for Cautious Expansion':'Not Ready'}</span></div></div>
@@ -709,20 +723,26 @@ function renderCryptoLab(){
   const cands=rows(DATA?.candidates).filter(c=>cryptoAssets.has(String(c.asset||'').toUpperCase())||String(c.asset_class||'').toLowerCase()==='crypto').slice(0,10);
   let html=`<div class="lab-warning">Crypto Lab is a separate proving lane for after-hours monitoring. It does not count toward official prop totals unless explicitly promoted.</div>`;
   html+=`<div class="kpis">
-    ${kpi('X Posts', fmtInt(x.length), '', 'latest research events')}
     ${kpi('Crypto Open', fmtInt(cryptoOpen.length), '', `${fmtInt(cryptoClosed.length)} closed`)}
+    ${kpi('Open P/L', `${cryptoOpen.reduce((s,t)=>s+pnlOf(t),0)>=0?'+':''}${fmtMoney(cryptoOpen.reduce((s,t)=>s+pnlOf(t),0))}`, signCls(cryptoOpen.reduce((s,t)=>s+pnlOf(t),0)), 'marked positions')}
+    ${kpi('Closed P/L', `${cryptoClosed.reduce((s,t)=>s+pnlOf(t),0)>=0?'+':''}${fmtMoney(cryptoClosed.reduce((s,t)=>s+pnlOf(t),0))}`, signCls(cryptoClosed.reduce((s,t)=>s+pnlOf(t),0)), 'realized lab trades')}
     ${kpi('Crypto Candidates', fmtInt(cands.length), '', 'research queue')}
-    ${kpi('Research Mode', 'ON', 'pos-text', 'no direct broker routing')}
   </div>`;
-  html+=`<div class="grid"><div class="panel"><h2>Crypto / X Research</h2>${x.map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div>`;
-  html+=`<div class="panel"><h2>Crypto Candidates</h2>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'—':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div></div>`;
-  html+=`<div class="panel"><h2>Crypto Positions</h2>${cryptoOpen.concat(cryptoClosed.slice(0,8)).map(tradeRow).join('')||'<div class="empty">No crypto positions in V2 right now.</div>'}</div>`;
+  html+=targetHealthPanel(cryptoOpen.concat(cryptoClosed), 'crypto');
+  html+=`<div class="grid"><div class="panel open-panel"><h2>Open Crypto Positions</h2>${cryptoOpen.map(tradeRow).join('')||'<div class="empty">No open crypto positions in V2 right now.</div>'}</div>`;
+  html+=`<div class="panel closed-panel"><h2>Closed Crypto Trades</h2>${cryptoClosed.slice(0,10).map(tradeRow).join('')||'<div class="empty">No closed crypto trades yet.</div>'}</div></div>`;
+  html+=`<div class="grid"><div class="panel"><h2>Crypto Candidates</h2>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'—':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div>`;
+  html+=`<div class="panel"><h2>X / Crypto Feed</h2><div class="section-note">Compact research stream. Tap trade cards above for performance.</div>${x.slice(0,8).map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
   document.getElementById('view-crypto').innerHTML=html;
 }
 function showView(v){
   CURRENT_VIEW=v; localStorage.setItem('v2_old_view',v);
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));
+  const active=document.querySelector(`.nav-link[data-view="${v}"]`);
+  const label=document.getElementById('nav-current-label');
+  if(label && active) label.textContent=active.textContent;
+  document.getElementById('site-nav')?.classList.remove('open');
 }
 function openTradeModal(id){
   const t=allTrades().find(x=>String(x.id)===String(id)); if(!t) return;
@@ -747,6 +767,7 @@ function openTradeModal(id){
     <div class="tm-pnl-banner ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
     <div class="tm-focus">
       <div class="focus-card ${closed?reasonClass==='stop_loss'?'bad':reasonClass==='take_profit'?'good':'':''}"><div class="focus-label">${closed?'Close Reason':'Status'}</div><div class="focus-value">${esc(outcomeTitle)}</div><div class="small">${esc(outcomeSub)}</div></div>
+      <div class="focus-card"><div class="focus-label">Timing</div><div class="focus-value" style="font-size:18px">${secondsLabel(lat?.news_to_trade_seconds)}</div><div class="small">${adjMove==null?'Move before entry not captured yet':`${fmtPct(adjMove)} direction-adjusted before entry`}</div></div>
       <div class="focus-card"><div class="focus-label">Article</div><div class="focus-value" style="font-size:17px">${url?'Available':'Missing'}</div>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">Read original article</a>`:'<div class="small">Source link unavailable</div>'}</div>
     </div>
     <div class="tm-cols">
@@ -770,6 +791,7 @@ function kv(k,v){return `<div class="tm-kv"><span class="k">${esc(k)}</span><spa
 function closeTradeModal(){document.getElementById('tm-overlay').classList.remove('open')}
 function bind(){
   document.querySelectorAll('.nav-link').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+  document.getElementById('nav-current').onclick=()=>document.getElementById('site-nav').classList.toggle('open');
   document.getElementById('refresh-btn').onclick=()=>load();
   document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
