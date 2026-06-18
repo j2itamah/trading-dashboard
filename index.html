@@ -31,6 +31,8 @@ body {
   letter-spacing: 0;
 }
 button { font: inherit; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 18px 56px; }
 .topbar {
   display: flex;
@@ -40,6 +42,8 @@ button { font: inherit; }
   margin-bottom: 18px;
 }
 h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
+h2 { margin: 0; font-size: 18px; }
+h3 { margin: 0 0 8px; font-size: 15px; font-weight: 680; }
 .sub { color: var(--muted); margin-top: 6px; font-size: 13px; }
 .status-pill {
   display: inline-flex;
@@ -55,30 +59,56 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(53,199,123,.14); }
 .dot.bad { background: var(--red); box-shadow: 0 0 0 4px rgba(255,107,107,.14); }
 .stale-banner { background: rgba(248,81,73,0.1); border: 1px solid var(--red); color: #ff9b9b; padding: 8px 16px; border-radius: 8px; margin-bottom: 12px; display: none; font-size: 13px; }
+.pull-indicator {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  text-align: center; padding: 8px; font-size: 12px; font-weight: 600;
+  background: var(--panel); color: var(--muted); border-bottom: 1px solid var(--border);
+  transform: translateY(-100%); transition: transform .2s ease;
+}
+.pull-indicator.visible { transform: translateY(0); }
+.pull-indicator.refreshing { color: var(--blue); }
+.pull-indicator.error { color: var(--red); }
+.refresh-btn {
+  background: none; border: 1px solid var(--border); border-radius: 6px;
+  color: var(--muted); padding: 4px 10px; font-size: 12px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; transition: color .15s;
+}
+.refresh-btn:hover { color: var(--text); border-color: var(--blue); }
+.refresh-btn.spinning svg { animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Navigation */
 .nav {
   position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
-  gap: 6px;
-  padding: 8px;
+  gap: 4px;
+  padding: 6px;
   margin: 0 0 18px;
   background: rgba(15,20,25,.92);
   border: 1px solid var(--border);
   border-radius: 8px;
   backdrop-filter: blur(12px);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.nav::-webkit-scrollbar { display: none; }
 .nav button {
   border: 0;
   color: var(--muted);
   background: transparent;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-radius: 6px;
   cursor: pointer;
   white-space: nowrap;
+  font-size: 13px;
+  min-height: 40px;
 }
 .nav button.active { color: var(--text); background: var(--panel-soft); }
+
+/* Cards and grid */
 .grid { display: grid; gap: 12px; }
 .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .two-grid { grid-template-columns: 1.15fr .85fr; }
@@ -91,27 +121,38 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
   box-shadow: var(--shadow);
 }
 .card.soft { background: var(--panel-soft); box-shadow: none; }
+.card.clickable { cursor: pointer; transition: border-color .15s, background .15s; }
+.card.clickable:hover { border-color: #405061; background: #1a2129; }
 .label {
   color: var(--muted);
   font-size: 12px;
   font-weight: 650;
   margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: .02em;
 }
 .value { font-size: 28px; line-height: 1.05; font-weight: 760; }
 .value.small { font-size: 20px; }
 .value.good { color: var(--green); }
 .value.bad { color: var(--red); }
 .meta { color: var(--muted); font-size: 12px; margin-top: 7px; line-height: 1.45; }
-.section { margin-top: 22px; scroll-margin-top: 76px; }
+.section {
+  display: none;
+  margin-top: 0;
+  scroll-margin-top: 76px;
+}
+.section.active { display: block; }
 .section-head {
   display: flex;
   align-items: end;
   justify-content: space-between;
   gap: 14px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
-.section h2 { margin: 0; font-size: 18px; }
 .section-note { color: var(--muted); font-size: 12px; }
+
+/* Bars and charts */
 .bar { height: 10px; background: #28313b; border-radius: 999px; overflow: hidden; }
 .bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--green), var(--blue)); }
 .split { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: #28313b; }
@@ -119,10 +160,14 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
 .split .b { background: var(--blue); }
 .split .c { background: var(--purple); }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; color: var(--muted); font-size: 12px; }
-.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+
+/* Flow strip */
 .flow-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .flow-item { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,.025); }
 .flow-item strong { display: block; font-size: 20px; }
+
+/* Badges and chips */
 .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
 .chip, .filter-btn, .badge {
   display: inline-flex;
@@ -135,14 +180,16 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
   color: var(--muted);
   background: rgba(255,255,255,.025);
 }
-.filter-btn { cursor: pointer; }
+.filter-btn { cursor: pointer; min-height: 36px; }
 .filter-btn.active { color: var(--text); background: var(--panel-soft); border-color: #405061; }
 .badge.long, .badge.good { color: var(--green); background: rgba(53,199,123,.11); border-color: rgba(53,199,123,.26); }
 .badge.short, .badge.bad { color: var(--red); background: rgba(255,107,107,.10); border-color: rgba(255,107,107,.24); }
 .badge.warn { color: var(--yellow); background: rgba(244,201,93,.10); border-color: rgba(244,201,93,.24); }
 .badge.info { color: var(--blue); background: rgba(101,169,255,.10); border-color: rgba(101,169,255,.24); }
 .badge.purple { color: var(--purple); background: rgba(184,156,255,.10); border-color: rgba(184,156,255,.24); }
-.position-list, .x-list, .latency-list { display: grid; gap: 9px; }
+
+/* Row cards */
+.position-list, .x-list, .latency-list, .signal-list { display: grid; gap: 9px; }
 .row-card {
   display: grid;
   grid-template-columns: 1.2fr 1fr auto;
@@ -155,13 +202,15 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
   cursor: pointer;
 }
 .row-card:hover { border-color: #405061; background: #1a2129; }
-.asset-line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.asset-line { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .asset { font-weight: 760; font-size: 16px; }
 .row-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
 .pnl { font-weight: 760; }
 .pnl.pos { color: var(--green); }
 .pnl.neg { color: var(--red); }
 .chev { color: var(--muted); font-size: 18px; }
+
+/* Timeline */
 .timeline {
   position: relative;
   display: grid;
@@ -180,12 +229,16 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
 }
 .step { position: relative; z-index: 1; color: var(--muted); font-size: 11px; }
 .step::before { content: ""; display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--blue); margin-bottom: 5px; border: 3px solid var(--panel); }
+
+/* X cards */
 .x-card { padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
 .x-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
 .x-text { line-height: 1.45; color: #dce6f0; }
 .empty { color: var(--muted); padding: 24px; text-align: center; border: 1px dashed var(--border); border-radius: 8px; }
-.show-more { display: block; width: 100%; padding: 10px; margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--blue); cursor: pointer; text-align: center; font-size: 13px; }
+.show-more { display: block; width: 100%; padding: 10px; margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--blue); cursor: pointer; text-align: center; font-size: 13px; min-height: 40px; }
 .show-more:hover { background: var(--panel-soft); }
+
+/* Modal */
 .modal {
   position: fixed;
   inset: 0;
@@ -199,33 +252,175 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
 .modal.open { display: grid; }
 .modal-panel {
   width: min(720px, 100%);
+  max-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
   background: #12181f;
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 24px 80px rgba(0,0,0,.45);
 }
-.modal-head { display: flex; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--border); }
+.modal-head { display: flex; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .modal-title { font-size: 22px; font-weight: 780; }
-.modal-close { border: 0; background: transparent; color: var(--muted); font-size: 24px; cursor: pointer; }
-.modal-body { padding: 18px; }
+.modal-close { border: 0; background: transparent; color: var(--muted); font-size: 24px; cursor: pointer; min-width: 40px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 18px; overflow-y: auto; flex: 1; }
 .kv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .kv { padding: 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
-.kv .k { color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+.kv .k { color: var(--muted); font-size: 11px; margin-bottom: 4px; text-transform: uppercase; }
 .kv .v { font-weight: 680; }
-.warn-box { margin-top: 12px; padding: 12px; border: 1px solid rgba(244,201,93,.32); border-radius: 8px; background: rgba(244,201,93,.08); color: #ffe0a3; }
+.warn-box { margin-top: 12px; padding: 12px; border: 1px solid rgba(244,201,93,.32); border-radius: 8px; background: rgba(244,201,93,.08); color: #ffe0a3; font-size: 13px; }
+.info-box { margin-top: 12px; padding: 12px; border: 1px solid rgba(101,169,255,.24); border-radius: 8px; background: rgba(101,169,255,.06); color: #a8ceff; font-size: 13px; }
+
+/* Book table */
 .book-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
 .book-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; }
 .book-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+
+/* Book cards grid */
+.books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+.book-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.book-stat { text-align: center; }
+.book-stat .stat-val { font-size: 18px; font-weight: 720; }
+.book-stat .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* TP/SL Range bar */
+.range-bar-wrap { margin-top: 8px; }
+.range-bar-wrap.large { margin: 16px 0; }
+.range-bar {
+  position: relative;
+  height: 8px;
+  background: #28313b;
+  border-radius: 999px;
+  overflow: visible;
+}
+.range-bar-wrap.large .range-bar { height: 12px; }
+.range-bar-fill-loss {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(255,107,107,.35);
+  border-radius: 999px 0 0 999px;
+}
+.range-bar-fill-profit {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(53,199,123,.35);
+  border-radius: 0 999px 999px 0;
+}
+.range-bar-current {
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  background: var(--text);
+  border-radius: 2px;
+  z-index: 2;
+}
+.range-bar-wrap.large .range-bar-current { width: 5px; height: 26px; }
+.range-bar-entry {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  background: var(--muted);
+  z-index: 1;
+}
+.range-bar-wrap.large .range-bar-entry { height: 20px; }
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.range-bar-wrap.large .range-labels { font-size: 12px; margin-top: 6px; }
+.range-labels .rl-left { color: var(--red); }
+.range-labels .rl-right { color: var(--green); }
+.range-labels .rl-center { color: var(--muted); }
+.range-bar-waiting {
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #28313b 0px, #28313b 8px, #333d49 8px, #333d49 16px);
+  border-radius: 999px;
+  position: relative;
+}
+.range-bar-wrap.large .range-bar-waiting { height: 12px; }
+.range-waiting-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Crypto lab */
+.crypto-disclaimer {
+  padding: 12px 16px;
+  border: 1px solid rgba(244,201,93,.24);
+  border-radius: 8px;
+  background: rgba(244,201,93,.06);
+  color: var(--yellow);
+  font-size: 13px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* Signal row */
+.signal-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.signal-row:hover { border-color: #405061; background: #1a2129; }
+
+/* Back button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--blue);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 14px;
+  min-height: 40px;
+}
+.back-btn:hover { background: var(--panel-soft); }
+
+/* Detail sections */
+.detail-section { margin-top: 18px; }
+.detail-section h3 { margin-bottom: 10px; }
+
+/* Responsive */
 @media (max-width: 760px) {
   .wrap { padding: 16px 10px 40px; }
   .topbar { align-items: flex-start; flex-direction: column; }
   .summary-grid, .two-grid, .three-grid { grid-template-columns: 1fr; }
-  .flow-strip { grid-template-columns: repeat(2, 1fr); }
+  .flow-strip { grid-template-columns: repeat(3, 1fr); }
   .row-card { grid-template-columns: 1fr; }
+  .signal-row { grid-template-columns: 1fr; }
   .kv-grid { grid-template-columns: 1fr; }
   .value { font-size: 24px; }
   .book-table { font-size: 12px; }
   .book-table th, .book-table td { padding: 6px 6px; }
+  .books-grid { grid-template-columns: 1fr; }
+  .book-card-stats { grid-template-columns: repeat(3, 1fr); }
+  .section-head { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 400px) {
+  .nav { gap: 2px; padding: 4px; }
+  .nav button { padding: 6px 8px; font-size: 12px; }
+  .flow-strip { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -236,22 +431,32 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
       <h1>V2 Trading Command Center</h1>
       <div class="sub" id="subtitle">Loading V2 data...</div>
     </div>
-    <div class="status-pill"><span class="dot" id="health-dot"></span><span id="health-pill">Checking health</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="refresh-btn" id="refresh-btn" title="Refresh data">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        Refresh
+      </button>
+      <div class="status-pill"><span class="dot" id="health-dot"></span><span id="health-pill">Checking health</span></div>
+    </div>
   </header>
 
+  <div id="pull-indicator" class="pull-indicator"></div>
   <div id="stale-banner" class="stale-banner"></div>
 
   <nav class="nav" aria-label="Dashboard sections">
     <button class="active" data-jump="command">Command</button>
     <button data-jump="books">Books</button>
+    <button data-jump="book-detail" id="nav-book-detail" style="display:none">Book Detail</button>
     <button data-jump="positions">Positions</button>
+    <button data-jump="signals">Signals</button>
     <button data-jump="latency">Latency</button>
     <button data-jump="crypto">Crypto Lab</button>
     <button data-jump="health">Health</button>
   </nav>
 
   <main id="app">
-    <section class="section" id="command">
+    <!-- COMMAND -->
+    <section class="section active" id="command">
       <div class="grid summary-grid" id="summary"></div>
       <div class="grid two-grid" style="margin-top:12px">
         <div class="card" id="progress-card"></div>
@@ -262,16 +467,24 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
       </div>
     </section>
 
+    <!-- BOOKS -->
     <section class="section" id="books">
       <div class="section-head">
         <div>
           <h2>Books</h2>
-          <div class="section-note">Per-book metrics from official baseline.</div>
+          <div class="section-note">Per-book metrics from official baseline. Click a card for detail.</div>
         </div>
       </div>
-      <div class="card" id="books-card"></div>
+      <div class="books-grid" id="books-grid"></div>
     </section>
 
+    <!-- BOOK DETAIL -->
+    <section class="section" id="book-detail">
+      <button class="back-btn" data-jump-back="books">&#8592; Back to Books</button>
+      <div id="book-detail-content"></div>
+    </section>
+
+    <!-- POSITIONS -->
     <section class="section" id="positions">
       <div class="section-head">
         <div>
@@ -283,6 +496,18 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
       <div class="position-list" id="positions-list"></div>
     </section>
 
+    <!-- SIGNALS -->
+    <section class="section" id="signals">
+      <div class="section-head">
+        <div>
+          <h2>Signals</h2>
+          <div class="section-note">Recent signals received by the system.</div>
+        </div>
+      </div>
+      <div class="signal-list" id="signals-list"></div>
+    </section>
+
+    <!-- LATENCY -->
     <section class="section" id="latency">
       <div class="section-head">
         <div>
@@ -294,17 +519,20 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
       <div class="latency-list" id="latency-list" style="margin-top:12px"></div>
     </section>
 
+    <!-- CRYPTO LAB -->
     <section class="section" id="crypto">
       <div class="section-head">
         <div>
           <h2>Crypto Lab / X <span class="badge warn">Research Only</span></h2>
-          <div class="section-note">No trades created from this data.</div>
         </div>
         <div class="filters" id="x-filters"></div>
       </div>
-      <div class="x-list" id="x-list"></div>
+      <div class="crypto-disclaimer">Research-only proving lane. Not included in $20K account totals. Does not write public.trades or broker orders.</div>
+      <div class="grid three-grid" id="crypto-summary"></div>
+      <div class="x-list" id="x-list" style="margin-top:12px"></div>
     </section>
 
+    <!-- HEALTH -->
     <section class="section" id="health">
       <div class="section-head">
         <div>
@@ -325,7 +553,7 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
         <div class="modal-title" id="modal-title"></div>
         <div class="sub" id="modal-sub"></div>
       </div>
-      <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
     </div>
     <div class="modal-body" id="modal-body"></div>
   </div>
@@ -333,11 +561,20 @@ h1 { margin: 0; font-size: 24px; line-height: 1.1; font-weight: 720; }
 
 <script>
 const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* --- Formatters --- */
 const fmt = (n, d=2) => n == null || Number.isNaN(Number(n)) ? '—' : Number(n).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
 const money = n => n == null || Number.isNaN(Number(n)) ? '—' : `${Number(n) >= 0 ? '+$' : '-$'}${fmt(Math.abs(n))}`;
 const dollar = n => n == null || Number.isNaN(Number(n)) ? '—' : `$${fmt(n)}`;
 const pct = n => n == null || Number.isNaN(Number(n)) ? '—' : `${(Number(n) * 100).toFixed(2)}%`;
+const pctRaw = n => n == null || Number.isNaN(Number(n)) ? '—' : `${Number(n).toFixed(2)}%`;
 const ts = s => s ? new Date(s).toLocaleString() : '—';
+const tsShort = s => {
+  if (!s) return '—';
+  const d = new Date(s);
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric'}) + ' ' + d.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+};
 const seconds = s => {
   if (s == null || Number.isNaN(Number(s))) return '—';
   const n = Math.abs(Number(s));
@@ -347,8 +584,8 @@ const seconds = s => {
 };
 const clsPnl = n => Number(n) >= 0 ? 'pos' : 'neg';
 const hasVal = n => n != null && !Number.isNaN(Number(n));
-let DATA = null;
 
+/* --- Helpers --- */
 function median(values) {
   const xs = values.filter(v => v != null && !Number.isNaN(Number(v))).map(Number).sort((a,b) => a-b);
   if (!xs.length) return null;
@@ -356,10 +593,130 @@ function median(values) {
   return xs.length % 2 ? xs[mid] : (xs[mid - 1] + xs[mid]) / 2;
 }
 
+function prettyBookName(bookKey) {
+  if (!bookKey) return '—';
+  return bookKey
+    .replace(/^v2_/, '')
+    .replace(/_/g, ' ')
+    .replace(/\b(news only)\b/i, 'News Only')
+    .replace(/\b(hold)\b/i, '')
+    .replace(/\b(24hr)\b/i, '24hr')
+    .replace(/\b(fixed)\b/i, 'Fixed')
+    .replace(/\b(volatility)\b/i, 'Volatility')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+    .replace(/News Only 24hr Fixed/i, 'News Only · 24hr · Fixed')
+    .replace(/News Only 24hr Volatility/i, 'News Only · 24hr · Volatility');
+}
+
+function heldDuration(entryTime, exitTime) {
+  if (!entryTime) return '—';
+  const start = new Date(entryTime);
+  const end = exitTime ? new Date(exitTime) : new Date();
+  const diffMs = end - start;
+  if (diffMs < 0) return '—';
+  const hrs = Math.floor(diffMs / 3600000);
+  const mins = Math.floor((diffMs % 3600000) / 60000);
+  if (hrs > 0) return `${hrs}h ${mins}m`;
+  return `${mins}m`;
+}
+
 function card(label, value, meta='', kind='') {
   return `<div class="card"><div class="label">${label}</div><div class="value ${kind}">${value}</div>${meta ? `<div class="meta">${meta}</div>` : ''}</div>`;
 }
 
+/* --- TP/SL Range Bar --- */
+function rangeBar(trade, large) {
+  const isBuy = String(trade.direction).toUpperCase() === 'BUY';
+  const entry = Number(trade.entry_price);
+  const tp = Number(trade.take_profit_price);
+  const sl = Number(trade.stop_loss_price);
+  const current = trade.current_price != null ? Number(trade.current_price) : (trade.exit_price != null ? Number(trade.exit_price) : null);
+  const isMissing = trade.current_price_status === 'missing_mark' && current == null;
+  const isClosed = trade.status === 'CLOSED' || trade._kind === 'closed';
+  const cls = large ? 'range-bar-wrap large' : 'range-bar-wrap';
+
+  if (!hasVal(entry) || !hasVal(tp) || !hasVal(sl)) return '';
+
+  // For the bar: left is min(sl,tp), right is max(sl,tp)
+  let leftPrice, rightPrice, leftLabel, rightLabel, leftColor, rightColor;
+  if (isBuy) {
+    leftPrice = sl; rightPrice = tp;
+    leftLabel = 'SL'; rightLabel = 'TP';
+    leftColor = 'rl-left'; rightColor = 'rl-right';
+  } else {
+    leftPrice = tp; rightPrice = sl;
+    leftLabel = 'TP'; rightLabel = 'SL';
+    leftColor = 'rl-right'; rightColor = 'rl-left';
+  }
+
+  const range = rightPrice - leftPrice;
+  if (range <= 0) return '';
+  const entryPct = ((entry - leftPrice) / range) * 100;
+
+  if (isMissing && !isClosed) {
+    return `<div class="${cls}">
+      <div class="range-bar-waiting"></div>
+      <div class="range-waiting-label">Waiting for mark</div>
+      <div class="range-labels">
+        <span class="${leftColor}">${leftLabel} ${dollar(leftPrice)}</span>
+        <span class="rl-center">Entry ${dollar(entry)}</span>
+        <span class="${rightColor}">${rightLabel} ${dollar(rightPrice)}</span>
+      </div>
+    </div>`;
+  }
+
+  let currentPct = null;
+  if (current != null) {
+    currentPct = Math.max(0, Math.min(100, ((current - leftPrice) / range) * 100));
+  }
+
+  // Fill zones
+  let fillHtml = '';
+  if (isBuy) {
+    // Loss zone: left to entry
+    fillHtml += `<div class="range-bar-fill-loss" style="left:0;width:${entryPct}%"></div>`;
+    // Profit zone: entry to right
+    fillHtml += `<div class="range-bar-fill-profit" style="left:${entryPct}%;width:${100-entryPct}%"></div>`;
+  } else {
+    // Profit zone: left to entry
+    fillHtml += `<div class="range-bar-fill-profit" style="left:0;width:${entryPct}%"></div>`;
+    // Loss zone: entry to right
+    fillHtml += `<div class="range-bar-fill-loss" style="left:${entryPct}%;width:${100-entryPct}%"></div>`;
+  }
+
+  let markers = `<div class="range-bar-entry" style="left:${entryPct}%"></div>`;
+  if (currentPct != null) {
+    markers += `<div class="range-bar-current" style="left:${currentPct}%"></div>`;
+  }
+
+  const currentLabel = current != null ? (isClosed ? `Exit ${dollar(current)}` : `Current ${dollar(current)}`) : '';
+
+  return `<div class="${cls}">
+    <div class="range-bar">${fillHtml}${markers}</div>
+    <div class="range-labels">
+      <span class="${leftColor}">${leftLabel} ${dollar(leftPrice)}</span>
+      <span class="rl-center">${currentLabel || `Entry ${dollar(entry)}`}</span>
+      <span class="${rightColor}">${rightLabel} ${dollar(rightPrice)}</span>
+    </div>
+  </div>`;
+}
+
+function progressBadge(trade) {
+  const p = trade.progress_to_target_pct;
+  if (!hasVal(p)) return '';
+  const n = Number(p);
+  const cls = n >= 50 ? 'good' : n >= 0 ? 'info' : 'bad';
+  return `<span class="badge ${cls}" title="Progress toward take profit: 0%=entry, 100%=TP, negative=toward SL">${pctRaw(n)} to TP</span>`;
+}
+
+let DATA = null;
+let SELECTED_BOOK = null;
+
+/* --- Freshness --- */
 function renderFreshness(data) {
   const genAt = data.generated_at ? new Date(data.generated_at) : null;
   const ageMin = genAt ? Math.round((Date.now() - genAt.getTime()) / 60000) : null;
@@ -376,6 +733,7 @@ function renderFreshness(data) {
   }
 }
 
+/* --- Command --- */
 function renderSummary(data) {
   const os = data.official_summary || {};
   const ps = data.prop_summary || {};
@@ -405,7 +763,7 @@ function renderSummary(data) {
     card('Today P&L', money(today), 'realized today', today >= 0 ? 'good' : 'bad'),
     card('Since Official Start', money(sinceBaseline), sinceLabel, sinceBaseline >= 0 ? 'good' : 'bad'),
     card('Total Equity', dollar(equity), `${pct((equity - totalStart) / (totalStart || 1))} total return`),
-    card('Prop Guardrails', acctNotOk === 0 ? 'ALL OK' : `${acctNotOk} flags`, `Daily limit ${dollar(ps.total_max_daily_loss_dollars)} · Total limit ${dollar(ps.total_max_total_loss_dollars)}`, acctNotOk === 0 ? 'good' : 'bad')
+    card('Prop Guardrails', acctNotOk === 0 ? 'ALL OK' : `${acctNotOk} flags`, `Daily limit ${dollar(ps.total_max_daily_loss_dollars || 0)} · Total limit ${dollar(ps.total_max_total_loss_dollars || 0)}`, acctNotOk === 0 ? 'good' : 'bad')
   ].join('');
 
   $('#progress-card').innerHTML = `
@@ -432,54 +790,223 @@ function renderSummary(data) {
   ].map(([k,v]) => `<div class="flow-item"><strong>${v}</strong><span class="meta">${k}</span></div>`).join('');
 }
 
+/* --- Books Grid --- */
 function renderBooks(data) {
   const ob = data.official_books || [];
   const pb = data.prop_books || [];
   const books = ob.length ? ob : pb;
   const isOfficial = ob.length > 0;
+  const open = data.open_positions || [];
+  const closed = data.closed_trades || [];
 
   if (!books.length) {
-    $('#books-card').innerHTML = '<div class="empty">No book data available.</div>';
+    $('#books-grid').innerHTML = '<div class="empty">No book data available.</div>';
     return;
   }
 
-  let html = `<table class="book-table"><thead><tr>
-    <th>Book</th><th>Model</th><th>Start</th><th>Equity</th>
-    <th>${isOfficial ? 'Since Baseline' : 'Since Start'}</th>
-    <th>Today P&L</th><th>Open</th><th>Closed</th><th>Status</th>
-  </tr></thead><tbody>`;
-
-  books.forEach(b => {
+  const html = books.map(b => {
     const pnl = isOfficial ? b.official_since_baseline_pnl : b.since_start_pnl;
-    const status = isOfficial ? (b.official_status || '—') : (b.prop_status || '—');
-    const statusCls = status === 'ok' ? 'good' : (status.includes('breach') ? 'bad' : 'warn');
+    const statusVal = isOfficial ? (b.official_status || '—') : (b.prop_status || '—');
+    const statusCls = statusVal === 'ok' ? 'good' : (String(statusVal).includes('breach') ? 'bad' : 'warn');
     const modelCls = b.target_model === 'fixed' ? 'info' : 'warn';
-    html += `<tr>
-      <td><strong>${b.book_key || '—'}</strong></td>
-      <td><span class="badge ${modelCls}">${b.target_model || '—'}</span></td>
-      <td>${dollar(b.starting_balance)}</td>
-      <td>${dollar(b.marked_equity)}</td>
-      <td class="pnl ${clsPnl(pnl)}">${money(pnl)}</td>
-      <td class="pnl ${clsPnl(b.today_realized_pnl)}">${hasVal(b.today_realized_pnl) ? money(b.today_realized_pnl) : '—'}</td>
-      <td>${b.open_count ?? '—'}</td>
-      <td>${b.closed_count ?? '—'}</td>
-      <td><span class="badge ${statusCls}">${status}</span></td>
-    </tr>`;
-  });
+    const bookOpen = open.filter(t => t.book_key === b.book_key).length;
+    const bookClosed = closed.filter(t => t.book_key === b.book_key).length;
+    const bookClosedAll = b.closed_count || bookClosed;
+    const winCount = closed.filter(t => t.book_key === b.book_key && Number(t.realized_pnl) > 0).length;
+    const winRate = bookClosedAll > 0 ? ((winCount / bookClosedAll) * 100).toFixed(0) : '—';
+    const todayPnl = hasVal(b.today_realized_pnl) ? money(b.today_realized_pnl) : '—';
 
-  html += '</tbody></table>';
-  if (isOfficial) {
-    const baseline = data.official_baseline || {};
-    html += `<div class="meta" style="margin-top:8px">Baseline: ${baseline.baseline_key || '—'} · Captured: ${ts(baseline.captured_at)}</div>`;
-  }
-  $('#books-card').innerHTML = html;
+    return `<div class="card clickable" data-book-key="${b.book_key}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap">
+        <div>
+          <div class="asset" style="font-size:15px">${prettyBookName(b.book_key)}</div>
+          <div class="meta">${b.book_key}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge ${modelCls}">${b.target_model || '—'}</span>
+          <span class="badge ${statusCls}">${statusVal}</span>
+        </div>
+      </div>
+      <div class="book-card-stats">
+        <div class="book-stat">
+          <div class="stat-val">${dollar(b.marked_equity)}</div>
+          <div class="stat-label">Equity</div>
+        </div>
+        <div class="book-stat">
+          <div class="stat-val pnl ${clsPnl(pnl)}">${money(pnl)}</div>
+          <div class="stat-label">${isOfficial ? 'Since Baseline' : 'Since Start'}</div>
+        </div>
+        <div class="book-stat">
+          <div class="stat-val">${todayPnl}</div>
+          <div class="stat-label">Today P&L</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--muted)">
+        <span>Open: <strong style="color:var(--text)">${bookOpen}</strong></span>
+        <span>Closed: <strong style="color:var(--text)">${bookClosedAll}</strong></span>
+        <span>Win Rate: <strong style="color:var(--text)">${winRate}%</strong></span>
+      </div>
+    </div>`;
+  }).join('');
+
+  $('#books-grid').innerHTML = html;
 }
 
+/* --- Book Detail --- */
+function renderBookDetail(bookKey) {
+  SELECTED_BOOK = bookKey;
+  const ob = DATA.official_books || [];
+  const pb = DATA.prop_books || [];
+  const books = ob.length ? ob : pb;
+  const book = books.find(b => b.book_key === bookKey);
+  if (!book) {
+    $('#book-detail-content').innerHTML = '<div class="empty">Book not found.</div>';
+    return;
+  }
+
+  const isOfficial = ob.length > 0;
+  const pnl = isOfficial ? book.official_since_baseline_pnl : book.since_start_pnl;
+  const statusVal = isOfficial ? (book.official_status || '—') : (book.prop_status || '—');
+  const statusCls = statusVal === 'ok' ? 'good' : (String(statusVal).includes('breach') ? 'bad' : 'warn');
+  const modelCls = book.target_model === 'fixed' ? 'info' : 'warn';
+
+  const open = (DATA.open_positions || []).filter(t => t.book_key === bookKey);
+  const closed = (DATA.closed_trades || []).filter(t => t.book_key === bookKey);
+  const signals = (DATA.signals || []).filter(s => {
+    const payload = s.raw_payload || {};
+    return payload.source_signal_key && closed.some(t => t.signal_id === s.id) ||
+           open.some(t => t.signal_id === s.id) ||
+           (s.asset && open.some(t => t.asset === s.asset));
+  });
+
+  // Strategy explanation
+  const isFixed = book.target_model === 'fixed';
+  const strategyText = isFixed
+    ? 'Fixed TP/SL model: take-profit and stop-loss distances are set as fixed percentages from entry price, regardless of current volatility.'
+    : 'Volatility (ATR) model: take-profit and stop-loss distances scale with the asset\'s recent Average True Range, adapting to current market conditions.';
+
+  let html = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <div>
+        <h2>${prettyBookName(bookKey)}</h2>
+        <div class="meta">${bookKey}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <span class="badge ${modelCls}">${book.target_model || '—'}</span>
+        <span class="badge ${statusCls}">${statusVal}</span>
+        ${book.classification ? `<span class="badge purple">${book.classification}</span>` : ''}
+        ${book.experiment_phase ? `<span class="badge">${book.experiment_phase}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:0;margin-bottom:14px">${strategyText}</div>
+
+    <div class="grid three-grid">
+      ${card('Starting Balance', dollar(book.starting_balance), 'initial capital')}
+      ${card('Equity', dollar(book.marked_equity), `return ${pct(book.marked_return)}`, Number(book.marked_return) >= 0 ? 'good' : 'bad')}
+      ${card('Deployed', dollar(book.deployed_cost), `free cash ${dollar(book.free_cash)}`)}
+    </div>
+
+    <div class="grid three-grid" style="margin-top:12px">
+      ${card(isOfficial ? 'Since Baseline' : 'Since Start', money(pnl), isOfficial ? `baseline: ${book.baseline_key || '—'}` : '', Number(pnl) >= 0 ? 'good' : 'bad')}
+      ${card('Today P&L', hasVal(book.today_realized_pnl) ? money(book.today_realized_pnl) : '—', `opened today: ${book.today_opened_count || 0} · closed today: ${book.today_closed_count || 0}`)}
+      ${card('Prop Buffer', dollar(book.prop_total_loss_buffer), `daily limit ${dollar(book.prop_max_daily_loss_dollars)} · total limit ${dollar(book.prop_max_total_loss_dollars)}`)}
+    </div>
+  `;
+
+  // Open positions
+  html += `<div class="detail-section"><h3>Open Positions (${open.length})</h3>`;
+  if (open.length) {
+    html += '<div class="position-list">' + open.map((t, i) => tradeRow(t, 'open', `book-open-${i}`)).join('') + '</div>';
+  } else {
+    html += '<div class="empty">No open positions in this book.</div>';
+  }
+  html += '</div>';
+
+  // Closed trades
+  const MAX_CLOSED = 10;
+  const closedShown = closed.slice(0, MAX_CLOSED);
+  html += `<div class="detail-section"><h3>Closed Trades (${closed.length})</h3>`;
+  if (closed.length) {
+    html += '<div class="position-list" id="book-closed-list">' + closedShown.map((t, i) => tradeRow(t, 'closed', `book-closed-${i}`)).join('') + '</div>';
+    if (closed.length > MAX_CLOSED) {
+      html += `<button class="show-more" id="book-show-all-closed">Show all ${closed.length} trades</button>`;
+    }
+  } else {
+    html += '<div class="empty">No closed trades in this book.</div>';
+  }
+  html += '</div>';
+
+  // Signals for this book
+  html += `<div class="detail-section"><h3>Related Signals</h3>`;
+  if (signals.length) {
+    html += '<div class="signal-list">' + signals.slice(0, 5).map(s => signalRow(s)).join('') + '</div>';
+  } else {
+    html += '<div class="empty">No directly related signals found.</div>';
+  }
+  html += '</div>';
+
+  $('#book-detail-content').innerHTML = html;
+
+  // Store trades for click handling
+  window.__bookOpenTrades = open;
+  window.__bookClosedTrades = closed;
+  window.__bookClosedAll = closed;
+}
+
+/* --- Trade row builder --- */
+function tradeRow(t, kind, idPrefix) {
+  const pnlVal = kind === 'open' ? (t.computed_unrealized_pnl || t.unrealized_pnl) : t.realized_pnl;
+  const pnlPctVal = kind === 'open' ? t.computed_unrealized_pnl_pct : t.computed_realized_pnl_pct;
+  const dirClass = String(t.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
+  const modelCls = t.target_model === 'fixed' ? 'info' : 'warn';
+  const mirrorBadge = t.broker_mirror_status === 'paper_filled'
+    ? '<span class="badge good" title="Broker mirror status is separate from trade status. Shows whether this V2 trade has been mirrored to a paper broker/simulator.">Broker: paper filled</span>'
+    : t.broker_mirror_status === 'pending'
+    ? '<span class="badge warn" title="Broker mirror status is separate from trade status. Shows whether this V2 trade has been mirrored to a paper broker/simulator.">Broker: pending</span>'
+    : '<span class="badge" title="Broker mirror status is separate from trade status. Shows whether this V2 trade has been mirrored to a paper broker/simulator.">Broker: not mirrored</span>';
+
+  const pnlPctStr = hasVal(pnlPctVal) ? ` (${pctRaw(pnlPctVal)})` : '';
+
+  let subText;
+  if (kind === 'open') {
+    subText = `Entry ${dollar(t.entry_price)} · TP ${dollar(t.take_profit_price)} · SL ${dollar(t.stop_loss_price)}`;
+  } else {
+    subText = `Entry ${dollar(t.entry_price)} · Exit ${dollar(t.exit_price)} · ${t.exit_reason || '—'}`;
+  }
+
+  return `<div class="row-card" data-trade-id="${t.id}" data-trade-kind="${kind}">
+    <div>
+      <div class="asset-line">
+        <span class="asset">${t.asset || '—'}</span>
+        <span class="badge ${dirClass}">${t.direction || '—'}</span>
+        <span class="badge ${modelCls}">${t.target_model || '—'}</span>
+        ${mirrorBadge}
+        ${progressBadge(t)}
+      </div>
+      <div class="row-sub">${subText}</div>
+      ${kind === 'open' ? rangeBar(t, false) : ''}
+    </div>
+    <div>
+      <div class="pnl ${clsPnl(pnlVal)}">${money(pnlVal)}${pnlPctStr}</div>
+      <div class="row-sub">Stake ${dollar(t.stake_amount)} · ${kind === 'open' ? tsShort(t.entry_time) : tsShort(t.exit_time)}</div>
+    </div>
+    <div class="chev">›</div>
+  </div>`;
+}
+
+/* --- Positions --- */
 function renderPositions(data, filter='all') {
   const open = data.open_positions || [];
   const closed = data.closed_trades || [];
   const all = [...open.map(t => ({...t, _kind:'open'})), ...closed.map(t => ({...t, _kind:'closed'}))];
-  const filtered = all.filter(t => filter === 'all' || t._kind === filter || t.target_model === filter);
+  const filtered = all.filter(t => {
+    if (filter === 'all') return true;
+    if (filter === 'open') return t._kind === 'open';
+    if (filter === 'closed') return t._kind === 'closed';
+    if (filter === 'fixed' || filter === 'volatility') return t.target_model === filter;
+    return true;
+  });
   const MAX = 10;
   const shown = filtered.slice(0, MAX);
 
@@ -487,24 +1014,7 @@ function renderPositions(data, filter='all') {
     `<button class="filter-btn ${f===filter?'active':''}" data-position-filter="${f}">${f} ${f==='open'?`(${open.length})`:f==='closed'?`(${closed.length})`:''}</button>`
   ).join('');
 
-  let html = shown.length ? shown.map((t, i) => {
-    const pnl = t._kind === 'open' ? t.unrealized_pnl : t.realized_pnl;
-    const dirClass = String(t.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
-    const mirrorBadge = t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">paper_filled</span>' :
-                        t.broker_mirror_status === 'pending' ? '<span class="badge warn">pending</span>' :
-                        `<span class="badge">${t.broker_mirror_status || 'not_attempted'}</span>`;
-    return `<div class="row-card" data-trade-index="${i}" data-trade-id="${t.id}">
-      <div>
-        <div class="asset-line"><span class="asset">${t.asset || '—'}</span><span class="badge ${dirClass}">${t.direction || '—'}</span><span class="badge ${t.target_model==='fixed'?'info':'warn'}">${t.target_model || '—'}</span>${mirrorBadge}</div>
-        <div class="row-sub">${t._kind === 'open' ? `Entry ${dollar(t.entry_price)} · TP ${dollar(t.take_profit_price)} · SL ${dollar(t.stop_loss_price)}` : `Entry ${dollar(t.entry_price)} · Exit ${dollar(t.exit_price)} · ${t.exit_reason || '—'}`}</div>
-      </div>
-      <div>
-        <div class="pnl ${clsPnl(pnl)}">${money(pnl)}</div>
-        <div class="row-sub">Stake ${dollar(t.stake_amount)} · ${t._kind === 'open' ? ts(t.entry_time) : ts(t.exit_time)}</div>
-      </div>
-      <div class="chev">›</div>
-    </div>`;
-  }).join('') : `<div class="empty">No trades match "${filter}".</div>`;
+  let html = shown.length ? shown.map(t => tradeRow(t, t._kind, `pos-${t.id}`)).join('') : `<div class="empty">No trades match "${filter}".</div>`;
 
   if (filtered.length > MAX) {
     html += `<button class="show-more" data-show-all="${filter}">Show all ${filtered.length} trades</button>`;
@@ -515,6 +1025,45 @@ function renderPositions(data, filter='all') {
   window.__allFilteredTrades = filtered;
 }
 
+/* --- Signals --- */
+function signalRow(s) {
+  const dirClass = String(s.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
+  const conf = hasVal(s.confidence) ? (Number(s.confidence) * 100).toFixed(0) + '%' : '—';
+  const confCls = hasVal(s.confidence) && Number(s.confidence) >= 0.7 ? 'good' : hasVal(s.confidence) && Number(s.confidence) >= 0.5 ? 'info' : 'warn';
+  const headline = s.headline || '—';
+  const url = s.news_url || null;
+  const headlineHtml = url ? `<a href="${url}" target="_blank" rel="noopener">${headline}</a>` : headline;
+
+  return `<div class="signal-row">
+    <div>
+      <div class="asset-line">
+        <span class="asset">${s.asset || '—'}</span>
+        <span class="badge ${dirClass}">${s.direction || '—'}</span>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px;line-height:1.4;word-break:break-word">${headlineHtml}</div>
+      <div class="row-sub">${s.source || '—'} · ${tsShort(s.received_at)} · <span class="badge ${confCls}" style="font-size:11px">conf ${conf}</span></div>
+    </div>
+    <div>
+      ${s.link_verified ? '<span class="badge good">verified</span>' : `<span class="badge">${s.link_verification_status || 'unverified'}</span>`}
+    </div>
+  </div>`;
+}
+
+function renderSignals(data) {
+  const signals = data.signals || [];
+  const MAX = 20;
+  const shown = signals.slice(0, MAX);
+  let html = shown.length ? shown.map(s => signalRow(s)).join('') : '<div class="empty">No signals yet.</div>';
+  if (signals.length > MAX) {
+    html += `<button class="show-more" id="show-all-signals">Show all ${signals.length} signals</button>`;
+  }
+  $('#signals-list').innerHTML = html;
+  window.__allSignals = signals;
+}
+
+/* --- Latency --- */
 function renderLatency(data) {
   const rows = data.latency || [];
   const medTrade = median(rows.map(r => r.news_to_trade_seconds));
@@ -527,7 +1076,7 @@ function renderLatency(data) {
     card('Price at News', `${withMove}/${rows.length}`, `${missingPrice} missing price-at-news`, missingPrice ? 'bad' : 'good')
   ].join('');
   const MAX_LAT = 6;
-  $('#latency-list').innerHTML = (rows.slice(0, MAX_LAT).map(r => `
+  let html = rows.slice(0, MAX_LAT).map(r => `
     <div class="card soft">
       <div class="asset-line"><span class="asset">${r.asset || '—'}</span><span class="badge">${r.source || '—'}</span><span class="badge ${r.latency_price_status === 'ok' ? 'good' : 'warn'}">${r.latency_price_status || '—'}</span></div>
       <div class="timeline">
@@ -539,17 +1088,39 @@ function renderLatency(data) {
       <div class="meta">Entry ${dollar(r.entry_price)} · Price at news ${dollar(r.news_reference_price)} · Move before entry ${pct(r.price_move_before_entry_pct)}</div>
       ${r.news_reference_price == null ? '<div class="warn-box">Price at news not captured yet.</div>' : ''}
     </div>
-  `).join('') || '<div class="empty">No latency rows yet.</div>') +
-  (rows.length > MAX_LAT ? `<button class="show-more" onclick="this.previousElementSibling||0;document.querySelectorAll('#latency-list .card.soft').forEach(e=>e.style.display='');this.remove()">Show all ${rows.length} latency rows</button>` : '');
+  `).join('');
+  if (!rows.length) html = '<div class="empty">No latency rows yet.</div>';
+  if (rows.length > MAX_LAT) {
+    html += `<button class="show-more" id="show-all-latency">Show all ${rows.length} latency rows</button>`;
+  }
+  $('#latency-list').innerHTML = html;
+  window.__allLatencyRows = rows;
 }
 
-function renderX(data, filter='all') {
+/* --- Crypto Lab --- */
+function renderCryptoLab(data, filter='all') {
   const allRows = data.crypto_lab_x || [];
   const rows = allRows.filter(x => filter === 'all' || String(x.source_quality_bucket) === filter || (x.detected_assets || []).includes(filter));
   const MAX_X = 6;
   const shown = rows.slice(0, MAX_X);
   const filters = ['all','high','medium','low','BTC','ETH','SOL'];
   $('#x-filters').innerHTML = filters.map(f => `<button class="filter-btn ${f===filter?'active':''}" data-x-filter="${f}">${f}</button>`).join('');
+
+  // Summary cards
+  const highQ = allRows.filter(x => x.source_quality_bucket === 'high').length;
+  const medQ = allRows.filter(x => x.source_quality_bucket === 'medium').length;
+  const lowQ = allRows.filter(x => x.source_quality_bucket === 'low').length;
+  const allAssets = [...new Set(allRows.flatMap(x => x.detected_assets || []))];
+  const allFlags = allRows.flatMap(x => x.quality_flags || []);
+  const flagCounts = {};
+  allFlags.forEach(f => { flagCounts[f] = (flagCounts[f] || 0) + 1; });
+
+  $('#crypto-summary').innerHTML = [
+    card('X Source Runs', `${allRows.length}`, `high: ${highQ} · medium: ${medQ} · low: ${lowQ}`),
+    card('Assets Detected', allAssets.join(', ') || '—', `${allAssets.length} unique assets`),
+    card('Quality Flags', `${allFlags.length}`, Object.entries(flagCounts).map(([k,v]) => `${k}: ${v}`).join(', ') || 'none')
+  ].join('');
+
   let html = shown.length ? shown.map(x => `
     <div class="x-card">
       <div class="x-head">
@@ -566,6 +1137,7 @@ function renderX(data, filter='all') {
   $('#x-list').innerHTML = html;
 }
 
+/* --- Health --- */
 function renderHealth(data) {
   const h = data.health || {};
   const sh = data.shadow_health || {};
@@ -594,7 +1166,7 @@ function renderHealth(data) {
   ].join('');
 
   const shStatus = sh.shadow_status || 'unknown';
-  const shClass = shStatus === 'OK' ? 'good' : (shStatus.startsWith('CRITICAL') ? 'bad' : '');
+  const shClass = shStatus === 'OK' ? 'good' : (String(shStatus).startsWith('CRITICAL') ? 'bad' : '');
   $('#shadow-grid').innerHTML = [
     card('Shadow Trigger', shStatus, `trigger: ${sh.trigger_status || '?'} · RLS: ${sh.audit_rls_enabled === false ? 'disabled' : 'enabled'}`, shClass),
     card('Audit Log', `${sh.total_audit_rows || 0} rows`, `success: ${sh.audit_success || 0} · errors: ${sh.audit_errors || 0}`),
@@ -602,81 +1174,273 @@ function renderHealth(data) {
   ].join('');
 }
 
+/* --- Trade Modal --- */
 function openTrade(t) {
   const latency = (DATA.latency || []).find(l => l.signal_id && t.signal_id && l.signal_id === t.signal_id)
     || (DATA.latency || []).find(l => l.asset === t.asset);
-
   const obBook = (DATA.official_books || []).find(b => b.book_key === t.book_key);
+  const isOpen = t._kind === 'open' || t.status === 'OPEN';
+  const isClosed = !isOpen;
+  const pnlVal = isOpen ? (t.computed_unrealized_pnl || t.unrealized_pnl) : t.realized_pnl;
+  const pnlPctVal = isOpen ? t.computed_unrealized_pnl_pct : t.computed_realized_pnl_pct;
 
   $('#modal-title').textContent = `${t.asset || '—'} ${t.direction || ''}`;
-  $('#modal-sub').textContent = `${t.status || t._kind || '—'} · ${t.target_model || '—'} · ${t.asset_class || '—'} · Book: ${t.book_key || '—'}`;
-  $('#modal-body').innerHTML = `
-    <div class="kv-grid">
-      <div class="kv"><div class="k">Entry</div><div class="v">${dollar(t.entry_price)} · ${ts(t.entry_time)}</div></div>
-      <div class="kv"><div class="k">Current / Exit</div><div class="v">${dollar(t.current_price ?? t.exit_price)} ${t.exit_time ? '· '+ts(t.exit_time) : ''}</div></div>
-      <div class="kv"><div class="k">P&L</div><div class="v pnl ${clsPnl(t.unrealized_pnl ?? t.realized_pnl)}">${money(t.unrealized_pnl ?? t.realized_pnl)}</div></div>
-      <div class="kv"><div class="k">Stake / Shares</div><div class="v">${dollar(t.stake_amount)} · ${fmt(t.shares, 6)}</div></div>
-      <div class="kv"><div class="k">Take Profit</div><div class="v">${dollar(t.take_profit_price)}</div></div>
-      <div class="kv"><div class="k">Stop Loss</div><div class="v">${dollar(t.stop_loss_price)}</div></div>
-      <div class="kv"><div class="k">Broker Mirror</div><div class="v">${t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">paper_filled</span>' : (t.broker_mirror_status || 'not_attempted')}</div></div>
-      <div class="kv"><div class="k">ATR / Volatility</div><div class="v">${fmt(t.atr_percent, 4)} · stop ${pct(t.volatility_stop_percent)} · target ${pct(t.volatility_target_percent)}</div></div>
-      ${t.exit_reason ? `<div class="kv"><div class="k">Exit Reason</div><div class="v">${t.exit_reason}</div></div>` : ''}
-      ${t.news_title ? `<div class="kv"><div class="k">News</div><div class="v" style="font-size:12px;word-break:break-word">${t.news_url ? `<a href="${t.news_url}" target="_blank" style="color:var(--blue)">${t.news_title}</a>` : t.news_title}</div></div>` : ''}
+  $('#modal-sub').textContent = `${t.status || t._kind || '—'} · ${prettyBookName(t.book_key)} · ${t.asset_class || '—'}`;
+
+  let html = '';
+
+  // Large range bar
+  html += rangeBar({...t, _kind: isOpen ? 'open' : 'closed'}, true);
+
+  // Progress info
+  if (hasVal(t.progress_to_target_pct)) {
+    const p = Number(t.progress_to_target_pct);
+    html += `<div class="info-box" style="margin-top:8px">Progress to target: <strong>${pctRaw(p)}</strong> (0% = entry, 100% = TP, negative = toward SL)</div>`;
+  }
+
+  // Book and strategy
+  html += `<div style="margin-top:14px;margin-bottom:6px">
+    <div class="label">Book &amp; Strategy</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+      <span class="badge ${t.target_model==='fixed'?'info':'warn'}">${t.target_model || '—'}</span>
+      ${t.classification ? `<span class="badge purple">${t.classification}</span>` : ''}
+      ${t.experiment_phase ? `<span class="badge">${t.experiment_phase}</span>` : ''}
+      ${t.portfolio ? `<span class="badge">${t.portfolio}</span>` : ''}
     </div>
-    ${latency ? `<div class="warn-box">Latency: news to trade ${seconds(latency.news_to_trade_seconds)}, captured to V2 ${seconds(latency.received_to_v2_shadow_seconds)}, move before entry ${pct(latency.price_move_before_entry_pct)} (${latency.latency_price_status}).</div>` : ''}
-    ${obBook ? `<div class="meta" style="margin-top:8px">Book baseline P&L: ${money(obBook.official_since_baseline_pnl)} · Status: ${obBook.official_status}</div>` : ''}
-  `;
+    <div class="meta">${t.book_key || '—'}${hasVal(t.book_starting_balance) ? ` · Book starting balance: ${dollar(t.book_starting_balance)}` : ''}</div>
+  </div>`;
+
+  // KV grid
+  html += `<div class="kv-grid" style="margin-top:12px">
+    <div class="kv"><div class="k">Entry Price</div><div class="v">${dollar(t.entry_price)}</div></div>
+    <div class="kv"><div class="k">Entry Time</div><div class="v">${ts(t.entry_time)}</div></div>
+    <div class="kv"><div class="k">${isClosed ? 'Exit Price' : 'Current Price'}</div><div class="v">${isClosed ? dollar(t.exit_price) : (t.current_price != null ? dollar(t.current_price) : (t.current_price_status === 'missing_mark' ? '<span class="badge warn">Waiting for mark</span>' : '—'))}</div></div>
+    <div class="kv"><div class="k">${isClosed ? 'Exit Time' : 'Held Duration'}</div><div class="v">${isClosed ? ts(t.exit_time) : heldDuration(t.entry_time)}</div></div>
+    <div class="kv"><div class="k">P&L</div><div class="v pnl ${clsPnl(pnlVal)}">${money(pnlVal)}${hasVal(pnlPctVal) ? ` (${pctRaw(pnlPctVal)})` : ''}</div></div>
+    <div class="kv"><div class="k">Stake / Shares</div><div class="v">${dollar(t.stake_amount)} · ${fmt(t.shares, 6)}</div></div>
+    <div class="kv"><div class="k">Take Profit</div><div class="v">${dollar(t.take_profit_price)}${hasVal(t.distance_to_tp_pct) ? ` (${pctRaw(t.distance_to_tp_pct)} from entry)` : ''}</div></div>
+    <div class="kv"><div class="k">Stop Loss</div><div class="v">${dollar(t.stop_loss_price)}${hasVal(t.distance_to_sl_pct) ? ` (${pctRaw(t.distance_to_sl_pct)} from entry)` : ''}</div></div>
+    <div class="kv"><div class="k">Broker Mirror</div><div class="v">${
+      t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">Broker: paper filled</span>' :
+      t.broker_mirror_status === 'pending' ? '<span class="badge warn">Broker: pending</span>' :
+      '<span class="badge">Broker: not mirrored</span>'
+    }</div></div>
+    <div class="kv"><div class="k">ATR / Volatility</div><div class="v">${hasVal(t.atr_percent) ? `ATR ${fmt(t.atr_percent, 4)}` : 'No ATR'}${hasVal(t.volatility_stop_percent) ? ` · stop ${pct(t.volatility_stop_percent)}` : ''}${hasVal(t.volatility_target_percent) ? ` · target ${pct(t.volatility_target_percent)}` : ''}</div></div>
+    ${t.exit_reason ? `<div class="kv"><div class="k">Exit Reason</div><div class="v">${t.exit_reason}</div></div>` : ''}
+    ${isClosed ? `<div class="kv"><div class="k">Held Duration</div><div class="v">${heldDuration(t.entry_time, t.exit_time)}</div></div>` : ''}
+  </div>`;
+
+  // News article
+  if (t.news_title || t.news_url) {
+    html += `<div style="margin-top:12px;padding:10px;background:var(--panel);border:1px solid var(--border);border-radius:8px">
+      <div class="label">News Article</div>
+      <div style="font-size:13px;line-height:1.45;word-break:break-word">${
+        t.news_url ? `<a href="${t.news_url}" target="_blank" rel="noopener" style="color:var(--blue)">${t.news_title || t.news_url}</a>` : (t.news_title || '—')
+      }</div>
+    </div>`;
+  }
+
+  // Latency info
+  if (latency) {
+    html += `<div class="warn-box">Latency: news to trade ${seconds(latency.news_to_trade_seconds)}, captured to V2 ${seconds(latency.received_to_v2_shadow_seconds)}, move before entry ${pct(latency.price_move_before_entry_pct)} (${latency.latency_price_status}).</div>`;
+  }
+
+  // Book baseline P&L
+  if (obBook) {
+    html += `<div class="meta" style="margin-top:8px">Book baseline P&L: ${money(obBook.official_since_baseline_pnl)} · Status: ${obBook.official_status}</div>`;
+  }
+
+  $('#modal-body').innerHTML = html;
   $('#trade-modal').classList.add('open');
 }
 
-function wire() {
-  document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    document.getElementById(b.dataset.jump).scrollIntoView({behavior:'smooth', block:'start'});
-  }));
-  document.addEventListener('click', e => {
-    const pf = e.target.closest('[data-position-filter]');
-    if (pf) renderPositions(DATA, pf.dataset.positionFilter);
-    const xf = e.target.closest('[data-x-filter]');
-    if (xf) renderX(DATA, xf.dataset.xFilter);
-    const row = e.target.closest('[data-trade-index]');
-    if (row) openTrade(window.__visibleTrades[Number(row.dataset.tradeIndex)]);
-    const showAll = e.target.closest('[data-show-all]');
-    if (showAll) {
-      window.__visibleTrades = window.__allFilteredTrades;
-      const items = window.__allFilteredTrades || [];
-      const listEl = $('#positions-list');
-      listEl.innerHTML = items.map((t, i) => {
-        const pnl = t._kind === 'open' ? t.unrealized_pnl : t.realized_pnl;
-        const dirClass = String(t.direction).toUpperCase() === 'BUY' ? 'long' : 'short';
-        const mirrorBadge = t.broker_mirror_status === 'paper_filled' ? '<span class="badge good">paper_filled</span>' :
-                            t.broker_mirror_status === 'pending' ? '<span class="badge warn">pending</span>' :
-                            `<span class="badge">${t.broker_mirror_status || 'not_attempted'}</span>`;
-        return `<div class="row-card" data-trade-index="${i}" data-trade-id="${t.id}">
-          <div>
-            <div class="asset-line"><span class="asset">${t.asset || '—'}</span><span class="badge ${dirClass}">${t.direction || '—'}</span><span class="badge ${t.target_model==='fixed'?'info':'warn'}">${t.target_model || '—'}</span>${mirrorBadge}</div>
-            <div class="row-sub">${t._kind === 'open' ? `Entry ${dollar(t.entry_price)} · TP ${dollar(t.take_profit_price)} · SL ${dollar(t.stop_loss_price)}` : `Entry ${dollar(t.entry_price)} · Exit ${dollar(t.exit_price)} · ${t.exit_reason || '—'}`}</div>
-          </div>
-          <div>
-            <div class="pnl ${clsPnl(pnl)}">${money(pnl)}</div>
-            <div class="row-sub">Stake ${dollar(t.stake_amount)} · ${t._kind === 'open' ? ts(t.entry_time) : ts(t.exit_time)}</div>
-          </div>
-          <div class="chev">›</div>
-        </div>`;
-      }).join('');
-    }
-    const showAllX = e.target.closest('[data-show-all-x]');
-    if (showAllX) {
-      renderX(DATA, showAllX.dataset.showAllX);
-      document.querySelectorAll('#x-list .x-card').forEach(e => e.style.display = '');
-      showAllX.remove();
-    }
-  });
-  $('#modal-close').addEventListener('click', () => $('#trade-modal').classList.remove('open'));
-  $('#trade-modal').addEventListener('click', e => { if (e.target.id === 'trade-modal') $('#trade-modal').classList.remove('open'); });
+/* --- Navigation --- */
+function showPage(pageId, push = true) {
+  const target = document.getElementById(pageId) ? pageId : 'command';
+  $$('.section').forEach(s => s.classList.toggle('active', s.id === target));
+  $$('.nav button').forEach(b => b.classList.toggle('active', b.dataset.jump === target));
+
+  // Show/hide Book Detail nav button
+  const bdNav = $('#nav-book-detail');
+  if (target === 'book-detail') {
+    bdNav.style.display = '';
+  } else if (target !== 'book-detail') {
+    bdNav.style.display = 'none';
+  }
+
+  if (push) {
+    const nextHash = target === 'command' ? '' : `#${target}`;
+    const nextUrl = `${location.pathname}${location.search}${nextHash}`;
+    history.pushState({page: target}, '', nextUrl);
+  }
+  window.scrollTo({top: 0, behavior: 'auto'});
 }
 
+/* --- Wiring --- */
+function wire() {
+  // Nav buttons
+  $$('.nav button').forEach(b => b.addEventListener('click', () => showPage(b.dataset.jump)));
+  window.addEventListener('popstate', () => showPage(location.hash.replace('#', '') || 'command', false));
+
+  // Global click delegation
+  document.addEventListener('click', e => {
+    // Position filter
+    const pf = e.target.closest('[data-position-filter]');
+    if (pf) { renderPositions(DATA, pf.dataset.positionFilter); return; }
+
+    // X filter
+    const xf = e.target.closest('[data-x-filter]');
+    if (xf) { renderCryptoLab(DATA, xf.dataset.xFilter); return; }
+
+    // Book card click -> Book Detail
+    const bookCard = e.target.closest('[data-book-key]');
+    if (bookCard && !e.target.closest('.row-card')) {
+      renderBookDetail(bookCard.dataset.bookKey);
+      showPage('book-detail');
+      return;
+    }
+
+    // Back to books
+    const backBtn = e.target.closest('[data-jump-back]');
+    if (backBtn) { showPage(backBtn.dataset.jumpBack); return; }
+
+    // Trade row click -> Modal
+    const row = e.target.closest('.row-card[data-trade-id]');
+    if (row) {
+      const tradeId = Number(row.dataset.tradeId);
+      const allTrades = [
+        ...(DATA.open_positions || []).map(t => ({...t, _kind:'open'})),
+        ...(DATA.closed_trades || []).map(t => ({...t, _kind:'closed'}))
+      ];
+      const trade = allTrades.find(t => t.id === tradeId);
+      if (trade) openTrade(trade);
+      return;
+    }
+
+    // Show all positions
+    const showAll = e.target.closest('[data-show-all]');
+    if (showAll) {
+      const items = window.__allFilteredTrades || [];
+      window.__visibleTrades = items;
+      $('#positions-list').innerHTML = items.map(t => tradeRow(t, t._kind, `pos-${t.id}`)).join('');
+      return;
+    }
+
+    // Show all X posts
+    const showAllX = e.target.closest('[data-show-all-x]');
+    if (showAllX) {
+      const allRows = DATA.crypto_lab_x || [];
+      const filter = showAllX.dataset.showAllX;
+      const rows = allRows.filter(x => filter === 'all' || String(x.source_quality_bucket) === filter || (x.detected_assets || []).includes(filter));
+      let html = rows.map(x => `
+        <div class="x-card">
+          <div class="x-head">
+            <div class="asset-line">${(x.detected_assets || []).map(a => `<span class="chip">${a}</span>`).join('') || '<span class="chip">needs asset</span>'}<span class="badge ${x.source_quality_bucket==='high'?'good':x.source_quality_bucket==='medium'?'info':'warn'}">${x.source_quality_bucket || 'unproven'}</span></div>
+            <div class="meta">${seconds(x.latency_seconds)} · @${x.author_handle || 'unknown'}</div>
+          </div>
+          <div class="x-text">${x.text_preview || x.raw_text || '—'}</div>
+          <div class="legend">${(x.quality_flags || []).map(f => `<span class="badge warn">${f}</span>`).join('') || '<span class="meta">No quality flags</span>'}<span class="meta">Engagement ${fmt(x.engagement_score,0)}</span></div>
+        </div>
+      `).join('');
+      $('#x-list').innerHTML = html;
+      return;
+    }
+
+    // Show all signals
+    if (e.target.closest('#show-all-signals')) {
+      const all = window.__allSignals || [];
+      $('#signals-list').innerHTML = all.map(s => signalRow(s)).join('');
+      return;
+    }
+
+    // Show all latency
+    if (e.target.closest('#show-all-latency')) {
+      const rows = window.__allLatencyRows || [];
+      $('#latency-list').innerHTML = rows.map(r => `
+        <div class="card soft">
+          <div class="asset-line"><span class="asset">${r.asset || '—'}</span><span class="badge">${r.source || '—'}</span><span class="badge ${r.latency_price_status === 'ok' ? 'good' : 'warn'}">${r.latency_price_status || '—'}</span></div>
+          <div class="timeline">
+            <div class="step">News<br>${ts(r.news_event_time)}</div>
+            <div class="step">Captured<br>${seconds(r.news_to_received_seconds)}</div>
+            <div class="step">Trade<br>${seconds(r.news_to_trade_seconds)}</div>
+            <div class="step">V2<br>${seconds(r.received_to_v2_shadow_seconds)}</div>
+          </div>
+          <div class="meta">Entry ${dollar(r.entry_price)} · Price at news ${dollar(r.news_reference_price)} · Move before entry ${pct(r.price_move_before_entry_pct)}</div>
+          ${r.news_reference_price == null ? '<div class="warn-box">Price at news not captured yet.</div>' : ''}
+        </div>
+      `).join('');
+      return;
+    }
+
+    // Show all closed in book detail
+    if (e.target.closest('#book-show-all-closed')) {
+      const closed = window.__bookClosedAll || [];
+      const el = $('#book-closed-list');
+      if (el) el.innerHTML = closed.map((t, i) => tradeRow(t, 'closed', `book-closed-${i}`)).join('');
+      e.target.closest('#book-show-all-closed').remove();
+      return;
+    }
+  });
+
+  // Modal close
+  $('#modal-close').addEventListener('click', () => $('#trade-modal').classList.remove('open'));
+  $('#trade-modal').addEventListener('click', e => { if (e.target.id === 'trade-modal') $('#trade-modal').classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#trade-modal').classList.remove('open'); });
+}
+
+/* --- Refresh --- */
+async function refreshDashboardData(reason) {
+  const btn = $('#refresh-btn');
+  const ind = $('#pull-indicator');
+  btn.classList.add('spinning');
+  ind.textContent = 'Refreshing...';
+  ind.className = 'pull-indicator visible refreshing';
+  try {
+    const res = await fetch('data.v2.json?ts=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    DATA = await res.json();
+    renderFreshness(DATA);
+    renderSummary(DATA);
+    renderBooks(DATA);
+    renderPositions(DATA);
+    renderSignals(DATA);
+    renderLatency(DATA);
+    renderCryptoLab(DATA);
+    renderHealth(DATA);
+    ind.textContent = 'Updated ' + new Date().toLocaleTimeString();
+    ind.className = 'pull-indicator visible';
+    setTimeout(() => ind.classList.remove('visible'), 2000);
+  } catch (err) {
+    console.error('[refresh]', reason, err);
+    ind.textContent = 'Refresh failed — ' + err.message;
+    ind.className = 'pull-indicator visible error';
+    setTimeout(() => ind.classList.remove('visible'), 4000);
+  }
+  btn.classList.remove('spinning');
+}
+
+(function initPullToRefresh() {
+  let startY = null, dist = 0;
+  const ind = $('#pull-indicator');
+  window.addEventListener('touchstart', e => {
+    if (window.scrollY === 0 && e.touches.length === 1) { startY = e.touches[0].clientY; dist = 0; }
+  }, { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (startY == null) return;
+    dist = e.touches[0].clientY - startY;
+    if (dist > 12) {
+      ind.textContent = dist >= 70 ? 'Release to refresh' : 'Pull to refresh';
+      ind.className = 'pull-indicator visible';
+    }
+  }, { passive: true });
+  window.addEventListener('touchend', () => {
+    if (startY != null && dist >= 70) refreshDashboardData('pull');
+    else if (ind.classList.contains('visible')) { ind.classList.remove('visible'); }
+    startY = null; dist = 0;
+  }, { passive: true });
+})();
+
+/* --- Load --- */
 async function load() {
   const res = await fetch('data.v2.json');
   DATA = await res.json();
@@ -684,10 +1448,13 @@ async function load() {
   renderSummary(DATA);
   renderBooks(DATA);
   renderPositions(DATA);
+  renderSignals(DATA);
   renderLatency(DATA);
-  renderX(DATA);
+  renderCryptoLab(DATA);
   renderHealth(DATA);
   wire();
+  showPage(location.hash.replace('#', '') || 'command', false);
+  $('#refresh-btn').addEventListener('click', () => refreshDashboardData('button'));
 }
 load().catch(err => {
   $('#app').innerHTML = `<div class="empty">Failed to load data.v2.json: ${err.message}</div>`;
