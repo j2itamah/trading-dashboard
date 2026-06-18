@@ -105,6 +105,11 @@
   .pos-pnl{text-align:right;font-weight:800}
   .mini-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:7px}
   .mini-track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--gold))}
+  .guardrail-track{height:12px;background:var(--line);border-radius:999px;overflow:hidden;margin:9px 0 4px}
+  .guardrail-track span{display:block;height:100%;border-radius:999px;min-width:0}
+  .guardrail-track.target span{background:linear-gradient(90deg,#6ee7b7,var(--green))}
+  .guardrail-track.loss span{background:linear-gradient(90deg,#fca5a5,var(--red))}
+  .guardrail-caption{display:flex;justify-content:space-between;gap:12px;font:700 10.5px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
   .closed-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft);margin:12px 0 10px;display:flex;justify-content:space-between;align-items:center}
   .trade-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;margin-bottom:10px;outline:none;background:var(--bg)}
   .empty{padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);font:13px/1.5 'Spline Sans Mono',monospace;background:rgba(255,255,255,.45)}
@@ -300,6 +305,10 @@ function renderOverview(){
   const total=Number(s.total_since_start_pnl ?? s.total_official_since_baseline_pnl ?? 0);
   const target=Number((DATA?.prop_summary||{}).total_profit_target_dollars||2000);
   const progress=target?Math.max(0,Math.min(100,(total/target)*100)):0;
+  const dailyLossLimit=Number((DATA?.prop_summary||{}).total_max_daily_loss_dollars||1000);
+  const dailyLossUsed=Math.max(0,-today);
+  const dailyLossPct=dailyLossLimit?Math.max(0,Math.min(100,(dailyLossUsed/dailyLossLimit)*100)):0;
+  const dailyLossRemaining=Math.max(0,dailyLossLimit-dailyLossUsed);
   let html=equityBlock(s);
   html+=`<div class="kpis">
     ${kpi('Today P/L', `${today>=0?'+':''}${fmtMoney(today)}`, signCls(today), 'Marked approximation')}
@@ -308,9 +317,12 @@ function renderOverview(){
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
   html+=`<div class="grid"><div class="panel"><h2>Prop Guardrails</h2>
-    <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(target)}</div><div class="m-lab">${progress.toFixed(1)}%</div></div></div></div>
-    <div class="mini-track"><span style="width:${progress}%"></span></div>
-    <div class="row"><div class="name">Daily Loss Buffer</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney((DATA?.prop_summary||{}).total_max_daily_loss_dollars||1000)}</div><div class="m-lab">limit</div></div></div></div>
+    <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(target)}</div><div class="m-lab">${progress.toFixed(1)}% reached</div></div></div></div>
+    <div class="guardrail-track target"><span style="width:${progress}%"></span></div>
+    <div class="guardrail-caption"><span>${fmtMoney(Math.max(0,total))} gained</span><span>${fmtMoney(Math.max(0,target-total))} to target</span></div>
+    <div class="row"><div class="name">Daily Loss Buffer</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(dailyLossRemaining)}</div><div class="m-lab">${dailyLossPct.toFixed(1)}% used</div></div></div></div>
+    <div class="guardrail-track loss"><span style="width:${dailyLossPct}%"></span></div>
+    <div class="guardrail-caption"><span>${fmtMoney(dailyLossUsed)} loss used</span><span>${fmtMoney(dailyLossLimit)} limit</span></div>
     <div class="row"><div class="name">Accounts</div><div class="metrics"><div class="metric"><div class="m-val">${fmtInt(s.account_count||2)}</div><div class="m-lab">${s.accounts_not_ok||0} not ok</div></div></div></div>
   </div><div class="panel"><h2>System</h2>
     <div class="row"><div class="name">Shadow Trigger</div><div class="metrics"><div class="metric"><div class="m-val ${shadow.shadow_status==='OK'?'pos-text':'neg-text'}">${esc(shadow.shadow_status||'—')}</div><div class="m-lab">${fmtInt(shadow.audit_success)} success</div></div></div></div>
