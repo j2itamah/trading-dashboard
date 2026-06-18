@@ -26,7 +26,7 @@
   a{color:#2563eb;text-decoration:none}
   a:hover{text-decoration:underline}
   .wrap{max-width:1120px;margin:0 auto}
-  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20}
+  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20;overflow-x:auto}
   .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:10px 20px;cursor:pointer;white-space:nowrap}
   .nav-link:hover{color:var(--ink)}
   .nav-link.on{background:var(--accent);color:#fff}
@@ -46,6 +46,8 @@
   .view.on{display:block}
   .equity-summary{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin:0 0 18px}
   .eq-card,.panel,.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .panel.clickable{cursor:pointer}
+  .panel.clickable:hover{border-color:rgba(55,91,121,.45);box-shadow:0 12px 32px rgba(55,91,121,.12)}
   .eq-card{padding:22px 24px}
   .eq-label,.label,.panel h2{font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
   .eq-equity{font-family:'Fraunces',serif;font-size:clamp(30px,5vw,44px);font-weight:600;letter-spacing:-1px;line-height:1.05;margin-top:7px}
@@ -136,6 +138,15 @@
   .guardrail-track.target span{background:linear-gradient(90deg,#6ee7b7,var(--green))}
   .guardrail-track.loss span{background:linear-gradient(90deg,#fca5a5,var(--red))}
   .guardrail-caption{display:flex;justify-content:space-between;gap:12px;font:700 10.5px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+  .account-guard{border:1px solid var(--line);border-radius:14px;background:#fbfaf6;padding:14px;margin:12px 0}
+  .account-guard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .account-guard-title{font-weight:800}
+  .account-guard-status{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.5px;border:1px solid #b8e2cc;background:var(--green-bg);color:var(--green);border-radius:999px;padding:6px 8px}
+  .account-guard-status.bad{border-color:#e8a0a8;background:var(--red-bg);color:var(--red)}
+  .guard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+  .guard-mini{border:1px solid rgba(35,31,26,.08);border-radius:10px;background:rgba(255,255,255,.62);padding:9px}
+  .guard-mini strong{display:block;font:800 17px/1.1 'Fraunces',serif}
+  .guard-mini span{font:700 9.5px/1.3 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px}
   .target-health{border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 18px;background:#fbfaf6}
   .target-health.warn{background:#fff8e5;border-color:#e7c46a}
   .target-health.bad{background:var(--red-bg);border-color:#e8a0a8}
@@ -215,7 +226,7 @@
   @media(max-width:760px){
     body{padding:20px 14px 76px}
     .site-nav{position:fixed;bottom:0;left:0;right:0;top:auto;border-radius:0;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel)}
-    .nav-link{flex:1;padding:12px 6px}
+    .nav-link{flex:0 0 auto;min-width:92px;padding:12px 6px}
     header{align-items:flex-start}
     .title-block h1{font-size:28px}
     .updated{text-align:left}
@@ -260,6 +271,8 @@
   <nav class="site-nav" aria-label="Dashboard views">
     <button class="nav-link" data-view="overview">Overview</button>
     <button class="nav-link" data-view="research">Research</button>
+    <button class="nav-link" data-view="guardrails">Guardrails</button>
+    <button class="nav-link" data-view="crypto">Crypto Lab</button>
     <button class="nav-link on" data-view="operations">Operations</button>
   </nav>
 
@@ -279,6 +292,8 @@
 
   <section id="view-overview" class="view"></section>
   <section id="view-research" class="view"></section>
+  <section id="view-guardrails" class="view"></section>
+  <section id="view-crypto" class="view"></section>
   <section id="view-operations" class="view on">
     <div class="exit-switch-wrap">
       <div class="exit-switch" id="exit-switch">
@@ -480,20 +495,67 @@ function renderOverview(){
     ${kpi('Open Trades', fmtInt(s.total_open_count), '', `${fmtInt(s.total_closed_count)} closed`)}
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
-  html+=`<div class="grid"><div class="panel"><h2>Prop Guardrails</h2>
+  html+=`<div class="grid"><div class="panel clickable" onclick="showView('guardrails')"><h2>Prop Guardrails</h2>
     <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(target)}</div><div class="m-lab">${progress.toFixed(1)}% reached</div></div></div></div>
     <div class="guardrail-track target"><span style="width:${progress}%"></span></div>
     <div class="guardrail-caption"><span>${fmtMoney(Math.max(0,total))} gained</span><span>${fmtMoney(Math.max(0,target-total))} to target</span></div>
     <div class="row"><div class="name">Daily Loss Buffer</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(dailyLossRemaining)}</div><div class="m-lab">${dailyLossPct.toFixed(1)}% used</div></div></div></div>
     <div class="guardrail-track loss"><span style="width:${dailyLossPct}%"></span></div>
     <div class="guardrail-caption"><span>${fmtMoney(dailyLossUsed)} loss used</span><span>${fmtMoney(dailyLossLimit)} limit</span></div>
-    <div class="row"><div class="name">Accounts</div><div class="metrics"><div class="metric"><div class="m-val">${fmtInt(s.account_count||2)}</div><div class="m-lab">${s.accounts_not_ok||0} not ok</div></div></div></div>
+    <div class="row"><div class="name">Accounts</div><div class="metrics"><div class="metric"><div class="m-val">${fmtInt(s.account_count||2)}</div><div class="m-lab">${s.accounts_not_ok||0} not ok · tap for detail</div></div></div></div>
   </div><div class="panel"><h2>System</h2>
     <div class="row"><div class="name">Shadow Trigger</div><div class="metrics"><div class="metric"><div class="m-val ${shadow.shadow_status==='OK'?'pos-text':'neg-text'}">${esc(shadow.shadow_status||'—')}</div><div class="m-lab">${fmtInt(shadow.audit_success)} success</div></div></div></div>
     <div class="row"><div class="name">Close Mirror</div><div class="metrics"><div class="metric"><div class="m-val pos-text">${closedTrades().filter(t=>t.exit_time&&t.exit_price!=null).length}/${closedTrades().length}</div><div class="m-lab">closed mirrored</div></div></div></div>
     <div class="row"><div class="name">Marked Open</div><div class="metrics"><div class="metric"><div class="m-val">${openPositions().filter(t=>t.current_price_status==='ok'||t.current_price!=null).length}/${openPositions().length}</div><div class="m-lab">positions</div></div></div></div>
   </div></div>`;
   document.getElementById('view-overview').innerHTML=html;
+}
+function pctWidth(value,total){return total?Math.max(0,Math.min(100,(Number(value||0)/Number(total||1))*100)):0}
+function renderGuardrails(){
+  const summary=DATA?.prop_summary||DATA?.official_summary||{};
+  const books=rows(DATA?.prop_books).length?rows(DATA.prop_books):officialBooks();
+  const total=Number(summary.total_since_start_pnl ?? summary.total_official_since_baseline_pnl ?? 0);
+  const target=Number(summary.total_profit_target_dollars||2000);
+  const dailyLimit=Number(summary.total_max_daily_loss_dollars||1000);
+  const today=Number(summary.total_today_marked_pnl_approx ?? summary.total_today_realized_pnl ?? 0);
+  const dailyUsed=Math.max(0,-today);
+  let html=`<div class="panel"><h2>Guardrails Overview</h2><div class="section-note">Prop-style limits by account/book. Use this when there are many accounts.</div>
+    <div class="guard-grid">
+      <div class="guard-mini"><strong>${fmtMoney(Math.max(0,total))}</strong><span>total gained</span></div>
+      <div class="guard-mini"><strong>${fmtMoney(Math.max(0,target-total))}</strong><span>to profit target</span></div>
+      <div class="guard-mini"><strong>${fmtMoney(dailyUsed)}</strong><span>daily loss used</span></div>
+      <div class="guard-mini"><strong>${fmtMoney(Math.max(0,dailyLimit-dailyUsed))}</strong><span>daily buffer left</span></div>
+    </div>
+  </div>`;
+  html+=books.map(b=>{
+    const profitTarget=Number(b.prop_profit_target_dollars||1000);
+    const dailyLoss=Number(b.prop_max_daily_loss_dollars||500);
+    const totalLoss=Number(b.prop_max_total_loss_dollars||1000);
+    const pnl=Number(b.since_start_pnl ?? b.official_since_baseline_pnl ?? b.realized_pnl ?? 0);
+    const todayPnl=Number(b.today_marked_pnl_approx ?? b.today_realized_pnl ?? 0);
+    const dailyLossUsed=Math.max(0,-todayPnl);
+    const totalLossUsed=Math.max(0,-pnl);
+    const status=String(b.prop_status||b.official_status||'ok').toLowerCase();
+    return `<div class="account-guard">
+      <div class="account-guard-head"><div><div class="account-guard-title">${esc(bookLabel(b))}</div><div class="small">${esc(b.book_key||'')} · ${fmtInt(b.open_count)} open · ${fmtInt(b.closed_count)} closed</div></div><span class="account-guard-status ${status==='ok'?'':'bad'}">${esc(status)}</span></div>
+      <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(profitTarget)}</div><div class="m-lab">${pctWidth(Math.max(0,pnl),profitTarget).toFixed(1)}% reached</div></div></div></div>
+      <div class="guardrail-track target"><span style="width:${pctWidth(Math.max(0,pnl),profitTarget)}%"></span></div>
+      <div class="guardrail-caption"><span>${fmtMoney(Math.max(0,pnl))} gained</span><span>${fmtMoney(Math.max(0,profitTarget-pnl))} to target</span></div>
+      <div class="row"><div class="name">Daily Loss</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(Math.max(0,dailyLoss-dailyLossUsed))}</div><div class="m-lab">${pctWidth(dailyLossUsed,dailyLoss).toFixed(1)}% used</div></div></div></div>
+      <div class="guardrail-track loss"><span style="width:${pctWidth(dailyLossUsed,dailyLoss)}%"></span></div>
+      <div class="guardrail-caption"><span>${fmtMoney(dailyLossUsed)} loss used</span><span>${fmtMoney(dailyLoss)} limit</span></div>
+      <div class="row"><div class="name">Total Loss</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(Math.max(0,totalLoss-totalLossUsed))}</div><div class="m-lab">${pctWidth(totalLossUsed,totalLoss).toFixed(1)}% used</div></div></div></div>
+      <div class="guardrail-track loss"><span style="width:${pctWidth(totalLossUsed,totalLoss)}%"></span></div>
+      <div class="guardrail-caption"><span>${fmtMoney(totalLossUsed)} total loss used</span><span>${fmtMoney(totalLoss)} max loss</span></div>
+      <div class="guard-grid">
+        <div class="guard-mini"><strong>${fmtMoney(b.marked_equity||b.starting_balance)}</strong><span>marked equity</span></div>
+        <div class="guard-mini"><strong>${fmtMoney(b.free_cash)}</strong><span>free cash</span></div>
+        <div class="guard-mini"><strong class="${signCls(b.realized_pnl)}">${Number(b.realized_pnl||0)>=0?'+':''}${fmtMoney(b.realized_pnl)}</strong><span>realized</span></div>
+        <div class="guard-mini"><strong class="${signCls(b.unrealized_pnl)}">${Number(b.unrealized_pnl||0)>=0?'+':''}${fmtMoney(b.unrealized_pnl)}</strong><span>open p/l</span></div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('view-guardrails').innerHTML=html;
 }
 function renderSelectors(){
   const books=officialBooks();
@@ -606,7 +668,6 @@ function renderResearch(){
   const cands=rows(DATA?.candidates);
   const lat=rows(DATA?.latency).slice(0,15);
   const sigs=rows(DATA?.signals).slice(0,10);
-  const x=rows(DATA?.crypto_lab_x).slice(0,8);
   const rej=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,8);
   let html='';
   // Candidate Queue from v2_signal_candidates
@@ -638,8 +699,25 @@ function renderResearch(){
   // Volatility Rejections + Signals + Crypto Lab in grids
   html+=`<div class="grid"><div class="panel"><h2>Volatility Rejections</h2>${rej.map(r=>`<div class="lat-row"><div class="headline">${esc((r.details&&r.details.asset)||'Unknown')} · ${esc(r.reason)}</div><div class="small">${shortTime(r.created_at)} · ATR ${esc((r.details&&r.details.atr_percent)||'missing')}</div></div>`).join('')||'<div class="empty">No recent volatility rejections.</div>'}</div>`;
   html+=`<div class="panel"><h2>Signals</h2>${sigs.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${esc(s.source||'')}</div><div class="small">${esc(s.headline||'')}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No signals yet.</div>'}</div></div>`;
-  html+=`<div class="panel"><h2>Crypto Lab / X</h2>${x.map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div>`;
   document.getElementById('view-research').innerHTML=html;
+}
+function renderCryptoLab(){
+  const x=rows(DATA?.crypto_lab_x).slice(0,18);
+  const cryptoAssets=new Set(['BTC','ETH','SOL','XRP','LINK','AVAX','BNB','LTC','DOGE','ADA']);
+  const cryptoOpen=openPositions().filter(t=>t.asset_class==='crypto'||cryptoAssets.has(String(t.asset||'').toUpperCase()));
+  const cryptoClosed=closedTrades().filter(t=>t.asset_class==='crypto'||cryptoAssets.has(String(t.asset||'').toUpperCase()));
+  const cands=rows(DATA?.candidates).filter(c=>cryptoAssets.has(String(c.asset||'').toUpperCase())||String(c.asset_class||'').toLowerCase()==='crypto').slice(0,10);
+  let html=`<div class="lab-warning">Crypto Lab is a separate proving lane for after-hours monitoring. It does not count toward official prop totals unless explicitly promoted.</div>`;
+  html+=`<div class="kpis">
+    ${kpi('X Posts', fmtInt(x.length), '', 'latest research events')}
+    ${kpi('Crypto Open', fmtInt(cryptoOpen.length), '', `${fmtInt(cryptoClosed.length)} closed`)}
+    ${kpi('Crypto Candidates', fmtInt(cands.length), '', 'research queue')}
+    ${kpi('Research Mode', 'ON', 'pos-text', 'no direct broker routing')}
+  </div>`;
+  html+=`<div class="grid"><div class="panel"><h2>Crypto / X Research</h2>${x.map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div>`;
+  html+=`<div class="panel"><h2>Crypto Candidates</h2>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'—':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div></div>`;
+  html+=`<div class="panel"><h2>Crypto Positions</h2>${cryptoOpen.concat(cryptoClosed.slice(0,8)).map(tradeRow).join('')||'<div class="empty">No crypto positions in V2 right now.</div>'}</div>`;
+  document.getElementById('view-crypto').innerHTML=html;
 }
 function showView(v){
   CURRENT_VIEW=v; localStorage.setItem('v2_old_view',v);
@@ -720,7 +798,7 @@ function ensureValidSelection(){
   if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle && b.target_model===sel.model)) sel.model=books.find(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)?.target_model||'fixed';
 }
 function renderAll(){
-  freshness(); ensureValidSelection(); renderOverview(); renderResearch(); renderOperations(); showView(CURRENT_VIEW);
+  freshness(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
 }
 async function load(){
   const res=await fetch('data.v2.json?ts='+Date.now(),{cache:'no-store'});
