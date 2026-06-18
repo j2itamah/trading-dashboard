@@ -373,9 +373,18 @@ function renderOperations(){
 function renderResearch(){
   const lat=rows(DATA?.latency).slice(0,12);
   const sigs=rows(DATA?.signals).slice(0,10);
+  const openKeys=new Set(openPositions().map(t=>`${t.asset}|${t.direction}|${t.signal_id||''}`));
+  const candidateRows=rows(DATA?.signals).slice(0,18).map(s=>{
+    const related=rows(DATA?.latency).filter(l=>l.asset===s.asset && l.direction===s.direction && (l.headline||'')===(s.headline||''));
+    const openCount=related.filter(l=>l.status==='OPEN').length;
+    const closedCount=related.filter(l=>l.status==='CLOSED').length;
+    const pending=openCount===0 && closedCount===0;
+    return {...s, openCount, closedCount, pending};
+  });
   const x=rows(DATA?.crypto_lab_x).slice(0,8);
   const rej=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,8);
   let html=`<div class="lab-warning">Crypto Lab is research-only and does not count toward official account totals.</div>`;
+  html+=`<div class="panel"><h2>Candidate Signals</h2>${candidateRows.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${s.pending?'<span class="badge">candidate pending</span>':`<span class="badge long">${fmtInt(s.openCount)} open</span>`}</div><div class="small">${esc(s.headline||'')}</div><div class="small">Confidence ${s.confidence==null?'—':Number(s.confidence).toFixed(2)} · Received ${shortTime(s.received_at)}${s.closedCount?` · ${fmtInt(s.closedCount)} closed`:''}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No candidate signals yet.</div>'}</div>`;
   html+=`<div class="grid"><div class="panel"><h2>News-to-Trade Latency</h2>${lat.map(l=>`<div class="lat-row"><div class="headline">${esc(l.asset)} ${esc(l.direction)} · ${esc(l.source||'')}</div><div class="small">${esc(l.headline||'')}</div><div class="small">News to trade: ${secondsLabel(l.news_to_trade_seconds)} · Move before entry: ${l.price_move_before_entry_pct==null?'missing reference price':fmtPct(l.price_move_before_entry_pct)}</div>${l.news_url?`<a href="${esc(l.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No latency rows yet.</div>'}</div>`;
   html+=`<div class="panel"><h2>Volatility Rejections</h2>${rej.map(r=>`<div class="lat-row"><div class="headline">${esc((r.details&&r.details.asset)||'Unknown')} · ${esc(r.reason)}</div><div class="small">${shortTime(r.created_at)} · ATR ${esc((r.details&&r.details.atr_percent)||'missing')}</div></div>`).join('')||'<div class="empty">No recent volatility rejections.</div>'}</div></div>`;
   html+=`<div class="grid"><div class="panel"><h2>Signals</h2>${sigs.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${esc(s.source||'')}</div><div class="small">${esc(s.headline||'')}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No signals yet.</div>'}</div>`;
