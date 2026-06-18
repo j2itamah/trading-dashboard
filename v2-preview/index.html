@@ -541,7 +541,10 @@ function confidencePerformancePanel(){
   const keyFinding=`<div style="margin:14px 0 0;padding:12px 14px;border-radius:10px;border:1px solid #e7c46a;background:#fff8e5;color:#7a5610;font:600 12px/1.5 'Spline Sans Mono',monospace">
     Key finding: Higher confidence does NOT improve performance. 0.65 BUY has the best absolute P/L (+$1,007) while 0.70+ BUY loses money (-$89). SELL outperforms BUY at every bucket. Recommend: do not raise the minimum confidence threshold — the 0.65 band is where most value is generated.
   </div>`;
-  return `<div class="panel"><h2>Confidence Performance</h2><div class="section-note">Closed V1 trade performance grouped by Claude's confidence score. research_valid = true only. Data snapshot from 2026-06-18.</div>${rows}${keyFinding}</div>`;
+  const tooltip=`<div style="margin:14px 0 0;padding:10px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--muted);font:11px/1.5 'Spline Sans Mono',monospace">
+    Confidence is only one factor. Direction, model, news type, and timing matter too.
+  </div>`;
+  return `<div class="panel"><h2>Historical Confidence Performance</h2><div class="section-note">Based on historical V1 closed trades, not only current V2 ledger sample. research_valid = true only. Data snapshot from 2026-06-18.</div>${rows}${keyFinding}${tooltip}</div>`;
 }
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
