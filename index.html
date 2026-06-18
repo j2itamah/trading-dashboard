@@ -154,9 +154,25 @@
     .tm-cols{grid-template-columns:1fr}
     .tm-head,.tm-body,.tm-foot{padding-left:18px;padding-right:18px}
   }
+  .vol-reject-tag{display:inline-flex;align-items:center;gap:4px;font:600 9.5px/1 'Spline Sans Mono',monospace;padding:3px 7px;border-radius:6px;background:#fff8e5;color:#7a5610;border:1px solid #e7c46a;letter-spacing:.2px;white-space:nowrap}
+  .atr-info-tag{display:inline-flex;align-items:center;gap:4px;font:600 9.5px/1 'Spline Sans Mono',monospace;padding:3px 7px;border-radius:6px;background:var(--purple-bg);color:var(--purple);border:1px solid #ddd6fe;letter-spacing:.2px;white-space:nowrap}
+  .expansion-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 22px;margin-bottom:18px}
+  .expansion-panel h2{margin:0 0 14px;font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+  .expansion-panel h2:before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .expansion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .expansion-stat{text-align:center}
+  .expansion-stat .exp-label{font:700 9.5px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);margin-bottom:6px}
+  .expansion-stat .exp-value{font:700 16px/1.2 'Spline Sans',sans-serif}
+  .expansion-badge{display:inline-block;margin-top:12px;font:700 11px/1 'Spline Sans Mono',monospace;padding:8px 16px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
+  .expansion-badge.ready{background:linear-gradient(135deg,var(--green-bg),#fdf6e3);color:var(--green);border:1.5px solid var(--green);box-shadow:0 0 0 3px rgba(29,157,107,.08)}
+  .expansion-badge.not-ready{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red)}
+  @media(max-width:760px){
+    .expansion-grid{grid-template-columns:repeat(2,1fr)}
+  }
   @media(max-width:390px){
     .kpi{padding:15px}
     .kpi .value{font-size:22px}
+    .expansion-grid{grid-template-columns:1fr 1fr}
   }
 </style>
 </head>
@@ -313,13 +329,27 @@ function renderSelectors(){
   ex.querySelectorAll('button').forEach(b=>{const on=b.dataset.rule===sel.lifecycle;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   document.querySelectorAll('#model-cards .model-card').forEach(b=>{const on=b.dataset.model===sel.model;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
 }
+function volRejectTag(t){
+  if(modelOf(t)!=='fixed') return '';
+  const rej=rows(DATA?.rejections).find(r=>r.stage==='volatility_gate' && r.details && r.details.asset===t.asset);
+  if(!rej) return '';
+  const shortReason=rej.reason.length>30?rej.reason.slice(0,28)+'...':rej.reason;
+  return `<span class="vol-reject-tag" title="${esc(rej.reason)}">Vol rejected: ${esc(shortReason)}</span>`;
+}
+function atrInfoTag(t){
+  if(modelOf(t)!=='volatility') return '';
+  if(t.atr_percent==null) return '';
+  return `<span class="atr-info-tag">ATR ${fmtPct(t.atr_percent)}</span>`;
+}
 function tradeRow(t){
   const pnl=pnlOf(t), pct=pctOf(t), dir=(t.direction||'').toUpperCase();
   const mark=t.current_price_status==='missing_mark'||t.current_price==null?'Waiting for mark':`Current ${fmtPrice(t.current_price)}`;
   const progress=Math.max(0,Math.min(100,Number(t.progress_to_target_pct||0)));
+  const rejTag=volRejectTag(t);
+  const atrTag=atrInfoTag(t);
   return `<div class="pos-row" data-trade-id="${t.id}">
     <div>
-      <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span><span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span><span class="badge">${esc(t.lifecycle||'')}</span></div>
+      <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span><span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span>${rejTag}${atrTag}<span class="badge">${esc(t.lifecycle||'')}</span></div>
       <div class="pos-meta">Entry ${fmtPrice(t.entry_price)} · ${mark} · ${brokerLabel(t.broker_mirror_status)}</div>
       ${t.status==='OPEN' && t.current_price!=null?`<div class="mini-track"><span style="width:${progress}%"></span></div>`:''}
     </div>
@@ -349,6 +379,26 @@ function renderOperations(){
     ${kpi('Unrealized', `${Number(b.unrealized_pnl||0)>=0?'+':''}${fmtMoney(b.unrealized_pnl||0)}`, signCls(b.unrealized_pnl))}
     ${kpi('Realized', `${Number(b.realized_pnl||0)>=0?'+':''}${fmtMoney(b.realized_pnl||0)}`, signCls(b.realized_pnl))}
   </div>`;
+  // --- Book Expansion Readiness Panel ---
+  const shadow=DATA?.shadow_health||{};
+  const allOpen=openPositions();
+  const volOpenCount=allOpen.filter(t=>modelOf(t)==='volatility').length;
+  const auditOk=Number(shadow.audit_success||0);
+  const auditErr=Number(shadow.audit_errors||0);
+  const triggerOk=shadow.shadow_status==='OK' || shadow.trigger_status==='OK';
+  const hasMixedSibling=volOpenCount>0 && allOpen.some(t=>modelOf(t)==='fixed');
+  const mixedAsset=allOpen.filter(t=>modelOf(t)==='volatility').map(t=>t.asset).filter(Boolean);
+  const latestMixedProof=mixedAsset.length?mixedAsset[0]:'None';
+  const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
+  html+=`<div class="expansion-panel"><h2>Book Expansion Readiness</h2>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">Shadow Trigger</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
+      <div class="expansion-stat"><div class="exp-label">Volatility Open</div><div class="exp-value">${fmtInt(volOpenCount)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Mixed Sibling Proof</div><div class="exp-value">${esc(latestMixedProof)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Status</div><div class="exp-value"><span class="expansion-badge ${expansionReady?'ready':'not-ready'}">${expansionReady?'Ready for Cautious Expansion':'Not Ready'}</span></div></div>
+    </div>
+  </div>`;
+
   const bookOpen=openPositions().filter(t=>t.book_key===b.book_key);
   const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key);
   const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
