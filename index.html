@@ -209,6 +209,9 @@
   .tm-pnl-banner.zero-text{background:#f3f3f3}
   .tm-foot{padding:14px 24px;border-top:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap}
   .tm-btn{font-size:13px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+  .tm-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .tm-nav .tm-btn{font-weight:800}
+  .tm-index{font:700 11px/1.3 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.45px}
   @media(max-width:760px){
     body{padding:20px 14px 76px}
     .site-nav{position:fixed;bottom:0;left:0;right:0;top:auto;border-radius:0;margin:0;border-left:0;border-right:0;border-bottom:0;background:var(--panel)}
@@ -311,6 +314,7 @@ let sel={
 };
 let OPEN_EXPANDED=false, CLOSED_EXPANDED=false;
 let OPEN_SEARCH='', CLOSED_SEARCH='';
+let CURRENT_TRADE_ID=null;
 
 const STRAT_LABELS={news_only:'News Only',news_plus_ta:'Trend Gate',mean_reversion:'Mean Revert',trend_strict:'Trend Strict',full_confluence:'Full Confluence',crypto_lab:'Crypto Lab'};
 const LIFE_LABELS={hold_24hr:'24hr Hold',sell_eod:'Early Exit'};
@@ -380,6 +384,10 @@ function pricePathBar(t, compact=false){
 function tradeHigh(t){return t.high_price ?? t.high_since_entry ?? t.max_price ?? t.session_high ?? null}
 function tradeLow(t){return t.low_price ?? t.low_since_entry ?? t.min_price ?? t.session_low ?? null}
 function latencyFor(t){return rows(DATA?.latency).find(l=>l.v2_trade_intent_id===t.id || (l.signal_id===t.signal_id && l.asset===t.asset))}
+function latencyReferencePrice(l){return l?.news_reference_price ?? l?.price_at_news ?? null}
+function latencyRawMove(l){return l?.price_move_before_entry_pct ?? null}
+function latencyAdjustedMove(l){return l?.direction_adjusted_move_before_entry_pct ?? latencyRawMove(l)}
+function latencySourceText(l){return String(l?.price_reference_source||l?.latency_price_status||'').replaceAll('_',' ') || 'not captured yet'}
 function bookForTrade(t){return officialBooks().find(b=>b.book_key===t.book_key || b.book_id===t.book_id)}
 function spendRuleInfo(t){
   const spent=Number(t.stake_amount||0);
@@ -640,14 +648,23 @@ function showView(v){
 }
 function openTradeModal(id){
   const t=allTrades().find(x=>String(x.id)===String(id)); if(!t) return;
+  CURRENT_TRADE_ID=t.id;
   const pnl=pnlOf(t), pct=pctOf(t), lat=latencyFor(t), url=articleUrl(t), dir=(t.direction||'').toUpperCase();
+  const tradeList=allTrades();
+  const tradeIdx=tradeList.findIndex(x=>String(x.id)===String(t.id));
+  const tradeCount=tradeList.length;
+  const prevId=tradeCount?tradeList[(tradeIdx-1+tradeCount)%tradeCount]?.id:null;
+  const nextId=tradeCount?tradeList[(tradeIdx+1)%tradeCount]?.id:null;
+  const refPx=latencyReferencePrice(lat);
+  const rawMove=latencyRawMove(lat);
+  const adjMove=latencyAdjustedMove(lat);
   const closed=t.status==='CLOSED';
   const high=tradeHigh(t), low=tradeLow(t);
   const spend=spendRuleInfo(t);
   const reasonClass=exitReasonClass(t.exit_reason);
   const outcomeTitle=closed?exitReasonLabel(t.exit_reason):(t.current_price==null?'Waiting for mark':'Open position');
   const outcomeSub=closed?`Exited ${shortTime(t.exit_time)}`:`Entered ${shortTime(t.entry_time)}`;
-  const html=`<div class="tm-head"><div><h3>${esc(t.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span></h3><div class="tm-sub">${esc(t.portfolio||'')} · ${esc(t.lifecycle||'')} · ${esc(t.status||'')}</div></div><button class="tm-close" onclick="closeTradeModal()">×</button></div>
+  const html=`<div class="tm-head"><div><h3>${esc(t.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span></h3><div class="tm-sub">${esc(t.portfolio||'')} · ${esc(t.lifecycle||'')} · ${esc(t.status||'')}</div></div><div class="tm-nav"><button class="tm-btn" onclick="openTradeModal('${esc(prevId)}')">← Prev</button><span class="tm-index">${tradeIdx+1}/${tradeCount}</span><button class="tm-btn" onclick="openTradeModal('${esc(nextId)}')">Next →</button><button class="tm-close" onclick="closeTradeModal()">×</button></div></div>
   <div class="tm-body">
     <div class="tm-pnl-banner ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
     <div class="tm-focus">
@@ -662,12 +679,12 @@ function openTradeModal(id){
       </div>
       <div>
         <div class="tm-section"><h4>Volatility Model</h4>${kv('Model source',t.target_source||t.atr_source||'—')}${kv('ATR source',t.atr_source||t.target_source||'—')}${kv('ATR timestamp',t.atr_source_timestamp?shortTime(t.atr_source_timestamp):'—')}${kv('ATR value',t.atr_value??'—')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Vol stop',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Vol target',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
-        <div class="tm-section"><h4>Timing</h4>${kv('News to trade',secondsLabel(lat?.news_to_trade_seconds))}${kv('Move before entry',lat?.price_move_before_entry_pct==null?'Missing reference price':fmtPct(lat.price_move_before_entry_pct))}${kv('Entry time',shortTime(t.entry_time))}${closed?kv('Exit time',shortTime(t.exit_time)):''}</div>
+        <div class="tm-section"><h4>Timing</h4>${kv('News to trade',secondsLabel(lat?.news_to_trade_seconds))}${kv('Reference price',refPx==null?'Not captured yet':fmtPrice(refPx))}${kv('Reference source',latencySourceText(lat))}${kv('Raw move before entry',rawMove==null?'Not captured yet':fmtPct(rawMove))}${kv('Direction-adjusted move',adjMove==null?'Not captured yet':fmtPct(adjMove))}${kv('Entry time',shortTime(t.entry_time))}${closed?kv('Exit time',shortTime(t.exit_time)):''}</div>
       </div>
     </div>
     <div class="tm-section"><h4>News</h4><div class="small">${esc(lat?.headline || rows(DATA?.signals).find(s=>s.id===t.signal_id)?.headline || 'No headline available')}</div></div>
   </div>
-  <div class="tm-foot"><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>`;
+  <div class="tm-foot"><button class="tm-btn" onclick="openTradeModal('${esc(prevId)}')">← Previous trade</button><button class="tm-btn" onclick="openTradeModal('${esc(nextId)}')">Next trade →</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>`;
   document.getElementById('tm-modal').innerHTML=html;
   document.getElementById('tm-overlay').classList.add('open');
 }
@@ -685,7 +702,15 @@ function bind(){
     if(e.target.closest('#toggle-closed')){CLOSED_EXPANDED=!CLOSED_EXPANDED; renderOperations(); return}
   });
   document.addEventListener('input',e=>{if(e.target.id==='open-search'){OPEN_SEARCH=e.target.value; renderOperations()} if(e.target.id==='closed-search'){CLOSED_SEARCH=e.target.value; renderOperations()}});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeTradeModal()});
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') closeTradeModal();
+    if(!document.getElementById('tm-overlay').classList.contains('open')) return;
+    const list=allTrades();
+    const idx=list.findIndex(x=>String(x.id)===String(CURRENT_TRADE_ID));
+    if(idx<0||!list.length) return;
+    if(e.key==='ArrowLeft') openTradeModal(list[(idx-1+list.length)%list.length].id);
+    if(e.key==='ArrowRight') openTradeModal(list[(idx+1)%list.length].id);
+  });
 }
 function ensureValidSelection(){
   const books=officialBooks();
