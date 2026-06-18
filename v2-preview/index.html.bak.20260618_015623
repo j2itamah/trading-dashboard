@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V2 Ledger Preview</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --green: #3fb950;
+  --red: #f85149;
+  --blue: #58a6ff;
+  --yellow: #d29922;
+  --purple: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; padding: 16px; }
+h1 { font-size: 20px; margin-bottom: 4px; }
+.subtitle { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.card h2 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+.metric { font-size: 28px; font-weight: 600; }
+.metric.green { color: var(--green); }
+.metric.red { color: var(--red); }
+.metric-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+.badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
+.badge-blue { background: rgba(88,166,255,0.15); color: var(--blue); }
+.badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.badge-purple { background: rgba(188,140,255,0.15); color: var(--purple); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; color: var(--muted); font-weight: 500; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: rgba(88,166,255,0.04); }
+.pnl-pos { color: var(--green); }
+.pnl-neg { color: var(--red); }
+.health-ok { color: var(--green); }
+.health-bad { color: var(--red); }
+.section { margin-bottom: 24px; }
+.section h2 { font-size: 16px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.tab { padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+#error { background: rgba(248,81,73,0.1); border: 1px solid var(--red); color: var(--red); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: none; }
+#loading { text-align: center; color: var(--muted); padding: 40px; }
+.flex-row { display: flex; gap: 8px; align-items: center; }
+.mini-stat { text-align: center; }
+.mini-stat .value { font-size: 18px; font-weight: 600; }
+.mini-stat .label { font-size: 10px; color: var(--muted); }
+.fresh { color: var(--green); }
+.stale-warn { color: var(--yellow); }
+.stale-danger { color: var(--red); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.freshness-banner { background: rgba(248,81,73,0.1); border: 1px solid var(--red); color: var(--red); padding: 8px 16px; border-radius: 8px; margin-bottom: 12px; display: none; font-size: 13px; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 480px) {
+  body { padding: 10px; font-size: 13px; }
+  h1 { font-size: 17px; }
+  .grid { grid-template-columns: 1fr; gap: 8px; }
+  .card { padding: 12px; }
+  .metric { font-size: 22px; }
+  th, td { padding: 6px 8px; white-space: nowrap; }
+  .section h2 { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+<h1>V2 Ledger Preview <span class="badge badge-purple">STAGING</span></h1>
+<p class="subtitle">Foundation V2 — reads from data.v2.json, no JS accounting recalculation <span id="freshness"></span></p>
+<div id="stale-banner" class="freshness-banner"></div>
+<div id="error"></div>
+<div id="loading">Loading data.v2.json...</div>
+<div id="app" style="display:none">
+
+<div class="grid" id="health-cards"></div>
+
+<div class="section">
+  <h2>Book Metrics</h2>
+  <div class="card table-scroll"><table id="books-table"><thead><tr>
+    <th>Book</th><th>Model</th><th>Equity</th><th>P&L</th><th>Return</th><th>Open</th><th>Closed</th><th>Drift</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+
+<div class="section">
+  <h2>Open Positions (<span id="open-count">0</span>)</h2>
+  <div class="card table-scroll"><table id="open-table"><thead><tr>
+    <th>Asset</th><th>Dir</th><th>Model</th><th>Entry</th><th>TP</th><th>SL</th><th>Stake</th><th>Mirror</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+
+<div class="section">
+  <h2>Closed Trades (<span id="closed-count">0</span>)</h2>
+  <div class="card table-scroll"><table id="closed-table"><thead><tr>
+    <th>Asset</th><th>Dir</th><th>Model</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Reason</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+
+<div class="section">
+  <h2>Rejections (<span id="reject-count">0</span>)</h2>
+  <div class="card table-scroll"><table id="reject-table"><thead><tr>
+    <th>Signal</th><th>Stage</th><th>Reason</th><th>Time</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = (n, d=2) => n == null ? '—' : Number(n).toLocaleString('en-US', {minimumFractionDigits: d, maximumFractionDigits: d});
+const fmtPct = n => n == null ? '—' : (Number(n) * 100).toFixed(2) + '%';
+const pnlClass = n => Number(n) >= 0 ? 'pnl-pos' : 'pnl-neg';
+const pnlSign = n => Number(n) >= 0 ? '+$' + fmt(n) : '-$' + fmt(Math.abs(n));
+const ts = s => s ? new Date(s).toLocaleString() : '—';
+
+async function load() {
+  try {
+    const res = await fetch('data.v2.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    $('#error').textContent = `Failed to load data.v2.json: ${e.message}`;
+    $('#error').style.display = 'block';
+    $('#loading').style.display = 'none';
+  }
+}
+
+function render(data) {
+  $('#loading').style.display = 'none';
+  $('#app').style.display = 'block';
+
+  // Freshness check
+  const genAt = data.generated_at ? new Date(data.generated_at) : null;
+  const ageMin = genAt ? Math.round((Date.now() - genAt.getTime()) / 60000) : null;
+  const freshEl = $('#freshness');
+  const bannerEl = $('#stale-banner');
+  if (ageMin === null) {
+    freshEl.textContent = '(no timestamp)';
+    freshEl.className = 'stale-danger';
+  } else if (ageMin > 60) {
+    freshEl.textContent = `⚠ Data is ${ageMin}m old`;
+    freshEl.className = 'stale-danger';
+    bannerEl.textContent = `WARNING: Data is ${ageMin} minutes old (generated ${genAt.toLocaleString()}). Publisher may not be running.`;
+    bannerEl.style.display = 'block';
+  } else if (ageMin > 15) {
+    freshEl.textContent = `Data is ${ageMin}m old`;
+    freshEl.className = 'stale-warn';
+  } else {
+    freshEl.textContent = `Updated ${ageMin}m ago`;
+    freshEl.className = 'fresh';
+  }
+
+  // Health cards
+  const h = data.health || {};
+  const books = data.book_metrics || [];
+  const open = data.open_positions || [];
+  const closed = data.closed_trades || [];
+  const signals = data.signals || [];
+  const rejections = data.rejections || [];
+
+  const totalEquity = books.reduce((s, b) => s + Number(b.marked_equity || 0), 0);
+  const totalPnl = books.reduce((s, b) => s + Number(b.realized_pnl || 0), 0);
+  const totalStarting = books.reduce((s, b) => s + Number(b.starting_balance || 0), 0);
+
+  $('#health-cards').innerHTML = `
+    <div class="card">
+      <h2>Health</h2>
+      <div class="metric ${h.accounting_ok ? 'health-ok' : 'health-bad'}">${h.accounting_ok ? 'OK' : 'DRIFT'}</div>
+      <div class="metric-label">accounting_ok: ${h.accounting_ok}, drift: ${h.books_with_drift || 0}</div>
+      <div class="metric-label">checked: ${ts(h.checked_at)}</div>
+    </div>
+    <div class="card">
+      <h2>Total Equity</h2>
+      <div class="metric">$${fmt(totalEquity)}</div>
+      <div class="metric-label">Starting: $${fmt(totalStarting)} across ${books.length} books</div>
+    </div>
+    <div class="card">
+      <h2>Realized P&L</h2>
+      <div class="metric ${pnlClass(totalPnl)}">${pnlSign(totalPnl)}</div>
+      <div class="metric-label">${fmtPct(totalPnl / totalStarting)} return</div>
+    </div>
+    <div class="card">
+      <h2>Activity</h2>
+      <div class="flex-row" style="justify-content:space-around;margin-top:8px">
+        <div class="mini-stat"><div class="value">${open.length}</div><div class="label">Open</div></div>
+        <div class="mini-stat"><div class="value">${closed.length}</div><div class="label">Closed</div></div>
+        <div class="mini-stat"><div class="value">${signals.length}</div><div class="label">Signals</div></div>
+        <div class="mini-stat"><div class="value">${rejections.length}</div><div class="label">Rejected</div></div>
+      </div>
+    </div>
+  `;
+
+  // Shadow health panel
+  const sh = data.shadow_health || {};
+  const shStatus = sh.shadow_status || 'unknown';
+  const shClass = shStatus === 'OK' ? 'health-ok' : (shStatus.startsWith('CRITICAL') ? 'health-bad' : 'stale-warn');
+  const trigClass = sh.trigger_status === 'active' ? 'badge-green' : 'badge-red';
+  const rlsClass = sh.audit_rls_enabled === false ? 'badge-green' : 'badge-yellow';
+
+  const shEl = document.createElement('div');
+  shEl.className = 'section';
+  shEl.innerHTML = `
+    <h2>Shadow Trigger Health</h2>
+    <div class="grid">
+      <div class="card">
+        <h2>Trigger</h2>
+        <div class="metric ${shClass}">${shStatus}</div>
+        <div class="metric-label" style="margin-top:8px">
+          <span class="badge ${trigClass}">${sh.trigger_status || '?'}</span>
+          RLS: <span class="badge ${rlsClass}">${sh.audit_rls_enabled === false ? 'disabled' : 'enabled'}</span>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Audit Log</h2>
+        <div class="flex-row" style="justify-content:space-around;margin-top:8px">
+          <div class="mini-stat"><div class="value">${sh.total_audit_rows || 0}</div><div class="label">Total</div></div>
+          <div class="mini-stat"><div class="value pnl-pos">${sh.audit_success || 0}</div><div class="label">Success</div></div>
+          <div class="mini-stat"><div class="value ${(sh.audit_errors || 0) > 0 ? 'pnl-neg' : ''}">${sh.audit_errors || 0}</div><div class="label">Errors</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Shadow Coverage</h2>
+        <div class="flex-row" style="justify-content:space-around;margin-top:8px">
+          <div class="mini-stat"><div class="value">${sh.production_open_trades || 0}</div><div class="label">Prod Open</div></div>
+          <div class="mini-stat"><div class="value" style="color:var(--blue)">${sh.v2_shadow_intents || 0}</div><div class="label">V2 Shadows</div></div>
+          <div class="mini-stat"><div class="value">${sh.trades_last_hour || 0}</div><div class="label">Last Hour</div></div>
+        </div>
+      </div>
+    </div>
+  `;
+  $('#health-cards').parentNode.insertBefore(shEl, $('#health-cards').nextSibling);
+
+  // Books table
+  const bBody = $('#books-table tbody');
+  bBody.innerHTML = books.map(b => `<tr>
+    <td>${b.book_key || '—'}</td>
+    <td><span class="badge ${b.target_model === 'fixed' ? 'badge-blue' : 'badge-yellow'}">${b.target_model}</span></td>
+    <td>$${fmt(b.marked_equity)}</td>
+    <td class="${pnlClass(b.realized_pnl)}">${pnlSign(b.realized_pnl)}</td>
+    <td>${fmtPct(b.marked_return)}</td>
+    <td>${b.open_count}</td>
+    <td>${b.closed_count}</td>
+    <td class="${Number(b.recon_drift || 0) === 0 ? 'health-ok' : 'health-bad'}">${fmt(b.recon_drift, 6)}</td>
+  </tr>`).join('');
+
+  // Open positions
+  $('#open-count').textContent = open.length;
+  const oBody = $('#open-table tbody');
+  oBody.innerHTML = open.map(t => `<tr>
+    <td><strong>${t.asset}</strong></td>
+    <td><span class="badge ${t.direction === 'BUY' ? 'badge-green' : 'badge-red'}">${t.direction}</span></td>
+    <td><span class="badge ${t.target_model === 'fixed' ? 'badge-blue' : 'badge-yellow'}">${t.target_model}</span></td>
+    <td>$${fmt(t.entry_price)}</td>
+    <td>$${fmt(t.take_profit_price)}</td>
+    <td>$${fmt(t.stop_loss_price)}</td>
+    <td>$${fmt(t.stake_amount)}</td>
+    <td><span class="badge badge-purple">${t.broker_mirror_status || 'not_attempted'}</span></td>
+  </tr>`).join('') || '<tr><td colspan="8" style="color:var(--muted);text-align:center">No open positions</td></tr>';
+
+  // Closed trades
+  $('#closed-count').textContent = closed.length;
+  const cBody = $('#closed-table tbody');
+  cBody.innerHTML = closed.map(t => `<tr>
+    <td><strong>${t.asset}</strong></td>
+    <td><span class="badge ${t.direction === 'BUY' ? 'badge-green' : 'badge-red'}">${t.direction}</span></td>
+    <td><span class="badge ${t.target_model === 'fixed' ? 'badge-blue' : 'badge-yellow'}">${t.target_model}</span></td>
+    <td>$${fmt(t.entry_price)}</td>
+    <td>$${fmt(t.exit_price)}</td>
+    <td class="${pnlClass(t.realized_pnl)}">${pnlSign(t.realized_pnl)}</td>
+    <td>${t.exit_reason || '—'}</td>
+  </tr>`).join('') || '<tr><td colspan="7" style="color:var(--muted);text-align:center">No closed trades</td></tr>';
+
+  // Rejections
+  $('#reject-count').textContent = rejections.length;
+  const rBody = $('#reject-table tbody');
+  rBody.innerHTML = rejections.map(r => `<tr>
+    <td>${r.signal_id || '—'}</td>
+    <td><span class="badge badge-yellow">${r.stage}</span></td>
+    <td>${r.reason || '—'}</td>
+    <td style="color:var(--muted)">${ts(r.created_at)}</td>
+  </tr>`).join('') || '<tr><td colspan="4" style="color:var(--muted);text-align:center">No rejections</td></tr>';
+}
+
+load();
+</script>
+</body>
+</html>
