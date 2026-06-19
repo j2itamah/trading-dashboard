@@ -171,6 +171,10 @@
   .target-health-bars .tp{background:var(--green)}
   .target-health-bars .sl{background:var(--red)}
   .target-health-bars .time{background:var(--accent)}
+  .ops-details{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:#fbfaf6;overflow:hidden}
+  .ops-details summary{cursor:pointer;padding:14px 16px;font:800 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);list-style:none}
+  .ops-details summary::-webkit-details-marker{display:none}
+  .ops-details-body{padding:0 16px 16px}
   .closed-toggle{background:none;border:1px solid var(--line);border-radius:10px;padding:10px 16px;width:100%;text-align:left;cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft);margin:12px 0 10px;display:flex;justify-content:space-between;align-items:center}
   .trade-search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;margin-bottom:10px;outline:none;background:var(--bg)}
   .empty{padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);font:13px/1.5 'Spline Sans Mono',monospace;background:rgba(255,255,255,.45)}
@@ -350,6 +354,7 @@ let sel={
 let OPEN_EXPANDED=false, CLOSED_EXPANDED=false;
 let OPEN_SEARCH='', CLOSED_SEARCH='';
 let CURRENT_TRADE_ID=null;
+const VOL_PILOT1_START_AT='2026-06-19T00:50:22.324742+00:00';
 
 const STRAT_LABELS={news_only:'News Only',news_plus_ta:'Trend Gate',mean_reversion:'Mean Revert',trend_strict:'Trend Strict',full_confluence:'Full Confluence',crypto_lab:'Crypto Lab'};
 const LIFE_LABELS={hold_24hr:'24hr Hold',sell_eod:'Early Exit'};
@@ -371,6 +376,12 @@ const allTrades=()=>openPositions().concat(closedTrades());
 function bookLabel(b){return `${STRAT_LABELS[b?.portfolio]||b?.portfolio||'Book'} · ${LIFE_LABELS[b?.lifecycle]||b?.lifecycle||'Lifecycle'} · ${(b?.target_model||'model')}`;}
 function selectedBook(){return officialBooks().find(b=>(b.portfolio||'')===sel.portfolio && (b.lifecycle||'')===sel.lifecycle && (b.target_model||b.classification||'')===sel.model)}
 function modelOf(r){return r.target_model||r.model||r.classification||'fixed'}
+function tradeTs(t){return new Date(t.entry_time||t.created_at||t.opened_at||t.exit_time||0).getTime()}
+function currentPilotTrade(t){return modelOf(t)!=='volatility' || tradeTs(t)>=new Date(VOL_PILOT1_START_AT).getTime()}
+function selectedBookTrades(b,status){
+  const source=status==='OPEN'?openPositions():closedTrades();
+  return source.filter(t=>t.book_key===b.book_key).filter(currentPilotTrade);
+}
 function pnlOf(t){return t.status==='CLOSED' ? Number(t.realized_pnl||0) : Number(t.computed_unrealized_pnl ?? t.unrealized_pnl ?? 0)}
 function pctOf(t){return t.status==='CLOSED' ? Number(t.computed_realized_pnl_pct ?? (Number(t.realized_pnl_percent||0)*100)) : Number(t.computed_unrealized_pnl_pct ?? (Number(t.unrealized_pnl_percent||0)*100))}
 function brokerLabel(s){return s==='paper_filled'?'Broker: paper filled':s==='submitted'?'Broker: submitted':s==='cancelled'?'Broker: cancelled':'Broker: not mirrored'}
@@ -722,45 +733,16 @@ function renderOperations(){
     return;
   }
   active.innerHTML=`<strong>${bookLabel(b)}</strong><div>${esc(b.book_key)} · ${esc(b.prop_status||b.official_status||'ok')}</div>`;
+  const bookOpen=selectedBookTrades(b,'OPEN');
+  const bookClosed=selectedBookTrades(b,'CLOSED').sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
+  const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
+  const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
   let html='';
   if(sel.portfolio==='crypto_lab') html+=`<div class="lab-warning">Crypto Lab is research-only and does not count toward official account totals.</div>`;
-  if(sel.model==='volatility' && Number(b.open_count||0)===0){
+  if(sel.model==='volatility' && bookOpen.length===0){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
-  html+=`<div class="equity-summary"><div class="eq-card"><div class="eq-label">Selected Book Equity</div><div class="eq-equity">${fmtMoney(b.marked_equity||b.equity||b.starting_balance)}</div><div class="eq-growth ${signCls(b.since_start_pnl)}">${Number(b.since_start_pnl||0)>=0?'+':''}${fmtMoney(b.since_start_pnl||0)} since start · ${fmtPct(Number(b.since_start_return||0)*100)}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized</div></div></div>`;
-  html+=`<div class="kpis">
-    ${kpi('Open', fmtInt(b.open_count), '', `${fmtInt(b.today_opened_count)} opened today`)}
-    ${kpi('Closed', fmtInt(b.closed_count), '', `${fmtInt(b.today_closed_count)} closed today`)}
-    ${kpi('Unrealized', `${Number(b.unrealized_pnl||0)>=0?'+':''}${fmtMoney(b.unrealized_pnl||0)}`, signCls(b.unrealized_pnl))}
-    ${kpi('Realized', `${Number(b.realized_pnl||0)>=0?'+':''}${fmtMoney(b.realized_pnl||0)}`, signCls(b.realized_pnl))}
-  </div>`;
-  html+=modelPerformancePanel();
-  // --- Book Expansion Readiness Panel ---
-  const shadow=DATA?.shadow_health||{};
-  const allOpen=openPositions();
-  const volOpenCount=allOpen.filter(t=>modelOf(t)==='volatility').length;
-  const auditOk=Number(shadow.audit_success||0);
-  const auditErr=Number(shadow.audit_errors||0);
-  const triggerOk=shadow.shadow_status==='OK' || shadow.trigger_status==='OK';
-  const hasMixedSibling=volOpenCount>0 && allOpen.some(t=>modelOf(t)==='fixed');
-  const mixedAsset=allOpen.filter(t=>modelOf(t)==='volatility').map(t=>t.asset).filter(Boolean);
-  const latestMixedProof=mixedAsset.length?mixedAsset[0]:'None';
-  const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
-  html+=`<div class="expansion-panel"><h2>Book Expansion Readiness</h2>
-    <div class="expansion-grid">
-      <div class="expansion-stat"><div class="exp-label">Trade Capture</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
-      <div class="expansion-stat"><div class="exp-label">Volatility Open</div><div class="exp-value">${fmtInt(volOpenCount)}</div></div>
-      <div class="expansion-stat"><div class="exp-label">Mixed Sibling Proof</div><div class="exp-value">${esc(latestMixedProof)}</div></div>
-      <div class="expansion-stat"><div class="exp-label">Status</div><div class="exp-value"><span class="expansion-badge ${expansionReady?'ready':'not-ready'}">${expansionReady?'Ready for Cautious Expansion':'Not Ready'}</span></div></div>
-    </div>
-  </div>`;
-
-  const bookOpen=openPositions().filter(t=>t.book_key===b.book_key);
-  const bookClosed=closedTrades().filter(t=>t.book_key===b.book_key).sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
-  const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
-  const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
-  html+=targetHealthPanel(bookOpen.concat(bookClosed), sel.model);
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
@@ -776,6 +758,27 @@ function renderOperations(){
     if(bookClosed.length>6) html+=`<button class="closed-toggle" id="toggle-closed"><span>${CLOSED_EXPANDED?'Collapse':'Show all '+bookClosed.length+' trades'}</span><span>›</span></button>`;
   }
   html+='</div></div>';
+  const shadow=DATA?.shadow_health||{};
+  const allOpen=openPositions().filter(currentPilotTrade);
+  const volOpenCount=allOpen.filter(t=>modelOf(t)==='volatility').length;
+  const auditOk=Number(shadow.audit_success||0);
+  const auditErr=Number(shadow.audit_errors||0);
+  const triggerOk=shadow.shadow_status==='OK' || shadow.trigger_status==='OK';
+  const mixedAsset=allOpen.filter(t=>modelOf(t)==='volatility').map(t=>t.asset).filter(Boolean);
+  const latestMixedProof=mixedAsset.length?mixedAsset[0]:'None';
+  const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
+  html+=`<details class="ops-details"><summary>Book health and expansion details</summary><div class="ops-details-body">
+    ${targetHealthPanel(bookOpen.concat(bookClosed), sel.model)}
+    <div class="equity-summary"><div class="eq-card"><div class="eq-label">Selected Book Equity</div><div class="eq-equity">${fmtMoney(b.marked_equity||b.equity||b.starting_balance)}</div><div class="eq-growth ${signCls(b.since_start_pnl)}">${Number(b.since_start_pnl||0)>=0?'+':''}${fmtMoney(b.since_start_pnl||0)} since start · ${fmtPct(Number(b.since_start_return||0)*100)}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized</div></div></div>
+    <div class="expansion-panel"><h2>Book Expansion Readiness</h2>
+      <div class="expansion-grid">
+        <div class="expansion-stat"><div class="exp-label">Trade Capture</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
+        <div class="expansion-stat"><div class="exp-label">Pilot 1 Volatility Open</div><div class="exp-value">${fmtInt(volOpenCount)}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Mixed Sibling Proof</div><div class="exp-value">${esc(latestMixedProof)}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Status</div><div class="exp-value"><span class="expansion-badge ${expansionReady?'ready':'not-ready'}">${expansionReady?'Ready for Cautious Expansion':'Not Ready'}</span></div></div>
+      </div>
+    </div>
+  </div></details>`;
   document.getElementById('operations-content').innerHTML=html;
 }
 function renderResearch(){
