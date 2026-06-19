@@ -171,6 +171,13 @@
   .target-health-bars .tp{background:var(--green)}
   .target-health-bars .sl{background:var(--red)}
   .target-health-bars .time{background:var(--accent)}
+  .ops-glance{display:grid;grid-template-columns:.95fr 1.45fr;gap:14px;margin:0 0 18px}
+  .ops-glance-card{border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);padding:14px}
+  .ops-glance-title{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.75px;color:var(--ink-soft);margin-bottom:10px}
+  .ops-glance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .ops-glance-stat{border:1px solid rgba(35,31,26,.08);border-radius:10px;background:#fbfaf6;padding:9px}
+  .ops-glance-stat strong{display:block;font:800 20px/1.05 'Fraunces',serif}
+  .ops-glance-stat span{display:block;font:700 9.5px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px;margin-top:4px}
   .ops-details{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:#fbfaf6;overflow:hidden}
   .ops-details summary{cursor:pointer;padding:14px 16px;font:800 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);list-style:none}
   .ops-details summary::-webkit-details-marker{display:none}
@@ -477,6 +484,21 @@ function targetHealthPanel(trades, model){
     <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
   </div>`;
 }
+function operationsGlance(open, closed){
+  const s=targetStats(open.concat(closed));
+  return `<div class="ops-glance">
+    <div class="ops-glance-card">
+      <div class="ops-glance-title">At a glance</div>
+      <div class="ops-glance-grid">
+        <div class="ops-glance-stat"><strong>${fmtInt(s.open)}</strong><span>open</span></div>
+        <div class="ops-glance-stat"><strong>${fmtInt(s.closed)}</strong><span>closed</span></div>
+        <div class="ops-glance-stat"><strong class="${signCls(s.unrealized)}">${Number(s.unrealized)>=0?'+':''}${fmtMoney(s.unrealized)}</strong><span>open P/L</span></div>
+        <div class="ops-glance-stat"><strong class="${signCls(s.realized)}">${Number(s.realized)>=0?'+':''}${fmtMoney(s.realized)}</strong><span>realized</span></div>
+      </div>
+    </div>
+    ${targetHealthPanel(open.concat(closed), sel.model)}
+  </div>`;
+}
 function modelPerformancePanel(){
   const vr=DATA?.volatility_review||[];
   const vrMap={};
@@ -743,6 +765,7 @@ function renderOperations(){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
+  html+=operationsGlance(bookOpen, bookClosed);
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
@@ -768,7 +791,6 @@ function renderOperations(){
   const latestMixedProof=mixedAsset.length?mixedAsset[0]:'None';
   const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
   html+=`<details class="ops-details"><summary>Book health and expansion details</summary><div class="ops-details-body">
-    ${targetHealthPanel(bookOpen.concat(bookClosed), sel.model)}
     <div class="equity-summary"><div class="eq-card"><div class="eq-label">Selected Book Equity</div><div class="eq-equity">${fmtMoney(b.marked_equity||b.equity||b.starting_balance)}</div><div class="eq-growth ${signCls(b.since_start_pnl)}">${Number(b.since_start_pnl||0)>=0?'+':''}${fmtMoney(b.since_start_pnl||0)} since start · ${fmtPct(Number(b.since_start_return||0)*100)}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized</div></div></div>
     <div class="expansion-panel"><h2>Book Expansion Readiness</h2>
       <div class="expansion-grid">
