@@ -237,6 +237,17 @@
   .focus-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfaf6}
   .focus-card.good{background:var(--green-bg);border-color:#b8e2cc}
   .focus-card.bad{background:var(--red-bg);border-color:#e8a0a8}
+  .news-impact{border:1px solid var(--line);border-radius:16px;background:#fbfaf6;padding:14px;margin-bottom:14px}
+  .news-impact-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .news-impact-title{font-weight:800}
+  .impact-pill{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.45px;padding:6px 8px;border-radius:999px;border:1px solid var(--line);background:var(--accent-bg);color:var(--accent);white-space:nowrap}
+  .impact-pill.heavy{background:var(--green-bg);border-color:#b8e2cc;color:var(--green)}
+  .impact-pill.light{background:#fff8e5;border-color:#e7c46a;color:#7a5610}
+  .impact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .impact-metric{border:1px solid rgba(35,31,26,.08);border-radius:10px;background:rgba(255,255,255,.65);padding:9px}
+  .impact-metric span{display:block;font:800 9.5px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px;margin-bottom:4px}
+  .impact-metric strong{display:block;font:800 17px/1.1 'Fraunces',serif}
+  .impact-wide{grid-column:1/-1}
   .focus-label{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft)}
   .focus-value{font-family:'Fraunces',serif;font-weight:700;font-size:22px;margin-top:5px}
   .path-bar{height:16px;border-radius:999px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;margin:10px 0 8px;border:1px solid var(--line)}
@@ -486,6 +497,30 @@ function latencyQuality(l){
   if(raw!=null && Math.abs(Number(raw))<0.005 && source==='news_time_quote') return {label:'Reference equals entry', detail:'Reference price is captured, but movement before entry is effectively zero.', cls:'warn'};
   if(status.includes('ok')) return {label:'Timing captured', detail:`Entry was ${durationLabel(seconds)} after the news timestamp.`, cls:'good'};
   return {label:'Timing captured', detail:`Entry was ${durationLabel(seconds)} after the reference timestamp.`, cls:'good'};
+}
+function signalForTrade(t){return rows(DATA?.signals).find(s=>s.id===t.signal_id)}
+function confidenceForTrade(t){
+  const sig=signalForTrade(t);
+  return Number(t.confidence ?? sig?.confidence ?? sig?.raw_payload?.confidence ?? NaN);
+}
+function catalystWeight(t, lat){
+  const headline=String(lat?.headline || signalForTrade(t)?.headline || '').toLowerCase();
+  let score=0;
+  const conf=confidenceForTrade(t);
+  if(Number.isFinite(conf)) score+=Math.max(0,Math.min(1,conf))*45;
+  if(/acquir|merger|buyout|contract|partnership|approval|fda|guidance|earnings|beats|revenue|patent|lawsuit win|wins/.test(headline)) score+=30;
+  if(/investigation|class action|deadline|reminder|rosen law|shareholder alert|securities class/.test(headline)) score-=20;
+  const move=Math.abs(Number(latencyAdjustedMove(lat) ?? 0));
+  if(move>=2) score+=15; else if(move>=.75) score+=8;
+  if(String(lat?.source||'').toLowerCase().includes('pr newswire')) score-=4;
+  const label=score>=55?'Heavy catalyst':score>=28?'Medium catalyst':'Light catalyst';
+  const cls=score>=55?'heavy':score>=28?'medium':'light';
+  return {score:Math.max(0,Math.min(100,score)),label,cls};
+}
+function pctFromPrices(a,b){
+  const x=Number(a), y=Number(b);
+  if(!Number.isFinite(x)||!Number.isFinite(y)||x===0) return null;
+  return ((y-x)/x)*100;
 }
 function bookForTrade(t){return officialBooks().find(b=>b.book_key===t.book_key || b.book_id===t.book_id)}
 function spendRuleInfo(t){
@@ -1030,32 +1065,52 @@ function openTradeModal(id){
   const rawMove=latencyRawMove(lat);
   const adjMove=latencyAdjustedMove(lat);
   const latQ=latencyQuality(lat);
+  const impact=catalystWeight(t,lat);
   const closed=t.status==='CLOSED';
   const high=tradeHigh(t), low=tradeLow(t);
   const spend=spendRuleInfo(t);
   const reasonClass=exitReasonClass(t.exit_reason);
   const outcomeTitle=closed?exitReasonLabel(t.exit_reason):(t.current_price==null?'Waiting for mark':'Open position');
   const outcomeSub=closed?`Exited ${shortTime(t.exit_time)}`:`Entered ${shortTime(t.entry_time)}`;
+  const headline=lat?.headline || signalForTrade(t)?.headline || 'No headline available';
+  const tradePx=Number(t.entry_price);
+  const markPx=Number(closed?(t.exit_price??t.current_price):t.current_price);
+  const rawEntryMove=rawMove ?? pctFromPrices(refPx,tradePx);
+  const rawNowMove=pctFromPrices(refPx,markPx);
+  const dirAdjNow=rawNowMove==null?null:(dir==='SELL'?-rawNowMove:rawNowMove);
   const html=`<div class="tm-head"><div><h3>${esc(t.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span></h3><div class="tm-sub">${esc(t.portfolio||'')} · ${esc(t.lifecycle||'')} · ${esc(t.status||'')}</div></div><div class="tm-nav"><button class="tm-btn" onclick="openTradeModal('${esc(prevId)}')">← Prev</button><span class="tm-index">${tradeIdx+1}/${tradeCount}</span><button class="tm-btn" onclick="openTradeModal('${esc(nextId)}')">Next →</button><button class="tm-close" onclick="closeTradeModal()">×</button></div></div>
   <div class="tm-body">
     <div class="tm-pnl-banner ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
+    <div class="news-impact">
+      <div class="news-impact-head"><div><div class="news-impact-title">News impact</div><div class="small">${esc(headline)}</div></div><span class="impact-pill ${impact.cls}">${esc(impact.label)}</span></div>
+      <div class="impact-grid">
+        <div class="impact-metric"><span>Article time</span><strong>${lat?.news_event_time?shortTime(lat.news_event_time):'Missing'}</strong></div>
+        <div class="impact-metric"><span>Trade placed</span><strong>${shortTime(t.entry_time)}</strong></div>
+        <div class="impact-metric"><span>News → trade</span><strong>${durationLabel(lat?.news_to_trade_seconds)}</strong></div>
+        <div class="impact-metric"><span>Ref → entry</span><strong class="${signCls(rawEntryMove)}">${rawEntryMove==null?'Missing':fmtPct(rawEntryMove)}</strong></div>
+        <div class="impact-metric"><span>Ref price</span><strong>${refPx==null?'Missing':fmtPrice(refPx)}</strong></div>
+        <div class="impact-metric"><span>Entry price</span><strong>${fmtPrice(t.entry_price)}</strong></div>
+        <div class="impact-metric impact-wide"><span>Move since news/reference now</span><strong class="${signCls(dirAdjNow)}">${dirAdjNow==null?'Waiting for mark':`${fmtPct(rawNowMove)} raw · ${fmtPct(dirAdjNow)} for this ${dir}`}</strong></div>
+      </div>
+      <div class="small" style="margin-top:9px">${esc(latQ.detail)}</div>
+      ${url?`<a class="cand-link" href="${esc(url)}" target="_blank" rel="noopener">Read original article →</a>`:''}
+    </div>
     <div class="tm-focus">
       <div class="focus-card ${closed?reasonClass==='stop_loss'?'bad':reasonClass==='take_profit'?'good':'':''}"><div class="focus-label">${closed?'Close Reason':'Status'}</div><div class="focus-value">${esc(outcomeTitle)}</div><div class="small">${esc(outcomeSub)}</div></div>
       <div class="focus-card ${latQ.cls==='warn'?'bad':latQ.cls==='good'?'good':''}"><div class="focus-label">Timing</div><div class="focus-value" style="font-size:17px">${esc(latQ.label)}</div><div class="small">${esc(latQ.detail)}</div></div>
       <div class="focus-card"><div class="focus-label">Article</div><div class="focus-value" style="font-size:17px">${url?'Available':'Missing'}</div>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">Read original article</a>`:'<div class="small">Source link unavailable</div>'}</div>
     </div>
-    <div class="tm-cols">
+    <details class="ops-details"><summary>Show trade details</summary><div class="ops-details-body"><div class="tm-cols">
       <div>
         <div class="tm-section"><h4>Price Path</h4>${pricePathBar(t,false)}${kv('Entry',fmtPrice(t.entry_price))}${kv(closed?'Exit':'Current',closed?fmtPrice(t.exit_price):(t.current_price==null?'Waiting for mark':fmtPrice(t.current_price)))}${kv('High reached',high==null?'Not tracked yet':fmtPrice(high))}${kv('Low reached',low==null?'Not tracked yet':fmtPrice(low))}</div>
-        <div class="tm-section"><h4>Spend / Sizing</h4>${kv('Amount spent',fmtMoney(spend.spent))}${kv('Sizing check',spend.pct==null?'Unknown':`${spend.pct.toFixed(1)}% ${spend.exact?'of available cash':'of book size'}`)}${kv('10% rule source',spend.exact?'pre-trade cash captured':'needs pre-trade cash field')}${kv('Shares',Number(t.shares||0).toFixed(4))}</div>
+        <div class="tm-section"><h4>Spend / Sizing</h4>${kv('Amount spent',fmtMoney(spend.spent))}${kv('Sizing check',spend.pct==null?'Unknown':`${spend.pct.toFixed(1)}% ${spend.exact?'of available cash':'of book size'}`)}</div>
         <div class="tm-section"><h4>Risk / Target</h4>${kv(dir==='BUY'?'Take Profit (above entry)':'Take Profit (below entry)',fmtPrice(t.take_profit_price))}${kv(dir==='BUY'?'Stop Loss (below entry)':'Stop Loss (above entry)',fmtPrice(t.stop_loss_price))}</div>
       </div>
       <div>
-        <div class="tm-section"><h4>Volatility Model</h4>${kv('Model source',t.target_source||t.atr_source||'—')}${kv('ATR source',t.atr_source||t.target_source||'—')}${kv('ATR timestamp',t.atr_source_timestamp?shortTime(t.atr_source_timestamp):'—')}${kv('ATR value',t.atr_value??'—')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Vol stop',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Vol target',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
-        <div class="tm-section"><h4>Timing</h4>${kv('Read this as',latQ.label)}${kv('Timing note',latQ.detail)}${kv('News to trade',durationLabel(lat?.news_to_trade_seconds))}${kv('Reference price',refPx==null?'Not captured yet':fmtPrice(refPx))}${kv('Reference source',latencySourceText(lat))}${kv('Raw move before entry',rawMove==null?'Not captured yet':fmtPct(rawMove))}${kv('Direction-adjusted move',adjMove==null?'Not captured yet':fmtPct(adjMove))}${kv('Entry time',shortTime(t.entry_time))}${closed?kv('Exit time',shortTime(t.exit_time)):''}</div>
+        <div class="tm-section"><h4>Model</h4>${kv('Target model',modelOf(t)==='volatility'?'Volatility (ATR)':'Fixed')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Stop distance',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Target distance',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
+        <div class="tm-section"><h4>Timing detail</h4>${kv('Read this as',latQ.label)}${kv('Reference source',latencySourceText(lat))}${kv('Direction-adjusted entry move',adjMove==null?'Not captured yet':fmtPct(adjMove))}${closed?kv('Exit time',shortTime(t.exit_time)):''}</div>
       </div>
-    </div>
-    <div class="tm-section"><h4>News</h4><div class="small">${esc(lat?.headline || rows(DATA?.signals).find(s=>s.id===t.signal_id)?.headline || 'No headline available')}</div></div>
+    </div></div></details>
   </div>
   <div class="tm-foot"><button class="tm-btn" onclick="openTradeModal('${esc(prevId)}')">← Previous trade</button><button class="tm-btn" onclick="openTradeModal('${esc(nextId)}')">Next trade →</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>`;
   document.getElementById('tm-modal').innerHTML=html;
