@@ -327,7 +327,7 @@
       <div class="model-section-label">Target Model</div>
       <div class="model-cards" id="model-cards">
         <button class="model-card fixed on" data-model="fixed">Fixed</button>
-        <button class="model-card volatility" data-model="volatility">Volatility <span class="pilot-tag">PILOT</span></button>
+        <button class="model-card volatility" data-model="volatility">Volatility <span class="pilot-tag">PILOT 1</span></button>
       </div>
     </div>
     <div id="active-label"></div>
@@ -509,7 +509,7 @@ function modelPerformancePanel(){
     <div class="guardrail-caption"><span>${fmtInt(r.tp)} TP</span><span>${fmtInt(r.sl)} SL</span><span>${fmtInt(r.timed)} time</span></div>
     ${sampleBar}${atrRow}
   </div>`}).join('');
-  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Server-side comparison from v2_volatility_performance_review. Volatility is still a pilot — needs 30 closed trades or a separate smaller-target test book before tuning.</div>${cards}</div>`;
+  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Volatility Pilot 1 (authority-fixed targets verified). Collecting 0 / 30 closed trades before tuning. Prior Pilot 0 evidence archived.</div>${cards}</div>`;
 }
 function confidencePerformancePanel(){
   const CONF_DATA=[
