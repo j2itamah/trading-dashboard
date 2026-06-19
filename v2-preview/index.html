@@ -178,6 +178,11 @@
   .ops-glance-stat{border:1px solid rgba(35,31,26,.08);border-radius:10px;background:#fbfaf6;padding:9px}
   .ops-glance-stat strong{display:block;font:800 20px/1.05 'Fraunces',serif}
   .ops-glance-stat span{display:block;font:700 9.5px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px;margin-top:4px}
+  .ops-mini-bars{margin-top:12px}
+  .ops-mini-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font:700 10.5px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.45px;margin-top:8px}
+  .ops-progress-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:5px;display:flex}
+  .ops-progress-track .open{background:var(--green);height:100%}
+  .ops-progress-track .closed{background:var(--accent);height:100%}
   .ops-details{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:#fbfaf6;overflow:hidden}
   .ops-details summary{cursor:pointer;padding:14px 16px;font:800 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);list-style:none}
   .ops-details summary::-webkit-details-marker{display:none}
@@ -504,6 +509,20 @@ function targetStats(trades){
   return {closed:closed.length,open:open.length,tp,sl,timed,rate,realized,unrealized};
 }
 function deployedCash(open){return open.reduce((sum,t)=>sum+Number(t.stake_amount||0),0)}
+function topVisualBars(s){
+  const closedTotal=s.closed||0;
+  const outcomeTotal=Math.max(1, s.tp+s.sl+s.timed);
+  const totalTrades=Math.max(1, s.open+s.closed);
+  const openPct=s.open/totalTrades*100;
+  const closedPct=s.closed/totalTrades*100;
+  return `<div class="ops-mini-bars">
+    <div class="target-health-bars"><span class="tp" style="opacity:${s.tp?Math.max(.28,s.tp/outcomeTotal):.10}"></span><span class="sl" style="opacity:${s.sl?Math.max(.28,s.sl/outcomeTotal):.10}"></span><span class="time" style="opacity:${s.timed?Math.max(.28,s.timed/outcomeTotal):.10}"></span></div>
+    <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
+    <div class="ops-mini-row"><span>Open / closed</span><span>${fmtInt(s.open)} open · ${fmtInt(s.closed)} closed</span></div>
+    <div class="ops-progress-track"><span class="open" style="width:${openPct}%"></span><span class="closed" style="width:${closedPct}%"></span></div>
+    <div class="guardrail-caption"><span>${fmtInt(s.open)} open</span><span>${fmtInt(s.closed)} closed</span></div>
+  </div>`;
+}
 function targetHealthPanel(trades, model){
   const s=targetStats(trades);
   if(!s.closed) return `<div class="target-health"><div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">${fmtInt(s.open)} open positions. No closed trades yet for this selected book.</div></div><div class="target-health-rate">—</div></div></div>`;
@@ -529,11 +548,11 @@ function targetHealthPanel(trades, model){
 function operationsGlance(open, closed, book){
   const s=targetStats(open.concat(closed));
   const totalPnl=s.realized+s.unrealized;
-  const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? 0);
   const freeCash=Number(book?.free_cash ?? 0);
   const markedEquity=Number(book?.marked_equity ?? book?.current_equity ?? book?.starting_balance ?? 0);
   const positionEquity=Math.max(0, markedEquity-freeCash);
   const isVol=sel.model==='volatility';
+  const todayPnl=isVol ? totalPnl : Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? 0);
   const realized=isVol ? Number(s.realized||0) : Number(book?.realized_pnl ?? s.realized ?? 0);
   const deployed=deployedCash(open);
   return `<div class="ops-glance">
@@ -547,6 +566,7 @@ function operationsGlance(open, closed, book){
         <div class="ops-glance-stat"><strong>${fmtMoney(deployed)}</strong><span>${isVol?'pilot deployed':'deployed'}</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(realized)}">${realized>=0?'+':''}${fmtMoney(realized)}</strong><span>realized P/L</span></div>
       </div>
+      ${topVisualBars(s)}
     </div>
     <div class="ops-glance-card">
       <div class="ops-glance-title">Book capital</div>
