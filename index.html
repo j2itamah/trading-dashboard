@@ -843,7 +843,26 @@ function renderCryptoLab(){
       <div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>Sample progress</span><span>${fmtInt(s.closed)} / ${sampleGoal} closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:${sampleColor};width:${Math.min(100,s.closed/sampleGoal*100)}%"></div></div></div>
     </div>`;
   }).join('');
+  const srcRuns=rows(DATA?.crypto_lab_source_runs);
+  const todayRuns=srcRuns.filter(r=>{const d=new Date(r.started_at);const now=new Date();return d.toDateString()===now.toDateString()});
+  const totalSeen=todayRuns.reduce((s,r)=>s+Number(r.items_seen||0),0);
+  const totalInserted=todayRuns.reduce((s,r)=>s+Number(r.items_inserted||0),0);
+  const lastRun=srcRuns[0];
+  const failedRuns=todayRuns.filter(r=>r.status==='failed').length;
+  const notifs=rows(DATA?.crypto_lab_notifications);
+  const nSent=notifs.filter(n=>n.status==='sent').length;
+  const nSkipped=notifs.filter(n=>n.status==='skipped').length;
+  const nFailed=notifs.filter(n=>n.status==='failed').length;
+  const lastSentAlert=notifs.find(n=>n.status==='sent');
+  const totalAlerts=nSent+nSkipped+nFailed;
+  const noiseRate=totalAlerts?(nSkipped+nFailed)/totalAlerts*100:0;
   let html=`<div class="lab-warning">Crypto Lab is a separate proving lane for after-hours monitoring. No broker orders and no official prop totals unless explicitly promoted.</div>`;
+  html+=`<div class="panel" style="margin-bottom:18px;border-color:#c7d2fe;background:linear-gradient(180deg,#fff,#f8f9ff)"><h2 style="margin-bottom:12px">Overnight Summary</h2><div class="kpis" style="margin-bottom:0">
+    ${kpi('X Runs Today',fmtInt(todayRuns.length),'',failedRuns?failedRuns+' failed':'all clean')}
+    ${kpi('Posts Ingested',fmtInt(totalInserted),'',fmtInt(totalSeen)+' seen')}
+    ${kpi('Alerts Sent',fmtInt(nSent),'',lastSentAlert?esc(lastSentAlert.asset||''):'none yet')}
+    ${kpi('Noise Filter',noiseRate.toFixed(0)+'%','',fmtInt(nSkipped)+' skipped / '+fmtInt(nFailed)+' failed')}
+  </div>${failedRuns?'<div class="lab-warning" style="border-color:var(--red);background:var(--red-bg);color:var(--red);margin-top:10px">X sidecar has '+fmtInt(failedRuns)+' failed run(s). Check v2_crypto_lab_source_runs.</div>':'<div class="small" style="margin-top:8px;color:var(--green)">X sidecar runs clean today.</div>'}</div>`;
   html+=`<div class="kpis">
     ${kpi('Crypto Open', fmtInt(cryptoOpen.length), '', `${fmtInt(cryptoClosed.length)} closed`)}
     ${kpi('Lab P/L', `${cryptoPnl>=0?'+':''}${fmtMoney(cryptoPnl)}`, signCls(cryptoPnl), 'open + closed')}
@@ -856,11 +875,7 @@ function renderCryptoLab(){
   html+=`<div class="panel closed-panel"><h2>Closed Crypto Trades</h2><div class="section-note">Close reason first, then P/L and distance to stop/target.</div>${cryptoClosed.slice(0,10).map(tradeRow).join('')||'<div class="empty">No closed crypto trades yet.</div>'}</div></div>`;
   html+=`<div class="grid"><div class="panel"><h2>Crypto Candidates</h2><div class="section-note">Potential crypto trades from candidate intake. These are review-only until promoted.</div>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'--':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span><span>${esc(c.source||'')}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article -></a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div>`;
   html+=`<div class="panel"><h2>After-Hours X Pulse</h2><div class="section-note">X/Twitter research feed. Telegram alerts sent from this data; no trade execution.</div>${x.slice(0,8).map(e=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc((e.detected_assets||[]).join(', ')||'Crypto')} <span class="badge">${esc(e.source_quality_bucket||'unproven')}</span></div><span class="cand-status candidate">${secondsLabel(e.latency_seconds)}</span></div><div class="cand-headline">${esc(e.text_preview||e.raw_text||'')}</div><div class="cand-meta"><span>@${esc(e.author_handle||'')}</span><span>Engagement <strong>${esc(e.engagement_score??'--')}</strong></span></div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
-  const notifs=rows(DATA?.crypto_lab_notifications);
-  const nSent=notifs.filter(n=>n.status==='sent').length;
-  const nSkipped=notifs.filter(n=>n.status==='skipped').length;
-  const nFailed=notifs.filter(n=>n.status==='failed').length;
-  const lastAlert=notifs.find(n=>n.status==='sent');
+  const lastAlert=lastSentAlert;
   const alertedAssets=[...new Set(notifs.filter(n=>n.status==='sent').map(n=>n.asset).filter(Boolean))].slice(0,6);
   html+=`<div class="panel"><h2>Telegram Research Alerts</h2><div class="section-note">Research-only notifications. No trade placed.</div>`;
   if(notifs.length===0){
@@ -873,6 +888,7 @@ function renderCryptoLab(){
       ${kpi('Failed', fmtInt(nFailed), nFailed>0?'red':'', '')}
     </div>`;
     if(alertedAssets.length>0) html+=`<div class="small" style="margin-bottom:8px">Alerted assets: <strong>${alertedAssets.map(a=>esc(a)).join(', ')}</strong></div>`;
+    if(lastAlert) html+=`<div class="cand-card"><div class="cand-head"><div class="cand-asset">Latest alert: ${esc(lastAlert.asset||'Unknown')}</div><span class="cand-status candidate">${timeAgo(lastAlert.created_at)}</span></div><div class="cand-headline">${esc(lastAlert.message_preview||'')}</div><div class="cand-meta"><span>@${esc(lastAlert.author_handle||'')}</span><span>Quality <strong>${esc(lastAlert.source_quality_bucket||'--')}</strong></span><span>Research <strong>${esc(lastAlert.research_score??'--')}</strong></span></div></div>`;
     html+=notifs.slice(0,8).map(n=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(n.asset||'Unknown')} <span class="badge ${n.status==='sent'?'long':n.status==='failed'?'short':''}">${esc(n.status)}</span></div><span class="cand-status candidate">${timeAgo(n.created_at)}</span></div><div class="cand-headline">${esc(n.message_preview||'')}</div><div class="cand-meta"><span>@${esc(n.author_handle||'')}</span><span>Research <strong>${esc(n.research_score??'--')}</strong></span><span>Urgency <strong>${esc(n.urgency_score??'--')}</strong></span>${n.error_message?`<span style="color:var(--red)">Error: ${esc(n.error_message)}</span>`:''}</div></div>`).join('');
   }
   html+=`</div>`;
