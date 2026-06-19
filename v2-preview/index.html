@@ -410,26 +410,60 @@ function bookLabel(b){return `${STRAT_LABELS[b?.portfolio]||b?.portfolio||'Book'
 function selectedBook(){return officialBooks().find(b=>(b.portfolio||'')===sel.portfolio && (b.lifecycle||'')===sel.lifecycle && (b.target_model||b.classification||'')===sel.model)}
 function modelOf(r){return r.target_model||r.model||r.classification||'fixed'}
 function tradeTs(t){return new Date(t.entry_time||t.created_at||t.opened_at||t.exit_time||0).getTime()}
-function currentPilotTrade(t){return modelOf(t)!=='volatility' || tradeTs(t)>=new Date(VOL_PILOT1_START_AT).getTime()}
+function activeBaselineMs(){
+  const ts=DATA?.official_baseline?.captured_at;
+  const ms=ts?new Date(ts).getTime():NaN;
+  return Number.isFinite(ms)?ms:null;
+}
+function officialStartMsFor(t){
+  const starts=[];
+  const base=activeBaselineMs();
+  if(base!=null) starts.push(base);
+  if(modelOf(t)==='volatility') starts.push(new Date(VOL_PILOT1_START_AT).getTime());
+  return starts.length?Math.max(...starts.filter(Number.isFinite)):0;
+}
+function currentOfficialTrade(t){return tradeTs(t)>=officialStartMsFor(t)}
 function selectedBookTrades(b,status){
   const source=status==='OPEN'?openPositions():closedTrades();
-  return source.filter(t=>t.book_key===b.book_key).filter(currentPilotTrade);
+  return source.filter(t=>t.book_key===b.book_key).filter(currentOfficialTrade);
 }
 function bookDisplayStats(b){
   const open=selectedBookTrades(b,'OPEN');
   const closed=selectedBookTrades(b,'CLOSED');
   const s=targetStats(open.concat(closed));
   const isVol=(b?.target_model||b?.classification)==='volatility';
+  const start=Number(b?.starting_balance||10000);
+  const deployed=deployedCash(open);
+  const freeCash=start+s.realized-deployed;
   const pnl=s.realized+s.unrealized;
   return {
     open, closed, stats:s, isVol,
     realized:s.realized,
     unrealized:s.unrealized,
     pnl,
-    marked_equity:isVol ? Number(b?.starting_balance||0)+pnl : Number(b?.marked_equity||b?.starting_balance||0),
-    labelPrefix:isVol?'Pilot 1 ': '',
-    cashNote:isVol?' · cash includes preserved live positions':''
+    deployed,
+    free_cash:freeCash,
+    position_equity:deployed+s.unrealized,
+    marked_equity:start+pnl,
+    labelPrefix:'Reset ',
+    cashNote:' · official reset view'
   };
+}
+function officialResetSummary(){
+  return officialBooks().reduce((acc,b)=>{
+    const d=bookDisplayStats(b);
+    const start=Number(b?.starting_balance||10000);
+    acc.starting += start;
+    acc.cash += Number(d.free_cash||0);
+    acc.deployed += Number(d.deployed||0);
+    acc.positionEquity += Number(d.position_equity||0);
+    acc.realized += Number(d.realized||0);
+    acc.unrealized += Number(d.unrealized||0);
+    acc.pnl += Number(d.pnl||0);
+    acc.open += Number(d.stats?.open||0);
+    acc.closed += Number(d.stats?.closed||0);
+    return acc;
+  },{starting:0,cash:0,deployed:0,positionEquity:0,realized:0,unrealized:0,pnl:0,open:0,closed:0});
 }
 function pnlOf(t){return t.status==='CLOSED' ? Number(t.realized_pnl||0) : Number(t.computed_unrealized_pnl ?? t.unrealized_pnl ?? 0)}
 function pctOf(t){return t.status==='CLOSED' ? Number(t.computed_realized_pnl_pct ?? (Number(t.realized_pnl_percent||0)*100)) : Number(t.computed_unrealized_pnl_pct ?? (Number(t.unrealized_pnl_percent||0)*100))}
@@ -582,23 +616,23 @@ function targetHealthPanel(trades, model){
 }
 function operationsGlance(open, closed, book){
   const s=targetStats(open.concat(closed));
+  const start=Number(book?.starting_balance||10000);
   const totalPnl=s.realized+s.unrealized;
-  const freeCash=Number(book?.free_cash ?? 0);
-  const markedEquity=Number(book?.marked_equity ?? book?.current_equity ?? book?.starting_balance ?? 0);
-  const positionEquity=Math.max(0, markedEquity-freeCash);
-  const isVol=sel.model==='volatility';
-  const todayPnl=isVol ? totalPnl : Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? 0);
-  const realized=isVol ? Number(s.realized||0) : Number(book?.realized_pnl ?? s.realized ?? 0);
   const deployed=deployedCash(open);
+  const freeCash=start+s.realized-deployed;
+  const markedEquity=start+totalPnl;
+  const positionEquity=deployed+s.unrealized;
+  const todayPnl=totalPnl;
+  const realized=Number(s.realized||0);
   return `<div class="ops-glance">
     <div class="ops-glance-card">
-      <div class="ops-glance-title">${isVol?'Pilot 1 sample':'At a glance'}</div>
+      <div class="ops-glance-title">Official reset view</div>
       <div class="ops-glance-grid">
         <div class="ops-glance-stat"><strong>${fmtInt(s.open)}</strong><span>open</span></div>
         <div class="ops-glance-stat"><strong>${fmtInt(s.closed)}</strong><span>closed</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(todayPnl)}">${todayPnl>=0?'+':''}${fmtMoney(todayPnl)}</strong><span>today P/L</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(totalPnl)}">${totalPnl>=0?'+':''}${fmtMoney(totalPnl)}</strong><span>total P/L</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(deployed)}</strong><span>${isVol?'pilot deployed':'deployed'}</span></div>
+        <div class="ops-glance-stat"><strong>${fmtMoney(deployed)}</strong><span>deployed</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(realized)}">${realized>=0?'+':''}${fmtMoney(realized)}</strong><span>realized P/L</span></div>
       </div>
       ${topVisualBars(s)}
@@ -610,25 +644,14 @@ function operationsGlance(open, closed, book){
         <div class="ops-glance-stat"><strong>${fmtMoney(positionEquity)}</strong><span>in positions</span></div>
         <div class="ops-glance-stat"><strong>${fmtMoney(markedEquity)}</strong><span>marked equity</span></div>
       </div>
-      <div class="small" style="margin-top:10px">${isVol?'Pilot stats above are reset to Pilot 1. Book capital still includes preserved live volatility positions until they close.':'Free cash + position equity = marked equity.'}</div>
+      <div class="small" style="margin-top:10px">Since the clean reset: free cash + marked position value = reset equity. Pre-reset trades remain archived.</div>
     </div>
     ${targetHealthPanel(open.concat(closed), sel.model)}
   </div>`;
 }
 function modelPerformancePanel(){
-  const vr=DATA?.volatility_review||[];
-  const vrMap={};
-  vr.forEach(r=>{vrMap[r.target_model]=r});
   const rows=['fixed','volatility'].map(model=>{
-    const db=vrMap[model];
-    if(db){
-      const timed=(db.other_exits||0);
-      return {model,open:db.open_count,closed:db.closed_count,tp:db.tp_hits,sl:db.sl_hits,timed,
-        realized:db.realized_pnl,unrealized:db.unrealized_pnl,tpRate:db.tp_hit_rate_pct||0,slRate:db.sl_hit_rate_pct||0,
-        status:db.review_status,atr:db.avg_atr_percent,stopPct:db.avg_stop_pct,targetPct:db.avg_target_pct};
-    }
-    const trades=allTrades();
-    const rs=trades.filter(t=>modelOf(t)===model);
+    const rs=allTrades().filter(t=>modelOf(t)===model).filter(currentOfficialTrade);
     const open=rs.filter(t=>t.status==='OPEN');
     const closed=rs.filter(t=>t.status==='CLOSED');
     const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
@@ -637,12 +660,20 @@ function modelPerformancePanel(){
     const realized=closed.reduce((sum,t)=>sum+Number(t.realized_pnl||0),0);
     const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
     const tpRate=closed.length?tp/closed.length*100:0;
-    return {model,open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized,tpRate,slRate:0,status:'',atr:null,stopPct:null,targetPct:null};
+    const volRows=rs.filter(t=>model==='volatility' && t.atr_percent!=null);
+    const avg=key=>volRows.length?volRows.reduce((sum,t)=>sum+Number(t[key]||0),0)/volRows.length:null;
+    return {
+      model,open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized,tpRate,slRate:0,
+      status:closed.length?'collecting_evidence':'reset',
+      atr:avg('atr_percent'),
+      stopPct:avg('volatility_stop_percent'),
+      targetPct:avg('volatility_target_percent')
+    };
   });
   const statusLabel=s=>({collecting_evidence:'Collecting evidence',review_target_distance:'Review target distance',underperforming:'Underperforming',ok:'On track'}[s]||s||'');
   const cards=rows.map(r=>{
     const net=Number(r.realized||0)+Number(r.unrealized||0);
-    const modelClosed=allTrades().filter(t=>modelOf(t)===r.model).filter(currentPilotTrade).filter(t=>t.status==='CLOSED');
+    const modelClosed=allTrades().filter(t=>modelOf(t)===r.model).filter(currentOfficialTrade).filter(t=>t.status==='CLOSED');
     const winRate=modelClosed.length ? modelClosed.filter(t=>pnlOf(t)>0).length/modelClosed.length*100 : null;
     const sampleGoal=r.model==='volatility'?30:40;
     const sampleLabel=r.model==='volatility'?'Sample progress':'Closed sample';
@@ -663,7 +694,7 @@ function modelPerformancePanel(){
     <div class="guardrail-caption"><span>${fmtInt(r.tp)} TP</span><span>${fmtInt(r.sl)} SL</span><span>${fmtInt(r.timed)} time</span></div>
     ${sampleBar}${atrRow}
   </div>`}).join('');
-  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Volatility Pilot 1 (authority-fixed targets verified). Collecting 0 / 30 closed trades before tuning. Prior Pilot 0 evidence archived.</div>${cards}</div>`;
+  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Official reset window only. Pre-reset sizing-bug evidence is archived and excluded from these cards.</div>${cards}</div>`;
 }
 function confidencePerformancePanel(){
   const CONF_DATA=[
@@ -715,11 +746,12 @@ function freshness(){
 }
 function kpi(label,value,cls='',sub=''){return `<div class="kpi"><div class="label">${label}</div><div class="value ${cls}">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`}
 function equityBlock(summary){
-  const start=Number(summary?.total_starting_balance||20000);
-  const equity=Number(summary?.total_marked_equity||start);
-  const deployed=Number(summary?.total_deployed_cost||0);
-  const cash=Number(summary?.total_free_cash||0);
-  const pnl=Number(summary?.total_since_start_pnl ?? summary?.total_official_since_baseline_pnl ?? (equity-start));
+  const reset=officialResetSummary();
+  const start=reset.starting || Number(summary?.total_starting_balance||20000);
+  const equity=start+reset.pnl;
+  const deployed=reset.deployed;
+  const cash=reset.cash;
+  const pnl=reset.pnl;
   const cashPct=Math.max(0,Math.min(100,(cash/(cash+deployed||1))*100));
   const invPct=Math.max(0,Math.min(100,100-cashPct));
   return `<div class="equity-summary">
@@ -737,10 +769,11 @@ function equityBlock(summary){
 }
 function renderOverview(){
   const s=DATA?.official_summary||DATA?.prop_summary||{};
+  const reset=officialResetSummary();
   const health=DATA?.health||{};
   const shadow=DATA?.shadow_health||{};
-  const today=Number(s.total_today_marked_pnl_approx ?? s.total_today_realized_pnl ?? 0);
-  const total=Number(s.total_since_start_pnl ?? s.total_official_since_baseline_pnl ?? 0);
+  const today=reset.pnl;
+  const total=reset.pnl;
   const target=Number((DATA?.prop_summary||{}).total_profit_target_dollars||2000);
   const progress=target?Math.max(0,Math.min(100,(total/target)*100)):0;
   const dailyLossLimit=Number((DATA?.prop_summary||{}).total_max_daily_loss_dollars||1000);
@@ -751,7 +784,7 @@ function renderOverview(){
   html+=`<div class="kpis">
     ${kpi('Today P/L', `${today>=0?'+':''}${fmtMoney(today)}`, signCls(today), 'Marked approximation')}
     ${kpi('Total P/L', `${total>=0?'+':''}${fmtMoney(total)}`, signCls(total), 'Since start/baseline')}
-    ${kpi('Open Trades', fmtInt(s.total_open_count), '', `${fmtInt(s.total_closed_count)} closed`)}
+    ${kpi('Open Trades', fmtInt(reset.open), '', `${fmtInt(reset.closed)} closed since reset`)}
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
   html+=modelPerformancePanel();
@@ -774,11 +807,12 @@ function renderOverview(){
 function pctWidth(value,total){return total?Math.max(0,Math.min(100,(Number(value||0)/Number(total||1))*100)):0}
 function renderGuardrails(){
   const summary=DATA?.prop_summary||DATA?.official_summary||{};
+  const reset=officialResetSummary();
   const books=rows(DATA?.prop_books).length?rows(DATA.prop_books):officialBooks();
-  const total=Number(summary.total_since_start_pnl ?? summary.total_official_since_baseline_pnl ?? 0);
+  const total=reset.pnl;
   const target=Number(summary.total_profit_target_dollars||2000);
   const dailyLimit=Number(summary.total_max_daily_loss_dollars||1000);
-  const today=Number(summary.total_today_marked_pnl_approx ?? summary.total_today_realized_pnl ?? 0);
+  const today=reset.pnl;
   const dailyUsed=Math.max(0,-today);
   let html=`<div class="panel"><h2>Guardrails Overview</h2><div class="section-note">Prop-style limits by account/book. Use this when there are many accounts.</div>
     <div class="guard-grid">
@@ -812,7 +846,7 @@ function renderGuardrails(){
       <div class="guardrail-caption"><span>${fmtMoney(totalLossUsed)} total loss used</span><span>${fmtMoney(totalLoss)} max loss</span></div>
       <div class="guard-grid">
         <div class="guard-mini"><strong>${fmtMoney(display.marked_equity)}</strong><span>${esc(display.labelPrefix)}marked equity</span></div>
-        <div class="guard-mini"><strong>${fmtMoney(b.free_cash)}</strong><span>free cash</span></div>
+        <div class="guard-mini"><strong>${fmtMoney(display.free_cash)}</strong><span>free cash</span></div>
         <div class="guard-mini"><strong class="${signCls(display.realized)}">${Number(display.realized||0)>=0?'+':''}${fmtMoney(display.realized)}</strong><span>${esc(display.labelPrefix)}realized</span></div>
         <div class="guard-mini"><strong class="${signCls(display.unrealized)}">${Number(display.unrealized||0)>=0?'+':''}${fmtMoney(display.unrealized)}</strong><span>${esc(display.labelPrefix)}open p/l</span></div>
       </div>
@@ -906,7 +940,7 @@ function renderOperations(){
   }
   html+='</div></div>';
   const shadow=DATA?.shadow_health||{};
-  const allOpen=openPositions().filter(currentPilotTrade);
+  const allOpen=openPositions().filter(currentOfficialTrade);
   const volOpenCount=allOpen.filter(t=>modelOf(t)==='volatility').length;
   const auditOk=Number(shadow.audit_success||0);
   const auditErr=Number(shadow.audit_errors||0);
