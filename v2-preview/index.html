@@ -171,10 +171,10 @@
   .target-health-bars .tp{background:var(--green)}
   .target-health-bars .sl{background:var(--red)}
   .target-health-bars .time{background:var(--accent)}
-  .ops-glance{display:grid;grid-template-columns:.95fr 1.45fr;gap:14px;margin:0 0 18px}
+  .ops-glance{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;margin:0 0 18px}
   .ops-glance-card{border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);padding:14px}
   .ops-glance-title{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.75px;color:var(--ink-soft);margin-bottom:10px}
-  .ops-glance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .ops-glance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .ops-glance-stat{border:1px solid rgba(35,31,26,.08);border-radius:10px;background:#fbfaf6;padding:9px}
   .ops-glance-stat strong{display:block;font:800 20px/1.05 'Fraunces',serif}
   .ops-glance-stat span{display:block;font:700 9.5px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px;margin-top:4px}
@@ -259,6 +259,8 @@
     .title-block h1{font-size:28px}
     .updated{text-align:left}
     .equity-summary,.grid,.three-grid{grid-template-columns:1fr}
+    .ops-glance{grid-template-columns:1fr}
+    .ops-glance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .kpis{grid-template-columns:repeat(2,1fr)}
     .portfolio-toggle{border-radius:14px}
     .toggle-btn{flex:1 1 30%;text-align:center;font-size:12px;padding:9px 8px}
@@ -462,6 +464,7 @@ function targetStats(trades){
   const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
   return {closed:closed.length,open:open.length,tp,sl,timed,rate,realized,unrealized};
 }
+function deployedCash(open){return open.reduce((sum,t)=>sum+Number(t.stake_amount||0),0)}
 function targetHealthPanel(trades, model){
   const s=targetStats(trades);
   if(!s.closed) return `<div class="target-health"><div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">${fmtInt(s.open)} open positions. No closed trades yet for this selected book.</div></div><div class="target-health-rate">—</div></div></div>`;
@@ -484,16 +487,22 @@ function targetHealthPanel(trades, model){
     <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
   </div>`;
 }
-function operationsGlance(open, closed){
+function operationsGlance(open, closed, book){
   const s=targetStats(open.concat(closed));
+  const totalPnl=s.realized+s.unrealized;
+  const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? 0);
+  const freeCash=Number(book?.free_cash ?? 0);
+  const deployed=deployedCash(open);
   return `<div class="ops-glance">
     <div class="ops-glance-card">
       <div class="ops-glance-title">At a glance</div>
       <div class="ops-glance-grid">
         <div class="ops-glance-stat"><strong>${fmtInt(s.open)}</strong><span>open</span></div>
         <div class="ops-glance-stat"><strong>${fmtInt(s.closed)}</strong><span>closed</span></div>
-        <div class="ops-glance-stat"><strong class="${signCls(s.unrealized)}">${Number(s.unrealized)>=0?'+':''}${fmtMoney(s.unrealized)}</strong><span>open P/L</span></div>
-        <div class="ops-glance-stat"><strong class="${signCls(s.realized)}">${Number(s.realized)>=0?'+':''}${fmtMoney(s.realized)}</strong><span>realized</span></div>
+        <div class="ops-glance-stat"><strong class="${signCls(todayPnl)}">${todayPnl>=0?'+':''}${fmtMoney(todayPnl)}</strong><span>today P/L</span></div>
+        <div class="ops-glance-stat"><strong class="${signCls(totalPnl)}">${totalPnl>=0?'+':''}${fmtMoney(totalPnl)}</strong><span>total P/L</span></div>
+        <div class="ops-glance-stat"><strong>${fmtMoney(freeCash)}</strong><span>free cash</span></div>
+        <div class="ops-glance-stat"><strong>${fmtMoney(deployed)}</strong><span>deployed</span></div>
       </div>
     </div>
     ${targetHealthPanel(open.concat(closed), sel.model)}
@@ -765,7 +774,7 @@ function renderOperations(){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
-  html+=operationsGlance(bookOpen, bookClosed);
+  html+=operationsGlance(bookOpen, bookClosed, b);
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
