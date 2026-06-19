@@ -156,6 +156,12 @@
   .guard-mini{border:1px solid rgba(35,31,26,.08);border-radius:10px;background:rgba(255,255,255,.62);padding:9px}
   .guard-mini strong{display:block;font:800 17px/1.1 'Fraunces',serif}
   .guard-mini span{font:700 9.5px/1.3 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px}
+  .rb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .rb-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fbfaf6}
+  .rb-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
+  .rb-label{font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.5px;color:var(--ink)}
+  .rb-text{font:600 13px/1.3 'Spline Sans',sans-serif;color:var(--ink)}
+  .rb-detail{font:500 10px/1.3 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:3px}
   .target-health{border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 18px;background:#fbfaf6}
   .target-health.warn{background:#fff8e5;border-color:#e7c46a}
   .target-health.bad{background:var(--red-bg);border-color:#e8a0a8}
@@ -304,11 +310,15 @@
   .expansion-badge.not-ready{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red)}
   @media(max-width:760px){
     .expansion-grid{grid-template-columns:repeat(2,1fr)}
+    .rb-grid{grid-template-columns:repeat(2,1fr)}
   }
   @media(max-width:390px){
     .kpi{padding:15px}
     .kpi .value{font-size:22px}
     .expansion-grid{grid-template-columns:1fr 1fr}
+    .rb-grid{grid-template-columns:repeat(2,1fr)}
+    .rb-card{padding:8px 10px}
+    .rb-label{font-size:10px}
   }
 </style>
 </head>
@@ -747,6 +757,55 @@ function confidencePerformancePanel(){
   </div>`;
   return `<div class="panel"><h2>Historical Confidence Performance</h2><div class="section-note">Based on historical V1 closed trades, not only current V2 ledger sample. research_valid = true only. Data snapshot from 2026-06-18.</div>${rows}${keyFinding}${tooltip}</div>`;
 }
+function rulebookStatusPanel(){
+  const health=DATA?.health||{};
+  const postReset=allTrades().filter(currentOfficialTrade);
+  const card=(label,status,text,detail)=>{
+    const cls=status==='PASS'?'good':status==='FAIL'?'bad':'warn';
+    return `<div class="rb-card"><div class="rb-head"><span class="rb-label">${esc(label)}</span><span class="badge ${cls}">${esc(status)}</span></div><div class="rb-text">${esc(text)}</div><div class="rb-detail">${esc(detail)}</div></div>`;
+  };
+  // A) Ledger
+  const ledgerOk=health.accounting_ok===true && Number(health.books_with_drift||0)===0;
+  const ledgerCard=card('Ledger',ledgerOk?'PASS':'FAIL',ledgerOk?'Clean':'Mismatch',ledgerOk?'No drift':'drift='+Number(health.books_with_drift||0));
+  // B) 10% Sizing
+  const sizingRows=postReset.filter(t=>t.stake_cash_pct!=null);
+  const sizingBad=sizingRows.filter(t=>Number(t.stake_cash_pct)<9||Number(t.stake_cash_pct)>11);
+  const sizingStatus=sizingRows.length===0?'WATCH':sizingBad.length>0?'FAIL':'PASS';
+  const sizingCard=card('10% Sizing',sizingStatus,sizingStatus==='PASS'?'PASS':sizingStatus==='WATCH'?'No data':'FAIL',sizingRows.length+' checked');
+  // C) Cash Guard
+  const cashRej=rows(DATA?.rejections).filter(r=>JSON.stringify(r).toLowerCase().includes('cash')||JSON.stringify(r).toLowerCase().includes('free_cash'));
+  const cashStatus=cashRej.length>0?'PASS':'WATCH';
+  const cashCard=card('Cash Guard',cashStatus,cashStatus==='PASS'?'Active':'No rejections',cashStatus==='PASS'?'cash guard active':'no cash rejection seen');
+  // D) Volatility ATR
+  const volTrades=postReset.filter(t=>modelOf(t)==='volatility');
+  const volWithAtr=volTrades.filter(t=>t.atr_percent!=null);
+  const volMissing=volTrades.filter(t=>t.atr_percent==null);
+  const volStatus=volTrades.length===0?'WATCH':volMissing.length>0?'FAIL':'PASS';
+  const volCard=card('Volatility ATR',volStatus,volStatus==='PASS'?'PASS':volStatus==='WATCH'?'No vol rows':'FAIL',volWithAtr.length+' vol rows');
+  // E) Telegram
+  const telegramCard=card('Telegram','WATCH','Live HC only','Replay/manual skip alerts');
+  // F) Latency
+  const latencyRows=rows(DATA?.latency);
+  const cleanLatency=latencyRows.filter(r=>r.news_event_time!=null && r.news_to_trade_seconds!=null && r.news_reference_price!=null);
+  const latencyPct=latencyRows.length?cleanLatency.length/latencyRows.length*100:0;
+  const latencyStatus=cleanLatency.length===0?'FAIL':latencyPct>=50?'PASS':'WATCH';
+  const latencyCard=card('Latency',latencyStatus,latencyStatus==='PASS'?'PASS':latencyStatus==='WATCH'?'Partial':'Missing',cleanLatency.length+' clean / '+latencyRows.length+' rows');
+  // G) IBKR Paper
+  const ibkrCard=card('IBKR Paper','WATCH','Manual check','Not in JSON');
+  // H) Book Mapping
+  const bookTrades=allTrades().filter(t=>t.book_key);
+  const bookGroups={};
+  bookTrades.forEach(t=>{const k=t.book_key;if(!bookGroups[k])bookGroups[k]=new Set();bookGroups[k].add(t.lifecycle||'unknown')});
+  const mixedBooks=Object.keys(bookGroups).filter(k=>bookGroups[k].size>1);
+  const mappingStatus=mixedBooks.length===0?'PASS':'WATCH';
+  const mappingCard=card('Book Mapping',mappingStatus,mappingStatus==='PASS'?'Clean':'Mixed',mixedBooks.length>0?mixedBooks.length+' shared books':'All books single-lifecycle');
+  const cards=ledgerCard+sizingCard+cashCard+volCard+telegramCard+latencyCard+ibkrCard+mappingCard;
+  const passCount=[ledgerOk,sizingStatus==='PASS',cashStatus==='PASS',volStatus==='PASS',false,latencyStatus==='PASS',false,mappingStatus==='PASS'].filter(Boolean).length;
+  const failCount=[!ledgerOk&&health.accounting_ok!==undefined,sizingStatus==='FAIL',false,volStatus==='FAIL',false,latencyStatus==='FAIL',false,false].filter(Boolean).length;
+  const watchCount=8-passCount-failCount;
+  const summary=`${passCount} pass · ${watchCount} watch · ${failCount} fail`;
+  return `<div class="panel"><h2>Rulebook Status</h2><div class="section-note">Live checks from the Codex-Claude System Rulebook. ${esc(summary)}</div><div class="rb-grid">${cards}</div></div>`;
+}
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
   const age=Math.max(0,Math.round((Date.now()-new Date(gen).getTime())/60000));
@@ -800,6 +859,7 @@ function renderOverview(){
     ${kpi('Open Trades', fmtInt(reset.open), '', `${fmtInt(reset.closed)} closed since reset`)}
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
+  html+=rulebookStatusPanel();
   html+=modelPerformancePanel();
   html+=confidencePerformancePanel();
   html+=`<div class="grid"><div class="panel clickable" onclick="showView('guardrails')"><h2>Prop Guardrails</h2>
