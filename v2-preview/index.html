@@ -806,9 +806,9 @@ function renderOverview(){
 }
 function pctWidth(value,total){return total?Math.max(0,Math.min(100,(Number(value||0)/Number(total||1))*100)):0}
 function renderGuardrails(){
-  const summary=DATA?.prop_summary||DATA?.official_summary||{};
+  const summary=DATA?.official_summary||DATA?.prop_summary||{};
   const reset=officialResetSummary();
-  const books=rows(DATA?.prop_books).length?rows(DATA.prop_books):officialBooks();
+  const books=officialBooks().length?officialBooks():rows(DATA?.prop_books);
   const total=reset.pnl;
   const target=Number(summary.total_profit_target_dollars||2000);
   const dailyLimit=Number(summary.total_max_daily_loss_dollars||1000);
@@ -828,8 +828,8 @@ function renderGuardrails(){
     const profitTarget=Number(b.prop_profit_target_dollars||1000);
     const dailyLoss=Number(b.prop_max_daily_loss_dollars||500);
     const totalLoss=Number(b.prop_max_total_loss_dollars||1000);
-    const pnl=display.isVol ? display.pnl : Number(b.since_start_pnl ?? b.official_since_baseline_pnl ?? b.realized_pnl ?? 0);
-    const todayPnl=Number(b.today_marked_pnl_approx ?? b.today_realized_pnl ?? 0);
+    const pnl=Number(display.pnl||0);
+    const todayPnl=Number(display.pnl||0);
     const dailyLossUsed=Math.max(0,-todayPnl);
     const totalLossUsed=Math.max(0,-pnl);
     const status=String(b.prop_status||b.official_status||'ok').toLowerCase();
