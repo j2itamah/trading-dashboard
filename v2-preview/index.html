@@ -391,6 +391,22 @@ function selectedBookTrades(b,status){
   const source=status==='OPEN'?openPositions():closedTrades();
   return source.filter(t=>t.book_key===b.book_key).filter(currentPilotTrade);
 }
+function bookDisplayStats(b){
+  const open=selectedBookTrades(b,'OPEN');
+  const closed=selectedBookTrades(b,'CLOSED');
+  const s=targetStats(open.concat(closed));
+  const isVol=(b?.target_model||b?.classification)==='volatility';
+  const pnl=s.realized+s.unrealized;
+  return {
+    open, closed, stats:s, isVol,
+    realized:s.realized,
+    unrealized:s.unrealized,
+    pnl,
+    marked_equity:isVol ? Number(b?.starting_balance||0)+pnl : Number(b?.marked_equity||b?.starting_balance||0),
+    labelPrefix:isVol?'Pilot 1 ': '',
+    cashNote:isVol?' · cash includes preserved live positions':''
+  };
+}
 function pnlOf(t){return t.status==='CLOSED' ? Number(t.realized_pnl||0) : Number(t.computed_unrealized_pnl ?? t.unrealized_pnl ?? 0)}
 function pctOf(t){return t.status==='CLOSED' ? Number(t.computed_realized_pnl_pct ?? (Number(t.realized_pnl_percent||0)*100)) : Number(t.computed_unrealized_pnl_pct ?? (Number(t.unrealized_pnl_percent||0)*100))}
 function brokerLabel(s){return s==='paper_filled'?'Broker: paper filled':s==='submitted'?'Broker: submitted':s==='cancelled'?'Broker: cancelled':'Broker: not mirrored'}
@@ -534,13 +550,14 @@ function modelPerformancePanel(){
   });
   const statusLabel=s=>({collecting_evidence:'Collecting evidence',review_target_distance:'Review target distance',underperforming:'Underperforming',ok:'On track'}[s]||s||'');
   const cards=rows.map(r=>{
+    const net=Number(r.realized||0)+Number(r.unrealized||0);
     const sampleGoal=r.model==='volatility'?30:40;
     const sampleLabel=r.model==='volatility'?'Sample progress':'Closed sample';
     const sampleColor=r.model==='volatility'?'var(--purple)':'var(--green)';
     const sampleBar=`<div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>${sampleLabel}</span><span>${fmtInt(r.closed)} / ${sampleGoal} closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:${sampleColor};width:${Math.min(100,r.closed/sampleGoal*100)}%"></div></div></div>`;
     const atrRow=r.atr!=null?`<div style="margin-top:8px;padding:8px 10px;background:var(--purple-bg);border-radius:8px;font:500 11px/1.5 'Spline Sans Mono',monospace;color:var(--purple)">ATR ${fmtPct(r.atr)} · Stop ${fmtPct(r.stopPct)} · Target ${fmtPct(r.targetPct)}</div>`:'';
     return `<div class="account-guard">
-    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(statusLabel(r.status))}</div></div><span class="account-guard-status ${r.realized>=0?'':'bad'}">${r.realized>=0?'ahead':'behind'}</span></div>
+    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(statusLabel(r.status))}</div></div><span class="account-guard-status ${net>=0?'':'bad'}">${net>=0?'ahead':'behind'}</span></div>
     <div class="guard-grid">
       <div class="guard-mini"><strong class="${signCls(r.realized)}">${r.realized>=0?'+':''}${fmtMoney(r.realized)}</strong><span>realized</span></div>
       <div class="guard-mini"><strong class="${signCls(r.unrealized)}">${r.unrealized>=0?'+':''}${fmtMoney(r.unrealized)}</strong><span>open P/L</span></div>
@@ -677,16 +694,18 @@ function renderGuardrails(){
     </div>
   </div>`;
   html+=books.map(b=>{
+    const display=bookDisplayStats(b);
+    const s=display.stats;
     const profitTarget=Number(b.prop_profit_target_dollars||1000);
     const dailyLoss=Number(b.prop_max_daily_loss_dollars||500);
     const totalLoss=Number(b.prop_max_total_loss_dollars||1000);
-    const pnl=Number(b.since_start_pnl ?? b.official_since_baseline_pnl ?? b.realized_pnl ?? 0);
+    const pnl=display.isVol ? display.pnl : Number(b.since_start_pnl ?? b.official_since_baseline_pnl ?? b.realized_pnl ?? 0);
     const todayPnl=Number(b.today_marked_pnl_approx ?? b.today_realized_pnl ?? 0);
     const dailyLossUsed=Math.max(0,-todayPnl);
     const totalLossUsed=Math.max(0,-pnl);
     const status=String(b.prop_status||b.official_status||'ok').toLowerCase();
     return `<div class="account-guard">
-      <div class="account-guard-head"><div><div class="account-guard-title">${esc(bookLabel(b))}</div><div class="small">${esc(b.book_key||'')} · ${fmtInt(b.open_count)} open · ${fmtInt(b.closed_count)} closed</div></div><span class="account-guard-status ${status==='ok'?'':'bad'}">${esc(status)}</span></div>
+      <div class="account-guard-head"><div><div class="account-guard-title">${esc(display.labelPrefix+bookLabel(b))}</div><div class="small">${esc(b.book_key||'')} · ${fmtInt(s.open)} ${display.labelPrefix.toLowerCase()}open · ${fmtInt(s.closed)} ${display.labelPrefix.toLowerCase()}closed${esc(display.cashNote)}</div></div><span class="account-guard-status ${status==='ok'?'':'bad'}">${esc(status)}</span></div>
       <div class="row"><div class="name">Profit Target</div><div class="metrics"><div class="metric"><div class="m-val">${fmtMoney(profitTarget)}</div><div class="m-lab">${pctWidth(Math.max(0,pnl),profitTarget).toFixed(1)}% reached</div></div></div></div>
       <div class="guardrail-track target"><span style="width:${pctWidth(Math.max(0,pnl),profitTarget)}%"></span></div>
       <div class="guardrail-caption"><span>${fmtMoney(Math.max(0,pnl))} gained</span><span>${fmtMoney(Math.max(0,profitTarget-pnl))} to target</span></div>
@@ -697,10 +716,10 @@ function renderGuardrails(){
       <div class="guardrail-track loss"><span style="width:${pctWidth(totalLossUsed,totalLoss)}%"></span></div>
       <div class="guardrail-caption"><span>${fmtMoney(totalLossUsed)} total loss used</span><span>${fmtMoney(totalLoss)} max loss</span></div>
       <div class="guard-grid">
-        <div class="guard-mini"><strong>${fmtMoney(b.marked_equity||b.starting_balance)}</strong><span>marked equity</span></div>
+        <div class="guard-mini"><strong>${fmtMoney(display.marked_equity)}</strong><span>${esc(display.labelPrefix)}marked equity</span></div>
         <div class="guard-mini"><strong>${fmtMoney(b.free_cash)}</strong><span>free cash</span></div>
-        <div class="guard-mini"><strong class="${signCls(b.realized_pnl)}">${Number(b.realized_pnl||0)>=0?'+':''}${fmtMoney(b.realized_pnl)}</strong><span>realized</span></div>
-        <div class="guard-mini"><strong class="${signCls(b.unrealized_pnl)}">${Number(b.unrealized_pnl||0)>=0?'+':''}${fmtMoney(b.unrealized_pnl)}</strong><span>open p/l</span></div>
+        <div class="guard-mini"><strong class="${signCls(display.realized)}">${Number(display.realized||0)>=0?'+':''}${fmtMoney(display.realized)}</strong><span>${esc(display.labelPrefix)}realized</span></div>
+        <div class="guard-mini"><strong class="${signCls(display.unrealized)}">${Number(display.unrealized||0)>=0?'+':''}${fmtMoney(display.unrealized)}</strong><span>${esc(display.labelPrefix)}open p/l</span></div>
       </div>
     </div>`;
   }).join('');
@@ -764,8 +783,9 @@ function renderOperations(){
     return;
   }
   active.innerHTML=`<strong>${bookLabel(b)}</strong><div>${esc(b.book_key)} · ${esc(b.prop_status||b.official_status||'ok')}</div>`;
-  const bookOpen=selectedBookTrades(b,'OPEN');
-  const bookClosed=selectedBookTrades(b,'CLOSED').sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
+  const display=bookDisplayStats(b);
+  const bookOpen=display.open;
+  const bookClosed=display.closed.sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
   const openFiltered=bookOpen.filter(t=>`${t.asset} ${t.direction} ${t.broker_mirror_status}`.toLowerCase().includes(OPEN_SEARCH.toLowerCase()));
   const closedFiltered=bookClosed.filter(t=>`${t.asset} ${t.direction} ${t.exit_reason}`.toLowerCase().includes(CLOSED_SEARCH.toLowerCase()));
   let html='';
@@ -800,7 +820,7 @@ function renderOperations(){
   const latestMixedProof=mixedAsset.length?mixedAsset[0]:'None';
   const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
   html+=`<details class="ops-details"><summary>Book health and expansion details</summary><div class="ops-details-body">
-    <div class="equity-summary"><div class="eq-card"><div class="eq-label">Selected Book Equity</div><div class="eq-equity">${fmtMoney(b.marked_equity||b.equity||b.starting_balance)}</div><div class="eq-growth ${signCls(b.since_start_pnl)}">${Number(b.since_start_pnl||0)>=0?'+':''}${fmtMoney(b.since_start_pnl||0)} since start · ${fmtPct(Number(b.since_start_return||0)*100)}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized</div></div></div>
+    <div class="equity-summary"><div class="eq-card"><div class="eq-label">${esc(display.labelPrefix)}Selected Book Equity</div><div class="eq-equity">${fmtMoney(display.marked_equity)}</div><div class="eq-growth ${signCls(display.pnl)}">${Number(display.pnl||0)>=0?'+':''}${fmtMoney(display.pnl||0)} ${display.isVol?'pilot P/L':'current P/L'}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized${esc(display.cashNote)}</div></div></div>
     <div class="expansion-panel"><h2>Book Expansion Readiness</h2>
       <div class="expansion-grid">
         <div class="expansion-stat"><div class="exp-label">Trade Capture</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
