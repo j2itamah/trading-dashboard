@@ -407,7 +407,12 @@ const openPositions=()=>rows(DATA?.open_positions);
 const closedTrades=()=>rows(DATA?.closed_trades);
 const allTrades=()=>openPositions().concat(closedTrades());
 function bookLabel(b){return `${STRAT_LABELS[b?.portfolio]||b?.portfolio||'Book'} · ${LIFE_LABELS[b?.lifecycle]||b?.lifecycle||'Lifecycle'} · ${(b?.target_model||'model')}`;}
-function selectedBook(){return officialBooks().find(b=>(b.portfolio||'')===sel.portfolio && (b.lifecycle||'')===sel.lifecycle && (b.target_model||b.classification||'')===sel.model)}
+function selectedBook(){
+  const exact=officialBooks().find(b=>(b.portfolio||'')===sel.portfolio && (b.lifecycle||'')===sel.lifecycle && (b.target_model||b.classification||'')===sel.model);
+  if(exact) return {...exact, selection_is_exact:true};
+  const shared=officialBooks().find(b=>(b.portfolio||'')===sel.portfolio && (b.target_model||b.classification||'')===sel.model);
+  return shared?{...shared,lifecycle:sel.lifecycle,source_lifecycle:shared.lifecycle,shared_lifecycle_book:true}:null;
+}
 function modelOf(r){return r.target_model||r.model||r.classification||'fixed'}
 function tradeTs(t){return new Date(t.entry_time||t.created_at||t.opened_at||t.exit_time||0).getTime()}
 function activeBaselineMs(){
@@ -425,7 +430,10 @@ function officialStartMsFor(t){
 function currentOfficialTrade(t){return tradeTs(t)>=officialStartMsFor(t)}
 function selectedBookTrades(b,status){
   const source=status==='OPEN'?openPositions():closedTrades();
-  return source.filter(t=>t.book_key===b.book_key).filter(currentOfficialTrade);
+  return source
+    .filter(t=>t.book_key===b.book_key)
+    .filter(t=>(t.lifecycle||'')===(b.lifecycle||''))
+    .filter(currentOfficialTrade);
 }
 function bookDisplayStats(b){
   const open=selectedBookTrades(b,'OPEN');
@@ -618,33 +626,38 @@ function operationsGlance(open, closed, book){
   const s=targetStats(open.concat(closed));
   const start=Number(book?.starting_balance||10000);
   const totalPnl=s.realized+s.unrealized;
-  const deployed=deployedCash(open);
-  const freeCash=start+s.realized-deployed;
-  const markedEquity=start+totalPnl;
-  const positionEquity=deployed+s.unrealized;
+  const selectedDeployed=deployedCash(open);
+  const freeCash=Number(book?.free_cash ?? (start+s.realized-selectedDeployed));
+  const markedEquity=Number(book?.marked_equity ?? (start+totalPnl));
+  const bookDeployed=Number(book?.deployed_cost ?? selectedDeployed);
+  const positionEquity=Math.max(0,markedEquity-freeCash);
   const todayPnl=totalPnl;
   const realized=Number(s.realized||0);
+  const capitalNote=book?.shared_lifecycle_book
+    ? `${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} rows are shown above. Capital below is the shared backend book until separate ${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} books are deployed.`
+    : 'Capital below is the full backend book. Selected lifecycle rows are shown above.';
   return `<div class="ops-glance">
     <div class="ops-glance-card">
-      <div class="ops-glance-title">Official reset view</div>
+      <div class="ops-glance-title">Since reset · ${esc(LIFE_LABELS[book?.lifecycle]||book?.lifecycle||'selected')}</div>
       <div class="ops-glance-grid">
         <div class="ops-glance-stat"><strong>${fmtInt(s.open)}</strong><span>open</span></div>
         <div class="ops-glance-stat"><strong>${fmtInt(s.closed)}</strong><span>closed</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(todayPnl)}">${todayPnl>=0?'+':''}${fmtMoney(todayPnl)}</strong><span>today P/L</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(totalPnl)}">${totalPnl>=0?'+':''}${fmtMoney(totalPnl)}</strong><span>total P/L</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(deployed)}</strong><span>deployed</span></div>
+        <div class="ops-glance-stat"><strong>${fmtMoney(selectedDeployed)}</strong><span>selected deployed</span></div>
         <div class="ops-glance-stat"><strong class="${signCls(realized)}">${realized>=0?'+':''}${fmtMoney(realized)}</strong><span>realized P/L</span></div>
       </div>
       ${topVisualBars(s)}
     </div>
     <div class="ops-glance-card">
-      <div class="ops-glance-title">Book capital</div>
+      <div class="ops-glance-title">Book capital · shared account</div>
       <div class="ops-glance-grid">
         <div class="ops-glance-stat"><strong>${fmtMoney(freeCash)}</strong><span>free cash</span></div>
         <div class="ops-glance-stat"><strong>${fmtMoney(positionEquity)}</strong><span>in positions</span></div>
         <div class="ops-glance-stat"><strong>${fmtMoney(markedEquity)}</strong><span>marked equity</span></div>
+        <div class="ops-glance-stat"><strong>${fmtMoney(bookDeployed)}</strong><span>book deployed</span></div>
       </div>
-      <div class="small" style="margin-top:10px">Since the clean reset: free cash + marked position value = reset equity. Pre-reset trades remain archived.</div>
+      <div class="small" style="margin-top:10px">${capitalNote} Pre-reset trades remain archived.</div>
     </div>
     ${targetHealthPanel(open.concat(closed), sel.model)}
   </div>`;
@@ -911,7 +924,8 @@ function renderOperations(){
     document.getElementById('operations-content').innerHTML='<div class="empty">This book is not deployed in V2 yet.</div>';
     return;
   }
-  active.innerHTML=`<strong>${bookLabel(b)}</strong><div>${esc(b.book_key)} · ${esc(b.prop_status||b.official_status||'ok')}</div>`;
+  const sharedNote=b.shared_lifecycle_book?` · shared ${esc(LIFE_LABELS[b.source_lifecycle]||b.source_lifecycle)} backend book`:'';
+  active.innerHTML=`<strong>${bookLabel(b)}</strong><div>${esc(b.book_key)} · ${esc(b.prop_status||b.official_status||'ok')}${sharedNote}</div>`;
   const display=bookDisplayStats(b);
   const bookOpen=display.open;
   const bookClosed=display.closed.sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
