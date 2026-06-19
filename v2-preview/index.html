@@ -821,18 +821,41 @@ function renderCryptoLab(){
   const cryptoOpen=openPositions().filter(t=>t.asset_class==='crypto'||cryptoAssets.has(String(t.asset||'').toUpperCase()));
   const cryptoClosed=closedTrades().filter(t=>t.asset_class==='crypto'||cryptoAssets.has(String(t.asset||'').toUpperCase()));
   const cands=rows(DATA?.candidates).filter(c=>cryptoAssets.has(String(c.asset||'').toUpperCase())||String(c.asset_class||'').toLowerCase()==='crypto').slice(0,10);
-  let html=`<div class="lab-warning">Crypto Lab is a separate proving lane for after-hours monitoring. It does not count toward official prop totals unless explicitly promoted.</div>`;
+  const allCrypto=cryptoOpen.concat(cryptoClosed);
+  const cryptoPnl=cryptoOpen.reduce((s,t)=>s+pnlOf(t),0)+cryptoClosed.reduce((s,t)=>s+pnlOf(t),0);
+  const modelCards=['fixed','volatility'].map(model=>{
+    const trades=allCrypto.filter(t=>modelOf(t)===model);
+    const s=targetStats(trades);
+    const closed=trades.filter(t=>t.status==='CLOSED');
+    const sampleGoal=model==='volatility'?30:20;
+    const sampleColor=model==='volatility'?'var(--purple)':'var(--green)';
+    const tpRate=s.closed?s.rate.toFixed(0)+'%':'--';
+    return `<div class="account-guard">
+      <div class="account-guard-head"><div><div class="account-guard-title">Crypto ${model==='fixed'?'Fixed':'Volatility'}</div><div class="small">${fmtInt(s.open)} open · ${fmtInt(s.closed)} closed · ${tpRate} TP rate</div></div><span class="account-guard-status ${s.realized>=0?'':'bad'}">${s.realized>=0?'ahead':'behind'}</span></div>
+      <div class="guard-grid">
+        <div class="guard-mini"><strong class="${signCls(s.unrealized)}">${s.unrealized>=0?'+':''}${fmtMoney(s.unrealized)}</strong><span>open P/L</span></div>
+        <div class="guard-mini"><strong class="${signCls(s.realized)}">${s.realized>=0?'+':''}${fmtMoney(s.realized)}</strong><span>realized</span></div>
+        <div class="guard-mini"><strong>${fmtInt(s.tp)}</strong><span>take profits</span></div>
+        <div class="guard-mini"><strong>${fmtInt(s.sl)}</strong><span>stop losses</span></div>
+      </div>
+      <div class="target-health-bars"><span class="tp" style="opacity:${s.closed?s.tp/s.closed:.08}"></span><span class="sl" style="opacity:${s.closed?s.sl/s.closed:.08}"></span><span class="time" style="opacity:${s.closed?s.timed/s.closed:.08}"></span></div>
+      <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
+      <div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>Sample progress</span><span>${fmtInt(s.closed)} / ${sampleGoal} closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:${sampleColor};width:${Math.min(100,s.closed/sampleGoal*100)}%"></div></div></div>
+    </div>`;
+  }).join('');
+  let html=`<div class="lab-warning">Crypto Lab is a separate proving lane for after-hours monitoring. No broker orders and no official prop totals unless explicitly promoted.</div>`;
   html+=`<div class="kpis">
     ${kpi('Crypto Open', fmtInt(cryptoOpen.length), '', `${fmtInt(cryptoClosed.length)} closed`)}
-    ${kpi('Open P/L', `${cryptoOpen.reduce((s,t)=>s+pnlOf(t),0)>=0?'+':''}${fmtMoney(cryptoOpen.reduce((s,t)=>s+pnlOf(t),0))}`, signCls(cryptoOpen.reduce((s,t)=>s+pnlOf(t),0)), 'marked positions')}
-    ${kpi('Closed P/L', `${cryptoClosed.reduce((s,t)=>s+pnlOf(t),0)>=0?'+':''}${fmtMoney(cryptoClosed.reduce((s,t)=>s+pnlOf(t),0))}`, signCls(cryptoClosed.reduce((s,t)=>s+pnlOf(t),0)), 'realized lab trades')}
+    ${kpi('Lab P/L', `${cryptoPnl>=0?'+':''}${fmtMoney(cryptoPnl)}`, signCls(cryptoPnl), 'open + closed')}
     ${kpi('Crypto Candidates', fmtInt(cands.length), '', 'research queue')}
+    ${kpi('X Posts', fmtInt(x.length), '', 'latest batch')}
   </div>`;
-  html+=targetHealthPanel(cryptoOpen.concat(cryptoClosed), 'crypto');
-  html+=`<div class="grid"><div class="panel open-panel"><h2>Open Crypto Positions</h2>${cryptoOpen.map(tradeRow).join('')||'<div class="empty">No open crypto positions in V2 right now.</div>'}</div>`;
-  html+=`<div class="panel closed-panel"><h2>Closed Crypto Trades</h2>${cryptoClosed.slice(0,10).map(tradeRow).join('')||'<div class="empty">No closed crypto trades yet.</div>'}</div></div>`;
-  html+=`<div class="grid"><div class="panel"><h2>Crypto Candidates</h2>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'—':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div>`;
-  html+=`<div class="panel"><h2>X / Crypto Feed</h2><div class="section-note">Compact research stream. Tap trade cards above for performance.</div>${x.slice(0,8).map(e=>`<div class="x-row"><div class="headline">${esc((e.detected_assets||[]).join(', ')||'Crypto')} · @${esc(e.author_handle||'')}</div><div class="small">${esc(e.text_preview||e.raw_text||'')}</div><div class="small">Quality ${esc(e.source_quality_bucket||'unproven')} · latency ${secondsLabel(e.latency_seconds)}</div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
+  html+=`<div class="grid">${modelCards}</div>`;
+  html+=targetHealthPanel(allCrypto, 'crypto');
+  html+=`<div class="grid"><div class="panel open-panel"><h2>Open Crypto Positions</h2><div class="section-note">Tap a card for timing, article, sizing, and risk detail.</div>${cryptoOpen.map(tradeRow).join('')||'<div class="empty">No open crypto positions in V2 right now.</div>'}</div>`;
+  html+=`<div class="panel closed-panel"><h2>Closed Crypto Trades</h2><div class="section-note">Close reason first, then P/L and distance to stop/target.</div>${cryptoClosed.slice(0,10).map(tradeRow).join('')||'<div class="empty">No closed crypto trades yet.</div>'}</div></div>`;
+  html+=`<div class="grid"><div class="panel"><h2>Crypto Candidates</h2><div class="section-note">Potential crypto trades from candidate intake. These are review-only until promoted.</div>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'--':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span><span>${esc(c.source||'')}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article -></a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div>`;
+  html+=`<div class="panel"><h2>After-Hours X Pulse</h2><div class="section-note">X/Twitter research feed. Telegram branch is the next isolated sidecar patch; no trade execution.</div>${x.slice(0,8).map(e=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc((e.detected_assets||[]).join(', ')||'Crypto')} <span class="badge">${esc(e.source_quality_bucket||'unproven')}</span></div><span class="cand-status candidate">${secondsLabel(e.latency_seconds)}</span></div><div class="cand-headline">${esc(e.text_preview||e.raw_text||'')}</div><div class="cand-meta"><span>@${esc(e.author_handle||'')}</span><span>Engagement <strong>${esc(e.engagement_score??'--')}</strong></span></div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
   document.getElementById('view-crypto').innerHTML=html;
 }
 function showView(v){
