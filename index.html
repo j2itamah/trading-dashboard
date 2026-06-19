@@ -533,9 +533,9 @@ function operationsGlance(open, closed, book){
   const freeCash=Number(book?.free_cash ?? 0);
   const markedEquity=Number(book?.marked_equity ?? book?.current_equity ?? book?.starting_balance ?? 0);
   const positionEquity=Math.max(0, markedEquity-freeCash);
-  const realized=Number(book?.realized_pnl ?? s.realized ?? 0);
-  const deployed=deployedCash(open);
   const isVol=sel.model==='volatility';
+  const realized=isVol ? Number(s.realized||0) : Number(book?.realized_pnl ?? s.realized ?? 0);
+  const deployed=deployedCash(open);
   return `<div class="ops-glance">
     <div class="ops-glance-card">
       <div class="ops-glance-title">${isVol?'Pilot 1 sample':'At a glance'}</div>
