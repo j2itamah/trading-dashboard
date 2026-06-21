@@ -1344,6 +1344,10 @@ function renderOperations(){
   const mondayCandidateStatus=mondayCandidate.status||'PENDING';
   const mondayRecommended=mondayCandidate.recommended||null;
   const mondayNext=DATA?.monday_next_action||{};
+  const mondayFirst=DATA?.monday_first_command_packet||{};
+  const mondayFirstStatus=mondayFirst.status||'PENDING';
+  const mondayFirstDecisions=mondayFirst.decisions||{};
+  const mondayFirstExpansion=mondayFirst.stock_expansion_preflight||{};
   const mondayRuns=newestRowsBy(DATA?.monday_operator_runs,['recorded_at','checked_at','created_at']);
   const latestMonday=mondayRuns[0]||{};
   const mondayStatus=latestMonday.status||'PENDING';
@@ -1385,6 +1389,20 @@ function renderOperations(){
         <div class="expansion-stat"><div class="exp-label">Session Efficiency</div><div class="exp-value ${mondayPayloadReused?'pos-text':'warn-text'}">${mondayPayloadReused?'ONE GATE':'LEGACY'}</div><div class="small">payload reused: ${mondayPayloadReused?'yes':'not yet'}</div></div>
       </div>
       <div class="section-note">Monday operator evidence · ${esc(mondayRecorded)} · ${esc(latestMonday.next_action||'Run python3 foundation_v2/v2_monday_operator_watch.py for evidence.')} Source: DATA.monday_operator_runs.</div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Monday First Command</span><span class="expansion-badge ${mondayFirstStatus==='PASS'?'ready':mondayFirstStatus==='FAIL'?'not-ready':''}">${esc(mondayFirstStatus)}</span></div>
+        <div class="next-action-main">${esc(mondayFirst.operator_message||'Start with the live standby packet, then continue observation only if it says to continue.')}</div>
+        <code>${esc(mondayFirst.first_command||'python3 foundation_v2/v2_monday_live_standby_packet.py --json')}</code>
+        <code>${esc(mondayFirst.if_first_command_says_continue||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh')}</code>
+        <div class="expansion-grid">
+          <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${mondayFirstDecisions.safe_to_observe?'pos-text':'warn-text'}">${mondayFirstDecisions.safe_to_observe?'ALLOWED':'WAIT'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${mondayFirstDecisions.paper_order_allowed?'neg-text':'pos-text'}">${mondayFirstDecisions.paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${mondayFirstDecisions.mirror_sql_allowed?'neg-text':'pos-text'}">${mondayFirstDecisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Stock Expansion</div><div class="exp-value ${mondayFirstDecisions.stock_expansion_allowed?'neg-text':'pos-text'}">${mondayFirstDecisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
+        </div>
+        <div class="small">Expansion preflight: ${esc(mondayFirstExpansion.command||'python3 foundation_v2/v2_stock_expansion_preflight_bundle.py --json')}</div>
+        <div class="small">Source: DATA.monday_first_command_packet · read-only; executes nothing.</div>
+      </div>
       <div class="next-action-card approval-boundary-card">
         <div class="next-action-head"><span>Approval Boundary</span><span class="expansion-badge ${approvalBoundaryPass?'ready':'not-ready'}">${approvalBoundaryPass?'PASS':'CHECK'}</span></div>
         <div class="next-action-main">SAFE OBSERVATION ONLY</div>
