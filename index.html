@@ -1068,7 +1068,7 @@ function tradeRow(t){
   const meta=closed
     ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span>${timingChip}${brokerChip}</div>`
     : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta">${timingChip}${brokerChip}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}</div>`;
-  return `<div class="pos-row ${closed?'closed '+reasonClass:'open'}" data-trade-id="${t.id}">
+  return `<div class="pos-row ${closed?'closed '+reasonClass:'open'}" data-trade-id="${t.id}" role="button" tabindex="0" aria-label="Open ${esc(t.asset)} ${esc(dir)} trade details">
     <div>
       <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span>${modelBadge}${closed?`<span class="badge">${esc(t.lifecycle||'')}</span>`:''}</div>
       ${meta}
@@ -1093,7 +1093,7 @@ function labTradeRow(t){
     const markBadge=t.mark_status?`<span class="badge ${t.mark_status==='fresh'?'long':t.mark_status==='stale'?'short':''}">${esc(t.mark_status)}</span>`:'';
     meta=`<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(t.stake_amount)}</div></div><span class="rule-chip ${t.sizing_rule_status==='ok'?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta"><span class="tag">${esc(labMarkedLabel(t))}</span>${markBadge}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">X source</a>`:''}</div>`;
   }
-  return `<div class="pos-row ${closed?'closed':'open'}" data-lab-trade-id="${t.id}">
+  return `<div class="pos-row ${closed?'closed':'open'}" data-lab-trade-id="${t.id}" role="button" tabindex="0" aria-label="Open ${esc(t.asset)} ${esc(dir)} CryptoLab trade details">
     <div>
       <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span><span class="badge">SIM</span></div>
       ${meta}
@@ -1984,6 +1984,7 @@ function bind(){
   document.addEventListener('click',e=>{
     const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
     const lf=e.target.closest('[data-lab-focus]'); if(lf){LAB_FOCUS=lf.dataset.labFocus; localStorage.setItem('v2_lab_focus',LAB_FOCUS); renderCryptoLab(); return}
+    if(e.target.closest('a,button')) return;
     const lr=e.target.closest('[data-lab-trade-id]'); if(lr){openLabTradeModal(lr.dataset.labTradeId); return}
     const tr=e.target.closest('[data-trade-id]'); if(tr){openTradeModal(tr.dataset.tradeId); return}
     if(e.target.closest('#toggle-open')){OPEN_EXPANDED=!OPEN_EXPANDED; renderOperations(); return}
@@ -1992,6 +1993,10 @@ function bind(){
   document.addEventListener('input',e=>{if(e.target.id==='open-search'){OPEN_SEARCH=e.target.value; renderOperations()} if(e.target.id==='closed-search'){CLOSED_SEARCH=e.target.value; renderOperations()}});
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape') closeTradeModal();
+    if((e.key==='Enter'||e.key===' ') && !document.getElementById('tm-overlay').classList.contains('open')){
+      const lr=e.target.closest?.('[data-lab-trade-id]'); if(lr){e.preventDefault(); openLabTradeModal(lr.dataset.labTradeId); return}
+      const tr=e.target.closest?.('[data-trade-id]'); if(tr){e.preventDefault(); openTradeModal(tr.dataset.tradeId); return}
+    }
     if(!document.getElementById('tm-overlay').classList.contains('open')) return;
     const list=allTrades();
     const idx=list.findIndex(x=>String(x.id)===String(CURRENT_TRADE_ID));
