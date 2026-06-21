@@ -1118,6 +1118,8 @@ function preOpenChecklistStrip(){
   const decisions=checklist.decisions||{};
   const status=checklist.status||'PENDING';
   const command=decisions.next_command||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh';
+  const telegramProbe=DATA?.telegram_delivery_probe||{};
+  const telegramStatus=telegramProbe.status||'WATCH';
   return `<div class="next-action-card compact-boundary-card">
     <div class="next-action-head"><span>Pre-Open Checklist</span><span class="expansion-badge ${status==='PASS'?'ready':status==='FAIL'?'not-ready':''}">${esc(status)}</span></div>
     <div class="next-action-main">${fmtInt(summary.pass||0)} pass · ${fmtInt(summary.watch||0)} watch · ${fmtInt(summary.fail||0)} fail</div>
@@ -1125,6 +1127,7 @@ function preOpenChecklistStrip(){
       <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${decisions.safe_to_observe?'pos-text':'warn-text'}">${decisions.safe_to_observe?'ALLOWED':'WAIT'}</div></div>
       <div class="expansion-stat"><div class="exp-label">Scheduler</div><div class="exp-value ${decisions.scheduler_install_allowed?'neg-text':'pos-text'}">${decisions.scheduler_install_allowed?'ALLOWED':'BLOCKED'}</div></div>
       <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${decisions.paper_order_allowed?'neg-text':'pos-text'}">${decisions.paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Telegram</div><div class="exp-value ${telegramStatus==='PASS'?'pos-text':'warn-text'}">${esc(telegramStatus)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${decisions.mirror_sql_allowed?'neg-text':'pos-text'}">${decisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
       <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${decisions.stock_expansion_allowed?'neg-text':'pos-text'}">${decisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
     </div>
@@ -1313,6 +1316,7 @@ function renderOperations(){
           <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${preopenDecisions.safe_to_observe?'pos-text':'warn-text'}">${preopenDecisions.safe_to_observe?'ALLOWED':'WAIT'}</div></div>
           <div class="expansion-stat"><div class="exp-label">Scheduler</div><div class="exp-value ${preopenDecisions.scheduler_install_allowed?'neg-text':'pos-text'}">${preopenDecisions.scheduler_install_allowed?'ALLOWED':'BLOCKED'}</div></div>
           <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${preopenDecisions.paper_order_allowed?'neg-text':'pos-text'}">${preopenDecisions.paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Telegram</div><div class="exp-value ${telegramProbeStatus==='PASS'?'pos-text':'warn-text'}">${esc(telegramProbeStatus)}</div></div>
           <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${preopenDecisions.mirror_sql_allowed?'neg-text':'pos-text'}">${preopenDecisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
           <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${preopenDecisions.stock_expansion_allowed?'neg-text':'pos-text'}">${preopenDecisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
         </div>
