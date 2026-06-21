@@ -334,6 +334,14 @@
   .next-action-card .expansion-badge{margin-top:0;padding:6px 10px}
   .next-action-main{font:800 18px/1.15 'Spline Sans',sans-serif;text-transform:capitalize}
   .next-action-card code{display:block;max-width:100%;overflow-wrap:anywhere;padding:8px 9px;border-radius:8px;background:#f1f5f9;color:#243445;font:700 11px/1.35 'Spline Sans Mono',monospace;white-space:normal}
+  .runbook-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:2px}
+  .runbook-summary .expansion-stat{min-height:0}
+  .runbook-details{margin-top:8px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.58);overflow:hidden}
+  .runbook-details summary{cursor:pointer;list-style:none;padding:10px 11px;font:800 10px/1.15 'Spline Sans',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .runbook-details summary::-webkit-details-marker{display:none}
+  .runbook-details summary:after{content:'+';float:right;font:900 14px/1 'Spline Sans',sans-serif;color:var(--blue)}
+  .runbook-details[open] summary:after{content:'-'}
+  .runbook-details .checklist-mini{padding:0 8px 8px}
   .checklist-mini{display:grid;gap:6px;margin-top:2px}
   .checklist-row{display:grid;grid-template-columns:minmax(72px,.75fr) auto minmax(0,1.5fr);gap:8px;align-items:start;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.62)}
   .checklist-name{font:800 10px/1.1 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink)}
@@ -1186,11 +1194,15 @@ function operatorRunbookStrip(){
   </div>`).join('');
   return `<div class="next-action-card compact-boundary-card operator-runbook-card">
     <div class="next-action-head"><span>Monday Operator Runbook</span><span class="expansion-badge ${status==='PASS'?'ready':status==='FAIL'?'not-ready':''}">${esc(status)}</span></div>
-    <div class="next-action-main">${esc(order)}</div>
-    <div class="checklist-mini">${stepRows}</div>
+    <div class="runbook-summary">
+      <div class="expansion-stat"><div class="exp-label">Steps</div><div class="exp-value">${fmtInt(seq.length||0)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Paper</div><div class="exp-value ${phrases.paper_order?'warn-text':'neg-text'}">${phrases.paper_order?'Approval':'Missing'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${phrases.mirror_sql?'warn-text':'neg-text'}">${phrases.mirror_sql?'Approval':'Missing'}</div></div>
+    </div>
     <code>${esc(firstCommand)}</code>
     <div class="small">Paper: ${esc(phrases.paper_order||'I approve one IBKR paper mirror test on DUQ523641 only.')}</div>
     <div class="small">Mirror SQL: ${esc(phrases.mirror_sql||'I approve applying the IBKR paper mirror SQL for trade [id] only.')}</div>
+    <details class="runbook-details"><summary>Show 7-step order</summary><div class="small">${esc(order)}</div><div class="checklist-mini">${stepRows}</div></details>
     <div class="small">Source: DATA.monday_operator_runbook · read-only; executes nothing.</div>
   </div>`;
 }
