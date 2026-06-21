@@ -1233,7 +1233,7 @@ function operatorRunbookStrip(){
     <code>${esc(firstCommand)}</code>
     <div class="small">Paper: ${esc(phrases.paper_order||'I approve one IBKR paper mirror test on DUQ523641 only.')}</div>
     <div class="small">Mirror SQL: ${esc(phrases.mirror_sql||'I approve applying the IBKR paper mirror SQL for trade [id] only.')}</div>
-    <details class="runbook-details"><summary>Show 7-step order</summary><div class="small">${esc(order)}</div><div class="checklist-mini">${stepRows}</div></details>
+    <details class="runbook-details"><summary>Show ${fmtInt(seq.length||0)}-step order</summary><div class="small">${esc(order)}</div><div class="checklist-mini">${stepRows}</div></details>
     <div class="small">Source: DATA.monday_operator_runbook · read-only; executes nothing.</div>
   </div>`;
 }
@@ -1464,6 +1464,13 @@ function renderOperations(){
         <div class="next-action-main">${esc(ibkrPreflightStatus==='PASS'?'Paper account ready':ibkrPreflightStatus==='FAIL'?'Broker check blocked':'Paper not connected')}</div>
         <code>${esc(ibkrPreflightCommand)}</code>
         <div class="small">${esc(ibkrPreflightAction)} · Source: DATA.ibkr_paper_preflight</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Stock Expansion Preflight</span><span class="expansion-badge not-ready">READ ONLY</span></div>
+        <div class="next-action-main">Unified expansion check before any stock book change</div>
+        <code>python3 foundation_v2/v2_stock_expansion_preflight_bundle.py --json</code>
+        <code>python3 foundation_v2/v2_stock_expansion_preflight_bundle_check.py --execute</code>
+        <div class="small">Read-only bundle: fixture suite, live expansion gate, IBKR paper preflight, extended JSON, and system check. Expansion still requires a separate exact approved stock expansion packet.</div>
       </div>
       <div class="next-action-card">
         <div class="next-action-head"><span>Local Telegram Alerts</span><span class="expansion-badge ${telegramProbeStatus==='PASS'?'ready':telegramProbeStatus==='FAIL'?'not-ready':''}">${esc(telegramProbeStatus)}</span></div>
