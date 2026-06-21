@@ -220,6 +220,8 @@
   .cand-status{font:800 10px/1 'Spline Sans Mono',monospace;padding:5px 9px;border-radius:999px;letter-spacing:.4px;text-transform:uppercase}
   .cand-status.candidate{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a}
   .cand-status.opened{background:var(--green-bg);color:var(--green);border:1px solid #b8e2cc}
+  .cand-status.ok{background:var(--green-bg);color:var(--green);border:1px solid #b8e2cc}
+  .cand-status.warn{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a}
   .cand-status.rejected{background:var(--red-bg);color:var(--red);border:1px solid #e8a0a8}
   .cand-status.pending_trade{background:var(--accent-bg);color:var(--accent);border:1px solid #bfd0dd}
   .cand-status.closed{background:#f7f6f0;color:var(--ink-soft);border:1px solid var(--line)}
@@ -462,6 +464,21 @@ function durationLabel(s){
 }
 const timeAgo=ts=>{if(!ts)return'—';const d=Date.now()-new Date(ts).getTime();if(d<0)return'just now';if(d<60000)return'<1m ago';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'};
 const timeUntil=ts=>{if(!ts)return'—';const d=new Date(ts).getTime()-Date.now();if(d<=0)return'expired';if(d<60000)return'<1m';if(d<3600000)return Math.ceil(d/60000)+'m';if(d<86400000)return Math.ceil(d/3600000)+'h';return Math.ceil(d/86400000)+'d'};
+const labelize=s=>String(s||'').replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
+function candidateStatusMeta(c){
+  const raw=String(c.display_status||c.status||'review');
+  if(raw.includes('open_trade_created')) return {label:'Open trade created', cls:'ok'};
+  if(raw.includes('closed_trade_created')) return {label:'Closed trade created', cls:'closed'};
+  if(raw.includes('expired')) return {label:'Expired needs review', cls:'warn'};
+  if(raw.includes('rejected')) return {label:'Rejected', cls:'rejected'};
+  if(raw.includes('approved')) return {label:'Approved research only', cls:'candidate'};
+  return {label:labelize(raw), cls:'candidate'};
+}
+function expiryText(ts){
+  if(!ts) return '';
+  const v=timeUntil(ts);
+  return v==='expired'?'Expired':'Expires in '+v;
+}
 const refLabel=src=>src==='news_time_quote'?'Move since news':src==='candidate_observed_price'?'Move since first seen':'Reference price missing';
 const rows=a=>Array.isArray(a)?a:[];
 function timestampMs(v){
@@ -604,7 +621,8 @@ function pricePathBar(t, compact=false){
   const rightCls=Number(t.stop_loss_price)<Number(t.take_profit_price)?'target':'loss';
   const klass=compact?'mini-track':'path-bar';
   const labels=compact?'mini-track-labels':'path-labels';
-  return `<div class="${klass}"><span class="loss-zone"></span><span class="target-zone"></span><i class="price-dot" style="left:${pos}%"></i></div><div class="${labels}"><span class="${leftCls}">${esc(left)}</span><span class="${rightCls}">${esc(right)}</span></div>`;
+  const dotLeft=compact?`clamp(6px, ${pos}%, calc(100% - 6px))`:`${pos}%`;
+  return `<div class="${klass}"><span class="loss-zone"></span><span class="target-zone"></span><i class="price-dot" style="left:${dotLeft}"></i></div><div class="${labels}"><span class="${leftCls}">${esc(left)}</span><span class="${rightCls}">${esc(right)}</span></div>`;
 }
 function tradeHigh(t){return t.high_price ?? t.high_since_entry ?? t.max_price ?? t.session_high ?? null}
 function tradeLow(t){return t.low_price ?? t.low_since_entry ?? t.min_price ?? t.session_low ?? null}
@@ -1743,7 +1761,10 @@ function renderCryptoLab(){
     const freshWarn=freshStatus==='stale'||freshStatus==='unknown';
     const freshLabel=freshStatus==='fresh'?'fresh source':freshStatus==='stale'?'stale source':'source unknown';
     const freshAge=c.source_age_minutes!=null?Number(c.source_age_minutes).toFixed(0)+'m old':'age unknown';
-    return `<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset||'?')} <span class="badge">${esc(c.source||'x')}</span></div><span class="cand-status ${esc(c.status||'review')}">${esc(c.display_status||c.status||'review')}</span></div><div class="cand-headline">${esc(firstEvt.text_preview||c.reason||'No details')}</div><div class="cand-meta"><span>Research <strong>${c.research_score!=null?Number(c.research_score).toFixed(2):'--'}</strong></span><span>${timeAgo(c.created_at)}</span><span>@${esc(firstEvt.author_handle||'')}</span><span class="${freshWarn?'warn-text':'pos-text'}">${esc(freshLabel)} · ${esc(freshAge)}</span>${c.expires_at?`<span>Expires in ${timeUntil(c.expires_at)}</span>`:''}</div></div>`;
+    const status=candidateStatusMeta(c);
+    const author=firstEvt.author_handle?'@'+firstEvt.author_handle:'No public author';
+    const expiry=expiryText(c.expires_at);
+    return `<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset||'?')} <span class="badge">${esc(c.source||'x')}</span></div><span class="cand-status ${esc(status.cls)}">${esc(status.label)}</span></div><div class="cand-headline">${esc(firstEvt.text_preview||c.reason||'No details')}</div><div class="cand-meta"><span>Research <strong>${c.research_score!=null?Number(c.research_score).toFixed(2):'--'}</strong></span><span>${timeAgo(c.created_at)}</span><span>${esc(author)}</span><span class="${freshWarn?'warn-text':'pos-text'}">${esc(freshLabel)} · ${esc(freshAge)}</span>${expiry?`<span>${esc(expiry)}</span>`:''}</div></div>`;
   }).join('');
   html+=`<div class="grid"><div class="panel"><h2>CryptoLab Trade Candidates</h2><div class="section-note">Research candidates from X/Twitter scoring. Review-only until a manual checkpoint approves a simulated trade. Source freshness is shown because stale X evidence must not become an approval.</div>${cands.length?candidateCards:'<div class="empty">No CryptoLab candidates yet.</div>'}</div>`;
   html+=`<div class="panel"><h2>Signal Scores</h2><div class="section-note">Composite research scores from X event features. Higher = stronger research signal.</div>${labScores.length?labScores.map(s=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(s.asset||'?')} <span class="badge">${esc(s.source_quality_bucket||'unproven')}</span></div><span class="cand-status candidate">${Number(s.research_score||0).toFixed(2)}</span></div><div class="cand-headline">${esc((s.text_preview||'').substring(0,160))}</div><div class="cand-meta"><span>@${esc(s.author_handle||'')}</span><span>Urgency <strong>${Number(s.urgency_score||0).toFixed(2)}</strong></span><span>Engagement <strong>${esc(s.engagement_score??'--')}</strong></span><span>${timeAgo(s.observed_at)}</span></div></div>`).join(''):'<div class="empty">No signal scores yet.</div>'}</div></div>`;
