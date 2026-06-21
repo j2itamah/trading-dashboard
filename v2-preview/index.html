@@ -334,6 +334,14 @@
   .next-action-card .expansion-badge{margin-top:0;padding:6px 10px}
   .next-action-main{font:800 18px/1.15 'Spline Sans',sans-serif;text-transform:capitalize}
   .next-action-card code{display:block;max-width:100%;overflow-wrap:anywhere;padding:8px 9px;border-radius:8px;background:#f1f5f9;color:#243445;font:700 11px/1.35 'Spline Sans Mono',monospace;white-space:normal}
+  .checklist-mini{display:grid;gap:6px;margin-top:2px}
+  .checklist-row{display:grid;grid-template-columns:minmax(72px,.75fr) auto minmax(0,1.5fr);gap:8px;align-items:start;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.62)}
+  .checklist-name{font:800 10px/1.1 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink)}
+  .checklist-status{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.4px;border-radius:999px;padding:5px 7px;border:1px solid var(--line);white-space:nowrap}
+  .checklist-status.pass{color:var(--green);background:var(--green-bg);border-color:rgba(29,157,107,.35)}
+  .checklist-status.watch{color:#7a5610;background:var(--gold-bg);border-color:rgba(200,150,51,.45)}
+  .checklist-status.fail{color:var(--red);background:var(--red-bg);border-color:rgba(198,79,96,.35)}
+  .checklist-detail{font:650 11px/1.35 'Spline Sans',sans-serif;color:var(--ink-soft);overflow-wrap:anywhere}
   .expansion-blockers{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:grid;gap:7px}
   .expansion-blocker{display:flex;gap:8px;align-items:flex-start;font:600 12px/1.35 'Spline Sans',sans-serif;color:var(--ink)}
   .expansion-blocker:before{content:'!';flex:0 0 auto;width:17px;height:17px;border-radius:50%;display:inline-grid;place-items:center;background:var(--gold-bg);border:1px solid var(--gold);color:#7a5610;font:700 10px/1 'Spline Sans Mono',monospace;margin-top:1px}
@@ -1112,6 +1120,34 @@ function approvalBoundaryStrip(){
     <div class="small">scheduler_install_allowed=${scheduler_install_allowed} · mirror_sql_allowed=${mirror_sql_allowed} · Source: DATA.monday_next_action + DATA.monday_safe_observation</div>
   </div>`;
 }
+function checklistItemByName(checklist,name){
+  const found=rows(checklist.items).find(item=>item.name===name);
+  return found||{};
+}
+function checklistStatusClass(status){
+  const s=String(status||'PENDING').toUpperCase();
+  return s==='PASS'?'pass':s==='FAIL'?'fail':'watch';
+}
+function renderChecklistHighlights(checklist){
+  const defs=[
+    ['safe_observation_lock','Lock'],
+    ['safe_observation_ready','Ready'],
+    ['telegram_delivery_probe','Telegram'],
+    ['ibkr_paper_preflight','IBKR'],
+    ['current_day_candidate','Candidate']
+  ];
+  const cards=defs.map(([name,label])=>{
+    const item=checklistItemByName(checklist,name);
+    const status=String(item.status||'PENDING').toUpperCase();
+    const detail=item.action||item.detail||'Pending evidence.';
+    return `<div class="checklist-row">
+      <div class="checklist-name">${esc(label)}</div>
+      <div class="checklist-status ${checklistStatusClass(status)}">${esc(status)}</div>
+      <div class="checklist-detail">${esc(detail)}</div>
+    </div>`;
+  }).join('');
+  return `<div class="checklist-mini">${cards}</div>`;
+}
 function preOpenChecklistStrip(){
   const checklist=DATA?.monday_preopen_checklist||{};
   const summary=checklist.summary||{};
@@ -1131,6 +1167,7 @@ function preOpenChecklistStrip(){
       <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${decisions.mirror_sql_allowed?'neg-text':'pos-text'}">${decisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
       <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${decisions.stock_expansion_allowed?'neg-text':'pos-text'}">${decisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
     </div>
+    ${renderChecklistHighlights(checklist)}
     <code>${esc(command)}</code>
     <div class="small">Confirm this checklist has zero FAIL before Monday open. Source: DATA.monday_preopen_checklist</div>
   </div>`;
@@ -1320,6 +1357,7 @@ function renderOperations(){
           <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${preopenDecisions.mirror_sql_allowed?'neg-text':'pos-text'}">${preopenDecisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
           <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${preopenDecisions.stock_expansion_allowed?'neg-text':'pos-text'}">${preopenDecisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
         </div>
+        ${renderChecklistHighlights(preopenChecklist)}
         <code>${esc(preopenCommand)}</code>
         <div class="small">Confirm this checklist has zero FAIL before Monday open. Source: DATA.monday_preopen_checklist</div>
       </div>
