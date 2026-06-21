@@ -1159,6 +1159,39 @@ function approvalBoundaryStrip(){
     <div class="small">scheduler_install_allowed=${scheduler_install_allowed} · mirror_sql_allowed=${mirror_sql_allowed} · Source: DATA.monday_next_action + DATA.monday_safe_observation</div>
   </div>`;
 }
+function marketClockStrip(){
+  const clock=DATA?.market_clock||{};
+  const nextAction=DATA?.monday_next_action||{};
+  const protectedActions=clock.protected_actions||{};
+  const phase=String(clock.phase||'UNKNOWN').toUpperCase();
+  const marketOpen=clock.stock_market_open===true;
+  const safe=clock.safe_to_observe===true;
+  const minsOpen=Number(clock.minutes_to_next_open);
+  const minsClose=Number(clock.minutes_to_next_close);
+  const hoursOpen=Number.isFinite(minsOpen)?`${Math.floor(minsOpen/60)}h ${minsOpen%60}m`:'pending';
+  const hoursClose=Number.isFinite(minsClose)?`${Math.floor(minsClose/60)}h ${minsClose%60}m`:'pending';
+  const command=clock.next_command||nextAction.next_command||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh';
+  const blocked=[
+    ['Paper',protectedActions.paper_order_allowed===true],
+    ['Mirror',protectedActions.mirror_sql_allowed===true],
+    ['Scheduler',protectedActions.scheduler_install_allowed===true],
+    ['Expansion',protectedActions.stock_expansion_allowed===true],
+  ];
+  return `<div class="next-action-card compact-boundary-card market-clock-card">
+    <div class="next-action-head"><span>Market Clock</span><span class="expansion-badge ${marketOpen?'ready':''}">${esc(phase)}</span></div>
+    <div class="next-action-main">${marketOpen?'REGULAR SESSION OPEN':'BUILD / SAFE OBSERVATION WINDOW'}</div>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">Current ET</div><div class="exp-value">${esc(clock.current_et_label||'pending')}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Current MDT</div><div class="exp-value">${esc(clock.current_mdt_label||'pending')}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Next Open</div><div class="exp-value">${esc(clock.next_open_label||'pending')}</div><div class="small">${esc(hoursOpen)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Next Close</div><div class="exp-value">${esc(clock.next_close_label||'pending')}</div><div class="small">${esc(hoursClose)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Mode</div><div class="exp-value ${safe?'pos-text':'warn-text'}">${safe?'SAFE OBSERVE':'STANDBY'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Protected</div><div class="exp-value ${blocked.some(x=>x[1])?'neg-text':'pos-text'}">${blocked.filter(x=>x[1]).length?'CHECK':'BLOCKED'}</div><div class="small">${esc(blocked.map(([name,allowed])=>`${name}:${allowed?'allowed':'blocked'}`).join(' · '))}</div></div>
+    </div>
+    <code>${esc(command)}</code>
+    <div class="small">Source: DATA.market_clock · ${esc(clock.regular_session||'09:30-16:00 ET')} · ${esc(clock.holiday_calendar||'market calendar')}</div>
+  </div>`;
+}
 function checklistItemByName(checklist,name){
   const found=rows(checklist.items).find(item=>item.name===name);
   return found||{};
@@ -1290,6 +1323,7 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
   html+=operationsGlance(bookOpen, bookClosed, b);
+  html+=marketClockStrip();
   html+=approvalBoundaryStrip();
   html+=preOpenChecklistStrip();
   html+=operatorRunbookStrip();
