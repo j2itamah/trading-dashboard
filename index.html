@@ -1112,6 +1112,26 @@ function approvalBoundaryStrip(){
     <div class="small">scheduler_install_allowed=${scheduler_install_allowed} · mirror_sql_allowed=${mirror_sql_allowed} · Source: DATA.monday_next_action + DATA.monday_safe_observation</div>
   </div>`;
 }
+function preOpenChecklistStrip(){
+  const checklist=DATA?.monday_preopen_checklist||{};
+  const summary=checklist.summary||{};
+  const decisions=checklist.decisions||{};
+  const status=checklist.status||'PENDING';
+  const command=decisions.next_command||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh';
+  return `<div class="next-action-card compact-boundary-card">
+    <div class="next-action-head"><span>Pre-Open Checklist</span><span class="expansion-badge ${status==='PASS'?'ready':status==='FAIL'?'not-ready':''}">${esc(status)}</span></div>
+    <div class="next-action-main">${fmtInt(summary.pass||0)} pass · ${fmtInt(summary.watch||0)} watch · ${fmtInt(summary.fail||0)} fail</div>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${decisions.safe_to_observe?'pos-text':'warn-text'}">${decisions.safe_to_observe?'ALLOWED':'WAIT'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Scheduler</div><div class="exp-value ${decisions.scheduler_install_allowed?'neg-text':'pos-text'}">${decisions.scheduler_install_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${decisions.paper_order_allowed?'neg-text':'pos-text'}">${decisions.paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${decisions.mirror_sql_allowed?'neg-text':'pos-text'}">${decisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${decisions.stock_expansion_allowed?'neg-text':'pos-text'}">${decisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
+    </div>
+    <code>${esc(command)}</code>
+    <div class="small">Confirm this checklist has zero FAIL before Monday open. Source: DATA.monday_preopen_checklist</div>
+  </div>`;
+}
 function renderOperations(){
   renderSelectors();
   const b=selectedBook();
@@ -1136,6 +1156,7 @@ function renderOperations(){
   }
   html+=operationsGlance(bookOpen, bookClosed, b);
   html+=approvalBoundaryStrip();
+  html+=preOpenChecklistStrip();
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
@@ -1208,6 +1229,11 @@ function renderOperations(){
   const digestPublished=mondayDigest.published_json||{};
   const digestStatus=mondayDigest.status||'PENDING';
   const digestMode=mondayDigest.mode||'published';
+  const preopenChecklist=DATA?.monday_preopen_checklist||{};
+  const preopenSummary=preopenChecklist.summary||{};
+  const preopenDecisions=preopenChecklist.decisions||{};
+  const preopenStatus=preopenChecklist.status||'PENDING';
+  const preopenCommand=preopenDecisions.next_command||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh';
   const mondayCandidate=DATA?.monday_current_day_candidate||{};
   const mondayCandidateStatus=mondayCandidate.status||'PENDING';
   const mondayRecommended=mondayCandidate.recommended||null;
@@ -1279,6 +1305,19 @@ function renderOperations(){
         </div>
         <code>${esc(digestNext.command||mondayNextCommand)}</code>
         <div class="small">${esc(digestLatency.next_action||'Digest derived from published evidence.')} · Source: DATA.monday_readiness_digest</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Pre-Open Checklist</span><span class="expansion-badge ${preopenStatus==='PASS'?'ready':preopenStatus==='FAIL'?'not-ready':''}">${esc(preopenStatus)}</span></div>
+        <div class="next-action-main">${fmtInt(preopenSummary.pass||0)} pass · ${fmtInt(preopenSummary.watch||0)} watch · ${fmtInt(preopenSummary.fail||0)} fail</div>
+        <div class="expansion-grid">
+          <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${preopenDecisions.safe_to_observe?'pos-text':'warn-text'}">${preopenDecisions.safe_to_observe?'ALLOWED':'WAIT'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Scheduler</div><div class="exp-value ${preopenDecisions.scheduler_install_allowed?'neg-text':'pos-text'}">${preopenDecisions.scheduler_install_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${preopenDecisions.paper_order_allowed?'neg-text':'pos-text'}">${preopenDecisions.paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${preopenDecisions.mirror_sql_allowed?'neg-text':'pos-text'}">${preopenDecisions.mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${preopenDecisions.stock_expansion_allowed?'neg-text':'pos-text'}">${preopenDecisions.stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
+        </div>
+        <code>${esc(preopenCommand)}</code>
+        <div class="small">Confirm this checklist has zero FAIL before Monday open. Source: DATA.monday_preopen_checklist</div>
       </div>
       <div class="next-action-card">
         <div class="next-action-head"><span>Current-Day Candidate Proof</span><span class="expansion-badge ${mondayCandidateStatus==='PASS'?'ready':mondayCandidateStatus==='FAIL'?'not-ready':''}">${esc(mondayCandidateStatus)}</span></div>
