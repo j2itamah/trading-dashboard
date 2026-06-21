@@ -1172,6 +1172,28 @@ function preOpenChecklistStrip(){
     <div class="small">Confirm this checklist has zero FAIL before Monday open. Source: DATA.monday_preopen_checklist</div>
   </div>`;
 }
+function operatorRunbookStrip(){
+  const runbook=DATA?.monday_operator_runbook||{};
+  const status=String(runbook.status||'PENDING').toUpperCase();
+  const seq=rows(runbook.sequence);
+  const phrases=runbook.approval_phrases||{};
+  const firstCommand=(seq[0]&&seq[0].command)||'python3 foundation_v2/v2_monday_live_standby_packet.py --json';
+  const order=seq.map(s=>s.name).filter(Boolean).join(' → ')||'standby_packet → bounded_observation → ibkr_paper_preflight';
+  const stepRows=seq.map(s=>`<div class="checklist-row">
+    <div class="checklist-name">${fmtInt(s.step||0)} · ${esc(String(s.name||'step').replaceAll('_',' '))}</div>
+    <div class="checklist-status ${s.approval_required?'watch':'pass'}">${s.approval_required?'APPROVAL':'READ'}</div>
+    <div class="checklist-detail">${esc(s.continue_if||s.when||'Read-only step.')}</div>
+  </div>`).join('');
+  return `<div class="next-action-card compact-boundary-card operator-runbook-card">
+    <div class="next-action-head"><span>Monday Operator Runbook</span><span class="expansion-badge ${status==='PASS'?'ready':status==='FAIL'?'not-ready':''}">${esc(status)}</span></div>
+    <div class="next-action-main">${esc(order)}</div>
+    <div class="checklist-mini">${stepRows}</div>
+    <code>${esc(firstCommand)}</code>
+    <div class="small">Paper: ${esc(phrases.paper_order||'I approve one IBKR paper mirror test on DUQ523641 only.')}</div>
+    <div class="small">Mirror SQL: ${esc(phrases.mirror_sql||'I approve applying the IBKR paper mirror SQL for trade [id] only.')}</div>
+    <div class="small">Source: DATA.monday_operator_runbook · read-only; executes nothing.</div>
+  </div>`;
+}
 function renderOperations(){
   renderSelectors();
   const b=selectedBook();
@@ -1197,6 +1219,7 @@ function renderOperations(){
   html+=operationsGlance(bookOpen, bookClosed, b);
   html+=approvalBoundaryStrip();
   html+=preOpenChecklistStrip();
+  html+=operatorRunbookStrip();
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
