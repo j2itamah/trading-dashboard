@@ -443,7 +443,7 @@ const VOL_PILOT1_START_AT='2026-06-19T00:50:22.324742+00:00';
 
 const STRAT_LABELS={news_only:'News Only',news_plus_ta:'Trend Gate',mean_reversion:'Mean Revert',trend_strict:'Trend Strict',full_confluence:'Full Confluence',crypto_lab:'Crypto Lab'};
 const LIFE_LABELS={hold_24hr:'24hr Hold',sell_eod:'Early Exit'};
-const fmtMoney=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtMoney=n=>{const v=Number(n||0);const s=Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});return v<0?'-$'+s:'$'+s};
 const fmtPrice=n=>n==null?'—':'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:Math.abs(Number(n))<1?4:2,maximumFractionDigits:Math.abs(Number(n))<1?4:2});
 const fmtPct=n=>(Number(n||0)>0?'+':'')+Number(n||0).toFixed(2)+'%';
 const fmtInt=n=>Number(n||0).toLocaleString('en-US');
