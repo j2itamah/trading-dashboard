@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trading Analyst — V2 Operations</title>
+<link rel="icon" href="data:,">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Spline+Sans+Mono:wght@400;500;600&family=Spline+Sans:wght@400;500;600;700&display=swap');
   :root {
@@ -25,7 +26,7 @@
   button,input{font:inherit}
   a{color:#2563eb;text-decoration:none}
   a:hover{text-decoration:underline}
-  .wrap{max-width:1120px;margin:0 auto}
+  .wrap{width:100%;max-width:1120px;margin:0 auto;min-width:0}
   .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20}
   .nav-current{display:none;border:0;background:var(--accent);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:11px 14px;cursor:pointer;width:100%;justify-content:space-between;align-items:center}
   .nav-current-main{display:inline-flex;align-items:center;gap:10px}
@@ -54,7 +55,7 @@
   .view{display:none}
   .view.on{display:block}
   .equity-summary{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin:0 0 18px}
-  .eq-card,.panel,.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .eq-card,.panel,.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);min-width:0;max-width:100%;overflow-wrap:anywhere}
   .panel.clickable{cursor:pointer}
   .panel.clickable:hover{border-color:rgba(55,91,121,.45);box-shadow:0 12px 32px rgba(55,91,121,.12)}
   .eq-card{padding:22px 24px}
@@ -134,6 +135,22 @@
   .rule-chip{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.45px;padding:6px 8px;border-radius:999px;border:1px solid #b8e2cc;background:var(--green-bg);color:var(--green);white-space:nowrap}
   .rule-chip.warn{border-color:#e7c46a;background:#fff8e5;color:#7a5610}
   .compact-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .lab-closed-detail .lab-prices{display:flex;gap:16px;font:12px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-bottom:4px}
+  .lab-closed-detail .lab-prices span{white-space:nowrap}
+  .account-matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .account-row{border:1px solid var(--line);border-radius:12px;background:#fbfaf6;padding:12px;min-width:0;overflow-wrap:anywhere}
+  .account-row.active{border-color:#b8e2cc;background:var(--green-bg)}
+  .account-row.inactive{opacity:.92}
+  .account-row .rule-chip{white-space:normal;line-height:1.25;overflow-wrap:anywhere;text-align:left}
+  .lab-focus-controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+  .lab-focus-btn{border:0;background:transparent;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:800;color:var(--ink-soft);cursor:pointer}
+  .lab-focus-btn.on{background:var(--purple-bg);color:var(--purple);box-shadow:inset 0 0 0 1px var(--purple)}
+  #view-crypto[data-lab-focus="accounts"] .lab-section:not(.lab-section-accounts){display:none}
+  #view-crypto[data-lab-focus="trades"] .lab-section:not(.lab-section-trades){display:none}
+  #view-crypto[data-lab-focus="evidence"] .lab-section:not(.lab-section-evidence){display:none}
+  .mini-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+  .mini-metrics span{font:700 9.5px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.35px;min-width:0}
+  .mini-metrics strong{font:800 13px/1.2 'Spline Sans',sans-serif;color:var(--ink);letter-spacing:0;text-transform:none;overflow-wrap:anywhere}
   .pos-pnl{text-align:right;font-weight:800}
   .mini-track{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:9px;display:grid;grid-template-columns:1fr 1fr;position:relative}
   .mini-track .loss-zone{background:linear-gradient(90deg,#f8c8ce,var(--red-bg))}
@@ -272,6 +289,8 @@
   .tm-index{font:700 11px/1.3 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.45px}
   @media(max-width:760px){
     body{padding:20px 14px 76px}
+    .wrap,.view,.panel,.kpi,.eq-card{max-width:100%;min-width:0}
+    table{max-width:100%}
     .site-nav{top:8px;border-radius:16px;margin-bottom:18px;display:block}
     .nav-current{display:flex}
     .nav-list{display:none;margin-top:6px;overflow:visible;flex-direction:column}
@@ -290,6 +309,8 @@
     .model-card{padding:9px 14px;font-size:12px}
     .metrics{gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .pos-row{grid-template-columns:1fr}
+    .account-matrix{grid-template-columns:1fr}
+    .mini-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
     .pos-pnl{text-align:left}
     .tm-overlay{padding:0}
     .tm-modal{border-radius:0;max-width:100%;min-height:100vh;min-height:100dvh}
@@ -308,6 +329,16 @@
   .expansion-badge{display:inline-block;margin-top:12px;font:700 11px/1 'Spline Sans Mono',monospace;padding:8px 16px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
   .expansion-badge.ready{background:linear-gradient(135deg,var(--green-bg),#fdf6e3);color:var(--green);border:1.5px solid var(--green);box-shadow:0 0 0 3px rgba(29,157,107,.08)}
   .expansion-badge.not-ready{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red)}
+  .next-action-card{margin:12px 0;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#fff,var(--bg));display:grid;gap:7px}
+  .next-action-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font:700 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-soft)}
+  .next-action-card .expansion-badge{margin-top:0;padding:6px 10px}
+  .next-action-main{font:800 18px/1.15 'Spline Sans',sans-serif;text-transform:capitalize}
+  .next-action-card code{display:block;max-width:100%;overflow-wrap:anywhere;padding:8px 9px;border-radius:8px;background:#f1f5f9;color:#243445;font:700 11px/1.35 'Spline Sans Mono',monospace;white-space:normal}
+  .expansion-blockers{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:grid;gap:7px}
+  .expansion-blocker{display:flex;gap:8px;align-items:flex-start;font:600 12px/1.35 'Spline Sans',sans-serif;color:var(--ink)}
+  .expansion-blocker:before{content:'!';flex:0 0 auto;width:17px;height:17px;border-radius:50%;display:inline-grid;place-items:center;background:var(--gold-bg);border:1px solid var(--gold);color:#7a5610;font:700 10px/1 'Spline Sans Mono',monospace;margin-top:1px}
+  .expansion-blocker.pass:before{content:'✓';background:var(--green-bg);border-color:var(--green);color:var(--green)}
+  .expansion-footnote{margin-top:10px;font:600 11px/1.45 'Spline Sans Mono',monospace;color:var(--ink-soft)}
   @media(max-width:760px){
     .expansion-grid{grid-template-columns:repeat(2,1fr)}
     .rb-grid{grid-template-columns:repeat(2,1fr)}
@@ -380,6 +411,7 @@
 
 <script>
 let DATA=null;
+const CRYPTOLAB_RULES={"version":"cp42_20260620_v1","scope":"CryptoLab simulated strategy accounts only. No broker orders and no official stock table writes.","global_rules":{"broker_orders_allowed":false,"official_public_trades_writes_allowed":false,"official_v2_trade_intents_writes_allowed":false,"position_size":{"formula":"round(account.free_cash * 0.10, 2)","cash_basis":"current account free_cash","minimum_floor":false},"fixed_take_profit_stop_loss":{"BUY":{"take_profit_price":"entry_price * 1.02","stop_loss_price":"entry_price * 0.98"},"SELL":{"take_profit_price":"entry_price * 0.98","stop_loss_price":"entry_price * 1.02"}},"account_math":{"deployed_cost":"SUM(stake_amount) WHERE status = OPEN","unrealized_pnl":"SUM(unrealized_pnl) WHERE status = OPEN","realized_pnl":"SUM(realized_pnl) WHERE status = CLOSED","free_cash":"starting_balance - deployed_cost + realized_pnl","marked_equity":"free_cash + deployed_cost + unrealized_pnl"},"dedupe":{"rule":"one approved candidate creates at most one simulated trade per account","required_guard":"NOT EXISTS trade for candidate_id and account_key"},"required_trade_lifecycle":["candidate_approved","simulated_trade_opened","scheduled_mark","scheduled_close_or_manual_audit_close","account_reconciliation","dashboard_evidence"]},"allowed_sources":{"research":["X/Twitter sidecar raw events","v2_crypto_lab_signal_scores","v2_crypto_lab_trade_candidates"],"price":["Coinbase public spot price for entry, mark, and close"],"future_price_history":["explicitly audited crypto price history source before trend or mean-revert routing"]},"disallowed_sources":["single tweet as trend proof","browser-only calculations","hidden dashboard-only calculations","broker fills as CryptoLab simulation source of truth"],"accounts":[{"account_key":"crypto_news_only","strategy_family":"news_only","target_model":"fixed","active_for_routing":true,"proof_state":"proven_lifecycle","purpose":"Baseline book proving approved research candidate through simulated open, scheduled mark, scheduled close, account reconciliation, and dashboard evidence.","required_sources":["v2_crypto_lab_trade_candidates","Coinbase spot price"],"candidate_checks":["candidate.status = approved_for_shadow_only","candidate.expires_at > now()","candidate.direction in BUY, SELL","candidate.asset has Coinbase USD spot endpoint","account.active = true","no existing trade for candidate/account"],"direction_rule":"use approved candidate.direction; reject if missing","sizing_rule":"round(account.free_cash * 0.10, 2)","take_profit_stop_loss_rule":"global fixed_take_profit_stop_loss","reject_reasons":["candidate_not_approved","candidate_expired","missing_direction","coinbase_price_unavailable","account_inactive","duplicate_candidate_trade"]},{"account_key":"crypto_trend_gate","strategy_family":"trend_gate","target_model":"fixed","active_for_routing":false,"proof_state":"controlled_lifecycle_proven","purpose":"Basic trend-confirmed version of the baseline book.","required_sources":["v2_crypto_lab_trade_candidates","Coinbase spot price","audited 30-minute crypto price history","audited 4-hour crypto price history"],"candidate_checks":["all crypto_news_only candidate checks","trend price history exists","trend direction matches candidate direction"],"trend_math":{"short_return":"(price_now - price_30m_ago) / price_30m_ago * 100","long_return":"(price_now - price_4h_ago) / price_4h_ago * 100","BUY_pass":"short_return > 0 and long_return > 0","SELL_pass":"short_return < 0 and long_return < 0"},"sizing_rule":"round(account.free_cash * 0.10, 2)","take_profit_stop_loss_rule":"global fixed_take_profit_stop_loss","reject_reasons":["missing_trend_price_history","trend_direction_mismatch","candidate_not_approved","candidate_expired","coinbase_price_unavailable","account_inactive","duplicate_candidate_trade"]},{"account_key":"crypto_trend_strict","strategy_family":"trend_strict","target_model":"fixed","active_for_routing":false,"proof_state":"live_reject_and_controlled_lifecycle_proven","purpose":"Stricter trend-following book requiring minimum trend magnitude.","required_sources":["v2_crypto_lab_trade_candidates","Coinbase spot price","audited 30-minute crypto price history","audited 4-hour crypto price history"],"candidate_checks":["all crypto_trend_gate candidate checks","trend magnitude exceeds strict threshold"],"trend_math":{"short_return":"(price_now - price_30m_ago) / price_30m_ago * 100","long_return":"(price_now - price_4h_ago) / price_4h_ago * 100","BUY_pass":"short_return >= 0.30 and long_return >= 0.75","SELL_pass":"short_return <= -0.30 and long_return <= -0.75"},"future_extension_guard":"reject if abs(price_now - 24h_vwap) / 24h_vwap exceeds max_extension_pct after VWAP source is audited","sizing_rule":"round(account.free_cash * 0.10, 2)","take_profit_stop_loss_rule":"global fixed_take_profit_stop_loss","reject_reasons":["missing_trend_price_history","strict_trend_threshold_not_met","trend_direction_mismatch","candidate_not_approved","candidate_expired","coinbase_price_unavailable","account_inactive","duplicate_candidate_trade"]},{"account_key":"crypto_mean_revert","strategy_family":"mean_revert","target_model":"fixed","active_for_routing":false,"proof_state":"live_reject_and_controlled_lifecycle_proven","purpose":"Reversal book after overextended one-hour moves.","required_sources":["v2_crypto_lab_trade_candidates","Coinbase spot price","audited 1-hour crypto price history"],"candidate_checks":["candidate.status = approved_for_shadow_only","candidate.expires_at > now()","candidate.direction in BUY, SELL","one-hour price history exists","candidate direction is against the recent overextension"],"mean_revert_math":{"move_1h":"(price_now - price_1h_ago) / price_1h_ago * 100","BUY_pass":"move_1h <= -1.00","SELL_pass":"move_1h >= 1.00"},"sizing_rule":"round(account.free_cash * 0.10, 2)","take_profit_stop_loss_rule":"global fixed_take_profit_stop_loss","reject_reasons":["missing_mean_revert_price_history","mean_revert_threshold_not_met","candidate_direction_not_reversal","candidate_not_approved","candidate_expired","coinbase_price_unavailable","account_inactive","duplicate_candidate_trade"]},{"account_key":"crypto_full_confluence","strategy_family":"full_confluence","target_model":"fixed","active_for_routing":false,"proof_state":"controlled_lifecycle_proven","purpose":"Highest-quality book requiring signal strength, trend confirmation, price freshness, and clean sizing.","required_sources":["v2_crypto_lab_trade_candidates","v2_crypto_lab_signal_scores","Coinbase spot price","audited 30-minute crypto price history","audited 4-hour crypto price history"],"candidate_checks":["candidate.status = approved_for_shadow_only","candidate.expires_at > now()","candidate.research_score >= 0.70","source quality is not spam or low","trend_gate pass = true","price_age_seconds <= 60","account.free_cash > 0","stake = round(free_cash * 0.10, 2)"],"confluence_math":{"research_score_minimum":0.7,"price_age_seconds_maximum":60,"requires_trend_gate_pass":true},"sizing_rule":"round(account.free_cash * 0.10, 2)","take_profit_stop_loss_rule":"global fixed_take_profit_stop_loss","reject_reasons":["research_score_too_low","source_quality_too_low","trend_gate_failed","stale_price","candidate_not_approved","candidate_expired","coinbase_price_unavailable","account_inactive","duplicate_candidate_trade"]}]};
 let CURRENT_VIEW=localStorage.getItem('v2_old_view') || 'operations';
 let sel={
   portfolio:localStorage.getItem('v2_old_portfolio') || 'news_only',
@@ -389,6 +421,7 @@ let sel={
 let OPEN_EXPANDED=false, CLOSED_EXPANDED=false;
 let OPEN_SEARCH='', CLOSED_SEARCH='';
 let CURRENT_TRADE_ID=null;
+let LAB_FOCUS=localStorage.getItem('v2_lab_focus') || 'all';
 const VOL_PILOT1_START_AT='2026-06-19T00:50:22.324742+00:00';
 
 const STRAT_LABELS={news_only:'News Only',news_plus_ta:'Trend Gate',mean_reversion:'Mean Revert',trend_strict:'Trend Strict',full_confluence:'Full Confluence',crypto_lab:'Crypto Lab'};
@@ -410,8 +443,21 @@ function durationLabel(s){
   return (sec/86400).toFixed(sec<172800?1:0)+'d';
 }
 const timeAgo=ts=>{if(!ts)return'—';const d=Date.now()-new Date(ts).getTime();if(d<0)return'just now';if(d<60000)return'<1m ago';if(d<3600000)return Math.floor(d/60000)+'m ago';if(d<86400000)return Math.floor(d/3600000)+'h ago';return Math.floor(d/86400000)+'d ago'};
+const timeUntil=ts=>{if(!ts)return'—';const d=new Date(ts).getTime()-Date.now();if(d<=0)return'expired';if(d<60000)return'<1m';if(d<3600000)return Math.ceil(d/60000)+'m';if(d<86400000)return Math.ceil(d/3600000)+'h';return Math.ceil(d/86400000)+'d'};
 const refLabel=src=>src==='news_time_quote'?'Move since news':src==='candidate_observed_price'?'Move since first seen':'Reference price missing';
 const rows=a=>Array.isArray(a)?a:[];
+function timestampMs(v){
+  const t=new Date(v||0).getTime();
+  return Number.isFinite(t)?t:0;
+}
+function newestRowsBy(arr, fields){
+  return rows(arr).slice().sort((a,b)=>{
+    const at=Math.max(...fields.map(f=>timestampMs(a&&a[f])));
+    const bt=Math.max(...fields.map(f=>timestampMs(b&&b[f])));
+    return bt-at;
+  });
+}
+function newestBy(arr, fields){return newestRowsBy(arr,fields)[0]||null}
 const officialBooks=()=>rows(DATA?.official_books).length?rows(DATA.official_books):rows(DATA?.prop_books).length?rows(DATA.prop_books):rows(DATA?.book_metrics);
 const openPositions=()=>rows(DATA?.open_positions);
 const closedTrades=()=>rows(DATA?.closed_trades);
@@ -485,11 +531,25 @@ function officialResetSummary(){
 }
 function pnlOf(t){return t.status==='CLOSED' ? Number(t.realized_pnl||0) : Number(t.computed_unrealized_pnl ?? t.unrealized_pnl ?? 0)}
 function pctOf(t){return t.status==='CLOSED' ? Number(t.computed_realized_pnl_pct ?? (Number(t.realized_pnl_percent||0)*100)) : Number(t.computed_unrealized_pnl_pct ?? (Number(t.unrealized_pnl_percent||0)*100))}
-function brokerLabel(s){return s==='paper_filled'?'Broker: paper filled':s==='submitted'?'Broker: submitted':s==='cancelled'?'Broker: cancelled':'Broker: not mirrored'}
+function brokerLabel(s){return s==='paper_filled'?'Paper broker: filled':s==='paper_submitted'||s==='submitted'?'Paper broker: submitted':s==='cancelled'?'Paper broker: cancelled':'Paper broker: not mirrored'}
+function brokerBadge(t){
+  const s=String(t?.broker_mirror_status||'not_attempted');
+  const cls=s==='paper_filled'?'long':(s==='paper_submitted'||s==='submitted')?'warn':'';
+  return `<span class="badge ${cls}" title="Paper-only broker mirror status. This is not live-money execution.">${esc(brokerLabel(s))}</span>`;
+}
 function articleUrl(t){
   const sig=rows(DATA?.signals).find(s=>s.id===t.signal_id);
   return t.news_url || t.source_url || sig?.news_url || sig?.raw_payload?.source_url || t.raw_payload?.source_url || null;
 }
+function labPnlOf(t){return String(t.status||'').toUpperCase()==='CLOSED'?Number(t.realized_pnl||0):Number(t.unrealized_pnl||0)}
+function labPctOf(t){
+  if(String(t.status||'').toUpperCase()==='CLOSED'){
+    return Number(t.realized_pnl_pct ?? t.raw_payload?.realized_pnl_pct ?? (t.stake_amount?Number(t.realized_pnl||0)/Number(t.stake_amount)*100:0));
+  }
+  return Number(t.unrealized_pnl_pct||0);
+}
+function labSourceUrl(t){const id=t.source_event_id||(t.raw_payload&&t.raw_payload.source_event_id);return id?'https://x.com/i/web/status/'+encodeURIComponent(id):''}
+function labMarkedLabel(t){if(!t.marked_at)return'Not marked yet';return timeAgo(t.marked_at)+' · '+(t.mark_status||'marked')}
 function exitReasonLabel(reason){
   const r=String(reason||'').toLowerCase();
   if(!r||r==='null') return 'Close reason pending';
@@ -635,13 +695,14 @@ function targetHealthPanel(trades, model){
 function operationsGlance(open, closed, book){
   const s=targetStats(open.concat(closed));
   const start=Number(book?.starting_balance||10000);
-  const totalPnl=s.realized+s.unrealized;
+  const selectedPnl=s.realized+s.unrealized;
+  const totalPnl=Number(book?.official_since_baseline_pnl ?? book?.since_start_pnl ?? selectedPnl);
   const selectedDeployed=deployedCash(open);
   const freeCash=Number(book?.free_cash ?? (start+s.realized-selectedDeployed));
-  const markedEquity=Number(book?.marked_equity ?? (start+totalPnl));
+  const markedEquity=Number(book?.marked_equity ?? (start+selectedPnl));
   const bookDeployed=Number(book?.deployed_cost ?? selectedDeployed);
   const positionEquity=Math.max(0,markedEquity-freeCash);
-  const todayPnl=totalPnl;
+  const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? selectedPnl);
   const realized=Number(s.realized||0);
   const capitalNote=book?.shared_lifecycle_book
     ? `${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} rows are shown above. Capital below is the shared backend book until separate ${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} books are deployed.`
@@ -782,29 +843,53 @@ function rulebookStatusPanel(){
   const volMissing=volTrades.filter(t=>t.atr_percent==null);
   const volStatus=volTrades.length===0?'WATCH':volMissing.length>0?'FAIL':'PASS';
   const volCard=card('Volatility ATR',volStatus,volStatus==='PASS'?'PASS':volStatus==='WATCH'?'No vol rows':'FAIL',volWithAtr.length+' vol rows');
-  // E) Telegram
-  const telegramCard=card('Telegram','WATCH','Live HC only','Replay/manual skip alerts');
-  // F) Latency
+  // E) X / Telegram
+  const notifRows=rows(DATA?.crypto_lab_notifications);
+  const latestNotif=newestBy(notifRows,['created_at','updated_at','sent_at']);
+  const failedNotif=notifRows.filter(n=>String(n.status||'').toLowerCase()==='failed'||n.error_message);
+  const telegramStatus=failedNotif.length?'FAIL':latestNotif&&latestNotif.status==='sent'?'PASS':'WATCH';
+  const telegramText=telegramStatus==='PASS'?'Sent evidence':telegramStatus==='FAIL'?'Failed rows':'No sent row';
+  const telegramDetail=latestNotif?`${esc(latestNotif.asset||'--')} · ${timeAgo(latestNotif.created_at)}`:'no notification rows';
+  const telegramCard=card('X / Telegram',telegramStatus,telegramText,telegramDetail);
+  // F) Local Telegram probe
+  const localTelegram=DATA?.telegram_delivery_probe||{};
+  const localTelegramStatus=localTelegram.status||'WATCH';
+  const localTelegramText=localTelegramStatus==='PASS'?'Local send ready':localTelegramStatus==='FAIL'?'Probe failed':'Env missing';
+  const localTelegramDetail=localTelegram.next_action||localTelegram.reason||localTelegram.env_source||'Source: DATA.telegram_delivery_probe';
+  const localTelegramCard=card('Local Telegram',localTelegramStatus,localTelegramText,localTelegramDetail);
+  // G) Latency
   const latencyRows=rows(DATA?.latency);
+  const latencyCutoff=new Date('2026-06-21T01:55:30Z').getTime();
+  const postCp65Latency=latencyRows.filter(r=>new Date(r.entry_time||r.v2_created_at||0).getTime()>=latencyCutoff);
+  const cleanPostCp65=postCp65Latency.filter(r=>r.news_event_time!=null && r.news_to_trade_seconds!=null && Number(r.news_to_trade_seconds)>=0 && Number(r.news_to_trade_seconds)<=86400 && r.news_reference_price!=null);
+  const badPostCp65=postCp65Latency.filter(r=>String(r.price_reference_source||'').toLowerCase().includes('entry') || Number(r.news_to_trade_seconds)<0);
   const cleanLatency=latencyRows.filter(r=>r.news_event_time!=null && r.news_to_trade_seconds!=null && r.news_reference_price!=null);
-  const latencyPct=latencyRows.length?cleanLatency.length/latencyRows.length*100:0;
-  const latencyStatus=cleanLatency.length===0?'FAIL':latencyPct>=50?'PASS':'WATCH';
-  const latencyCard=card('Latency',latencyStatus,latencyStatus==='PASS'?'PASS':latencyStatus==='WATCH'?'Partial':'Missing',cleanLatency.length+' clean / '+latencyRows.length+' rows');
-  // G) IBKR Paper
-  const ibkrCard=card('IBKR Paper','WATCH','Manual check','Not in JSON');
-  // H) Book Mapping
+  const latencyStatus=badPostCp65.length?'FAIL':postCp65Latency.length===0?'WATCH':cleanPostCp65.length?'PASS':'WATCH';
+  const latencyText=latencyStatus==='FAIL'?'Bad reference':postCp65Latency.length===0?'Awaiting post-fix trade':latencyStatus==='PASS'?'Post-fix clean':'Post-fix partial';
+  const latencyDetail=postCp65Latency.length
+    ? `${cleanPostCp65.length} clean / ${postCp65Latency.length} post-fix · ${cleanLatency.length}/${latencyRows.length} historical`
+    : `0 post-fix rows · ${cleanLatency.length}/${latencyRows.length} historical clean`;
+  const latencyCard=card('Latency',latencyStatus,latencyText,latencyDetail);
+  // H) IBKR Paper
+  const ibkrPreflight=DATA?.ibkr_paper_preflight||{};
+  const ibkrStatus=ibkrPreflight.status||'WATCH';
+  const ibkrText=ibkrStatus==='PASS'?'Paper ready':ibkrStatus==='FAIL'?'Blocked':'Not connected';
+  const ibkrDetail=ibkrPreflight.next_action
+    || `paper ${JSON.stringify(ibkrPreflight.paper_ports_open||[])} · live ${JSON.stringify(ibkrPreflight.live_ports_open||[])}`;
+  const ibkrCard=card('IBKR Paper',ibkrStatus,ibkrText,ibkrDetail);
+  // I) Book Mapping
   const bookTrades=allTrades().filter(t=>t.book_key);
   const bookGroups={};
   bookTrades.forEach(t=>{const k=t.book_key;if(!bookGroups[k])bookGroups[k]=new Set();bookGroups[k].add(t.lifecycle||'unknown')});
   const mixedBooks=Object.keys(bookGroups).filter(k=>bookGroups[k].size>1);
   const mappingStatus=mixedBooks.length===0?'PASS':'WATCH';
   const mappingCard=card('Book Mapping',mappingStatus,mappingStatus==='PASS'?'Clean':'Mixed',mixedBooks.length>0?mixedBooks.length+' shared books':'All books single-lifecycle');
-  const cards=ledgerCard+sizingCard+cashCard+volCard+telegramCard+latencyCard+ibkrCard+mappingCard;
-  const passCount=[ledgerOk,sizingStatus==='PASS',cashStatus==='PASS',volStatus==='PASS',false,latencyStatus==='PASS',false,mappingStatus==='PASS'].filter(Boolean).length;
-  const failCount=[!ledgerOk&&health.accounting_ok!==undefined,sizingStatus==='FAIL',false,volStatus==='FAIL',false,latencyStatus==='FAIL',false,false].filter(Boolean).length;
-  const watchCount=8-passCount-failCount;
+  const cards=ledgerCard+sizingCard+cashCard+volCard+telegramCard+localTelegramCard+latencyCard+ibkrCard+mappingCard;
+  const passCount=[ledgerOk,sizingStatus==='PASS',cashStatus==='PASS',volStatus==='PASS',telegramStatus==='PASS',localTelegramStatus==='PASS',latencyStatus==='PASS',ibkrStatus==='PASS',mappingStatus==='PASS'].filter(Boolean).length;
+  const failCount=[!ledgerOk&&health.accounting_ok!==undefined,sizingStatus==='FAIL',false,volStatus==='FAIL',telegramStatus==='FAIL',localTelegramStatus==='FAIL',latencyStatus==='FAIL',ibkrStatus==='FAIL',false].filter(Boolean).length;
+  const watchCount=9-passCount-failCount;
   const summary=`${passCount} pass · ${watchCount} watch · ${failCount} fail`;
-  return `<div class="panel"><h2>Rulebook Status</h2><div class="section-note">Live checks from the Codex-Claude System Rulebook. ${esc(summary)}</div><div class="rb-grid">${cards}</div></div>`;
+  return `<div class="panel"><h2>Dashboard Rule Signals</h2><div class="section-note">Frontend-derived indicators from published JSON. Full CLI rulebook runs separately. ${esc(summary)}</div><div class="rb-grid">${cards}</div></div>`;
 }
 function freshness(){
   const gen=DATA?.generated_at; if(!gen) return;
@@ -957,6 +1042,7 @@ function tradeRow(t){
   const reasonClass=exitReasonClass(t.exit_reason);
   const spend=spendRuleInfo(t);
   const modelBadge=`<span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span>`;
+  const brokerChip=brokerBadge(t);
   const sizingLabel=spend.exact && spend.pct!=null ? `${spend.pct.toFixed(1)}% of cash` : '10% check pending';
   const adjMove=latencyAdjustedMove(lat);
   const timingBits=[];
@@ -964,8 +1050,8 @@ function tradeRow(t){
   if(adjMove!=null) timingBits.push(`${Number(adjMove)>=0?'+':''}${Number(adjMove).toFixed(2)}% before entry`);
   const timingChip=timingBits.length?`<span class="tag">${esc(timingBits.join(' · '))}</span>`:'<span class="tag">Timing pending</span>';
   const meta=closed
-    ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span>${timingChip}</div>`
-    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta">${timingChip}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}</div>`;
+    ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span>${timingChip}${brokerChip}</div>`
+    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta">${timingChip}${brokerChip}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}</div>`;
   return `<div class="pos-row ${closed?'closed '+reasonClass:'open'}" data-trade-id="${t.id}">
     <div>
       <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span>${modelBadge}${closed?`<span class="badge">${esc(t.lifecycle||'')}</span>`:''}</div>
@@ -973,6 +1059,57 @@ function tradeRow(t){
       ${pricePathBar(t,true)}
     </div>
     <div class="pos-pnl ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
+  </div>`;
+}
+function labTradeRow(t){
+  const pnl=labPnlOf(t),pct=labPctOf(t),dir=(t.direction||'').toUpperCase();
+  const url=labSourceUrl(t);
+  const closed=String(t.status||'').toUpperCase()==='CLOSED';
+  const sizingLabel=t.stake_cash_pct!=null?Number(t.stake_cash_pct).toFixed(1)+'% of cash':'sizing pending';
+  let meta='';
+  if(closed){
+    meta=`<div class="lab-closed-detail">
+      <div class="lab-prices"><span>Entry ${fmtPrice(t.entry_price)}</span><span>Close ${fmtPrice(t.close_price)}</span></div>
+      <div class="reason-line"><span class="reason-pill">${esc(t.close_reason||'closed')}</span><span class="small">${shortTime(t.closed_at)}</span></div>
+      <div class="compact-meta"><span class="small">Stake ${fmtMoney(t.stake_amount)} · ${esc(sizingLabel)}</span>${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">X source</a>`:''}</div>
+    </div>`;
+  } else {
+    const markBadge=t.mark_status?`<span class="badge ${t.mark_status==='fresh'?'long':t.mark_status==='stale'?'short':''}">${esc(t.mark_status)}</span>`:'';
+    meta=`<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(t.stake_amount)}</div></div><span class="rule-chip ${t.sizing_rule_status==='ok'?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta"><span class="tag">${esc(labMarkedLabel(t))}</span>${markBadge}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">X source</a>`:''}</div>`;
+  }
+  return `<div class="pos-row ${closed?'closed':'open'}" data-lab-trade-id="${t.id}">
+    <div>
+      <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span><span class="badge">SIM</span></div>
+      ${meta}
+      ${pricePathBar(t,true)}
+    </div>
+    <div class="pos-pnl ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
+  </div>`;
+}
+function approvalBoundaryStrip(){
+  const mondayNext=DATA?.monday_next_action||{};
+  const latestMonday=(newestRowsBy(DATA?.monday_operator_runs,['recorded_at','checked_at','created_at'])[0])||{};
+  const mondayCandidate=DATA?.monday_current_day_candidate||{};
+  const safeObs=DATA?.monday_safe_observation||{};
+  const safeObsScheduler=safeObs.scheduler||{};
+  const publishedExpansion=DATA?.stock_expansion_readiness||{};
+  const scheduler_install_allowed=safeObsScheduler.activation_allowed===true;
+  const paper_order_allowed=mondayNext.paper_order_allowed===true || latestMonday.paper_order_allowed===true || mondayCandidate.paper_order_allowed===true;
+  const mirror_sql_allowed=false;
+  const stock_expansion_allowed=mondayNext.stock_expansion_allowed===true || latestMonday.stock_expansion_allowed===true || publishedExpansion.expansion_allowed===true;
+  const safe_to_observe=mondayNext.safe_to_observe===true || latestMonday.safe_to_observe===true;
+  const pass=safe_to_observe && !scheduler_install_allowed && !paper_order_allowed && !mirror_sql_allowed && !stock_expansion_allowed;
+  return `<div class="next-action-card approval-boundary-card compact-boundary-card">
+    <div class="next-action-head"><span>Approval Boundary</span><span class="expansion-badge ${pass?'ready':'not-ready'}">${pass?'PASS':'CHECK'}</span></div>
+    <div class="next-action-main">SAFE OBSERVATION ONLY</div>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${safe_to_observe?'pos-text':'warn-text'}">${safe_to_observe?'ALLOWED':'WAIT'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Scheduler</div><div class="exp-value ${scheduler_install_allowed?'neg-text':'pos-text'}">${scheduler_install_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${paper_order_allowed?'neg-text':'pos-text'}">${paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${mirror_sql_allowed?'neg-text':'pos-text'}">${mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${stock_expansion_allowed?'neg-text':'pos-text'}">${stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
+    </div>
+    <div class="small">scheduler_install_allowed=${scheduler_install_allowed} · mirror_sql_allowed=${mirror_sql_allowed} · Source: DATA.monday_next_action + DATA.monday_safe_observation</div>
   </div>`;
 }
 function renderOperations(){
@@ -998,6 +1135,7 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
   html+=operationsGlance(bookOpen, bookClosed, b);
+  html+=approvalBoundaryStrip();
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
@@ -1015,22 +1153,188 @@ function renderOperations(){
   html+='</div></div>';
   const shadow=DATA?.shadow_health||{};
   const allOpen=openPositions().filter(currentOfficialTrade);
+  const expansionOpen=openPositions();
   const volOpenCount=allOpen.filter(t=>modelOf(t)==='volatility').length;
   const auditOk=Number(shadow.audit_success||0);
   const auditErr=Number(shadow.audit_errors||0);
   const triggerOk=shadow.shadow_status==='OK' || shadow.trigger_status==='OK';
   const mixedAsset=allOpen.filter(t=>modelOf(t)==='volatility').map(t=>t.asset).filter(Boolean);
   const latestMixedProof=mixedAsset.length?mixedAsset[0]:'None';
-  const expansionReady=triggerOk && auditErr===0 && volOpenCount>0;
+  const missingMarks=expansionOpen.filter(t=>t.current_price==null || !['ok','fresh','marked'].includes(String(t.current_price_status||'').toLowerCase()));
+  const volReview=rows(DATA?.volatility_review).find(r=>String(r.target_model||'').toLowerCase()==='volatility')||{};
+  const volClosed=Number(volReview.closed_count||0);
+  const volReviewStatus=String(volReview.review_status||'unknown');
+  const latencyCutoffOps=new Date('2026-06-21T01:55:30Z').getTime();
+  const postCp65StockLatency=rows(DATA?.latency).filter(r=>{
+    const ts=new Date(r.entry_time||r.v2_created_at||0).getTime();
+    return ts>=latencyCutoffOps && String(r.asset_class||'').toLowerCase()==='stock';
+  });
+  const cleanPostCp65StockLatency=postCp65StockLatency.filter(r=>
+    r.news_event_time!=null &&
+    r.news_reference_price!=null &&
+    Number(r.news_to_trade_seconds)>=0 &&
+    Number(r.news_to_trade_seconds)<=86400 &&
+    !['entry_price','entry','trade_entry'].includes(String(r.price_reference_source||'').toLowerCase())
+  );
+  const mondayOpenTs=new Date('2026-06-22T13:30:00Z').getTime();
+  const mondayStockRows=[...openPositions(),...closedTrades()].filter(t=>
+    currentOfficialTrade(t) &&
+    String(t.asset_class||'').toLowerCase()==='stock' &&
+    new Date(t.created_at||t.entry_time||t.exit_time||0).getTime()>=mondayOpenTs
+  );
+  const ibkrPreflight=DATA?.ibkr_paper_preflight||{};
+  const ibkrPreflightStatus=ibkrPreflight.status||'WATCH';
+  const ibkrPreflightAction=ibkrPreflight.next_action||'Open IBKR Gateway/TWS paper on port 4002 or 7497, then rerun preflight.';
+  const ibkrPreflightCommand=ibkrPreflight.command||'python3 foundation_v2/v2_ibkr_paper_preflight.py --json';
+  const telegramProbe=DATA?.telegram_delivery_probe||{};
+  const telegramProbeStatus=telegramProbe.status||'WATCH';
+  const telegramProbeAction=telegramProbe.next_action||'Configure TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID, then rerun the delivery probe.';
+  const telegramProbeCommand=telegramProbe.command||'python3 foundation_v2/v2_telegram_delivery_probe.py';
+  const fallbackExpansionChecks=[
+    {label:'Trade capture clean',pass:triggerOk&&auditErr===0,detail:`${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err`},
+    {label:'Mark coverage complete',pass:missingMarks.length===0,detail:missingMarks.length?`${fmtInt(expansionOpen.length-missingMarks.length)}/${fmtInt(expansionOpen.length)} marked · missing ${missingMarks.slice(0,4).map(t=>t.asset).join(', ')}`:`${fmtInt(expansionOpen.length)}/${fmtInt(expansionOpen.length)} marked`},
+    {label:'Volatility evidence complete',pass:volClosed>=30&&volReviewStatus==='ok',detail:`${fmtInt(volClosed)} / 30 closed · ${esc(volReviewStatus)}`},
+    {label:'Post-fix stock latency proven',pass:cleanPostCp65StockLatency.length>0,detail:`${fmtInt(cleanPostCp65StockLatency.length)} clean / ${fmtInt(postCp65StockLatency.length)} post-fix stock rows`},
+    {label:'Monday live observation',pass:mondayStockRows.length>0,detail:mondayStockRows.length?`${fmtInt(mondayStockRows.length)} stock rows since Monday open`:'pending Monday open'},
+    {label:'IBKR paper proof',pass:ibkrPreflightStatus==='PASS',detail:ibkrPreflightAction},
+    {label:'User expansion approval',pass:false,detail:'requires exact approved expansion packet'}
+  ];
+  const publishedExpansion=DATA?.stock_expansion_readiness||{};
+  const publishedExpansionGates=rows(publishedExpansion.gates);
+  const mondayDigest=DATA?.monday_readiness_digest||{};
+  const digestNext=mondayDigest.next_safe_action||{};
+  const digestIbkr=mondayDigest.ibkr_paper||{};
+  const digestLatency=mondayDigest.latency||{};
+  const digestPublished=mondayDigest.published_json||{};
+  const digestStatus=mondayDigest.status||'PENDING';
+  const digestMode=mondayDigest.mode||'published';
+  const mondayCandidate=DATA?.monday_current_day_candidate||{};
+  const mondayCandidateStatus=mondayCandidate.status||'PENDING';
+  const mondayRecommended=mondayCandidate.recommended||null;
+  const mondayNext=DATA?.monday_next_action||{};
+  const mondayRuns=newestRowsBy(DATA?.monday_operator_runs,['recorded_at','checked_at','created_at']);
+  const latestMonday=mondayRuns[0]||{};
+  const mondayStatus=latestMonday.status||'PENDING';
+  const mondaySafe=latestMonday.safe_to_observe===true;
+  const mondayPaper=latestMonday.paper_order_allowed===true;
+  const mondayExpansion=latestMonday.stock_expansion_allowed===true;
+  const mondayPayloadReused=latestMonday.payload_reused===true;
+  const mondayRecorded=latestMonday.recorded_at?timeAgo(latestMonday.recorded_at):'not recorded';
+  const mondayNextStatus=mondayNext.status||'PENDING';
+  const mondayNextAction=mondayNext.action||'run_monday_operator_gate';
+  const mondayNextCommand=mondayNext.next_command||'bash foundation_v2/run_v2_monday_safe_observation.sh';
+  const mondayNextRecorded=mondayNext.recorded_at?timeAgo(mondayNext.recorded_at):mondayRecorded;
+  const safeObs=DATA?.monday_safe_observation||{};
+  const safeObsSession=safeObs.latest_session||{};
+  const safeObsStatus=safeObs.status||'PENDING';
+  const safeObsScheduler=safeObs.scheduler||{};
+  const safeObsRecorded=safeObsSession.recorded_at?timeAgo(safeObsSession.recorded_at):'no proof run yet';
+  const safeObsCommand=safeObs.wrapper_command||'bash foundation_v2/run_v2_monday_safe_observation.sh';
+  const safeObsBlocked=safeObsSession.paper_order_allowed===false && safeObsSession.stock_expansion_allowed===false;
+  const scheduler_install_allowed=safeObsScheduler.activation_allowed===true;
+  const paper_order_allowed=mondayNext.paper_order_allowed===true || mondayPaper || mondayCandidate.paper_order_allowed===true;
+  const mirror_sql_allowed=false;
+  const stock_expansion_allowed=mondayNext.stock_expansion_allowed===true || mondayExpansion || publishedExpansion.expansion_allowed===true;
+  const approvalBoundarySafe=mondayNext.safe_to_observe===true || mondaySafe || digestNext.safe_to_observe===true;
+  const approvalBoundaryPass=approvalBoundarySafe && !scheduler_install_allowed && !paper_order_allowed && !mirror_sql_allowed && !stock_expansion_allowed;
+  const expansionChecks=publishedExpansionGates.length
+    ? publishedExpansionGates.map(g=>({label:g.label||g.id||'Gate',pass:g.status==='PASS'&&!g.blocks_expansion,detail:g.detail||g.status||''}))
+    : fallbackExpansionChecks;
+  const expansionReady=expansionChecks.every(c=>c.pass);
+  const expansionBlockers=expansionChecks.filter(c=>!c.pass);
   html+=`<details class="ops-details"><summary>Book health and expansion details</summary><div class="ops-details-body">
     <div class="equity-summary"><div class="eq-card"><div class="eq-label">${esc(display.labelPrefix)}Selected Book Equity</div><div class="eq-equity">${fmtMoney(display.marked_equity)}</div><div class="eq-growth ${signCls(display.pnl)}">${Number(display.pnl||0)>=0?'+':''}${fmtMoney(display.pnl||0)} ${display.isVol?'pilot P/L':'current P/L'}</div></div><div class="eq-card"><div class="eq-label">Today</div><div class="eq-equity ${signCls(b.today_marked_pnl_approx)}">${Number(b.today_marked_pnl_approx||0)>=0?'+':''}${fmtMoney(b.today_marked_pnl_approx||0)}</div><div class="eq-growth ${signCls(b.today_realized_pnl)}">${Number(b.today_realized_pnl||0)>=0?'+':''}${fmtMoney(b.today_realized_pnl||0)} realized${esc(display.cashNote)}</div></div></div>
     <div class="expansion-panel"><h2>Book Expansion Readiness</h2>
+      <div class="expansion-grid" style="margin-bottom:12px">
+        <div class="expansion-stat"><div class="exp-label">Monday Gate</div><div class="exp-value"><span class="expansion-badge ${mondayStatus==='PASS'?'ready':'not-ready'}">${esc(mondayStatus)}</span></div></div>
+        <div class="expansion-stat"><div class="exp-label">Safe to Observe</div><div class="exp-value ${mondaySafe?'pos-text':'neg-text'}">${mondaySafe?'YES':'NO'}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${mondayPaper?'pos-text':'neg-text'}">${mondayPaper?'ALLOWED':'BLOCKED'}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${mondayExpansion?'pos-text':'neg-text'}">${mondayExpansion?'ALLOWED':'BLOCKED'}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Session Efficiency</div><div class="exp-value ${mondayPayloadReused?'pos-text':'warn-text'}">${mondayPayloadReused?'ONE GATE':'LEGACY'}</div><div class="small">payload reused: ${mondayPayloadReused?'yes':'not yet'}</div></div>
+      </div>
+      <div class="section-note">Monday operator evidence · ${esc(mondayRecorded)} · ${esc(latestMonday.next_action||'Run python3 foundation_v2/v2_monday_operator_watch.py for evidence.')} Source: DATA.monday_operator_runs.</div>
+      <div class="next-action-card approval-boundary-card">
+        <div class="next-action-head"><span>Approval Boundary</span><span class="expansion-badge ${approvalBoundaryPass?'ready':'not-ready'}">${approvalBoundaryPass?'PASS':'CHECK'}</span></div>
+        <div class="next-action-main">SAFE OBSERVATION ONLY</div>
+        <div class="expansion-grid">
+          <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${approvalBoundarySafe?'pos-text':'warn-text'}">${approvalBoundarySafe?'ALLOWED':'WAIT'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Scheduler Install</div><div class="exp-value ${scheduler_install_allowed?'neg-text':'pos-text'}">${scheduler_install_allowed?'ALLOWED':'BLOCKED'}</div><div class="small">scheduler_install_allowed=${scheduler_install_allowed}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${paper_order_allowed?'neg-text':'pos-text'}">${paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Mirror SQL</div><div class="exp-value ${mirror_sql_allowed?'neg-text':'pos-text'}">${mirror_sql_allowed?'ALLOWED':'BLOCKED'}</div><div class="small">mirror_sql_allowed=${mirror_sql_allowed}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Expansion</div><div class="exp-value ${stock_expansion_allowed?'neg-text':'pos-text'}">${stock_expansion_allowed?'ALLOWED':'BLOCKED'}</div></div>
+        </div>
+        <div class="small">Install phrase: I approve installing the Monday safe observation scheduler only.</div>
+        <div class="small">Paper order phrase: I approve one IBKR paper mirror test on DUQ523641 only.</div>
+        <div class="small">Mirror SQL phrase: I approve applying the IBKR paper mirror SQL for trade [id] only.</div>
+        <div class="small">Read-only dashboard evidence. This panel cannot approve scheduler install, broker orders, SQL writes, or stock expansion.</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Monday Readiness Digest</span><span class="expansion-badge ${digestStatus==='PASS'?'ready':digestStatus==='FAIL'?'not-ready':''}">${esc(digestStatus)}</span></div>
+        <div class="next-action-main">${esc((digestNext.action||mondayNextAction||'run_monday_operator_gate').replaceAll('_',' '))}</div>
+        <div class="expansion-grid">
+          <div class="expansion-stat"><div class="exp-label">Mode</div><div class="exp-value">${esc(digestMode)}</div></div>
+          <div class="expansion-stat"><div class="exp-label">IBKR</div><div class="exp-value ${digestIbkr.status==='PASS'?'pos-text':'warn-text'}">${esc(digestIbkr.status||ibkrPreflightStatus)}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Latency</div><div class="exp-value ${digestLatency.status==='PASS'?'pos-text':'warn-text'}">${esc(digestLatency.status||'WATCH')}</div><div class="small">${fmtInt(digestLatency.rows_after_cutoff||0)} post-fix rows</div></div>
+          <div class="expansion-stat"><div class="exp-label">Accounting</div><div class="exp-value ${digestPublished.accounting_ok===true?'pos-text':'neg-text'}">${digestPublished.accounting_ok===true?'OK':'CHECK'}</div><div class="small">drift ${esc(digestPublished.books_with_drift??'--')}</div></div>
+        </div>
+        <code>${esc(digestNext.command||mondayNextCommand)}</code>
+        <div class="small">${esc(digestLatency.next_action||'Digest derived from published evidence.')} · Source: DATA.monday_readiness_digest</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Current-Day Candidate Proof</span><span class="expansion-badge ${mondayCandidateStatus==='PASS'?'ready':mondayCandidateStatus==='FAIL'?'not-ready':''}">${esc(mondayCandidateStatus)}</span></div>
+        <div class="next-action-main">${mondayRecommended?`${esc(mondayRecommended.asset)} ${esc(mondayRecommended.direction)} ready for review`:'Waiting for Monday stock candidate'}</div>
+        <div class="expansion-grid">
+          <div class="expansion-stat"><div class="exp-label">Current-Day Stocks</div><div class="exp-value">${fmtInt(mondayCandidate.current_day_stock_open_count||0)}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Eligible Mirror Candidates</div><div class="exp-value">${fmtInt(mondayCandidate.eligible_mirror_candidate_count||0)}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value neg-text">BLOCKED</div></div>
+          <div class="expansion-stat"><div class="exp-label">Approval</div><div class="exp-value">${mondayCandidate.required_approval_phrase?'REQUIRED':'PENDING'}</div></div>
+        </div>
+        ${mondayRecommended?`<div class="small">Intent ${esc(mondayRecommended.id)} · ${esc(mondayRecommended.target_model||'model')} · shares ${esc(mondayRecommended.shares??'--')} · stake ${fmtMoney(mondayRecommended.stake_amount)}</div>`:''}
+        <div class="small">${esc(mondayCandidate.next_action||'Continue safe observation.')} · Source: DATA.monday_current_day_candidate</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Next Safe Action</span><span class="expansion-badge ${mondayNextStatus==='ACTION_REQUIRED'?'ready':mondayNextStatus==='FAIL'?'not-ready':''}">${esc(mondayNextStatus)}</span></div>
+        <div class="next-action-main">${esc(mondayNextAction.replaceAll('_',' '))}</div>
+        <code>${esc(mondayNextCommand)}</code>
+        <div class="small">${esc(mondayNext.reason||'Derived from Monday operator evidence.')} · Source: DATA.monday_next_action · ${esc(mondayNextRecorded)}</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Safe Observation Wrapper</span><span class="expansion-badge ${safeObsStatus==='PASS'?'ready':safeObsStatus==='FAIL'?'not-ready':''}">${esc(safeObsStatus)}</span></div>
+        <div class="next-action-main">${esc(safeObsStatus==='PASS'?'Wrapper refuses unsafe args':'Wrapper needs review')}</div>
+        <div class="expansion-grid">
+          <div class="expansion-stat"><div class="exp-label">Unsafe Args</div><div class="exp-value ${safeObs.unsafe_args_refused?'pos-text':'neg-text'}">${safeObs.unsafe_args_refused?'REFUSED':'CHECK'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Latest Proof</div><div class="exp-value ${safeObsSession.gate_runs_this_cycle===1?'pos-text':'warn-text'}">${safeObsSession.gate_runs_this_cycle===1?'ONE GATE':'PENDING'}</div><div class="small">${esc(safeObsRecorded)}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Telegram Send</div><div class="exp-value ${safeObsSession.send_enabled==='False'?'pos-text':'warn-text'}">${safeObsSession.send_enabled==='False'?'DISABLED':'CHECK'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Orders / Expansion</div><div class="exp-value ${safeObsBlocked?'pos-text':'neg-text'}">${safeObsBlocked?'BLOCKED':'CHECK'}</div></div>
+          <div class="expansion-stat"><div class="exp-label">Scheduler</div><div class="exp-value ${safeObsScheduler.status==='PASS'?'pos-text':safeObsScheduler.status==='FAIL'?'neg-text':'warn-text'}">${esc(safeObsScheduler.status||'UNKNOWN')}</div></div>
+        </div>
+        <div class="small">Scheduler: ${esc(safeObsScheduler.next_action||'ready-not-installed; explicit approval required before install/load')}</div>
+        <code>${esc(safeObsCommand)}</code>
+        <div class="small">${esc(safeObs.next_action||'Use bounded observation wrapper only.')} · Source: DATA.monday_safe_observation</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>IBKR Paper Preflight</span><span class="expansion-badge ${ibkrPreflightStatus==='PASS'?'ready':ibkrPreflightStatus==='FAIL'?'not-ready':''}">${esc(ibkrPreflightStatus)}</span></div>
+        <div class="next-action-main">${esc(ibkrPreflightStatus==='PASS'?'Paper account ready':ibkrPreflightStatus==='FAIL'?'Broker check blocked':'Paper not connected')}</div>
+        <code>${esc(ibkrPreflightCommand)}</code>
+        <div class="small">${esc(ibkrPreflightAction)} · Source: DATA.ibkr_paper_preflight</div>
+      </div>
+      <div class="next-action-card">
+        <div class="next-action-head"><span>Local Telegram Alerts</span><span class="expansion-badge ${telegramProbeStatus==='PASS'?'ready':telegramProbeStatus==='FAIL'?'not-ready':''}">${esc(telegramProbeStatus)}</span></div>
+        <div class="next-action-main">${esc(telegramProbeStatus==='PASS'?'Codex urgent send ready':telegramProbeStatus==='FAIL'?'Local probe failed':'Local send env missing')}</div>
+        <code>${esc(telegramProbeCommand)}</code>
+        <div class="small">${esc(telegramProbeAction)} · Source: DATA.telegram_delivery_probe</div>
+      </div>
       <div class="expansion-grid">
         <div class="expansion-stat"><div class="exp-label">Trade Capture</div><div class="exp-value ${triggerOk?'pos-text':'neg-text'}">${fmtInt(auditOk)} OK / ${fmtInt(auditErr)} err</div></div>
-        <div class="expansion-stat"><div class="exp-label">Pilot 1 Volatility Open</div><div class="exp-value">${fmtInt(volOpenCount)}</div></div>
-        <div class="expansion-stat"><div class="exp-label">Mixed Sibling Proof</div><div class="exp-value">${esc(latestMixedProof)}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Volatility Evidence</div><div class="exp-value">${fmtInt(volClosed)} / 30</div></div>
+        <div class="expansion-stat"><div class="exp-label">Post-Fix Latency</div><div class="exp-value">${fmtInt(cleanPostCp65StockLatency.length)} clean</div></div>
         <div class="expansion-stat"><div class="exp-label">Status</div><div class="exp-value"><span class="expansion-badge ${expansionReady?'ready':'not-ready'}">${expansionReady?'Ready for Cautious Expansion':'Not Ready'}</span></div></div>
       </div>
+      <div class="expansion-blockers">
+        ${expansionChecks.map(c=>`<div class="expansion-blocker ${c.pass?'pass':''}"><span><strong>${esc(c.label)}:</strong> ${esc(c.detail)}</span></div>`).join('')}
+      </div>
+      <div class="expansion-footnote">Expansion requires the IBKR paper preflight to pass plus explicit user approval. Dashboard evidence is read-only and cannot approve expansion by itself.</div>
+      <div class="expansion-footnote">Source: ${publishedExpansionGates.length?'DATA.stock_expansion_readiness':'dashboard fallback calculation'}.</div>
     </div>
   </div></details>`;
   document.getElementById('operations-content').innerHTML=html;
@@ -1047,7 +1351,8 @@ function renderResearch(){
   else html+=cands.map(c=>{
     const st=c.display_status||c.status||'candidate';
     const dir=(c.direction||'').toUpperCase();
-    const price=c.candidate_price!=null?'$'+Number(c.candidate_price).toFixed(2):'not captured yet';
+    const priceNum=c.candidate_price==null?null:Number(c.candidate_price);
+    const price=(priceNum!=null && Number.isFinite(priceNum) && priceNum>0)?fmtPrice(priceNum):'not captured yet';
     const conf=c.confidence!=null?Number(c.confidence).toFixed(2):'not captured yet';
     const age=timeAgo(c.seen_at);
     const rejR=c.rejection_reason?`<div class="cand-meta" style="color:var(--red)">Rejected: ${esc(c.rejection_reason)}</div>`:'';
@@ -1074,82 +1379,358 @@ function renderResearch(){
 }
 function renderCryptoLab(){
   const x=rows(DATA?.crypto_lab_x).slice(0,18);
-  const cryptoAssets=new Set(['BTC','ETH','SOL','XRP','LINK','AVAX','BNB','LTC','DOGE','ADA']);
-  const cryptoOpen=openPositions().filter(t=>t.asset_class==='crypto'||cryptoAssets.has(String(t.asset||'').toUpperCase()));
-  const cryptoClosed=closedTrades().filter(t=>t.asset_class==='crypto'||cryptoAssets.has(String(t.asset||'').toUpperCase()));
-  const cands=rows(DATA?.candidates).filter(c=>cryptoAssets.has(String(c.asset||'').toUpperCase())||String(c.asset_class||'').toLowerCase()==='crypto').slice(0,10);
-  const allCrypto=cryptoOpen.concat(cryptoClosed);
-  const cryptoPnl=cryptoOpen.reduce((s,t)=>s+pnlOf(t),0)+cryptoClosed.reduce((s,t)=>s+pnlOf(t),0);
-  const modelCards=['fixed','volatility'].map(model=>{
-    const trades=allCrypto.filter(t=>modelOf(t)===model);
-    const s=targetStats(trades);
-    const closed=trades.filter(t=>t.status==='CLOSED');
-    const sampleGoal=model==='volatility'?30:20;
-    const sampleColor=model==='volatility'?'var(--purple)':'var(--green)';
-    const tpRate=s.closed?s.rate.toFixed(0)+'%':'--';
-    return `<div class="account-guard">
-      <div class="account-guard-head"><div><div class="account-guard-title">Crypto ${model==='fixed'?'Fixed':'Volatility'}</div><div class="small">${fmtInt(s.open)} open · ${fmtInt(s.closed)} closed · ${tpRate} TP rate</div></div><span class="account-guard-status ${s.realized>=0?'':'bad'}">${s.realized>=0?'ahead':'behind'}</span></div>
-      <div class="guard-grid">
-        <div class="guard-mini"><strong class="${signCls(s.unrealized)}">${s.unrealized>=0?'+':''}${fmtMoney(s.unrealized)}</strong><span>open P/L</span></div>
-        <div class="guard-mini"><strong class="${signCls(s.realized)}">${s.realized>=0?'+':''}${fmtMoney(s.realized)}</strong><span>realized</span></div>
-        <div class="guard-mini"><strong>${fmtInt(s.tp)}</strong><span>take profits</span></div>
-        <div class="guard-mini"><strong>${fmtInt(s.sl)}</strong><span>stop losses</span></div>
-      </div>
-      <div class="target-health-bars"><span class="tp" style="opacity:${s.closed?s.tp/s.closed:.08}"></span><span class="sl" style="opacity:${s.closed?s.sl/s.closed:.08}"></span><span class="time" style="opacity:${s.closed?s.timed/s.closed:.08}"></span></div>
-      <div class="guardrail-caption"><span>${fmtInt(s.tp)} TP</span><span>${fmtInt(s.sl)} SL</span><span>${fmtInt(s.timed)} time</span></div>
-      <div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>Sample progress</span><span>${fmtInt(s.closed)} / ${sampleGoal} closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:${sampleColor};width:${Math.min(100,s.closed/sampleGoal*100)}%"></div></div></div>
-    </div>`;
-  }).join('');
+  const labAccounts=rows(DATA?.crypto_lab_accounts);
+  const labTrades=rows(DATA?.crypto_lab_trade_intents);
+  const labOpen=labTrades.filter(t=>String(t.status||'').toUpperCase()==='OPEN');
+  const labClosed=labTrades.filter(t=>String(t.status||'').toUpperCase()==='CLOSED');
+  const newsOnlyAccount=labAccounts.find(a=>a.account_key==='crypto_news_only');
+  const cands=rows(DATA?.crypto_lab_trade_candidates);
+  const labPnl=labOpen.reduce((s,t)=>s+labPnlOf(t),0)+labClosed.reduce((s,t)=>s+labPnlOf(t),0);
   const srcRuns=rows(DATA?.crypto_lab_source_runs);
   const todayRuns=srcRuns.filter(r=>{const d=new Date(r.started_at);const now=new Date();return d.toDateString()===now.toDateString()});
   const totalSeen=todayRuns.reduce((s,r)=>s+Number(r.items_seen||0),0);
   const totalInserted=todayRuns.reduce((s,r)=>s+Number(r.items_inserted||0),0);
-  const lastRun=srcRuns[0];
   const failedRuns=todayRuns.filter(r=>r.status==='failed').length;
   const notifs=rows(DATA?.crypto_lab_notifications);
   const nSent=notifs.filter(n=>n.status==='sent').length;
   const nSkipped=notifs.filter(n=>n.status==='skipped').length;
   const nFailed=notifs.filter(n=>n.status==='failed').length;
-  const lastSentAlert=notifs.find(n=>n.status==='sent');
+  const lastSentAlert=newestRowsBy(notifs.filter(n=>n.status==='sent'),['created_at','updated_at','sent_at'])[0]||null;
   const totalAlerts=nSent+nSkipped+nFailed;
   const noiseRate=totalAlerts?(nSkipped+nFailed)/totalAlerts*100:0;
+  const mon=DATA?.cryptolab?.monitor||{};
+  const hlth=DATA?.cryptolab?.health||{};
+  const rdns=DATA?.cryptolab?.readiness||{};
+  const hist=rdns.history||{};
+  const pubRuns=newestRowsBy(DATA?.publisher_runs,['started_at','completed_at','created_at']);
+  const pubLatest=pubRuns[0]||null;
+  const hygiene=DATA?.cryptolab_source_hygiene||{};
+  const mf=hlth.mark_freshness||{};
+  const rc=hlth.reconciliation||{};
+  const hlthNotes=(hlth.notes||[]).filter(Boolean);
+  const rdnsBlockers=rdns.blockers||[];
+  const rdnsWarnings=rdns.warnings||[];
+  const rdnsGates=rdns.gates||[];
+  const histRecent=hist.recent||[];
+	  const labScores=rows(DATA?.crypto_lab_signal_scores).slice(0,12);
+	  const priceFeatures=rows(DATA?.crypto_lab_price_features);
+	  const wouldRoute=rows(DATA?.crypto_lab_would_route);
+	  const strategyRules=rows(CRYPTOLAB_RULES?.accounts);
+	  const strategyRuleByKey=new Map(strategyRules.map(r=>[r.account_key,r]));
+	  const proofLabels={
+	    proven_lifecycle:'baseline lifecycle proven',
+	    controlled_lifecycle_proven:'controlled lifecycle proven',
+	    live_reject_and_controlled_lifecycle_proven:'live reject + lifecycle proven',
+	    scaffold_only:'scaffold only'
+	  };
+	  const proofLabel=state=>proofLabels[state]||String(state||'not classified');
+	  const labStatusValue=()=>{
+    if(hlth.status==='FAIL' || pubLatest?.status==='failed') return {label:'FAIL', cls:'red', sub:'needs audit'};
+    if(!pubLatest || hlth.status==='WARN' || rdns.status==='NOT_READY' || mf.status==='WARN') return {label:'WATCH', cls:'warn', sub:rdns.status==='NOT_READY'?'not ready yet':'monitoring'};
+    if(hlth.status==='PASS' && mon.status==='PASS' && pubLatest.status==='success') return {label:'PASS', cls:'green', sub:'operating clean'};
+    return {label:'WATCH', cls:'warn', sub:'status mixed'};
+  };
+  const status=labStatusValue();
+  const pill=(label,value,cls='')=>`<span class="rule-chip ${cls}">${esc(label)}: ${esc(value)}</span>`;
+  const panel=(title,note,body,style='')=>`<div class="panel" style="margin-bottom:18px;${style}"><h2 style="margin-bottom:4px">${title}</h2>${note?`<div class="section-note">${note}</div>`:''}${body}</div>`;
   let html=`<div class="lab-warning">Crypto Lab is a separate proving lane for after-hours monitoring. No broker orders and no official prop totals unless explicitly promoted.</div>`;
-  html+=`<div class="panel" style="margin-bottom:18px;border-color:#c7d2fe;background:linear-gradient(180deg,#fff,#f8f9ff)"><h2 style="margin-bottom:12px">Overnight Summary</h2><div class="kpis" style="margin-bottom:0">
-    ${kpi('X Runs Today',fmtInt(todayRuns.length),'',failedRuns?failedRuns+' failed':'all clean')}
-    ${kpi('Posts Ingested',fmtInt(totalInserted),'',fmtInt(totalSeen)+' seen')}
-    ${kpi('Alerts Sent',fmtInt(nSent),'',lastSentAlert?esc(lastSentAlert.asset||''):'none yet')}
-    ${kpi('Noise Filter',noiseRate.toFixed(0)+'%','',fmtInt(nSkipped)+' skipped / '+fmtInt(nFailed)+' failed')}
-  </div>${failedRuns?'<div class="lab-warning" style="border-color:var(--red);background:var(--red-bg);color:var(--red);margin-top:10px">X sidecar has '+fmtInt(failedRuns)+' failed run(s). Check v2_crypto_lab_source_runs.</div>':'<div class="small" style="margin-top:8px;color:var(--green)">X sidecar runs clean today.</div>'}</div>`;
-  html+=`<div class="kpis">
-    ${kpi('Crypto Open', fmtInt(cryptoOpen.length), '', `${fmtInt(cryptoClosed.length)} closed`)}
-    ${kpi('Lab P/L', `${cryptoPnl>=0?'+':''}${fmtMoney(cryptoPnl)}`, signCls(cryptoPnl), 'open + closed')}
-    ${kpi('Crypto Candidates', fmtInt(cands.length), '', 'research queue')}
-    ${kpi('X Posts', fmtInt(x.length), '', 'latest batch')}
+  const focusLabels={all:'All',accounts:'Accounts',trades:'Trades',evidence:'Evidence'};
+  html+=`<div class="lab-focus-controls" aria-label="CryptoLab focus">${Object.entries(focusLabels).map(([key,label])=>`<button class="lab-focus-btn ${LAB_FOCUS===key?'on':''}" data-lab-focus="${key}" type="button">${label}</button>`).join('')}</div>`;
+  html+=`<div class="lab-section lab-section-accounts">`;
+  const hlthStatus=hlth.status||'unknown';
+  const hlthColor=hlthStatus==='PASS'?'var(--green)':hlthStatus==='FAIL'?'var(--red)':hlthStatus==='WARN'?'var(--gold)':'var(--muted)';
+  if(newsOnlyAccount){
+    const acct=newsOnlyAccount;
+    const markedEquity=Number(acct.free_cash||0)+Number(acct.deployed_cost||0)+Number(acct.unrealized_pnl||0);
+    const totalRealizedPnl=Number(acct.realized_pnl||0);
+    html+=`<div class="panel" style="margin-bottom:18px;border-color:var(--purple);background:linear-gradient(180deg,#fff,#faf8ff)"><h2 style="margin-bottom:4px">CryptoLab Sim Account</h2><div class="section-note">Research-only simulated lane · ${esc(newsOnlyAccount.account_key)} · No broker orders.</div><div class="kpis" style="margin-bottom:12px">${kpi('Free Cash',fmtMoney(acct.free_cash),'','of '+fmtMoney(acct.starting_balance))}${kpi('Deployed',fmtMoney(acct.deployed_cost),'',fmtInt(labOpen.length)+' open')}${kpi('Realized P/L',(totalRealizedPnl>=0?'+':'')+fmtMoney(totalRealizedPnl),signCls(totalRealizedPnl),fmtInt(labClosed.length)+' closed')}${kpi('Equity',fmtMoney(markedEquity),signCls(markedEquity-Number(acct.starting_balance||10000)),(Number(acct.unrealized_pnl||0)!==0?'unrealized '+(Number(acct.unrealized_pnl)>=0?'+':'')+fmtMoney(acct.unrealized_pnl):'no open exposure'))}${kpi('Open Trades',fmtInt(labOpen.length),'',fmtInt(labClosed.length)+' closed')}${kpi('System Status',status.label,status.cls,status.sub)}</div><div class="compact-meta">${pill('CP14',mon.status||'unknown',mon.status==='PASS'?'':'warn')}${pill('Health',hlth.status||'unknown',hlth.status==='PASS'?'':'warn')}${pill('Readiness',rdns.status||'UNKNOWN',rdns.status==='READY_FOR_REVIEW'?'':'warn')}${pill('Publisher',pubLatest?.status||'none',pubLatest?.status==='success'?'':'warn')}</div></div>`;
+  }
+  if(labAccounts.length){
+    const order=['crypto_news_only','crypto_trend_gate','crypto_trend_strict','crypto_mean_revert','crypto_full_confluence'];
+    const sortedAccounts=[...labAccounts].sort((a,b)=>{
+      const ai=order.indexOf(a.account_key), bi=order.indexOf(b.account_key);
+      return (ai<0?999:ai)-(bi<0?999:bi) || String(a.account_key).localeCompare(String(b.account_key));
+    });
+	    html+=`<div class="panel" style="margin-bottom:18px"><h2 style="margin-bottom:4px">Strategy Account Matrix</h2><div class="section-note">Five CryptoLab books. Only active/proven accounts should receive simulated routing.</div><div class="account-matrix">`;
+	    sortedAccounts.forEach(a=>{
+	      const active=!!a.active;
+	      const marked=Number(a.marked_equity ?? (Number(a.free_cash||0)+Number(a.deployed_cost||0)+Number(a.unrealized_pnl||0)));
+	      const rule=strategyRuleByKey.get(a.account_key)||{};
+	      const proof=proofLabel(rule.proof_state);
+	      html+=`<div class="account-row ${active?'active':'inactive'}">
+	        <div class="asset-line"><span>${esc(a.account_key)}</span><span class="badge ${active?'long':''}">${active?'ACTIVE':'INACTIVE'}</span></div>
+        <div class="small">${esc(a.strategy_family||'')} · ${esc(a.target_model||'fixed')} · ${proof}</div>
+        <div class="mini-metrics">
+          <span><strong>${fmtMoney(a.free_cash)}</strong><br>Free</span>
+          <span><strong>${fmtMoney(a.deployed_cost)}</strong><br>Deployed</span>
+          <span><strong class="${signCls(a.realized_pnl)}">${Number(a.realized_pnl||0)>=0?'+':''}${fmtMoney(a.realized_pnl)}</strong><br>Realized</span>
+          <span><strong>${fmtMoney(marked)}</strong><br>Equity</span>
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  }
+  if(strategyRules.length){
+    const activeRuleCount=strategyRules.filter(r=>r.active_for_routing).length;
+	    html+=`<div class="panel" style="margin-bottom:18px;border-color:#d8d4c8;background:linear-gradient(180deg,#fff,#fbfaf6)"><h2 style="margin-bottom:4px">Strategy Rules</h2><div class="section-note">Machine-readable rulebook · ${esc(CRYPTOLAB_RULES.version||'unknown')} · ${fmtInt(activeRuleCount)} routing on / ${fmtInt(strategyRules.length-activeRuleCount)} routing off.</div><div class="account-matrix">`;
+	    strategyRules.forEach(r=>{
+	      const active=!!r.active_for_routing;
+	      const sources=rows(r.required_sources).slice(0,3).join(' · ');
+	      const proof=proofLabel(r.proof_state);
+	      const proofCls=String(r.proof_state||'').includes('proven')?'long':'';
+	      let math='';
+      if(r.trend_math){
+        math=r.account_key==='crypto_trend_strict'
+          ? 'BUY +0.30% / +0.75% · SELL -0.30% / -0.75%'
+          : 'BUY trend positive · SELL trend negative';
+      } else if(r.mean_revert_math){
+        math='BUY after -1.00% 1h move · SELL after +1.00% 1h move';
+      } else if(r.confluence_math){
+        math='research >= 0.70 · trend_gate pass · price <= 60s';
+      } else {
+        math='approved candidate · Coinbase spot · no duplicate trade';
+      }
+	      html+=`<div class="account-row ${active?'active':'inactive'}">
+	        <div class="asset-line"><span>${esc(r.account_key)}</span><span class="badge ${active?'long':''}">${active?'ROUTING ON':'ROUTING OFF'}</span></div>
+	        <div class="small">${esc(r.strategy_family||'')} · <span class="badge ${proofCls}">${esc(proof)}</span></div>
+        <div class="compact-meta">${pill('Size',r.sizing_rule||'--')}${pill('TP/SL','2% fixed')}${pill('Source',sources||'--',active?'':'warn')}</div>
+        <div class="small" style="margin-top:8px"><strong>Pass rule:</strong> ${esc(math)}</div>
+        <div class="small" style="margin-top:5px"><strong>Rejects:</strong> ${rows(r.reject_reasons).slice(0,4).map(x=>esc(x)).join(' · ')}${rows(r.reject_reasons).length>4?' · …':''}</div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  }
+  if(priceFeatures.length){
+    const byAsset=new Map();
+    priceFeatures.forEach(f=>{
+      const asset=String(f.asset||'').toUpperCase();
+      if(asset && !byAsset.has(asset)) byAsset.set(asset,f);
+    });
+    const latestFeatures=[...byAsset.values()].slice(0,8);
+    const statusPill=(label,value)=>{
+      const pass=value===true || value==='true';
+      const fail=value===false || value==='false';
+      return `<span class="rule-chip ${pass?'':fail?'warn':'warn'}">${esc(label)}: ${pass?'PASS':fail?'FAIL':'--'}</span>`;
+    };
+    html+=`<div class="panel" style="margin-bottom:18px;border-color:#c7d2fe;background:linear-gradient(180deg,#fff,#f8f9ff)"><h2 style="margin-bottom:4px">Price History Evidence</h2><div class="section-note">Coinbase 5-minute candles. Backend evidence for trend and mean-revert books; no routing yet.</div><div class="account-matrix">`;
+    latestFeatures.forEach(f=>{
+      const warn=rows(f.warnings);
+      html+=`<div class="account-row">
+        <div class="asset-line"><span>${esc(f.asset||'?')}</span><span class="badge">${esc(f.source||'coinbase')}</span></div>
+        <div class="small">Newest candle ${f.newest_candle_age_seconds!=null?fmtInt(f.newest_candle_age_seconds)+'s old':'--'} · ${fmtInt(f.candle_count||0)} candles · ${timeAgo(f.fetched_at)}</div>
+        <div class="mini-metrics">
+          <span><strong>${fmtMoney(f.price_now)}</strong><br>Now</span>
+          <span><strong class="${signCls(f.return_30m_pct)}">${fmtPct(f.return_30m_pct)}</strong><br>30m</span>
+          <span><strong class="${signCls(f.return_1h_pct)}">${fmtPct(f.return_1h_pct)}</strong><br>1h</span>
+          <span><strong class="${signCls(f.return_4h_pct)}">${fmtPct(f.return_4h_pct)}</strong><br>4h</span>
+        </div>
+        <div class="compact-meta" style="margin-top:8px">
+          ${statusPill('Gate BUY',f.trend_gate_buy)}
+          ${statusPill('Gate SELL',f.trend_gate_sell)}
+          ${statusPill('Strict BUY',f.trend_strict_buy)}
+          ${statusPill('Strict SELL',f.trend_strict_sell)}
+          ${statusPill('Mean BUY',f.mean_revert_buy)}
+          ${statusPill('Mean SELL',f.mean_revert_sell)}
+        </div>
+        ${warn.length?`<div class="small" style="margin-top:8px;color:var(--gold)">${warn.map(w=>esc(w)).join(' · ')}</div>`:''}
+      </div>`;
+    });
+    html+=`</div></div>`;
+  } else {
+    html+=`<div class="panel" style="margin-bottom:18px"><h2 style="margin-bottom:4px">Price History Evidence</h2><div class="empty" style="margin:0">No cached Coinbase price-history features yet. CP45 has not published BTC/ETH rows.</div></div>`;
+  }
+  if(wouldRoute.length){
+    const decisionRank={would_pass:0,would_pass_but_account_inactive:1,would_reject:2,not_evaluated:3};
+    const sortedWould=[...wouldRoute].sort((a,b)=>(decisionRank[a.decision]??9)-(decisionRank[b.decision]??9) || Number(a.candidate_id||0)-Number(b.candidate_id||0));
+    const decisionBadge=d=>{
+      const cls=d==='would_pass'?'long':d==='would_pass_but_account_inactive'?'':'short';
+      const label=d==='would_pass_but_account_inactive'?'WOULD PASS · OFF':d==='would_pass'?'WOULD PASS':d==='would_reject'?'REJECT':'NOT EVAL';
+      return `<span class="badge ${cls}">${label}</span>`;
+    };
+    html+=`<div class="panel" style="margin-bottom:18px;border-color:#d8d4c8;background:linear-gradient(180deg,#fff,#fbfaf6)"><h2 style="margin-bottom:4px">Would-Route Decisions</h2><div class="section-note">Read-only strategy decisions from candidates + cached price features. No trade routing, no account activation.</div>`;
+    sortedWould.slice(0,24).forEach(d=>{
+      const ev=d.evidence||{};
+      const rejects=rows(d.reject_reasons);
+      const warns=rows(d.warnings);
+      html+=`<div class="cand-card">
+        <div class="cand-head"><div class="cand-asset">#${esc(d.candidate_id||'?')} · ${esc(d.asset||'?')} <span class="badge ${d.direction==='BUY'?'long':'short'}">${esc(d.direction||'--')}</span></div>${decisionBadge(d.decision)}</div>
+        <div class="small">${esc(d.account_key||'')} · ${esc(d.strategy_family||'')} · ${d.account_active?'routing active':'routing off'}</div>
+        <div class="mini-metrics" style="margin-top:8px">
+          <span><strong class="${signCls(ev.return_30m_pct)}">${fmtPct(ev.return_30m_pct)}</strong><br>30m</span>
+          <span><strong class="${signCls(ev.return_1h_pct)}">${fmtPct(ev.return_1h_pct)}</strong><br>1h</span>
+          <span><strong class="${signCls(ev.return_4h_pct)}">${fmtPct(ev.return_4h_pct)}</strong><br>4h</span>
+          <span><strong>${ev.research_score!=null?Number(ev.research_score).toFixed(2):'--'}</strong><br>Score</span>
+        </div>
+        ${rejects.length?`<div class="small" style="margin-top:8px;color:var(--red)"><strong>Reject:</strong> ${rejects.map(r=>esc(r)).join(' · ')}</div>`:''}
+        ${warns.length?`<div class="small" style="margin-top:4px;color:var(--gold)"><strong>Warn:</strong> ${warns.map(w=>esc(w)).join(' · ')}</div>`:''}
+      </div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div class="panel" style="margin-bottom:18px"><h2 style="margin-bottom:4px">Would-Route Decisions</h2><div class="empty" style="margin:0">No would-route decisions yet. Price features and candidates must both be present.</div></div>`;
+  }
+  html+=`</div><div class="lab-section lab-section-trades">`;
+  const lifecycleCandidates=cands.filter(c=>c.latest_trade_id).sort((a,b)=>{
+    const as=a.source==='controlled_test'?1:0, bs=b.source==='controlled_test'?1:0;
+    if(as!==bs) return bs-as;
+    return new Date(b.reviewed_at||b.created_at||0)-new Date(a.reviewed_at||a.created_at||0);
+  });
+  const lifeCand=lifecycleCandidates[0]||null;
+  const lifeTrade=lifeCand?labTrades.find(t=>String(t.id)===String(lifeCand.latest_trade_id)):null;
+  if(lifeCand && lifeTrade){
+    const closed=String(lifeTrade.status||'').toUpperCase()==='CLOSED';
+    const lpnl=labPnlOf(lifeTrade);
+    const acct=newsOnlyAccount||{};
+    const markedEquity=Number(acct.free_cash||0)+Number(acct.deployed_cost||0)+Number(acct.unrealized_pnl||0);
+    const eqOk=Math.abs(markedEquity-Number(acct.marked_equity||markedEquity))<0.01;
+    html+=`<div class="panel" style="margin-bottom:18px;border-color:#b7d7c7;background:linear-gradient(180deg,#fff,#f5fbf7)">
+      <h2 style="margin-bottom:4px">Lifecycle Evidence</h2>
+      <div class="section-note">Last proven CryptoLab path: candidate approval → simulated open → scheduled mark → scheduled close → account reconciliation.</div>
+      <div class="kpis" style="margin-bottom:12px">
+        ${kpi('Candidate','#'+esc(lifeCand.id), '', esc(lifeCand.display_status||lifeCand.status||'review'))}
+        ${kpi('Trade','#'+esc(lifeTrade.id)+' · '+esc(lifeTrade.asset)+' '+esc(lifeTrade.direction), closed?'green':'warn', esc(lifeTrade.status||'--'))}
+        ${kpi('Close', closed?esc(lifeTrade.close_reason||'closed'):'Open', closed?'green':'warn', closed?shortTime(lifeTrade.closed_at):labMarkedLabel(lifeTrade))}
+        ${kpi('P/L',(lpnl>=0?'+':'')+fmtMoney(lpnl),signCls(lpnl),lifeTrade.stake_amount?fmtMoney(lifeTrade.stake_amount)+' stake':'')}
+        ${kpi('Account Math',eqOk?'PASS':'CHECK',eqOk?'green':'warn',fmtMoney(markedEquity)+' equity')}
+        ${kpi('Scheduler',mon.latest_cp14_execution_id?'#'+mon.latest_cp14_execution_id:'--',mon.status==='PASS'?'green':'warn',esc(mon.status||'unknown'))}
+      </div>
+      <div class="compact-meta">
+        ${pill('Source',lifeCand.source||'unknown',lifeCand.source==='controlled_test'?'':'warn')}
+        ${pill('Reviewed by',lifeCand.reviewed_by||'--')}
+        ${pill('Mark',lifeTrade.mark_status||'--',lifeTrade.mark_status==='closed'||lifeTrade.mark_status==='marked'?'':'warn')}
+        ${pill('Health',hlth.status||'unknown',hlth.status==='PASS'?'':'warn')}
+        ${pill('Readiness',rdns.status||'UNKNOWN',rdns.status==='READY_FOR_REVIEW'?'':'warn')}
+        ${pill('Publisher',pubLatest?.status||'none',pubLatest?.status==='success'?'':'warn')}
+      </div>
+      <div class="small" style="margin-top:10px">${esc(lifeCand.reason||lifeCand.review_note||'No candidate note.')}</div>
+    </div>`;
+  } else {
+    html+=`<div class="panel" style="margin-bottom:18px"><h2 style="margin-bottom:4px">Lifecycle Evidence</h2><div class="empty" style="margin:0">No completed lifecycle evidence yet.</div></div>`;
+  }
+  if(labOpen.length>0){
+    html+=`<div class="panel open-panel" style="margin-bottom:18px"><h2>Open Simulated Trades (${fmtInt(labOpen.length)})</h2><div class="section-note">Tap a card for timing, source, sizing, and risk detail.</div>${labOpen.map(labTradeRow).join('')}</div>`;
+  } else {
+    html+=`<div class="panel" style="margin-bottom:18px;text-align:center;padding:28px"><div class="empty" style="margin:0">No open simulated trades. All positions closed.</div></div>`;
+  }
+  if(labClosed.length>0){
+    html+=`<div class="panel closed-panel" style="margin-bottom:18px"><h2>Closed Simulated Trades (${fmtInt(labClosed.length)})</h2><div class="section-note">Tap a card for entry/close prices, realized P/L, and source.</div>${labClosed.slice(0,10).map(labTradeRow).join('')}</div>`;
+  }
+  html+=`</div><div class="lab-section lab-section-evidence">`;
+  const candidateCards=cands.map(c=>{
+    const evts=(c.source_events||[]);
+    const firstEvt=evts[0]||{};
+    const freshStatus=String(c.source_freshness_status||'unknown');
+    const freshWarn=freshStatus==='stale'||freshStatus==='unknown';
+    const freshLabel=freshStatus==='fresh'?'fresh source':freshStatus==='stale'?'stale source':'source unknown';
+    const freshAge=c.source_age_minutes!=null?Number(c.source_age_minutes).toFixed(0)+'m old':'age unknown';
+    return `<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset||'?')} <span class="badge">${esc(c.source||'x')}</span></div><span class="cand-status ${esc(c.status||'review')}">${esc(c.display_status||c.status||'review')}</span></div><div class="cand-headline">${esc(firstEvt.text_preview||c.reason||'No details')}</div><div class="cand-meta"><span>Research <strong>${c.research_score!=null?Number(c.research_score).toFixed(2):'--'}</strong></span><span>${timeAgo(c.created_at)}</span><span>@${esc(firstEvt.author_handle||'')}</span><span class="${freshWarn?'warn-text':'pos-text'}">${esc(freshLabel)} · ${esc(freshAge)}</span>${c.expires_at?`<span>Expires in ${timeUntil(c.expires_at)}</span>`:''}</div></div>`;
+  }).join('');
+  html+=`<div class="grid"><div class="panel"><h2>CryptoLab Trade Candidates</h2><div class="section-note">Research candidates from X/Twitter scoring. Review-only until a manual checkpoint approves a simulated trade. Source freshness is shown because stale X evidence must not become an approval.</div>${cands.length?candidateCards:'<div class="empty">No CryptoLab candidates yet.</div>'}</div>`;
+  html+=`<div class="panel"><h2>Signal Scores</h2><div class="section-note">Composite research scores from X event features. Higher = stronger research signal.</div>${labScores.length?labScores.map(s=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(s.asset||'?')} <span class="badge">${esc(s.source_quality_bucket||'unproven')}</span></div><span class="cand-status candidate">${Number(s.research_score||0).toFixed(2)}</span></div><div class="cand-headline">${esc((s.text_preview||'').substring(0,160))}</div><div class="cand-meta"><span>@${esc(s.author_handle||'')}</span><span>Urgency <strong>${Number(s.urgency_score||0).toFixed(2)}</strong></span><span>Engagement <strong>${esc(s.engagement_score??'--')}</strong></span><span>${timeAgo(s.observed_at)}</span></div></div>`).join(''):'<div class="empty">No signal scores yet.</div>'}</div></div>`;
+  let evidence='';
+  evidence+=panel('Overnight Summary','X/Twitter source runs and Telegram alert noise filter.',`<div class="kpis" style="margin-bottom:0">${kpi('X Runs Today',fmtInt(todayRuns.length),'',failedRuns?failedRuns+' failed':'all clean')}${kpi('Posts Ingested',fmtInt(totalInserted),'',fmtInt(totalSeen)+' seen')}${kpi('Alerts Sent',fmtInt(nSent),'',lastSentAlert?esc(lastSentAlert.asset||''):'none yet')}${kpi('Noise Filter',noiseRate.toFixed(0)+'%','',fmtInt(nSkipped)+' skipped / '+fmtInt(nFailed)+' failed')}</div>${failedRuns?'<div class="lab-warning" style="border-color:var(--red);background:var(--red-bg);color:var(--red);margin-top:10px">X sidecar has '+fmtInt(failedRuns)+' failed run(s). Check v2_crypto_lab_source_runs.</div>':'<div class="small" style="margin-top:8px;color:var(--green)">X sidecar runs clean today.</div>'}`,'border-color:#c7d2fe;background:linear-gradient(180deg,#fff,#f8f9ff)');
+  evidence+=panel('CP14 Mark-to-Market Monitor','Automated 10-minute scheduler. Read-only status from n8n API.',`<div class="kpis" style="margin-bottom:0">${kpi('Status','<span style="color:'+(mon.status==='PASS'?'var(--green)':mon.status==='FAIL'?'var(--red)':'var(--gold)')+'">'+esc(mon.status||'unknown')+'</span>','',mon.cp14_active?'workflow active':'workflow inactive')}${kpi('Schedule',esc(mon.cp14_schedule||'unknown'),'',mon.cp14_active?'running':'stopped')}${kpi('Latest Exec',mon.latest_cp14_execution_id!=null?'#'+mon.latest_cp14_execution_id:'--','',esc(mon.latest_cp14_execution_status||'unknown'))}${kpi('New Errors',mon.new_errors!=null?fmtInt(mon.new_errors):'--',mon.new_errors>0?'red':'',mon.new_errors>0?'action needed':'clean')}</div>${mon.checked_at?'<div class="small" style="margin-top:8px">Last checked '+timeAgo(mon.checked_at)+'</div>':''}`);
+  evidence+=panel('CryptoLab Health','Derived read-only from published data. No browser API calls.',`<div class="kpis" style="margin-bottom:0">
+    ${kpi('Overall','<span style="color:'+hlthColor+';font-weight:700">'+esc(hlthStatus)+'</span>','',hlthStatus==='PASS'?'all checks pass':hlthStatus==='FAIL'?'action needed':'review notes')}
+    ${kpi('Mark Freshness','<span style="color:'+(mf.status==='PASS'?'var(--green)':mf.status==='FAIL'?'var(--red)':'var(--gold)')+'">'+esc(mf.status||'--')+'</span>','',mf.max_age_minutes!=null?mf.max_age_minutes.toFixed(1)+' min (< '+mf.threshold_minutes+')':'--')}
+    ${kpi('Reconciliation','<span style="color:'+(rc.status==='PASS'?'var(--green)':rc.status==='FAIL'?'var(--red)':'var(--gold)')+'">'+esc(rc.status||'--')+'</span>','','$'+Number(rc.delta_usd||0).toFixed(2)+' drift')}
+    ${kpi('Trades',fmtInt(hlth.open_trade_count||0)+' open / '+fmtInt(hlth.closed_trade_count||0)+' closed','',hlth.new_error_count>0?fmtInt(hlth.new_error_count)+' error(s)':'0 errors')}
+  </div>${hlthNotes.length?'<div class="small" style="margin-top:8px;color:var(--red)">'+hlthNotes.map(n=>esc(n)).join(' · ')+'</div>':''}${hlth.last_checked_at?'<div class="small" style="margin-top:4px">Health derived '+timeAgo(hlth.last_checked_at)+'</div>':''}`);
+  evidence+=`<div class="panel" style="margin-bottom:18px"><h2 style="margin-bottom:4px">Promotion Readiness</h2><div class="section-note">Read-only readiness gate. No actions, no mutations, no trading controls.</div><div class="kpis" style="margin-bottom:0">${kpi('Status','<span style="font-weight:700">'+esc(rdns.status||'UNKNOWN')+'</span>','',esc(rdns.summary||'--'))}</div>`;
+  if(rdnsGates.length){
+    evidence+=`<div style="margin-top:10px;overflow-x:auto;max-width:100%"><table style="width:100%;border-collapse:collapse;font-size:0.92rem"><thead><tr style="text-align:left;border-bottom:1px solid #ddd"><th style="padding:4px 6px">Gate</th><th style="padding:4px 6px">Status</th><th style="padding:4px 6px">Actual</th><th style="padding:4px 6px">Required</th></tr></thead><tbody>`;
+    rdnsGates.forEach(g=>{
+      const gc=g.status==='PASS'?'var(--green)':g.status==='FAIL'?'var(--red)':'var(--gold)';
+      evidence+=`<tr style="border-bottom:1px solid #eee"><td style="padding:4px 6px">${esc(g.label)}</td><td style="padding:4px 6px;color:${gc};font-weight:600">${esc(g.status)}</td><td style="padding:4px 6px;font-family:monospace;font-size:0.85rem">${esc(g.actual)}</td><td style="padding:4px 6px;font-family:monospace;font-size:0.85rem">${esc(g.required)}</td></tr>`;
+    });
+    evidence+=`</tbody></table></div>`;
+  }
+  if(rdnsBlockers.length){evidence+=`<div class="small" style="margin-top:8px;color:var(--red)"><strong>Blockers:</strong> ${rdnsBlockers.map(b=>esc(b)).join(' · ')}</div>`;}
+  if(rdnsWarnings.length){evidence+=`<div class="small" style="margin-top:4px;color:var(--gold)"><strong>Warnings:</strong> ${rdnsWarnings.map(w=>esc(w)).join(' · ')}</div>`;}
+  if(rdns.last_checked_at){evidence+=`<div class="small" style="margin-top:4px">Readiness derived ${timeAgo(rdns.last_checked_at)}</div>`;}
+  evidence+=`</div>`;
+  const histStatus=hist.status||'unknown';
+  const histColor=histStatus==='stable'?'var(--green)':histStatus==='unstable'?'var(--red)':histStatus==='insufficient_history'?'var(--gold)':'var(--muted)';
+  const histLabel=histStatus==='stable'?'STABLE':histStatus==='unstable'?'UNSTABLE':histStatus==='insufficient_history'?'INSUFFICIENT HISTORY':'UNKNOWN';
+  evidence+=`<div class="panel" style="margin-bottom:18px"><h2 style="margin-bottom:4px">Readiness History</h2><div class="section-note">Server-side readiness snapshots. Read-only — no actions, no mutations.</div><div class="kpis" style="margin-bottom:0">
+    ${kpi('History Status','<span style="color:'+histColor+';font-weight:700">'+histLabel+'</span>','','')}
+    ${kpi('PASS Streak',fmtInt(hist.stable_pass_streak_snapshots||0)+' snapshots / '+(hist.stable_pass_streak_days||0)+' days','','need 7 snapshots / 7 days')}
+    ${kpi('Snapshots',fmtInt(hist.snapshot_count||0)+' in '+fmtInt(hist.lookback_days||14)+' day window','','min 7 required')}
+    ${kpi('Latest Snapshot',hist.latest_snapshot_at?timeAgo(hist.latest_snapshot_at):'Never','','')}
   </div>`;
-  html+=`<div class="grid">${modelCards}</div>`;
-  html+=targetHealthPanel(allCrypto, 'crypto');
-  html+=`<div class="grid"><div class="panel open-panel"><h2>Open Crypto Positions</h2><div class="section-note">Tap a card for timing, article, sizing, and risk detail.</div>${cryptoOpen.map(tradeRow).join('')||'<div class="empty">No open crypto positions in V2 right now.</div>'}</div>`;
-  html+=`<div class="panel closed-panel"><h2>Closed Crypto Trades</h2><div class="section-note">Close reason first, then P/L and distance to stop/target.</div>${cryptoClosed.slice(0,10).map(tradeRow).join('')||'<div class="empty">No closed crypto trades yet.</div>'}</div></div>`;
-  html+=`<div class="grid"><div class="panel"><h2>Crypto Candidates</h2><div class="section-note">Potential crypto trades from candidate intake. These are review-only until promoted.</div>${cands.map(c=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${String(c.direction).toUpperCase()==='BUY'?'long':'short'}">${esc(c.direction||'')}</span></div><span class="cand-status ${esc(c.display_status||c.status||'candidate')}">${esc(c.display_status||c.status||'candidate')}</span></div><div class="cand-headline">${esc(c.headline||'')}</div><div class="cand-meta"><span>Confidence <strong>${c.confidence==null?'--':Number(c.confidence).toFixed(2)}</strong></span><span>${timeAgo(c.seen_at)}</span><span>${esc(c.source||'')}</span></div>${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article -></a>`:''}</div>`).join('')||'<div class="empty">No crypto candidates yet.</div>'}</div>`;
-  html+=`<div class="panel"><h2>After-Hours X Pulse</h2><div class="section-note">X/Twitter research feed. Telegram alerts sent from this data; no trade execution.</div>${x.slice(0,8).map(e=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc((e.detected_assets||[]).join(', ')||'Crypto')} <span class="badge">${esc(e.source_quality_bucket||'unproven')}</span></div><span class="cand-status candidate">${secondsLabel(e.latency_seconds)}</span></div><div class="cand-headline">${esc(e.text_preview||e.raw_text||'')}</div><div class="cand-meta"><span>@${esc(e.author_handle||'')}</span><span>Engagement <strong>${esc(e.engagement_score??'--')}</strong></span></div></div>`).join('')||'<div class="empty">No X events yet.</div>'}</div></div>`;
+  if(histRecent.length){
+    evidence+=`<div style="margin-top:10px;overflow-x:auto;max-width:100%"><table style="width:max-content;min-width:100%;border-collapse:collapse;font-size:0.85rem"><thead><tr style="text-align:left;border-bottom:1px solid #ddd"><th style="padding:4px 6px">Captured</th><th style="padding:4px 6px">Readiness</th><th style="padding:4px 6px">Health</th><th style="padding:4px 6px">Blockers</th><th style="padding:4px 6px">Warnings</th><th style="padding:4px 6px">Execution</th></tr></thead><tbody>`;
+    histRecent.forEach(s=>{
+      const rc2=s.overall_status==='READY_FOR_REVIEW'?'var(--green)':s.overall_status==='NOT_READY'?'var(--red)':'var(--muted)';
+      const hc2=s.health_status==='PASS'?'var(--green)':s.health_status==='FAIL'?'var(--red)':s.health_status==='WARN'?'var(--gold)':'var(--muted)';
+      evidence+=`<tr style="border-bottom:1px solid #eee"><td style="padding:4px 6px">${timeAgo(s.captured_at)}</td><td style="padding:4px 6px;color:${rc2};font-weight:600">${esc(s.overall_status||'--')}</td><td style="padding:4px 6px;color:${hc2};font-weight:600">${esc(s.health_status||'--')}</td><td style="padding:4px 6px">${fmtInt(s.blocker_count||0)}</td><td style="padding:4px 6px">${fmtInt(s.warning_count||0)}</td><td style="padding:4px 6px;font-family:monospace;font-size:0.8rem">${esc(s.latest_execution_id||'--')}</td></tr>`;
+    });
+    evidence+=`</tbody></table></div>`;
+  } else {
+    evidence+=`<div class="empty" style="margin-top:8px">No readiness snapshots yet. Snapshots accumulate each publisher run.</div>`;
+  }
+  evidence+=`</div>`;
+  const pubHasData=pubRuns.length>0;
+  const pubStatus=pubLatest?.status||'--';
+  const pubStatusColor=pubStatus==='success'?'var(--green)':pubStatus==='failed'?'var(--red)':'var(--muted)';
+  const pubKeysOk=pubLatest&&(pubLatest.missing_required_keys||[]).length===0;
+  const pubSyncOk=pubLatest?.copied_dashboard&&pubLatest?.copied_tmp;
+  const pubValOk=pubLatest?.validation_passed&&pubLatest?.accounting_ok&&(pubLatest?.books_with_drift||0)===0;
+  let artifactAge='--';
+  let artifactStale=false;
+  if(DATA?.generated_at){try{const ms=Date.now()-new Date(DATA.generated_at).getTime();artifactAge=ms<120000?Math.round(ms/1000)+'s':Math.round(ms/60000)+'m';artifactStale=ms>1500000;}catch(e){}}
+  let pubAge='--';
+  let pubStale=false;
+  if(pubLatest?.completed_at){try{const ms=Date.now()-new Date(pubLatest.completed_at).getTime();pubAge=ms<120000?Math.round(ms/1000)+'s':Math.round(ms/60000)+'m';pubStale=ms>1200000;}catch(e){}}
+  const pubBorder=!pubHasData?'#ccc':pubStatus==='success'&&!artifactStale?'#b8e2cc':'#e8a0a8';
+  const pubBg=!pubHasData?'#f5f5f5':pubStatus==='success'&&!artifactStale?'var(--green-bg)':'var(--red-bg)';
+  evidence+=`<div class="panel" style="margin-bottom:18px;border-color:${pubBorder};background:linear-gradient(180deg,#fff,${pubBg})"><h2 style="margin-bottom:4px">Publisher Reliability</h2><div class="section-note">Current dashboard artifact plus prior completed publisher-run evidence.</div>`;
+  if(!pubHasData){
+    evidence+=`<div class="empty" style="margin:12px 0">First run — no prior evidence yet.</div>`;
+  } else {
+    evidence+=`<div class="kpis" style="margin-bottom:0">
+      ${kpi('Dashboard Artifact','<span style="color:'+(artifactStale?'var(--red)':'var(--green)')+';font-weight:700">'+artifactAge+(artifactStale?' (STALE)':'')+'</span>','',DATA?.generated_at?shortTime(DATA.generated_at):'no generated_at')}
+      ${kpi('Prior Run','<span style="color:'+pubStatusColor+';font-weight:700">'+esc(pubStatus)+'</span>','',pubAge+(pubStale?' old':' old'))}
+      ${kpi('JSON Keys',(pubLatest?.key_count||'--')+' / '+(pubLatest?.required_key_count||24),'',pubKeysOk?'<span style="color:var(--green)">PASS</span>':'<span style="color:var(--red)">'+(pubLatest?.missing_required_keys||[]).join(', ')+'</span>')}
+      ${kpi('Artifact Sync',pubSyncOk?'<span style="color:var(--green)">PASS</span>':'<span style="color:var(--red)">INCOMPLETE</span>','','dashboard: '+(pubLatest?.copied_dashboard?'yes':'no')+' · tmp: '+(pubLatest?.copied_tmp?'yes':'no'))}
+      ${kpi('Validation',pubValOk?'<span style="color:var(--green)">PASS</span>':'<span style="color:var(--red)">FAIL</span>','','acct_ok='+(pubLatest?.accounting_ok??'--')+' drift='+(pubLatest?.books_with_drift??'--'))}
+      ${kpi('Payload',pubLatest?.bytes_written?fmtInt(pubLatest.bytes_written)+' bytes':'--','',pubLatest?.sha256?pubLatest.sha256.substring(0,10)+'…':'--')}
+    </div>`;
+    if(pubLatest?.error_message){evidence+=`<div class="small" style="margin-top:8px;color:var(--red)">Error: ${esc(pubLatest.error_message)}</div>`;}
+    if(pubLatest?.duration_ms!=null){evidence+=`<div class="small" style="margin-top:4px">Duration: ${fmtInt(pubLatest.duration_ms)}ms · CryptoLab: ${fmtInt(pubLatest?.crypto_lab_trade_count||0)} trades (${fmtInt(pubLatest?.crypto_lab_open_count||0)} open, ${fmtInt(pubLatest?.crypto_lab_closed_count||0)} closed)</div>`;}
+  }
+  evidence+=`</div>`;
+  if(hygiene.status){
+    evidence+=panel('Source Hygiene','Public dashboard feed after X/Twitter spam and unsafe-text filtering.',`<div class="kpis" style="margin-bottom:0">
+      ${kpi('Status','<span style="color:'+(hygiene.status==='PASS'?'var(--green)':'var(--gold)')+';font-weight:700">'+esc(hygiene.status)+'</span>','',hygiene.raw_text_removed_from_public_json?'raw text removed':'check raw text')}
+      ${kpi('Signal Scores',fmtInt(hygiene.signal_scores_after||0)+' shown','',fmtInt(hygiene.signal_scores_before||0)+' checked')}
+      ${kpi('X Pulse',fmtInt(hygiene.x_events_after||0)+' shown','',fmtInt(hygiene.x_events_before||0)+' checked')}
+      ${kpi('Filtered',fmtInt((hygiene.signal_scores_before||0)-(hygiene.signal_scores_after||0))+' scores','',''+fmtInt((hygiene.x_events_before||0)-(hygiene.x_events_after||0))+' X rows')}
+    </div>${hygiene.checked_at?'<div class="small" style="margin-top:8px">Checked '+timeAgo(hygiene.checked_at)+'</div>':''}`);
+  }
+  evidence+=`<div class="grid"><div class="panel"><h2>After-Hours X Pulse</h2><div class="section-note">X/Twitter research feed. Telegram alerts sent from this data; no trade execution.</div>${x.slice(0,8).map(e=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc((e.detected_assets||[]).join(', ')||'Crypto')} <span class="badge">${esc(e.source_quality_bucket||'unproven')}</span></div><span class="cand-status candidate">${secondsLabel(e.latency_seconds)}</span></div><div class="cand-headline">${esc(e.text_preview||'')}</div><div class="cand-meta"><span>@${esc(e.author_handle||'')}</span><span>Engagement <strong>${esc(e.engagement_score??'--')}</strong></span></div></div>`).join('')||'<div class="empty">No public-safe X events yet.</div>'}</div></div>`;
   const lastAlert=lastSentAlert;
   const alertedAssets=[...new Set(notifs.filter(n=>n.status==='sent').map(n=>n.asset).filter(Boolean))].slice(0,6);
-  html+=`<div class="panel"><h2>Telegram Research Alerts</h2><div class="section-note">Research-only notifications. No trade placed.</div>`;
+  evidence+=`<div class="panel"><h2>Telegram Research Alerts</h2><div class="section-note">Research-only notifications. No trade placed.</div>`;
   if(notifs.length===0){
-    html+=`<div class="empty">No Telegram alerts yet. Alerts will appear here after the X sidecar workflow runs with the Telegram branch active.</div>`;
+    evidence+=`<div class="empty">No Telegram alerts yet. Alerts will appear here after the X sidecar workflow runs with the Telegram branch active.</div>`;
   } else {
-    html+=`<div class="kpis" style="margin-bottom:12px">
+    evidence+=`<div class="kpis" style="margin-bottom:12px">
       ${kpi('Last Alert', lastAlert?timeAgo(lastAlert.created_at):'Never', '', lastAlert?esc(lastAlert.asset||''):'')}
       ${kpi('Sent', fmtInt(nSent), nSent>0?'green':'', '')}
       ${kpi('Skipped', fmtInt(nSkipped), '', '')}
       ${kpi('Failed', fmtInt(nFailed), nFailed>0?'red':'', '')}
     </div>`;
-    if(alertedAssets.length>0) html+=`<div class="small" style="margin-bottom:8px">Alerted assets: <strong>${alertedAssets.map(a=>esc(a)).join(', ')}</strong></div>`;
-    if(lastAlert) html+=`<div class="cand-card"><div class="cand-head"><div class="cand-asset">Latest alert: ${esc(lastAlert.asset||'Unknown')}</div><span class="cand-status candidate">${timeAgo(lastAlert.created_at)}</span></div><div class="cand-headline">${esc(lastAlert.message_preview||'')}</div><div class="cand-meta"><span>@${esc(lastAlert.author_handle||'')}</span><span>Quality <strong>${esc(lastAlert.source_quality_bucket||'--')}</strong></span><span>Research <strong>${esc(lastAlert.research_score??'--')}</strong></span></div></div>`;
-    html+=notifs.slice(0,8).map(n=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(n.asset||'Unknown')} <span class="badge ${n.status==='sent'?'long':n.status==='failed'?'short':''}">${esc(n.status)}</span></div><span class="cand-status candidate">${timeAgo(n.created_at)}</span></div><div class="cand-headline">${esc(n.message_preview||'')}</div><div class="cand-meta"><span>@${esc(n.author_handle||'')}</span><span>Research <strong>${esc(n.research_score??'--')}</strong></span><span>Urgency <strong>${esc(n.urgency_score??'--')}</strong></span>${n.error_message?`<span style="color:var(--red)">Error: ${esc(n.error_message)}</span>`:''}</div></div>`).join('');
+    if(alertedAssets.length>0) evidence+=`<div class="small" style="margin-bottom:8px">Alerted assets: <strong>${alertedAssets.map(a=>esc(a)).join(', ')}</strong></div>`;
+    if(lastAlert) evidence+=`<div class="cand-card"><div class="cand-head"><div class="cand-asset">Latest alert: ${esc(lastAlert.asset||'Unknown')}</div><span class="cand-status candidate">${timeAgo(lastAlert.created_at)}</span></div><div class="cand-headline">${esc(lastAlert.message_preview||'')}</div><div class="cand-meta"><span>@${esc(lastAlert.author_handle||'')}</span><span>Quality <strong>${esc(lastAlert.source_quality_bucket||'--')}</strong></span><span>Research <strong>${esc(lastAlert.research_score??'--')}</strong></span></div></div>`;
+    evidence+=notifs.slice(0,8).map(n=>`<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(n.asset||'Unknown')} <span class="badge ${n.status==='sent'?'long':n.status==='failed'?'short':''}">${esc(n.status)}</span></div><span class="cand-status candidate">${timeAgo(n.created_at)}</span></div><div class="cand-headline">${esc(n.message_preview||'')}</div><div class="cand-meta"><span>@${esc(n.author_handle||'')}</span><span>Research <strong>${esc(n.research_score??'--')}</strong></span><span>Urgency <strong>${esc(n.urgency_score??'--')}</strong></span>${n.error_message?`<span style="color:var(--red)">Error: ${esc(n.error_message)}</span>`:''}</div></div>`).join('');
   }
+  evidence+=`</div>`;
+  html+=`<details class="ops-details" open><summary>System Evidence <span class="compact-meta">${pill('CP14',mon.status||'unknown',mon.status==='PASS'?'':'warn')}${pill('Health',hlth.status||'unknown',hlth.status==='PASS'?'':'warn')}${pill('Readiness',rdns.status||'UNKNOWN',rdns.status==='READY_FOR_REVIEW'?'':'warn')}${pill('Publisher',pubLatest?.status||'none',pubLatest?.status==='success'?'':'warn')}</span></summary><div class="ops-details-body">${evidence}</div></details>`;
   html+=`</div>`;
-  document.getElementById('view-crypto').innerHTML=html;
+  const cryptoView=document.getElementById('view-crypto');
+  cryptoView.dataset.labFocus=LAB_FOCUS;
+  cryptoView.innerHTML=html;
 }
 function showView(v){
   CURRENT_VIEW=v; localStorage.setItem('v2_old_view',v);
@@ -1206,6 +1787,7 @@ function openTradeModal(id){
     <div class="tm-focus">
       <div class="focus-card ${closed?reasonClass==='stop_loss'?'bad':reasonClass==='take_profit'?'good':'':''}"><div class="focus-label">${closed?'Close Reason':'Status'}</div><div class="focus-value">${esc(outcomeTitle)}</div><div class="small">${esc(outcomeSub)}</div></div>
       <div class="focus-card ${latQ.cls==='warn'?'bad':latQ.cls==='good'?'good':''}"><div class="focus-label">Timing</div><div class="focus-value" style="font-size:17px">${esc(latQ.label)}</div><div class="small">${esc(latQ.detail)}</div></div>
+      <div class="focus-card"><div class="focus-label">Paper Broker</div><div class="focus-value" style="font-size:17px">${esc(brokerLabel(t.broker_mirror_status))}</div><div class="small">Paper-only mirror evidence; not live execution.</div></div>
       <div class="focus-card"><div class="focus-label">Article</div><div class="focus-value" style="font-size:17px">${url?'Available':'Missing'}</div>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">Read original article</a>`:'<div class="small">Source link unavailable</div>'}</div>
     </div>
     <details class="ops-details"><summary>Show trade details</summary><div class="ops-details-body"><div class="tm-cols">
@@ -1226,6 +1808,57 @@ function openTradeModal(id){
 }
 function kv(k,v){return `<div class="tm-kv"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`}
 function closeTradeModal(){document.getElementById('tm-overlay').classList.remove('open')}
+function openLabTradeModal(id){
+  const labTrades=rows(DATA?.crypto_lab_trade_intents);
+  const t=labTrades.find(x=>String(x.id)===String(id)); if(!t) return;
+  const pnl=labPnlOf(t),pct=labPctOf(t),dir=(t.direction||'').toUpperCase();
+  const url=labSourceUrl(t);
+  const closed=String(t.status||'').toUpperCase()==='CLOSED';
+  const tradeIdx=labTrades.findIndex(x=>String(x.id)===String(id));
+  const tradeCount=labTrades.length;
+  const prevId=tradeCount?labTrades[(tradeIdx-1+tradeCount)%tradeCount]?.id:null;
+  const nextId=tradeCount?labTrades[(tradeIdx+1)%tradeCount]?.id:null;
+  const closedBanner=closed?`<div class="reason-line" style="margin:8px 0 4px;text-align:center"><span class="reason-pill">${esc(t.close_reason||'closed')}</span><span class="small" style="margin-left:8px">${shortTime(t.closed_at)}</span></div>`:'';
+  const html=`<div class="tm-head"><div><h3>${esc(t.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="badge">SIM</span></h3><div class="tm-sub">${esc(t.account_key||'')} · ${esc(t.target_model||'fixed')} · ${esc(t.status||'')}</div></div><div class="tm-nav"><button class="tm-btn" onclick="openLabTradeModal('${esc(prevId)}')">← Prev</button><span class="tm-index">${tradeIdx+1}/${tradeCount}</span><button class="tm-btn" onclick="openLabTradeModal('${esc(nextId)}')">Next →</button><button class="tm-close" onclick="closeTradeModal()">×</button></div></div>
+  <div class="tm-body">
+    <div class="tm-pnl-banner ${signCls(pnl)}">${closed?'Realized ':''}${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
+    ${closedBanner}
+    ${pricePathBar(t,false)}
+    ${url?`<div style="text-align:center;margin:8px 0"><a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" style="font-size:13px">View X source post →</a></div>`:''}
+    <div class="tm-focus">
+      <div class="focus-card"><div class="focus-label">Entry Price</div><div class="focus-value">${fmtPrice(t.entry_price)}</div><div class="small">${esc(t.entry_price_source||'coinbase')}</div></div>
+      <div class="focus-card"><div class="focus-label">${closed?'Close Price':'Current Price'}</div><div class="focus-value">${closed?(t.close_price!=null?fmtPrice(t.close_price):'—'):(t.current_price!=null?fmtPrice(t.current_price):'Not marked')}</div><div class="small">${closed?esc(t.raw_payload?.close_price_source||'coinbase'):esc(t.current_price_source||'—')}</div></div>
+      <div class="focus-card"><div class="focus-label">Shares</div><div class="focus-value">${t.shares!=null?Number(t.shares).toFixed(6):'—'}</div><div class="small">${fmtMoney(t.stake_amount)} stake</div></div>
+    </div>
+    <div class="news-impact">
+      <div class="news-impact-head"><div><div class="news-impact-title">Timing / Latency</div><div class="small">Source event → candidate → simulated trade</div></div></div>
+      <div class="impact-grid">
+        <div class="impact-metric"><span>Source event</span><strong>${t.source_event_time?shortTime(t.source_event_time):'Not captured'}</strong></div>
+        <div class="impact-metric"><span>Candidate created</span><strong>${t.candidate_created_at?shortTime(t.candidate_created_at):'Not captured'}</strong></div>
+        <div class="impact-metric"><span>Entry captured</span><strong>${t.entry_price_captured_at?shortTime(t.entry_price_captured_at):shortTime(t.created_at)}</strong></div>
+        <div class="impact-metric"><span>Source → trade</span><strong>${durationLabel(t.source_to_trade_seconds)}</strong></div>
+        <div class="impact-metric"><span>Reference price</span><strong>${t.reference_price!=null?fmtPrice(t.reference_price):'Not captured'}</strong></div>
+        <div class="impact-metric"><span>Entry price</span><strong>${fmtPrice(t.entry_price)}</strong></div>
+        <div class="impact-metric"><span>Move before entry</span><strong>${t.move_before_entry_pct!=null?fmtPct(t.move_before_entry_pct):'Not captured'}</strong></div>
+        <div class="impact-metric"><span>Dir-adjusted move</span><strong>${t.direction_adjusted_move_before_entry_pct!=null?fmtPct(t.direction_adjusted_move_before_entry_pct):'Not captured'}</strong></div>
+      </div>
+    </div>
+    <div class="tm-focus">
+      <div class="focus-card"><div class="focus-label">Spend / Sizing</div><div class="focus-value">${fmtMoney(t.stake_amount)}</div><div class="small">${t.stake_cash_pct!=null?Number(t.stake_cash_pct).toFixed(1)+'% of cash':'—'} · ${esc(t.sizing_rule_status||'—')}</div></div>
+      <div class="focus-card"><div class="focus-label">Take Profit</div><div class="focus-value">${fmtPrice(t.take_profit_price)}</div><div class="small">${dir==='BUY'?'Above':'Below'} entry · ${t.fixed_target_pct!=null?Number(t.fixed_target_pct).toFixed(1)+'%':'2%'}</div></div>
+      <div class="focus-card"><div class="focus-label">Stop Loss</div><div class="focus-value">${fmtPrice(t.stop_loss_price)}</div><div class="small">${dir==='BUY'?'Below':'Above'} entry · ${t.fixed_stop_pct!=null?Number(t.fixed_stop_pct).toFixed(1)+'%':'2%'}</div></div>
+    </div>
+    <details class="ops-details"><summary>View more</summary><div class="ops-details-body"><div class="tm-cols"><div>
+      <div class="tm-section"><h4>IDs</h4>${kv('Trade ID',String(t.id))}${kv('Candidate ID',String(t.candidate_id||'—'))}${kv('Source Event ID',String(t.source_event_id||'—'))}${kv('Account',t.account_key||'—')}</div>
+      <div class="tm-section"><h4>Sources</h4>${kv('Source',t.source||'x')}${kv('Entry source',t.entry_price_source||'—')}${kv('Reference source',t.reference_price_source||'—')}${kv('Price source',t.current_price_source||'—')}</div>
+    </div><div>
+      <div class="tm-section"><h4>Raw Payload</h4><pre style="font-size:10px;max-height:180px;overflow:auto;background:var(--bg);padding:8px;border-radius:6px">${esc(JSON.stringify(t.raw_payload||{},null,2))}</pre></div>
+    </div></div></div></details>
+  </div>
+  <div class="tm-foot"><button class="tm-btn" onclick="openLabTradeModal('${esc(prevId)}')">← Previous</button><button class="tm-btn" onclick="openLabTradeModal('${esc(nextId)}')">Next →</button><button class="tm-btn" onclick="closeTradeModal()">Close</button></div>`;
+  document.getElementById('tm-modal').innerHTML=html;
+  document.getElementById('tm-overlay').classList.add('open');
+}
 function bind(){
   document.querySelectorAll('.nav-link').forEach(b=>b.onclick=()=>showView(b.dataset.view));
   document.getElementById('nav-current').onclick=()=>document.getElementById('site-nav').classList.toggle('open');
@@ -1234,6 +1867,8 @@ function bind(){
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
   document.addEventListener('click',e=>{
     const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
+    const lf=e.target.closest('[data-lab-focus]'); if(lf){LAB_FOCUS=lf.dataset.labFocus; localStorage.setItem('v2_lab_focus',LAB_FOCUS); renderCryptoLab(); return}
+    const lr=e.target.closest('[data-lab-trade-id]'); if(lr){openLabTradeModal(lr.dataset.labTradeId); return}
     const tr=e.target.closest('[data-trade-id]'); if(tr){openTradeModal(tr.dataset.tradeId); return}
     if(e.target.closest('#toggle-open')){OPEN_EXPANDED=!OPEN_EXPANDED; renderOperations(); return}
     if(e.target.closest('#toggle-closed')){CLOSED_EXPANDED=!CLOSED_EXPANDED; renderOperations(); return}
