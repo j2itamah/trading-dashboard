@@ -1237,6 +1237,36 @@ function operatorRunbookStrip(){
     <div class="small">Source: DATA.monday_operator_runbook · read-only; executes nothing.</div>
   </div>`;
 }
+function operatorEvidenceIndexStrip(){
+  const index=DATA?.monday_operator_evidence_index||{};
+  const status=String(index.status||'PENDING').toUpperCase();
+  const summary=index.summary||{};
+  const idxRows=rows(index.rows);
+  const approvalStepMarkers=['paper_order_approval_packet','mirror_sql_review_packet','scheduler_status_check'];
+  const rowHtml=idxRows.map(r=>{
+    const s=String(r.source_status||'PENDING').toUpperCase();
+    const cls=s==='PASS'?'pass':s==='FAIL'?'fail':'watch';
+    return `<div class="checklist-row">
+      <div class="checklist-name">${fmtInt(r.step||0)} · ${esc(String(r.name||'step').replaceAll('_',' '))}</div>
+      <div class="checklist-status ${cls}">${esc(s)}</div>
+      <div class="checklist-detail">${esc(r.source_key?'DATA.'+r.source_key:'missing source')} · ${esc(r.note||r.continue_if||'Read-only evidence step.')}</div>
+    </div>`;
+  }).join('');
+  const blocked=idxRows.filter(r=>['BLOCKED','NOT_READY'].includes(String(r.source_status||'').toUpperCase())).length;
+  const first=(idxRows[0]&&idxRows[0].command)||'python3 foundation_v2/v2_monday_live_standby_packet.py --json';
+  return `<div class="next-action-card compact-boundary-card operator-evidence-index-card">
+    <div class="next-action-head"><span>Monday Operator Evidence Index</span><span class="expansion-badge ${status==='PASS'?'ready':status==='FAIL'?'not-ready':''}">${esc(status)}</span></div>
+    <div class="runbook-summary">
+      <div class="expansion-stat"><div class="exp-label">Steps</div><div class="exp-value">${fmtInt(idxRows.length||0)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Pass</div><div class="exp-value pos-text">${fmtInt(summary.pass||0)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value warn-text">${fmtInt(summary.watch||0)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Blocked</div><div class="exp-value ${blocked?'pos-text':'muted'}">${fmtInt(blocked)}</div></div>
+    </div>
+    <code>${esc(first)}</code>
+    <details class="runbook-details"><summary>Show command evidence map</summary><div class="checklist-mini">${rowHtml}</div></details>
+    <div class="small">Source: DATA.monday_operator_evidence_index · read-only; executes nothing.</div>
+  </div>`;
+}
 function renderOperations(){
   renderSelectors();
   const b=selectedBook();
@@ -1263,6 +1293,7 @@ function renderOperations(){
   html+=approvalBoundaryStrip();
   html+=preOpenChecklistStrip();
   html+=operatorRunbookStrip();
+  html+=operatorEvidenceIndexStrip();
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
