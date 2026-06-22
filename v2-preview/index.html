@@ -997,6 +997,7 @@ function renderOverview(){
     ${kpi('Open Trades', fmtInt(reset.open), '', `${fmtInt(reset.closed)} closed since reset`)}
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
+  html+=cockpitGuideStrip();
   html+=mondayResetStatusStrip();
   html+=rulebookStatusPanel();
   html+=modelPerformancePanel();
@@ -1234,6 +1235,34 @@ function mondayResetStatusStrip(){
     <div class="small">Source: DATA.monday_dashboard_reset_status · dashboard/reporting reset only; no trade deletion, broker order, workflow mutation, X call, Telegram, or email.</div>
   </div>`;
 }
+function cockpitGuideStrip(){
+  const attention=DATA?.operator_attention||{};
+  const reset=DATA?.monday_dashboard_reset_status||{};
+  const clock=DATA?.market_clock||{};
+  const expansion=DATA?.stock_expansion_readiness||{};
+  const budget=DATA?.n8n_execution_budget||{};
+  const guideRows=[
+    ['Blockers / my attention','Operator Attention',attention.status||'WATCH',attention.attention_required?'Needs action':'Dashboard only'],
+    ['Why not zero yet?','Monday Reset',reset.state||'prepared_not_executed',reset.approval_required===false?'Applied':'Approval needed'],
+    ['Market timing','Market Clock',clock.phase||'PRE_OPEN',clock.next_open_label||'next open pending'],
+    ['Execution budget','n8n Budget',budget.status||'WATCH',budget.used_pct!=null?`${budget.used_pct}% used`:'budget pending'],
+    ['Can we expand?','Stock Expansion Preflight',expansion.status||'NOT_READY',expansion.expansion_allowed?'Allowed':'Blocked until gates pass']
+  ].map(([need,card,status,detail])=>{
+    const s=String(status||'PENDING').toUpperCase();
+    const cls=s==='PASS'||s==='APPLIED'||s==='ALLOWED'?'pass':s==='FAIL'||s==='ACTION_REQUIRED'?'fail':'watch';
+    return `<div class="checklist-row">
+      <div class="checklist-name">${esc(need)}</div>
+      <div class="checklist-status ${cls}">${esc(card)}</div>
+      <div class="checklist-detail">${esc(String(status||'pending').replaceAll('_',' '))} · ${esc(detail||'')}</div>
+    </div>`;
+  }).join('');
+  return `<div class="next-action-card compact-boundary-card cockpit-guide-card">
+    <div class="next-action-head"><span>Where To Look</span><span class="expansion-badge">COCKPIT</span></div>
+    <div class="next-action-main">Use this dashboard first. You do not need n8n, Supabase, or backend files for normal status.</div>
+    <div class="checklist-mini">${guideRows}</div>
+    <div class="small">Urgent blockers move to Telegram only when the published operator-attention policy says action is required. Otherwise the dashboard is the source of truth.</div>
+  </div>`;
+}
 function operatorAttentionStrip(){
   const attention=DATA?.operator_attention||{};
   const budget=DATA?.n8n_execution_budget||{};
@@ -1414,6 +1443,7 @@ function renderOperations(){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
+  html+=cockpitGuideStrip();
   html+=operatorAttentionStrip();
   html+=mondayResetStatusStrip();
   html+=marketClockStrip();
