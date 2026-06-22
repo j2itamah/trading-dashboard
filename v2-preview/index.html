@@ -997,6 +997,7 @@ function renderOverview(){
     ${kpi('Open Trades', fmtInt(reset.open), '', `${fmtInt(reset.closed)} closed since reset`)}
     ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
   </div>`;
+  html+=mondayResetStatusStrip();
   html+=rulebookStatusPanel();
   html+=modelPerformancePanel();
   html+=confidencePerformancePanel();
@@ -1204,6 +1205,35 @@ function marketClockStrip(){
     <div class="small">Source: DATA.market_clock · ${esc(clock.regular_session||'09:30-16:00 ET')} · ${esc(clock.holiday_calendar||'market calendar')}</div>
   </div>`;
 }
+function mondayResetStatusStrip(){
+  const reset=DATA?.monday_dashboard_reset_status||{};
+  const status=String(reset.status||'PENDING').toUpperCase();
+  const state=String(reset.state||'unknown').replaceAll('_',' ');
+  const applied=reset.state==='applied';
+  const files=reset.files||{};
+  const commands=reset.commands||{};
+  const summary=reset.current_official_summary||{};
+  const targetBaseline=reset.target_baseline_key||'official_2026_06_22_monday_dashboard_zero_start';
+  const badgeClass=status==='PASS'?'ready':status==='FAIL'||status==='ACTION_REQUIRED'?'not-ready':'';
+  const approval=reset.approval_required===false?'Not needed':'Required';
+  return `<div class="next-action-card compact-boundary-card monday-reset-card">
+    <div class="next-action-head"><span>Monday Reset</span><span class="expansion-badge ${badgeClass}">${esc(status)}</span></div>
+    <div class="next-action-main">${applied?'APPLIED':'PREPARED · NOT EXECUTED'}</div>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">State</div><div class="exp-value ${applied?'pos-text':'warn-text'}">${esc(state.toUpperCase())}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Approval</div><div class="exp-value ${applied?'pos-text':'warn-text'}">${esc(approval)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Active Baseline</div><div class="exp-value">${esc(reset.active_baseline_key||'pending')}</div><div class="small">${esc(reset.active_baseline_captured_at||'no timestamp')}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Target</div><div class="exp-value">${esc(targetBaseline)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Reset Files</div><div class="exp-value ${files.sql_exists&&files.packet_exists&&files.checker_exists?'pos-text':'neg-text'}">${files.sql_exists&&files.packet_exists&&files.checker_exists?'READY':'MISSING'}</div><div class="small">SQL ${files.sql_exists?'ok':'missing'} · packet ${files.packet_exists?'ok':'missing'} · checker ${files.checker_exists?'ok':'missing'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Current Window</div><div class="exp-value">${fmtInt(summary.total_open_count||0)} open</div><div class="small">${fmtInt(summary.total_closed_count||0)} closed · ${fmtMoney(summary.total_marked_equity||0)} equity</div></div>
+    </div>
+    <div class="small">${esc(reset.operator_message||'Reset status pending.')}</div>
+    <div class="small">Timing: ${esc(reset.recommended_timing||'After pre-open checks pass.')}</div>
+    <code>${esc(commands.check_packet||'python3 foundation_v2/v2_monday_dashboard_reset_packet_check.py')}</code>
+    <details class="runbook-details"><summary>Show exact approval phrase</summary><code>${esc(reset.approval_phrase||'approval phrase missing')}</code></details>
+    <div class="small">Source: DATA.monday_dashboard_reset_status · dashboard/reporting reset only; no trade deletion, broker order, workflow mutation, X call, Telegram, or email.</div>
+  </div>`;
+}
 function operatorAttentionStrip(){
   const attention=DATA?.operator_attention||{};
   const budget=DATA?.n8n_execution_budget||{};
@@ -1387,6 +1417,7 @@ function renderOperations(){
   html+=operationsGlance(bookOpen, bookClosed, b);
   html+=operatorAttentionStrip();
   html+=marketClockStrip();
+  html+=mondayResetStatusStrip();
   html+=approvalBoundaryStrip();
   html+=preOpenChecklistStrip();
   html+=operatorRunbookStrip();
