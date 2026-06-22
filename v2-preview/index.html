@@ -174,6 +174,13 @@
   .guard-mini strong{display:block;font:800 17px/1.1 'Fraunces',serif}
   .guard-mini span{font:700 9.5px/1.3 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px}
   .guard-formula{font:700 10px/1.45 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:9px;padding:8px 10px;border:1px dashed var(--line);border-radius:10px;background:rgba(255,255,255,.48)}
+  .notify-contract{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+  .notify-step{border:1px solid var(--line);border-radius:12px;background:#fbfaf6;padding:10px 11px;min-width:0}
+  .notify-step strong{display:block;font:800 11px/1.15 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;color:var(--ink)}
+  .notify-step span{display:block;font:600 12px/1.35 'Spline Sans',sans-serif;color:var(--ink-soft)}
+  .notify-step.active{border-color:#b8e2cc;background:var(--green-bg)}
+  .notify-step.urgent{border-color:#e7c46a;background:#fff8e5}
+  .notify-step.fallback{border-style:dashed}
   .rb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   .rb-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fbfaf6}
   .rb-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
@@ -369,6 +376,7 @@
   @media(max-width:760px){
     .expansion-grid{grid-template-columns:repeat(2,1fr)}
     .rb-grid{grid-template-columns:repeat(2,1fr)}
+    .notify-contract{grid-template-columns:1fr}
   }
   @media(max-width:390px){
     .kpi{padding:15px}
@@ -1205,6 +1213,8 @@ function operatorAttentionStrip(){
   const policy=attention.notification_policy||{};
   const notificationState=attention.notification_state||{};
   const surfaces=attention.user_surfaces||{};
+  const channel=notificationState.current_channel==='telegram_required'?'telegram':'dashboard';
+  const emailFallback=String(notificationState.email_fallback||'only_if_dashboard_or_telegram_unreachable_or_build_blocked').replaceAll('_',' ');
   const urgent=Number(summary.urgent||0);
   const action=Number(summary.action_required||0);
   const watch=Number(summary.watch||0);
@@ -1231,6 +1241,11 @@ function operatorAttentionStrip(){
       <div class="expansion-stat"><div class="exp-label">To Action</div><div class="exp-value ${Number(budget.remaining_to_action||0)<=0?'neg-text':Number(budget.remaining_to_action||0)<500?'warn-text':'pos-text'}">${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'--'}</div><div class="small">90% at ${budget.action_threshold_used!=null?fmtInt(budget.action_threshold_used):'--'} · urgent in ${budget.remaining_to_urgent!=null?fmtInt(budget.remaining_to_urgent):'--'}</div></div>
       <div class="expansion-stat"><div class="exp-label">Notify</div><div class="exp-value ${notificationState.telegram_send_required?'neg-text':'pos-text'}">${notificationState.current_channel==='telegram_required'?'Telegram':'Dashboard'}</div><div class="small">${notificationState.telegram_action_items!=null?fmtInt(notificationState.telegram_action_items):0} Telegram items</div></div>
       <div class="expansion-stat"><div class="exp-label">User Surface</div><div class="exp-value">Dashboard</div><div class="small">${esc(surfaces.urgent||'Telegram')} urgent · ${esc(surfaces.fallback||'email')} fallback</div></div>
+    </div>
+    <div class="notify-contract" aria-label="User notification contract">
+      <div class="notify-step ${channel==='dashboard'?'active':''}"><strong>Dashboard</strong><span>Default cockpit. Every watch/action item must be visible here in plain English.</span></div>
+      <div class="notify-step urgent ${channel==='telegram'?'active':''}"><strong>Telegram</strong><span>Only for urgent or action-required blockers: budget danger, X credits, public dashboard failure, publisher failure, accounting drift, IBKR paper near open, or trade approval.</span></div>
+      <div class="notify-step fallback"><strong>Email</strong><span>Fallback only if dashboard/Telegram cannot reach the user or the build cannot safely continue. Current rule: ${esc(emailFallback)}.</span></div>
     </div>
     <div class="checklist-mini">${visible||'<div class="empty">No operator attention items.</div>'}</div>
     <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')} · action threshold remaining ${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'pending'}.</div>
