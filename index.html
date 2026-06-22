@@ -725,6 +725,7 @@ function topVisualBars(s){
 }
 function targetHealthPanel(trades, model){
   const s=targetStats(trades);
+  if(!s.open && !s.closed) return '';
   if(!s.closed) return `<div class="target-health"><div class="target-health-top"><div><div class="target-health-title">Target feedback</div><div class="small">${fmtInt(s.open)} open positions. No closed trades yet for this selected book.</div></div><div class="target-health-rate">—</div></div></div>`;
   const cls=s.rate>=35?'good':s.rate>=15?'warn':'bad';
   const note=s.rate===0
@@ -1489,21 +1490,25 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
   html+=operationsGlance(bookOpen, bookClosed, b);
-  html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
-  if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
-  else {
-    if(OPEN_EXPANDED) html+=`<input class="trade-search" id="open-search" placeholder="Search open positions..." value="${esc(OPEN_SEARCH)}">`;
-    html+=(OPEN_EXPANDED?openFiltered:bookOpen.slice(0,6)).map(tradeRow).join('');
-    if(bookOpen.length>6) html+=`<button class="closed-toggle" id="toggle-open"><span>${OPEN_EXPANDED?'Collapse':'Show all '+bookOpen.length+' positions'}</span><span>›</span></button>`;
+  if(!bookOpen.length && !bookClosed.length){
+    html+=`<div class="panel"><h2>Waiting for first Monday trade</h2><div class="section-note">This reset-window book is clean: no open trades, no closed trades, and no deployed capital yet. Trade cards will appear here after the first official post-reset signal.</div></div>`;
+  } else {
+    html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
+    if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
+    else {
+      if(OPEN_EXPANDED) html+=`<input class="trade-search" id="open-search" placeholder="Search open positions..." value="${esc(OPEN_SEARCH)}">`;
+      html+=(OPEN_EXPANDED?openFiltered:bookOpen.slice(0,6)).map(tradeRow).join('');
+      if(bookOpen.length>6) html+=`<button class="closed-toggle" id="toggle-open"><span>${OPEN_EXPANDED?'Collapse':'Show all '+bookOpen.length+' positions'}</span><span>›</span></button>`;
+    }
+    html+=`</div><div class="panel closed-panel"><h2>Closed Trades</h2><div class="section-note">Resolved trades: close reason first, then where the exit landed against stop loss and target.</div>`;
+    if(!bookClosed.length) html+='<div class="empty">No closed trades for this selected book.</div>';
+    else {
+      if(CLOSED_EXPANDED) html+=`<input class="trade-search" id="closed-search" placeholder="Search closed trades..." value="${esc(CLOSED_SEARCH)}">`;
+      html+=(CLOSED_EXPANDED?closedFiltered:bookClosed.slice(0,6)).map(tradeRow).join('');
+      if(bookClosed.length>6) html+=`<button class="closed-toggle" id="toggle-closed"><span>${CLOSED_EXPANDED?'Collapse':'Show all '+bookClosed.length+' trades'}</span><span>›</span></button>`;
+    }
+    html+='</div></div>';
   }
-  html+=`</div><div class="panel closed-panel"><h2>Closed Trades</h2><div class="section-note">Resolved trades: close reason first, then where the exit landed against stop loss and target.</div>`;
-  if(!bookClosed.length) html+='<div class="empty">No closed trades for this selected book.</div>';
-  else {
-    if(CLOSED_EXPANDED) html+=`<input class="trade-search" id="closed-search" placeholder="Search closed trades..." value="${esc(CLOSED_SEARCH)}">`;
-    html+=(CLOSED_EXPANDED?closedFiltered:bookClosed.slice(0,6)).map(tradeRow).join('');
-    if(bookClosed.length>6) html+=`<button class="closed-toggle" id="toggle-closed"><span>${CLOSED_EXPANDED?'Collapse':'Show all '+bookClosed.length+' trades'}</span><span>›</span></button>`;
-  }
-  html+='</div></div>';
   const shadow=DATA?.shadow_health||{};
   const allOpen=openPositions().filter(currentOfficialTrade);
   const expansionOpen=openPositions();
