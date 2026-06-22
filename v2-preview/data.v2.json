@@ -1,6 +1,6 @@
 {
   "health": {
-    "checked_at": "2026-06-22T07:30:54.225698+00:00",
+    "checked_at": "2026-06-22T07:34:45.575737+00:00",
     "active_books": 2,
     "accounting_ok": true,
     "books_with_drift": 0
@@ -10696,7 +10696,7 @@
       "source_filter_status": "public_safe"
     }
   ],
-  "generated_at": "2026-06-22T07:30:54.225698+00:00",
+  "generated_at": "2026-06-22T07:34:45.575737+00:00",
   "prop_summary": {
     "account_count": 2,
     "reporting_date": "2026-06-22",
@@ -15088,7 +15088,7 @@
     }
   ],
   "shadow_health": {
-    "checked_at": "2026-06-22T07:30:54.225698+00:00",
+    "checked_at": "2026-06-22T07:34:45.575737+00:00",
     "audit_errors": 0,
     "audit_success": 316,
     "shadow_status": "OK",
@@ -15103,30 +15103,30 @@
     {
       "book_id": 13,
       "book_key": "v2_news_only_hold_24hr_fixed",
-      "free_cash": 341.332038,
+      "free_cash": 10000.0,
       "lifecycle": "hold_24hr",
       "portfolio": "news_only",
-      "open_count": 88,
+      "open_count": 0,
       "baseline_id": 4,
       "prop_status": "ok",
       "recon_drift": 0.0,
       "baseline_key": "official_2026_06_22_monday_dashboard_zero_start",
-      "closed_count": 66,
-      "realized_pnl": 74.042038,
+      "closed_count": 0,
+      "realized_pnl": 0,
       "target_model": "fixed",
-      "deployed_cost": 9732.71,
-      "marked_equity": 10052.35665,
-      "marked_return": 0.005235665,
+      "deployed_cost": 0,
+      "marked_equity": 10000.0,
+      "marked_return": 0.0,
       "classification": "production",
       "rejected_count": 0,
       "reporting_date": "2026-06-22",
-      "unrealized_pnl": -21.685388,
+      "unrealized_pnl": 0,
       "official_status": "ok",
-      "since_start_pnl": 52.35665,
+      "since_start_pnl": 0,
       "experiment_phase": "fixed_pilot_1_clean_reset",
       "starting_balance": 10000.0,
       "reporting_timezone": "America/Edmonton",
-      "since_start_return": 0.005235665,
+      "since_start_return": 0.0,
       "today_closed_count": 0,
       "today_opened_count": 0,
       "today_realized_pnl": 0,
@@ -15135,44 +15135,46 @@
       "baseline_closed_count": 66,
       "baseline_marked_equity": 10051.55681,
       "baseline_start_balance": 10000.0,
-      "prop_total_loss_buffer": 1052.35665,
-      "today_marked_pnl_approx": -21.685388,
+      "prop_total_loss_buffer": 1000,
+      "today_marked_pnl_approx": 0,
       "prop_profit_target_dollars": 1000.0,
-      "official_since_baseline_pnl": 0.79984,
+      "official_since_baseline_pnl": 0,
       "prop_max_daily_loss_dollars": 500.0,
       "prop_max_total_loss_dollars": 1000.0,
       "official_new_open_count_delta": 0,
-      "official_since_baseline_return": 7.95737431642691e-05,
+      "official_since_baseline_return": 0.0,
       "official_new_closed_count_delta": 0,
-      "prop_daily_loss_buffer_realized": 500.0
+      "prop_daily_loss_buffer_realized": 500,
+      "display_scope": "monday_reset_window",
+      "history_preserved_backend_key": "official_books_backend"
     },
     {
       "book_id": 14,
       "book_key": "v2_news_only_hold_24hr_volatility",
-      "free_cash": 9082.089072,
+      "free_cash": 10000.0,
       "lifecycle": "hold_24hr",
       "portfolio": "news_only",
-      "open_count": 8,
+      "open_count": 0,
       "baseline_id": 4,
       "prop_status": "ok",
       "recon_drift": 0.0,
       "baseline_key": "official_2026_06_22_monday_dashboard_zero_start",
-      "closed_count": 29,
-      "realized_pnl": -49.750928,
+      "closed_count": 0,
+      "realized_pnl": 0,
       "target_model": "volatility",
-      "deployed_cost": 868.16,
-      "marked_equity": 9950.249072,
-      "marked_return": -0.0049750928,
+      "deployed_cost": 0,
+      "marked_equity": 10000.0,
+      "marked_return": 0.0,
       "classification": "production",
       "rejected_count": 0,
       "reporting_date": "2026-06-22",
-      "unrealized_pnl": 0.0,
+      "unrealized_pnl": 0,
       "official_status": "ok",
-      "since_start_pnl": -49.750928,
+      "since_start_pnl": 0,
       "experiment_phase": "volatility_pilot_1_clean_reset",
       "starting_balance": 10000.0,
       "reporting_timezone": "America/Edmonton",
-      "since_start_return": -0.0049750928,
+      "since_start_return": 0.0,
       "today_closed_count": 0,
       "today_opened_count": 0,
       "today_realized_pnl": 0,
@@ -15181,16 +15183,18 @@
       "baseline_closed_count": 29,
       "baseline_marked_equity": 9950.249072,
       "baseline_start_balance": 10000.0,
-      "prop_total_loss_buffer": 950.249072,
-      "today_marked_pnl_approx": 0.0,
+      "prop_total_loss_buffer": 1000,
+      "today_marked_pnl_approx": 0,
       "prop_profit_target_dollars": 1000.0,
-      "official_since_baseline_pnl": 0.0,
+      "official_since_baseline_pnl": 0,
       "prop_max_daily_loss_dollars": 500.0,
       "prop_max_total_loss_dollars": 1000.0,
       "official_new_open_count_delta": 0,
       "official_since_baseline_return": 0.0,
       "official_new_closed_count_delta": 0,
-      "prop_daily_loss_buffer_realized": 500.0
+      "prop_daily_loss_buffer_realized": 500,
+      "display_scope": "monday_reset_window",
+      "history_preserved_backend_key": "official_books_backend"
     }
   ],
   "open_positions": [
@@ -19905,20 +19909,22 @@
     "account_count": 2,
     "reporting_date": "2026-06-22",
     "accounts_not_ok": 0,
-    "total_free_cash": 9423.42111,
-    "total_open_count": 96,
+    "total_free_cash": 20000.0,
+    "total_open_count": 0,
     "reporting_timezone": "America/Edmonton",
-    "total_closed_count": 95,
-    "total_deployed_cost": 10600.87,
-    "total_marked_equity": 20002.605722,
+    "total_closed_count": 0,
+    "total_deployed_cost": 0.0,
+    "total_marked_equity": 20000.0,
     "baseline_captured_at": "2026-06-22T07:30:37.450161+00:00",
     "total_starting_balance": 20000.0,
-    "total_today_realized_pnl": 0,
-    "total_baseline_marked_equity": 20001.805882,
+    "total_today_realized_pnl": 0.0,
+    "total_baseline_marked_equity": 20000.0,
     "official_new_open_count_delta": 0,
-    "total_today_marked_pnl_approx": -21.685388,
+    "total_today_marked_pnl_approx": 0.0,
     "official_new_closed_count_delta": 0,
-    "total_official_since_baseline_pnl": 0.79984
+    "total_official_since_baseline_pnl": 0.0,
+    "display_scope": "monday_reset_window",
+    "history_preserved_backend_key": "official_summary_backend"
   },
   "official_baseline": {
     "id": 4,
@@ -22109,8 +22115,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 1291.4,
-      "source_freshness_reason": "Newest source event age 1291.4m > 120m",
+      "source_age_minutes": 1295.2,
+      "source_freshness_reason": "Newest source event age 1295.2m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -22147,8 +22153,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 2086.4,
-      "source_freshness_reason": "Newest source event age 2086.4m > 120m",
+      "source_age_minutes": 2090.2,
+      "source_freshness_reason": "Newest source event age 2090.2m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -22285,8 +22291,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 2131.4,
-      "source_freshness_reason": "Newest source event age 2131.4m > 120m",
+      "source_age_minutes": 2135.2,
+      "source_freshness_reason": "Newest source event age 2135.2m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -22398,8 +22404,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 4441.4,
-      "source_freshness_reason": "Newest source event age 4441.4m > 120m",
+      "source_age_minutes": 4445.2,
+      "source_freshness_reason": "Newest source event age 4445.2m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -22432,7 +22438,7 @@
   ],
   "cryptolab_source_hygiene": {
     "status": "PASS",
-    "checked_at": "2026-06-22T07:31:17.787112+00:00",
+    "checked_at": "2026-06-22T07:35:07.675319+00:00",
     "signal_scores_before": 50,
     "signal_scores_after": 8,
     "x_events_before": 100,
@@ -24982,7 +24988,7 @@
     ],
     "monitor": {
       "status": "PASS",
-      "checked_at": "2026-06-22T07:31:28.521837+00:00",
+      "checked_at": "2026-06-22T07:35:18.874734+00:00",
       "cp14_active": true,
       "cp14_schedule": "every 10 minutes",
       "latest_cp14_execution_id": "8664",
@@ -24992,13 +24998,13 @@
     },
     "health": {
       "status": "PASS",
-      "last_checked_at": "2026-06-22T07:31:28.521872+00:00",
+      "last_checked_at": "2026-06-22T07:35:18.874893+00:00",
       "open_trade_count": 2,
       "closed_trade_count": 9,
       "new_error_count": 0,
       "mark_freshness": {
         "status": "PASS",
-        "max_age_minutes": 1.4,
+        "max_age_minutes": 5.2,
         "threshold_minutes": 20
       },
       "reconciliation": {
@@ -25046,7 +25052,7 @@
     },
     "readiness": {
       "status": "NOT_READY",
-      "last_checked_at": "2026-06-22T07:31:28.521898+00:00",
+      "last_checked_at": "2026-06-22T07:35:18.874999+00:00",
       "summary": "Not ready: Trade sample size: 11 total / 9 closed (need 25 total / 20 closed); Observation window: 2.3 days (need 7 days); Health stability: unstable: streak 0/7 snapshots, 0.0/7 days",
       "thresholds": {
         "min_closed_trades": 20,
@@ -25107,7 +25113,7 @@
           "id": "mark_freshness",
           "label": "Mark freshness",
           "status": "PASS",
-          "actual": "1.4 min",
+          "actual": "5.2 min",
           "required": "<= 20 min",
           "notes": []
         },
@@ -25140,8 +25146,16 @@
         "snapshot_count": 50,
         "stable_pass_streak_snapshots": 0,
         "stable_pass_streak_days": 0.0,
-        "latest_snapshot_at": "2026-06-22T07:30:06.389128+00:00",
+        "latest_snapshot_at": "2026-06-22T07:31:29.912973+00:00",
         "recent": [
+          {
+            "captured_at": "2026-06-22T07:31:29.912973+00:00",
+            "overall_status": "NOT_READY",
+            "health_status": "PASS",
+            "blocker_count": 3,
+            "warning_count": 0,
+            "latest_execution_id": "8664"
+          },
           {
             "captured_at": "2026-06-22T07:30:06.389128+00:00",
             "overall_status": "NOT_READY",
@@ -25213,21 +25227,13 @@
             "blocker_count": 3,
             "warning_count": 0,
             "latest_execution_id": "8641"
-          },
-          {
-            "captured_at": "2026-06-22T06:48:31.175561+00:00",
-            "overall_status": "NOT_READY",
-            "health_status": "PASS",
-            "blocker_count": 3,
-            "warning_count": 0,
-            "latest_execution_id": "8635"
           }
         ]
       }
     }
   },
   "ibkr_paper_preflight": {
-    "checked_at": "2026-06-22T07:31:28.849681+00:00",
+    "checked_at": "2026-06-22T07:35:19.186208+00:00",
     "expected_account": "DUQ523641",
     "ibkr_app": {
       "process_count": 0,
@@ -25262,17 +25268,17 @@
     "source": "foundation_v2/v2_telegram_delivery_probe.py",
     "exit_code": 0,
     "command": "/usr/bin/python3 /Users/riipen/.local/bin/v2_telegram_delivery_probe.py",
-    "checked_at": "2026-06-22T07:31:28.910364+00:00",
+    "checked_at": "2026-06-22T07:35:19.252430+00:00",
     "env_source": "/Users/riipen/.telegram_codex_relay_env",
     "telegram_env_present": true,
     "send_enabled": false,
     "delivery": "not_sent_dry_run",
     "reason": null,
     "expected_env_file": null,
-    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T07:31:28.910496+00:00",
+    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T07:35:19.252571+00:00",
     "next_action": "Local Telegram urgent-send path is configured; use --send only for an approved proof message.",
     "raw_status": "READY",
-    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-22T07:31:28.910364+00:00\nenv_source=/Users/riipen/.telegram_codex_relay_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=n8n_relay\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T07:31:28.910496+00:00\n",
+    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-22T07:35:19.252430+00:00\nenv_source=/Users/riipen/.telegram_codex_relay_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=n8n_relay\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T07:35:19.252571+00:00\n",
     "safety": {
       "send_enabled": false,
       "telegram_send": "not sent",
@@ -25284,7 +25290,7 @@
     }
   },
   "n8n_execution_budget": {
-    "checked_at": "2026-06-22T07:31:28.914038+00:00",
+    "checked_at": "2026-06-22T07:35:19.256033+00:00",
     "status": "WATCH",
     "severity": "dashboard",
     "quota": 10000,
@@ -25331,7 +25337,7 @@
     "contract_source_path": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_wrapper_check.py",
     "wrapper_command": "bash foundation_v2/run_v2_monday_safe_observation.sh",
     "check_mode": "static_contract",
-    "checked_at": "2026-06-22T07:31:29.230926+00:00",
+    "checked_at": "2026-06-22T07:35:19.624890+00:00",
     "unsafe_args_refused": true,
     "safe_banner": true,
     "telegram_send_disabled": true,
@@ -25389,7 +25395,7 @@
   },
   "stock_expansion_readiness": {
     "status": "NOT_READY",
-    "checked_at": "2026-06-22T07:31:29.237941+00:00",
+    "checked_at": "2026-06-22T07:35:19.638424+00:00",
     "expansion_allowed": false,
     "ready_for_user_approval": false,
     "summary": "Expansion blocked: Volatility evidence complete: 0/30 closed; review_status=collecting_evidence; Post-fix stock latency proven: 0 clean / 0 post-fix stock rows; classes={'observation_pending': 0}; Monday live observation: pending until 2026-06-22T13:30:00Z; IBKR paper proof: No IBKR Gateway/TWS process or paper API port detected. Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.; User expansion approval: requires exact approved expansion packet",
@@ -26200,6 +26206,121 @@
       "stock_expansion_allowed": false
     }
   ],
+  "official_summary_backend": {
+    "baseline_id": 4,
+    "baseline_key": "official_2026_06_22_monday_dashboard_zero_start",
+    "account_count": 2,
+    "reporting_date": "2026-06-22",
+    "accounts_not_ok": 0,
+    "total_free_cash": 9423.42111,
+    "total_open_count": 96,
+    "reporting_timezone": "America/Edmonton",
+    "total_closed_count": 95,
+    "total_deployed_cost": 10600.87,
+    "total_marked_equity": 20002.605722,
+    "baseline_captured_at": "2026-06-22T07:30:37.450161+00:00",
+    "total_starting_balance": 20000.0,
+    "total_today_realized_pnl": 0,
+    "total_baseline_marked_equity": 20001.805882,
+    "official_new_open_count_delta": 0,
+    "total_today_marked_pnl_approx": -21.685388,
+    "official_new_closed_count_delta": 0,
+    "total_official_since_baseline_pnl": 0.79984
+  },
+  "official_books_backend": [
+    {
+      "book_id": 13,
+      "book_key": "v2_news_only_hold_24hr_fixed",
+      "free_cash": 341.332038,
+      "lifecycle": "hold_24hr",
+      "portfolio": "news_only",
+      "open_count": 88,
+      "baseline_id": 4,
+      "prop_status": "ok",
+      "recon_drift": 0.0,
+      "baseline_key": "official_2026_06_22_monday_dashboard_zero_start",
+      "closed_count": 66,
+      "realized_pnl": 74.042038,
+      "target_model": "fixed",
+      "deployed_cost": 9732.71,
+      "marked_equity": 10052.35665,
+      "marked_return": 0.005235665,
+      "classification": "production",
+      "rejected_count": 0,
+      "reporting_date": "2026-06-22",
+      "unrealized_pnl": -21.685388,
+      "official_status": "ok",
+      "since_start_pnl": 52.35665,
+      "experiment_phase": "fixed_pilot_1_clean_reset",
+      "starting_balance": 10000.0,
+      "reporting_timezone": "America/Edmonton",
+      "since_start_return": 0.005235665,
+      "today_closed_count": 0,
+      "today_opened_count": 0,
+      "today_realized_pnl": 0,
+      "baseline_open_count": 88,
+      "baseline_captured_at": "2026-06-22T07:30:37.450161+00:00",
+      "baseline_closed_count": 66,
+      "baseline_marked_equity": 10051.55681,
+      "baseline_start_balance": 10000.0,
+      "prop_total_loss_buffer": 1052.35665,
+      "today_marked_pnl_approx": -21.685388,
+      "prop_profit_target_dollars": 1000.0,
+      "official_since_baseline_pnl": 0.79984,
+      "prop_max_daily_loss_dollars": 500.0,
+      "prop_max_total_loss_dollars": 1000.0,
+      "official_new_open_count_delta": 0,
+      "official_since_baseline_return": 7.95737431642691e-05,
+      "official_new_closed_count_delta": 0,
+      "prop_daily_loss_buffer_realized": 500.0
+    },
+    {
+      "book_id": 14,
+      "book_key": "v2_news_only_hold_24hr_volatility",
+      "free_cash": 9082.089072,
+      "lifecycle": "hold_24hr",
+      "portfolio": "news_only",
+      "open_count": 8,
+      "baseline_id": 4,
+      "prop_status": "ok",
+      "recon_drift": 0.0,
+      "baseline_key": "official_2026_06_22_monday_dashboard_zero_start",
+      "closed_count": 29,
+      "realized_pnl": -49.750928,
+      "target_model": "volatility",
+      "deployed_cost": 868.16,
+      "marked_equity": 9950.249072,
+      "marked_return": -0.0049750928,
+      "classification": "production",
+      "rejected_count": 0,
+      "reporting_date": "2026-06-22",
+      "unrealized_pnl": 0.0,
+      "official_status": "ok",
+      "since_start_pnl": -49.750928,
+      "experiment_phase": "volatility_pilot_1_clean_reset",
+      "starting_balance": 10000.0,
+      "reporting_timezone": "America/Edmonton",
+      "since_start_return": -0.0049750928,
+      "today_closed_count": 0,
+      "today_opened_count": 0,
+      "today_realized_pnl": 0,
+      "baseline_open_count": 8,
+      "baseline_captured_at": "2026-06-22T07:30:37.450161+00:00",
+      "baseline_closed_count": 29,
+      "baseline_marked_equity": 9950.249072,
+      "baseline_start_balance": 10000.0,
+      "prop_total_loss_buffer": 950.249072,
+      "today_marked_pnl_approx": 0.0,
+      "prop_profit_target_dollars": 1000.0,
+      "official_since_baseline_pnl": 0.0,
+      "prop_max_daily_loss_dollars": 500.0,
+      "prop_max_total_loss_dollars": 1000.0,
+      "official_new_open_count_delta": 0,
+      "official_since_baseline_return": 0.0,
+      "official_new_closed_count_delta": 0,
+      "prop_daily_loss_buffer_realized": 500.0
+    }
+  ],
   "monday_next_action": {
     "status": "WATCH",
     "action": "continue_bounded_observation",
@@ -26216,7 +26337,7 @@
     "required_approval_phrase": null
   },
   "monday_readiness_digest": {
-    "checked_at": "2026-06-22T07:31:29.241465+00:00",
+    "checked_at": "2026-06-22T07:35:19.644928+00:00",
     "mode": "published",
     "status": "WATCH",
     "next_safe_action": {
@@ -26246,8 +26367,8 @@
       "next_action": "latency proof is present; keep monitoring for failures and stale references"
     },
     "published_json": {
-      "generated_at": "2026-06-22T07:30:54.225698+00:00",
-      "key_count": 34,
+      "generated_at": "2026-06-22T07:34:45.575737+00:00",
+      "key_count": 36,
       "accounting_ok": true,
       "books_with_drift": 0
     },
@@ -26289,7 +26410,7 @@
     }
   },
   "monday_preopen_checklist": {
-    "checked_at": "2026-06-22T07:31:29.241622+00:00",
+    "checked_at": "2026-06-22T07:35:19.645077+00:00",
     "mode": "published",
     "status": "WATCH",
     "summary": {
@@ -26321,7 +26442,7 @@
       {
         "name": "published_json",
         "status": "PASS",
-        "detail": "assembled_keys_pre_checklist=36; missing_evidence=[]; generated_at=2026-06-22T07:30:54.225698+00:00; accounting_ok=True; books_with_drift=0",
+        "detail": "assembled_keys_pre_checklist=38; missing_evidence=[]; generated_at=2026-06-22T07:34:45.575737+00:00; accounting_ok=True; books_with_drift=0",
         "action": "Continue."
       },
       {
@@ -26369,7 +26490,7 @@
       {
         "name": "telegram_delivery_probe",
         "status": "PASS",
-        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-22T07:31:28.910364+00:00",
+        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-22T07:35:19.252430+00:00",
         "action": "Urgent Telegram path is configured for approved sends; no message sent."
       },
       {
@@ -26410,7 +26531,7 @@
     }
   },
   "monday_operator_runbook": {
-    "checked_at": "2026-06-22T07:31:29.241637+00:00",
+    "checked_at": "2026-06-22T07:35:19.645096+00:00",
     "status": "PASS",
     "mode": "read_only_operator_runbook",
     "primary_coordination_chat": "Understand GitHub and ledger updates",
@@ -26540,12 +26661,12 @@
     "status": "WATCH",
     "phase": "PRE_OPEN",
     "stock_market_open": false,
-    "checked_at": "2026-06-22T07:31:29.241641+00:00",
-    "current_utc": "2026-06-22T07:31:29.241641+00:00",
-    "current_et": "2026-06-22T03:31:29.241641-04:00",
-    "current_mdt": "2026-06-22T01:31:29.241641-06:00",
-    "current_et_label": "Mon Jun 22, 2026 3:31 AM ET",
-    "current_mdt_label": "Mon Jun 22, 2026 1:31 AM MDT",
+    "checked_at": "2026-06-22T07:35:19.645102+00:00",
+    "current_utc": "2026-06-22T07:35:19.645102+00:00",
+    "current_et": "2026-06-22T03:35:19.645102-04:00",
+    "current_mdt": "2026-06-22T01:35:19.645102-06:00",
+    "current_et_label": "Mon Jun 22, 2026 3:35 AM ET",
+    "current_mdt_label": "Mon Jun 22, 2026 1:35 AM MDT",
     "next_open_at": "2026-06-22T13:30:00+00:00",
     "next_open_et": "2026-06-22T09:30:00-04:00",
     "next_open_mdt": "2026-06-22T07:30:00-06:00",
@@ -26554,8 +26675,8 @@
     "next_close_et": "2026-06-22T16:00:00-04:00",
     "next_close_mdt": "2026-06-22T14:00:00-06:00",
     "next_close_label": "Mon Jun 22, 2026 4:00 PM ET",
-    "minutes_to_next_open": 359,
-    "minutes_to_next_close": 749,
+    "minutes_to_next_open": 355,
+    "minutes_to_next_close": 745,
     "regular_session": "09:30-16:00 ET",
     "holiday_calendar": "NYSE/Nasdaq 2026 full-day holiday approximation",
     "safe_to_observe": true,
@@ -26576,7 +26697,7 @@
     "source": "publisher clock + DATA.monday_next_action + DATA.monday_preopen_checklist"
   },
   "monday_dashboard_reset_status": {
-    "checked_at": "2026-06-22T07:31:29.478524+00:00",
+    "checked_at": "2026-06-22T07:35:19.860201+00:00",
     "status": "PASS",
     "state": "applied",
     "operator_message": "Monday dashboard reset is applied. Official Operations should show the Monday baseline window.",
@@ -26602,11 +26723,11 @@
     },
     "current_official_summary": {
       "reporting_date": "2026-06-22",
-      "total_open_count": 96,
-      "total_closed_count": 95,
-      "total_marked_equity": 20002.605722,
-      "total_free_cash": 9423.42111,
-      "total_deployed_cost": 10600.87
+      "total_open_count": 0,
+      "total_closed_count": 0,
+      "total_marked_equity": 20000.0,
+      "total_free_cash": 20000.0,
+      "total_deployed_cost": 0.0
     },
     "safety": {
       "scope": "dashboard_official_reporting_only",
@@ -26621,7 +26742,7 @@
     }
   },
   "monday_first_command_packet": {
-    "checked_at": "2026-06-22T07:31:29.478573+00:00",
+    "checked_at": "2026-06-22T07:35:19.860341+00:00",
     "status": "WATCH",
     "operator_message": "Run the execution-mode gate first; if it says continue, prove the public dashboard cockpit before standby.",
     "first_command": "python3 foundation_v2/v2_execution_mode_gate.py --json",
@@ -26652,7 +26773,7 @@
       "execution_profile": "budget_smart_quiet_prep",
       "observation_cadence": "quiet_until_preopen_window",
       "guidance": "Keep work low-cost: docs, source checks, dashboard freshness, and static contracts. Do not run live observation loops yet.",
-      "minutes_to_next_open": 359
+      "minutes_to_next_open": 355
     },
     "stock_expansion_preflight": {
       "command": "python3 foundation_v2/v2_stock_expansion_preflight_bundle.py --json",
@@ -26715,8 +26836,8 @@
     },
     "published_evidence": {
       "data_path": "/tmp/data.v2.json",
-      "generated_at": "2026-06-22T07:30:54.225698+00:00",
-      "key_count": 44,
+      "generated_at": "2026-06-22T07:34:45.575737+00:00",
+      "key_count": 46,
       "health_status": "PASS",
       "preopen_status": "WATCH",
       "readiness_digest_status": "WATCH",
@@ -26771,7 +26892,7 @@
     }
   },
   "monday_operator_evidence_index": {
-    "checked_at": "2026-06-22T07:31:29.478627+00:00",
+    "checked_at": "2026-06-22T07:35:19.860442+00:00",
     "status": "WATCH",
     "summary": {
       "pass": 2,
@@ -26779,7 +26900,7 @@
       "fail": 0
     },
     "data_path": "/tmp/data.v2.json",
-    "generated_at": "2026-06-22T07:30:54.225698+00:00",
+    "generated_at": "2026-06-22T07:34:45.575737+00:00",
     "runbook_status": "PASS",
     "next_safe_action": {
       "status": "WATCH",
@@ -26909,6 +27030,37 @@
     }
   },
   "publisher_runs": [
+    {
+      "id": 455,
+      "run_id": "3cae1792-36b0-4c03-a50d-d36e9eca9c58",
+      "source": "python_publisher",
+      "status": "success",
+      "started_at": "2026-06-22T07:30:53.863094+00:00",
+      "completed_at": "2026-06-22T07:31:29.501109+00:00",
+      "duration_ms": 36058,
+      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json",
+      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
+      "output_secondary_tmp": "/tmp/data.v2.json",
+      "generated_at": "2026-06-22T07:30:53.442991+00:00",
+      "key_count": 44,
+      "required_key_count": 22,
+      "missing_required_keys": [],
+      "bytes_written": 1077078,
+      "sha256": "eb22cc76cd648409dae20c61f242a95f9fae8fcd06c6aa5b82ae890443698644",
+      "accounting_ok": true,
+      "books_with_drift": 0,
+      "crypto_lab_trade_count": 11,
+      "crypto_lab_open_count": 2,
+      "crypto_lab_closed_count": 9,
+      "crypto_lab_account_count": 5,
+      "validation_passed": true,
+      "copied_dashboard": true,
+      "copied_tmp": true,
+      "error_message": null,
+      "metadata": {
+        "source": "python_publisher"
+      }
+    },
     {
       "id": 454,
       "run_id": "6f5f1088-de90-456b-b1d3-3bbb47e6f46d",
@@ -27652,41 +27804,10 @@
       "metadata": {
         "source": "python_publisher"
       }
-    },
-    {
-      "id": 430,
-      "run_id": "05635366-fda9-4152-b2b9-3d0003c66d9f",
-      "source": "python_publisher",
-      "status": "success",
-      "started_at": "2026-06-22T05:45:30.372015+00:00",
-      "completed_at": "2026-06-22T05:46:05.650122+00:00",
-      "duration_ms": 36128,
-      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json",
-      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
-      "output_secondary_tmp": "/tmp/data.v2.json",
-      "generated_at": "2026-06-22T05:45:29.521163+00:00",
-      "key_count": 43,
-      "required_key_count": 21,
-      "missing_required_keys": [],
-      "bytes_written": 1070668,
-      "sha256": "921ce173b8667ab52047e93b3cc57a0ab8ae2a58973e8ee13727f0de927f6c88",
-      "accounting_ok": true,
-      "books_with_drift": 0,
-      "crypto_lab_trade_count": 11,
-      "crypto_lab_open_count": 2,
-      "crypto_lab_closed_count": 9,
-      "crypto_lab_account_count": 5,
-      "validation_passed": true,
-      "copied_dashboard": true,
-      "copied_tmp": true,
-      "error_message": null,
-      "metadata": {
-        "source": "python_publisher"
-      }
     }
   ],
   "operator_attention": {
-    "checked_at": "2026-06-22T07:31:29.478379+00:00",
+    "checked_at": "2026-06-22T07:35:19.859968+00:00",
     "status": "WATCH",
     "attention_required": false,
     "summary": {
