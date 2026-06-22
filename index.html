@@ -1335,13 +1335,15 @@ function operatorAttentionStrip(){
     </div>`;
   }).join('');
   const badgeClass=status==='PASS'?'ready':status==='ACTION_REQUIRED'?'not-ready':'';
-  const main=userAction
-    ? `${fmtInt(userAction)} user action needed`
-    : codexAction
-      ? `${fmtInt(codexAction)} Codex repair · no user action`
-      : action
-        ? `${fmtInt(action)} system action`
-        : `${fmtInt(urgent)} urgent · ${fmtInt(watch)} watch`;
+  const main=(userAction&&codexAction)
+    ? `You: ${fmtInt(userAction)} · Codex: ${fmtInt(codexAction)}`
+    : userAction
+      ? `Your action: ${fmtInt(userAction)}`
+      : codexAction
+        ? `Codex action: ${fmtInt(codexAction)} · no user action`
+        : action
+          ? `${fmtInt(action)} system action`
+          : `${fmtInt(urgent)} urgent · ${fmtInt(watch)} watch`;
   return `<div class="next-action-card compact-boundary-card operator-attention-card">
     <div class="next-action-head"><span>Operator Attention</span><span class="expansion-badge ${badgeClass}">${esc(status)}</span></div>
     <div class="next-action-main">${esc(main)}</div>
