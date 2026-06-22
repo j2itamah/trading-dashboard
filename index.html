@@ -748,18 +748,19 @@ function targetHealthPanel(trades, model){
 function operationsGlance(open, closed, book){
   const s=targetStats(open.concat(closed));
   const start=Number(book?.starting_balance||10000);
+  const display=bookDisplayStats(book);
   const selectedPnl=s.realized+s.unrealized;
   const totalPnl=Number(book?.official_since_baseline_pnl ?? book?.since_start_pnl ?? selectedPnl);
   const selectedDeployed=deployedCash(open);
-  const freeCash=Number(book?.free_cash ?? (start+s.realized-selectedDeployed));
-  const markedEquity=Number(book?.marked_equity ?? (start+selectedPnl));
-  const bookDeployed=Number(book?.deployed_cost ?? selectedDeployed);
-  const positionEquity=Math.max(0,markedEquity-freeCash);
+  const freeCash=Number(display.free_cash ?? (start+s.realized-selectedDeployed));
+  const markedEquity=Number(display.marked_equity ?? (start+selectedPnl));
+  const bookDeployed=Number(display.deployed ?? selectedDeployed);
+  const positionEquity=Number(display.position_equity ?? Math.max(0,markedEquity-freeCash));
   const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? selectedPnl);
   const realized=Number(s.realized||0);
   const capitalNote=book?.shared_lifecycle_book
-    ? `${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} rows are shown above. Capital below is the shared backend book until separate ${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} books are deployed.`
-    : 'Capital below is the full backend book. Selected lifecycle rows are shown above.';
+    ? `${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} reset-window rows are shown above. Backend shared-book history remains archived outside this view.`
+    : 'Capital below is the official reset-window view. Backend history remains archived outside this view.';
   return `<div class="ops-glance">
     <div class="ops-glance-card">
       <div class="ops-glance-title">Since reset · ${esc(LIFE_LABELS[book?.lifecycle]||book?.lifecycle||'selected')}</div>
@@ -774,12 +775,12 @@ function operationsGlance(open, closed, book){
       ${topVisualBars(s)}
     </div>
     <div class="ops-glance-card">
-      <div class="ops-glance-title">Book capital · shared account</div>
+      <div class="ops-glance-title">Reset capital · official view</div>
       <div class="ops-glance-grid">
         <div class="ops-glance-stat"><strong>${fmtMoney(freeCash)}</strong><span>free cash</span></div>
         <div class="ops-glance-stat"><strong>${fmtMoney(positionEquity)}</strong><span>in positions</span></div>
         <div class="ops-glance-stat"><strong>${fmtMoney(markedEquity)}</strong><span>marked equity</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(bookDeployed)}</strong><span>book deployed</span></div>
+        <div class="ops-glance-stat"><strong>${fmtMoney(bookDeployed)}</strong><span>reset deployed</span></div>
       </div>
       <div class="small" style="margin-top:10px">${capitalNote} Pre-reset trades remain archived.</div>
     </div>
