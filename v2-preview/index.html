@@ -46,6 +46,10 @@
   .updated.fresh strong{color:var(--green)}
   .updated.warn strong{color:var(--gold,#d97706)}
   .updated.stale strong{color:var(--red)}
+  .header-attention{display:block;width:100%;border:1px solid rgba(59,95,126,.28);background:#f8fbff;color:var(--accent);border-radius:999px;padding:7px 10px;font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.45px;cursor:pointer;margin-top:8px;text-align:center}
+  .header-attention.pass{border-color:rgba(29,157,107,.28);background:var(--green-bg);color:var(--green)}
+  .header-attention.watch{border-color:rgba(200,150,51,.45);background:var(--gold-bg);color:#7a5610}
+  .header-attention.fail{border-color:rgba(198,79,96,.35);background:var(--red-bg);color:var(--red)}
   .refresh-btn{border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;margin-top:6px}
   .refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
   .snapshot-warning{display:none;margin:0 0 18px;padding:11px 14px;border:1px solid #e7c46a;border-radius:10px;background:#fff8e5;color:#7a5610;font:600 12px/1.45 'Spline Sans Mono',monospace}
@@ -411,6 +415,7 @@
       <span>Last updated</span>
       <strong id="upd-date">—</strong>
       <button class="refresh-btn" id="refresh-btn">Refresh</button>
+      <button class="header-attention watch" id="header-attention" type="button">Attention: loading</button>
     </div>
   </header>
 
@@ -955,6 +960,24 @@ function freshness(){
   const warn=document.getElementById('snapshot-warning');
   if(age>20){warn.style.display='block'; warn.textContent=`Data is ${age}m old. Pull/refresh if publisher has not updated yet.`}
   else {warn.style.display='none'}
+}
+function headerAttention(){
+  const attention=DATA?.operator_attention||{};
+  const summary=attention.summary||{};
+  const budget=DATA?.n8n_execution_budget||{};
+  const btn=document.getElementById('header-attention');
+  if(!btn) return;
+  const status=String(attention.status||'WATCH').toUpperCase();
+  const action=Number(summary.action_required||0);
+  const urgent=Number(summary.urgent||0);
+  const watch=Number(summary.watch||0);
+  const budgetStatus=String(budget.status||'').toUpperCase();
+  const cls=action||urgent||status==='ACTION_REQUIRED'||status==='FAIL'||budgetStatus==='ACTION_REQUIRED'?'fail':watch||status==='WATCH'||budgetStatus==='WATCH'?'watch':'pass';
+  btn.className=`header-attention ${cls}`;
+  if(action||urgent) btn.textContent=`Action needed · ${fmtInt(action)} action · ${fmtInt(urgent)} urgent`;
+  else if(watch) btn.textContent=`Dashboard only · ${fmtInt(watch)} watch · n8n ${budget.used_pct!=null?budget.used_pct+'%':'watch'}`;
+  else btn.textContent='All clear · System Health';
+  btn.title='Click to open System Health and Operator Attention.';
 }
 function kpi(label,value,cls='',sub=''){return `<div class="kpi"><div class="label">${label}</div><div class="value ${cls}">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`}
 function equityBlock(summary){
@@ -2275,6 +2298,7 @@ function bind(){
   document.querySelectorAll('.nav-link').forEach(b=>b.onclick=()=>showView(b.dataset.view));
   document.getElementById('nav-current').onclick=()=>document.getElementById('site-nav').classList.toggle('open');
   document.getElementById('refresh-btn').onclick=()=>load();
+  document.getElementById('header-attention').onclick=()=>showView('research');
   document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
   document.addEventListener('click',e=>{
@@ -2309,7 +2333,7 @@ function ensureValidSelection(){
   if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle && b.target_model===sel.model)) sel.model=books.find(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)?.target_model||'fixed';
 }
 function renderAll(){
-  freshness(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
+  freshness(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
 }
 async function load(){
   const res=await fetch('data.v2.json?ts='+Date.now(),{cache:'no-store'});
