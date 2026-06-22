@@ -1780,6 +1780,7 @@ function renderOperations(){
 function renderResearch(){
   const health=DATA?.health||{};
   const budget=DATA?.n8n_execution_budget||{};
+  const buildStatus=DATA?.codex_build_status||{};
   const reset=DATA?.monday_dashboard_reset_status||{};
   const expansion=DATA?.stock_expansion_readiness||{};
   const preopen=DATA?.monday_preopen_checklist||{};
@@ -1809,6 +1810,20 @@ function renderResearch(){
   let html='';
   html+=cockpitGuideStrip();
   html+=operatorAttentionStrip();
+  if(buildStatus && Object.keys(buildStatus).length){
+    const bsStatus=String(buildStatus.status||'WATCH').toUpperCase();
+    const bsCls=bsStatus==='PASS'||bsStatus==='OK'?'pass':bsStatus==='FAIL'||bsStatus==='ACTION_REQUIRED'?'fail':'watch';
+    html+=`<div class="panel"><h2>Latest Build Note</h2>
+      <div class="section-note">A short Codex handoff note so the dashboard tells you where the build currently stands.</div>
+      <div class="checklist-mini">
+        <div class="checklist-row"><div class="checklist-name">${esc(buildStatus.checkpoint||'Current')}</div><div class="checklist-status ${bsCls}">${esc(bsStatus)}</div><div class="checklist-detail">${esc(buildStatus.title||'Build status')}</div></div>
+        <div class="checklist-row"><div class="checklist-name">Summary</div><div class="checklist-status watch">NOTE</div><div class="checklist-detail">${esc(buildStatus.summary||'No summary published yet.')}</div></div>
+        <div class="checklist-row"><div class="checklist-name">Next gate</div><div class="checklist-status watch">NEXT</div><div class="checklist-detail">${esc(buildStatus.next_action||'Check execution-mode gate before live work.')} · ${esc(buildStatus.next_gate||'gate pending')}</div></div>
+        <div class="checklist-row"><div class="checklist-name">Attention</div><div class="checklist-status pass">POLICY</div><div class="checklist-detail">${esc(buildStatus.attention_policy||'Dashboard for WATCH items; Telegram/email only for urgent blockers.')}</div></div>
+      </div>
+      <div class="small">Source: DATA.codex_build_status · ${esc(buildStatus.report_file||'handoff docs')}</div>
+    </div>`;
+  }
   html+=mondayLiveProofStrip();
   html+=`<div class="panel"><h2>System Health</h2><div class="section-note">Green is okay. Yellow is watch/pending. Red means stop and fix or ask for attention.</div><div class="checklist-mini">${healthRows}</div></div>`;
   html+=mondayResetStatusStrip();
