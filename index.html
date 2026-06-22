@@ -537,10 +537,11 @@ function officialStartMsFor(t){
   const starts=[];
   const base=activeBaselineMs();
   if(base!=null) starts.push(base);
+  starts.push(new Date('2026-06-22T13:30:00Z').getTime());
   if(modelOf(t)==='volatility') starts.push(new Date(VOL_PILOT1_START_AT).getTime());
   return starts.length?Math.max(...starts.filter(Number.isFinite)):0;
 }
-function currentOfficialTrade(t){return tradeTs(t)>=officialStartMsFor(t)}
+function currentOfficialTrade(t){return String(t.asset_class||'').toLowerCase()==='stock' && tradeTs(t)>=officialStartMsFor(t)}
 function selectedBookTrades(b,status){
   const source=status==='OPEN'?openPositions():closedTrades();
   return source
