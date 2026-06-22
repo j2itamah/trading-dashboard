@@ -1823,6 +1823,7 @@ function renderResearch(){
 	  const atrGap=DATA?.atr_gap_monitor||{};
 	  const atrFillGate=DATA?.atr_cache_fill_gate||{};
 	  const atrTargetReview=atrGap?.volatility_target_review||{};
+	  const volTarget=DATA?.volatility_target_realism||{};
 	  const sizingAudit=DATA?.monday_sizing_audit||{};
 	  const batchTrace=DATA?.monday_live_batch_trace||{};
   const panelStatus=(label,status,detail,action)=>{
@@ -1847,7 +1848,7 @@ function renderResearch(){
 	    panelStatus('Live trade batch',batchTrace.status||'WATCH',`${fmtInt(batchTrace.selected_trade_count||0)} checked of ${fmtInt(batchTrace.available_current_day_stock_trades||0)} · ${fmtInt(batchTrace.failure_counts?.duplicate_same_signal_rows||0)} duplicate · ${fmtInt(batchTrace.failure_counts?.not_10pct_of_clean_reset_cash||0)} sizing fail`,batchTrace.next_action||'Latest trade batch trace pending'),
 	    panelStatus('ATR coverage',atrGap.status||'WATCH',`${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)} current-day stock symbols · ${fmtPct((atrGap.coverage_pct||0)/100)} · excluded crypto-like ${fmtInt(atrGap.excluded_crypto_like_row_count||0)}`,atrGap.next_action||'Required before volatility expansion'),
 	    panelStatus('ATR fill gate',atrFillGate.status||'WATCH',`${fmtInt(atrFillGate.missing_symbol_count||0)} missing · IBKR ${esc(atrFillGate.ibkr_preflight_status||'WATCH')}`,atrFillGate.next_action||'Open IBKR paper before ATR dry-run'),
-	    panelStatus('Vol target realism',atrTargetReview.status||'WATCH',`${fmtInt(atrTargetReview.target_cap_20_count||0)} cap-level 20% targets · max ${atrTargetReview.max_target_distance_pct!=null?fmtPct(atrTargetReview.max_target_distance_pct):'--'}`,atrTargetReview.note||'Review before volatility expansion'),
+	    panelStatus('Vol target realism',volTarget.status||atrTargetReview.status||'WATCH',`${fmtInt(volTarget.target_cap_20_count??atrTargetReview.target_cap_20_count??0)} cap-level 20% targets · avg target ${volTarget.avg_target_distance_pct!=null?fmtPct(volTarget.avg_target_distance_pct):atrTargetReview.avg_target_distance_pct!=null?fmtPct(atrTargetReview.avg_target_distance_pct):'--'}`,volTarget.next_action||atrTargetReview.note||'Review before volatility expansion'),
 	    panelStatus('Stock expansion',expansion.status||'NOT_READY',expansion.summary||'Not ready','Blocked until all gates pass')
   ].join('');
   let html='';
@@ -1898,6 +1899,29 @@ function renderResearch(){
       ${notOk.length?`<div class="small"><strong>Not OK:</strong> ${esc(notOk.join(', '))}</div>`:''}
       ${stale.length?`<div class="small"><strong>Stale:</strong> ${esc(stale.join(', '))}</div>`:''}
       <div class="checklist-mini">${sample}</div>
+	    </div>`;
+	  }
+	  if(volTarget && Object.keys(volTarget).length){
+	    const vtStatus=String(volTarget.status||'WATCH').toUpperCase();
+	    const vtBadge=vtStatus==='PASS'?'ready':vtStatus==='FAIL'?'not-ready':'';
+	    const highRows=rows(volTarget.sample_high_targets).slice(0,8).map(r=>`<div class="checklist-row">
+	      <div class="checklist-name">#${esc(r.id||'?')} ${esc(r.asset||'?')} ${esc(r.direction||'')} · ${esc(r.status||'')}</div>
+	      <div class="checklist-status ${r.target_at_cap_20?'fail':'watch'}">${r.target_distance_pct!=null?fmtPct(r.target_distance_pct):'--'}</div>
+	      <div class="checklist-detail">ATR ${r.atr_percent!=null?fmtPct(r.atr_percent):'--'} · stop ${r.stop_distance_pct!=null?fmtPct(r.stop_distance_pct):'--'} · same-day A ${r.same_day_option_a_target_pct!=null?fmtPct(r.same_day_option_a_target_pct):'--'} · B ${r.same_day_option_b_target_pct!=null?fmtPct(r.same_day_option_b_target_pct):'--'}</div>
+	    </div>`).join('');
+	    html+=`<div class="panel">
+	      <h2>Volatility Target Realism</h2>
+	      <div class="section-note">ATR coverage says whether we can calculate volatility. This says whether the resulting target distance is realistic for a same-day / 24h news trade.</div>
+	      <div class="next-action-head"><span>Current target model</span><span class="expansion-badge ${vtBadge}">${esc(vtStatus)}</span></div>
+	      <div class="expansion-grid">
+	        <div class="expansion-stat"><div class="exp-label">Rows</div><div class="exp-value">${fmtInt(volTarget.row_count||0)}</div><div class="small">${fmtInt(volTarget.open_count||0)} open · ${fmtInt(volTarget.closed_count||0)} closed</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Avg Target</div><div class="exp-value ${vtStatus==='FAIL'?'neg-text':'warn-text'}">${volTarget.avg_target_distance_pct!=null?fmtPct(volTarget.avg_target_distance_pct):'--'}</div><div class="small">median ${volTarget.median_target_distance_pct!=null?fmtPct(volTarget.median_target_distance_pct):'--'}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">20% Cap</div><div class="exp-value ${volTarget.target_cap_20_count?'neg-text':'pos-text'}">${fmtInt(volTarget.target_cap_20_count||0)}</div><div class="small">${volTarget.target_cap_20_rate_pct!=null?fmtPct(volTarget.target_cap_20_rate_pct):'--'} of rows</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Same-day Target</div><div class="exp-value">${volTarget.comparison?.option_a_avg_target_pct!=null?fmtPct(volTarget.comparison.option_a_avg_target_pct):'--'} / ${volTarget.comparison?.option_b_avg_target_pct!=null?fmtPct(volTarget.comparison.option_b_avg_target_pct):'--'}</div><div class="small">A/B draft comparison</div></div>
+	      </div>
+	      <div class="small">${esc(volTarget.comparison?.why_it_matters||'Daily ATR does not guarantee one-day directional follow-through.')}</div>
+	      <div class="small"><strong>Next:</strong> ${esc(volTarget.next_action||'Review before volatility expansion.')}</div>
+	      ${highRows?`<h3 style="margin-top:14px">Highest Targets</h3><div class="checklist-mini">${highRows}</div>`:''}
 	    </div>`;
 	  }
 	  if(sizingAudit && Object.keys(sizingAudit).length){
