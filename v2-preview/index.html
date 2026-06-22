@@ -971,10 +971,15 @@ function headerAttention(){
   const codexAction=Number(summary.codex_action_required||0);
   const urgent=Number(summary.urgent||0);
   const watch=Number(summary.watch||0);
+  const attentionItems=rows(attention.items);
+  const firstUserAction=attentionItems.find(item=>String(item.status||'').toUpperCase()==='ACTION_REQUIRED' && String(item.owner||'').toLowerCase()==='user');
+  const firstCodexAction=attentionItems.find(item=>String(item.status||'').toUpperCase()==='ACTION_REQUIRED' && String(item.owner||'codex').toLowerCase()!=='user');
+  const shortLabel=item=>String(item?.label||'action').replace(/^Monday /,'').replace(/execution budget/i,'budget').replace(/clean-reset /i,'');
   const budgetStatus=String(budget.status||'').toUpperCase();
   const cls=action||urgent||status==='ACTION_REQUIRED'||status==='FAIL'||budgetStatus==='ACTION_REQUIRED'?'fail':watch||status==='WATCH'||budgetStatus==='WATCH'?'watch':'pass';
   btn.className=`header-attention ${cls}`;
-  if(userAction) btn.textContent=`Your action · ${fmtInt(userAction)} needed`;
+  if(userAction&&codexAction) btn.textContent=`You: ${shortLabel(firstUserAction)} · Codex: ${shortLabel(firstCodexAction)}`;
+  else if(userAction) btn.textContent=`Your action: ${shortLabel(firstUserAction)}`;
   else if(codexAction||action) btn.textContent=`Codex handling · ${fmtInt(codexAction||action)} repair`;
   else if(urgent) btn.textContent=`Codex handling · ${fmtInt(urgent)} urgent`;
   else if(watch) btn.textContent=`Dashboard only · ${fmtInt(watch)} watch · n8n ${budget.used_pct!=null?budget.used_pct+'%':'watch'}`;
@@ -1816,8 +1821,10 @@ function renderResearch(){
 	  const ibkr=DATA?.ibkr_paper_preflight||{};
 	  const latency=DATA?.monday_readiness_digest?.latency||{};
 	  const atrGap=DATA?.atr_gap_monitor||{};
+	  const atrFillGate=DATA?.atr_cache_fill_gate||{};
 	  const atrTargetReview=atrGap?.volatility_target_review||{};
 	  const sizingAudit=DATA?.monday_sizing_audit||{};
+	  const batchTrace=DATA?.monday_live_batch_trace||{};
   const panelStatus=(label,status,detail,action)=>{
     const s=String(status||'PENDING').toUpperCase();
     const cls=s==='PASS'||s==='OK'||s==='APPLIED'?'pass':s==='FAIL'||s==='ACTION_REQUIRED'?'fail':'watch';
@@ -1837,7 +1844,9 @@ function renderResearch(){
     panelStatus('IBKR paper',ibkr.status||'WATCH',ibkr.next_action||'Paper port not proven','Required before paper mirror'),
     panelStatus('Latency proof',latency.status||'WATCH',`clean=${latency.classification_counts?.clean||0} · rows=${latency.rows_after_cutoff||0}`,'Keep monitoring new stock rows'),
 	    panelStatus('Clean-reset sizing',sizingAudit.status||'WATCH',`${fmtInt(sizingAudit.reset_sizing_failure_count||0)} sizing fail · ${fmtInt(sizingAudit.duplicate_group_count||0)} duplicate groups`,sizingAudit.next_action||'Required before reset/expansion'),
-	    panelStatus('ATR coverage',atrGap.status||'WATCH',`${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)} current-day symbols · ${fmtPct((atrGap.coverage_pct||0)/100)}`,atrGap.next_action||'Required before volatility expansion'),
+	    panelStatus('Live trade batch',batchTrace.status||'WATCH',`${fmtInt(batchTrace.selected_trade_count||0)} checked of ${fmtInt(batchTrace.available_current_day_stock_trades||0)} · ${fmtInt(batchTrace.failure_counts?.duplicate_same_signal_rows||0)} duplicate · ${fmtInt(batchTrace.failure_counts?.not_10pct_of_clean_reset_cash||0)} sizing fail`,batchTrace.next_action||'Latest trade batch trace pending'),
+	    panelStatus('ATR coverage',atrGap.status||'WATCH',`${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)} current-day stock symbols · ${fmtPct((atrGap.coverage_pct||0)/100)} · excluded crypto-like ${fmtInt(atrGap.excluded_crypto_like_row_count||0)}`,atrGap.next_action||'Required before volatility expansion'),
+	    panelStatus('ATR fill gate',atrFillGate.status||'WATCH',`${fmtInt(atrFillGate.missing_symbol_count||0)} missing · IBKR ${esc(atrFillGate.ibkr_preflight_status||'WATCH')}`,atrFillGate.next_action||'Open IBKR paper before ATR dry-run'),
 	    panelStatus('Vol target realism',atrTargetReview.status||'WATCH',`${fmtInt(atrTargetReview.target_cap_20_count||0)} cap-level 20% targets · max ${atrTargetReview.max_target_distance_pct!=null?fmtPct(atrTargetReview.max_target_distance_pct):'--'}`,atrTargetReview.note||'Review before volatility expansion'),
 	    panelStatus('Stock expansion',expansion.status||'NOT_READY',expansion.summary||'Not ready','Blocked until all gates pass')
   ].join('');
@@ -1882,6 +1891,9 @@ function renderResearch(){
 	        <div class="expansion-stat"><div class="exp-label">20% Targets</div><div class="exp-value ${atrGap.volatility_target_review?.target_cap_20_count?'warn-text':'pos-text'}">${fmtInt(atrGap.volatility_target_review?.target_cap_20_count||0)}</div><div class="small">max ${atrGap.volatility_target_review?.max_target_distance_pct!=null?fmtPct(atrGap.volatility_target_review.max_target_distance_pct):'--'}</div></div>
 	      </div>
       <div class="small">${esc(atrGap.next_action||'Keep monitoring ATR coverage.')}</div>
+      ${atrFillGate && Object.keys(atrFillGate).length?`<div class="small"><strong>ATR fill gate:</strong> ${esc(atrFillGate.status||'WATCH')} · ${esc(atrFillGate.next_action||'gate pending')}</div>`:''}
+      ${atrFillGate?.commands?.dry_run?`<div class="small"><strong>Dry-run command:</strong> ${esc(atrFillGate.commands.dry_run)}</div>`:''}
+      ${atrGap.excluded_crypto_like_row_count?`<div class="small"><strong>Excluded crypto-like rows from stock ATR:</strong> ${esc(rows(atrGap.excluded_crypto_like_symbols).join(', ')||String(atrGap.excluded_crypto_like_row_count))} (${fmtInt(atrGap.excluded_crypto_like_row_count)} rows)</div>`:''}
       ${missing.length?`<div class="small"><strong>Missing:</strong> ${esc(missing.join(', '))}</div>`:''}
       ${notOk.length?`<div class="small"><strong>Not OK:</strong> ${esc(notOk.join(', '))}</div>`:''}
       ${stale.length?`<div class="small"><strong>Stale:</strong> ${esc(stale.join(', '))}</div>`:''}
@@ -1914,6 +1926,36 @@ function renderResearch(){
 	      <div class="small">${esc(sizingAudit.next_action||'Keep monitoring clean-reset sizing.')}</div>
 	      ${sampleRows?`<h3 style="margin-top:14px">Spend Mismatches</h3><div class="checklist-mini">${sampleRows}</div>`:''}
 	      ${dupes?`<h3 style="margin-top:14px">Duplicate Same-Signal Groups</h3><div class="checklist-mini">${dupes}</div>`:''}
+	    </div>`;
+	  }
+	  if(batchTrace && Object.keys(batchTrace).length){
+	    const batchStatus=String(batchTrace.status||'WATCH').toUpperCase();
+	    const batchBadge=batchStatus==='PASS'?'ready':batchStatus==='FAIL'?'not-ready':'';
+	    const failures=batchTrace.failure_counts||{};
+	    const warnings=batchTrace.warning_counts||{};
+	    const traceRows=rows(batchTrace.trades).slice(0,8).map(r=>{
+	      const st=String(r.status||'WATCH').toUpperCase();
+	      const cls=st==='PASS'?'pass':st==='FAIL'?'fail':'watch';
+	      const reasons=rows(r.failures).concat(rows(r.warnings)).join(', ')||'no issues';
+	      return `<div class="checklist-row">
+	        <div class="checklist-name">#${esc(r.trade_id||'?')} ${esc(r.asset||'?')} ${esc(r.direction||'')} · ${esc(r.target_model||'')}</div>
+	        <div class="checklist-status ${cls}">${esc(st)}</div>
+	        <div class="checklist-detail">spent ${fmtMoney(r.stake_amount)} · expected clean ${fmtMoney(r.expected_clean_reset_stake)} · ${esc(reasons)}</div>
+	      </div>`;
+	    }).join('');
+	    html+=`<div class="panel">
+	      <h2>Live Trade Batch Trace</h2>
+	      <div class="section-note">Latest market-hours trade audit. This is the compact source of truth before any reset, expansion, or paper mirror.</div>
+	      <div class="next-action-head"><span>Current batch status</span><span class="expansion-badge ${batchBadge}">${esc(batchStatus)}</span></div>
+	      <div class="expansion-grid">
+	        <div class="expansion-stat"><div class="exp-label">Checked</div><div class="exp-value">${fmtInt(batchTrace.selected_trade_count||0)}</div><div class="small">of ${fmtInt(batchTrace.available_current_day_stock_trades||0)} current-day stock rows</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Duplicate Fails</div><div class="exp-value ${failures.duplicate_same_signal_rows?'neg-text':'pos-text'}">${fmtInt(failures.duplicate_same_signal_rows||0)}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Sizing Fails</div><div class="exp-value ${failures.not_10pct_of_clean_reset_cash?'neg-text':'pos-text'}">${fmtInt(failures.not_10pct_of_clean_reset_cash||0)}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Latency Warnings</div><div class="exp-value ${warnings.missing_reference_price_at_news?'warn-text':'pos-text'}">${fmtInt(warnings.missing_reference_price_at_news||0)}</div></div>
+	      </div>
+	      <div class="small">${esc(batchTrace.next_action||'Keep observing live batch trace.')}</div>
+	      <div class="small">Action owner: ${batchStatus==='FAIL'?'Codex/backend repair gated by approval':'No user action unless a red approval item says user approval required'}.</div>
+	      ${traceRows?`<div class="checklist-mini" style="margin-top:12px">${traceRows}</div>`:''}
 	    </div>`;
 	  }
 	  html+=mondayResetStatusStrip();
