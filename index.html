@@ -1461,8 +1461,9 @@ function renderOperations(){
       <div class="next-action-card">
         <div class="next-action-head"><span>Monday First Command</span><span class="expansion-badge ${mondayFirstStatus==='PASS'?'ready':mondayFirstStatus==='FAIL'?'not-ready':''}">${esc(mondayFirstStatus)}</span></div>
         <div class="next-action-main">${esc(mondayFirst.operator_message||'Start with the live standby packet, then continue observation only if it says to continue.')}</div>
-        <code>${esc(mondayFirst.first_command||'python3 foundation_v2/v2_monday_live_standby_packet.py --json')}</code>
-        <code>${esc(mondayFirst.if_first_command_says_continue||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh')}</code>
+        <code>${esc(mondayFirst.first_command||'python3 foundation_v2/v2_execution_mode_gate.py --json')}</code>
+        <code>${esc(mondayFirst.if_first_command_says_continue||'python3 foundation_v2/v2_monday_live_standby_packet.py --json')}</code>
+        <code>${esc(mondayFirst.if_standby_says_continue||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh')}</code>
         <div class="expansion-grid">
           <div class="expansion-stat"><div class="exp-label">Observe</div><div class="exp-value ${mondayFirstDecisions.safe_to_observe?'pos-text':'warn-text'}">${mondayFirstDecisions.safe_to_observe?'ALLOWED':'WAIT'}</div></div>
           <div class="expansion-stat"><div class="exp-label">Paper Order</div><div class="exp-value ${mondayFirstDecisions.paper_order_allowed?'neg-text':'pos-text'}">${mondayFirstDecisions.paper_order_allowed?'ALLOWED':'BLOCKED'}</div></div>
