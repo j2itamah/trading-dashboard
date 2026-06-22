@@ -1227,10 +1227,11 @@ function operatorAttentionStrip(){
       <div class="expansion-stat"><div class="exp-label">Urgent</div><div class="exp-value ${urgent?'neg-text':'pos-text'}">${fmtInt(urgent)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value ${watch?'warn-text':'pos-text'}">${fmtInt(watch)}</div></div>
       <div class="expansion-stat"><div class="exp-label">n8n Used</div><div class="exp-value ${budget.status==='ACTION_REQUIRED'?'neg-text':budget.status==='WATCH'?'warn-text':'pos-text'}">${budget.used_pct!=null?esc(budget.used_pct+'%'):'--'}</div><div class="small">${budget.remaining_estimate!=null?esc('~'+budget.remaining_estimate+' left'):'pending'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">To Action</div><div class="exp-value ${Number(budget.remaining_to_action||0)<=0?'neg-text':Number(budget.remaining_to_action||0)<500?'warn-text':'pos-text'}">${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'--'}</div><div class="small">90% at ${budget.action_threshold_used!=null?fmtInt(budget.action_threshold_used):'--'} · urgent in ${budget.remaining_to_urgent!=null?fmtInt(budget.remaining_to_urgent):'--'}</div></div>
       <div class="expansion-stat"><div class="exp-label">User Surface</div><div class="exp-value">Dashboard</div><div class="small">${esc(surfaces.urgent||'Telegram')} urgent · ${esc(surfaces.fallback||'email')} fallback</div></div>
     </div>
     <div class="checklist-mini">${visible||'<div class="empty">No operator attention items.</div>'}</div>
-    <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')}.</div>
+    <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')} · action threshold remaining ${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'pending'}.</div>
     <div class="small">${esc(policy.telegram||'Telegram only for urgent operator blockers.')}</div>
     <div class="small">Source: DATA.operator_attention + DATA.n8n_execution_budget · user does not need n8n/Supabase/backend access.</div>
   </div>`;
