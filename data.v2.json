@@ -1,6 +1,6 @@
 {
   "health": {
-    "checked_at": "2026-06-22T13:26:51.073907+00:00",
+    "checked_at": "2026-06-22T13:28:58.399811+00:00",
     "active_books": 2,
     "accounting_ok": true,
     "books_with_drift": 0
@@ -10811,7 +10811,7 @@
       "source_filter_status": "public_safe"
     }
   ],
-  "generated_at": "2026-06-22T13:26:51.073907+00:00",
+  "generated_at": "2026-06-22T13:28:58.399811+00:00",
   "prop_summary": {
     "account_count": 2,
     "reporting_date": "2026-06-22",
@@ -15203,7 +15203,7 @@
     }
   ],
   "shadow_health": {
-    "checked_at": "2026-06-22T13:26:51.073907+00:00",
+    "checked_at": "2026-06-22T13:28:58.399811+00:00",
     "audit_errors": 0,
     "audit_success": 330,
     "shadow_status": "OK",
@@ -22924,8 +22924,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 1647.4,
-      "source_freshness_reason": "Newest source event age 1647.4m > 120m",
+      "source_age_minutes": 1649.5,
+      "source_freshness_reason": "Newest source event age 1649.5m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -22962,8 +22962,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 2442.4,
-      "source_freshness_reason": "Newest source event age 2442.4m > 120m",
+      "source_age_minutes": 2444.5,
+      "source_freshness_reason": "Newest source event age 2444.5m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -23100,8 +23100,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 2487.4,
-      "source_freshness_reason": "Newest source event age 2487.4m > 120m",
+      "source_age_minutes": 2489.5,
+      "source_freshness_reason": "Newest source event age 2489.5m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -23213,8 +23213,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 4797.4,
-      "source_freshness_reason": "Newest source event age 4797.4m > 120m",
+      "source_age_minutes": 4799.5,
+      "source_freshness_reason": "Newest source event age 4799.5m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -23247,7 +23247,7 @@
   ],
   "cryptolab_source_hygiene": {
     "status": "PASS",
-    "checked_at": "2026-06-22T13:27:16.780676+00:00",
+    "checked_at": "2026-06-22T13:29:23.398916+00:00",
     "signal_scores_before": 50,
     "signal_scores_after": 8,
     "x_events_before": 100,
@@ -25795,7 +25795,7 @@
     ],
     "monitor": {
       "status": "PASS",
-      "checked_at": "2026-06-22T13:27:28.179060+00:00",
+      "checked_at": "2026-06-22T13:29:34.844470+00:00",
       "cp14_active": true,
       "cp14_schedule": "every 10 minutes",
       "latest_cp14_execution_id": "8864",
@@ -25805,13 +25805,13 @@
     },
     "health": {
       "status": "PASS",
-      "last_checked_at": "2026-06-22T13:27:28.179177+00:00",
+      "last_checked_at": "2026-06-22T13:29:34.844632+00:00",
       "open_trade_count": 1,
       "closed_trade_count": 10,
       "new_error_count": 0,
       "mark_freshness": {
         "status": "PASS",
-        "max_age_minutes": 7.4,
+        "max_age_minutes": 9.5,
         "threshold_minutes": 20
       },
       "reconciliation": {
@@ -25859,7 +25859,7 @@
     },
     "readiness": {
       "status": "NOT_READY",
-      "last_checked_at": "2026-06-22T13:27:28.179291+00:00",
+      "last_checked_at": "2026-06-22T13:29:34.844727+00:00",
       "summary": "Not ready: Trade sample size: 11 total / 10 closed (need 25 total / 20 closed); Observation window: 2.6 days (need 7 days); Health stability: unstable: streak 0/7 snapshots, 0.0/7 days",
       "thresholds": {
         "min_closed_trades": 20,
@@ -25920,7 +25920,7 @@
           "id": "mark_freshness",
           "label": "Mark freshness",
           "status": "PASS",
-          "actual": "7.4 min",
+          "actual": "9.5 min",
           "required": "<= 20 min",
           "notes": []
         },
@@ -25953,8 +25953,16 @@
         "snapshot_count": 50,
         "stable_pass_streak_snapshots": 0,
         "stable_pass_streak_days": 0.0,
-        "latest_snapshot_at": "2026-06-22T13:23:52.570426+00:00",
+        "latest_snapshot_at": "2026-06-22T13:27:29.594878+00:00",
         "recent": [
+          {
+            "captured_at": "2026-06-22T13:27:29.594878+00:00",
+            "overall_status": "NOT_READY",
+            "health_status": "PASS",
+            "blocker_count": 3,
+            "warning_count": 0,
+            "latest_execution_id": "8864"
+          },
           {
             "captured_at": "2026-06-22T13:23:52.570426+00:00",
             "overall_status": "NOT_READY",
@@ -26026,21 +26034,13 @@
             "blocker_count": 3,
             "warning_count": 0,
             "latest_execution_id": "8846"
-          },
-          {
-            "captured_at": "2026-06-22T12:49:26.001405+00:00",
-            "overall_status": "NOT_READY",
-            "health_status": "PASS",
-            "blocker_count": 3,
-            "warning_count": 0,
-            "latest_execution_id": "8841"
           }
         ]
       }
     }
   },
   "ibkr_paper_preflight": {
-    "checked_at": "2026-06-22T13:27:28.520338+00:00",
+    "checked_at": "2026-06-22T13:29:35.241263+00:00",
     "expected_account": "DUQ523641",
     "ibkr_app": {
       "process_count": 0,
@@ -26068,24 +26068,24 @@
     "status": "WATCH",
     "source": "foundation_v2/v2_ibkr_paper_preflight.py",
     "exit_code": 0,
-    "command": "/Library/Developer/CommandLineTools/usr/bin/python3 /Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_ibkr_paper_preflight.py --json"
+    "command": "/Library/Developer/CommandLineTools/usr/bin/python3 /Users/riipen/.local/bin/v2_ibkr_paper_preflight.py --json"
   },
   "telegram_delivery_probe": {
     "status": "PASS",
     "source": "foundation_v2/v2_telegram_delivery_probe.py",
     "exit_code": 0,
     "command": "/usr/bin/python3 /Users/riipen/.local/bin/v2_telegram_delivery_probe.py",
-    "checked_at": "2026-06-22T13:27:28.570898+00:00",
+    "checked_at": "2026-06-22T13:29:35.293959+00:00",
     "env_source": "/Users/riipen/.telegram_codex_relay_env",
     "telegram_env_present": true,
     "send_enabled": false,
     "delivery": "not_sent_dry_run",
     "reason": null,
     "expected_env_file": null,
-    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T13:27:28.571015+00:00",
+    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T13:29:35.294061+00:00",
     "next_action": "Local Telegram urgent-send path is configured; use --send only for an approved proof message.",
     "raw_status": "READY",
-    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-22T13:27:28.570898+00:00\nenv_source=/Users/riipen/.telegram_codex_relay_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=n8n_relay\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T13:27:28.571015+00:00\n",
+    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-22T13:29:35.293959+00:00\nenv_source=/Users/riipen/.telegram_codex_relay_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=n8n_relay\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T13:29:35.294061+00:00\n",
     "safety": {
       "send_enabled": false,
       "telegram_send": "not sent",
@@ -26097,7 +26097,7 @@
     }
   },
   "n8n_execution_budget": {
-    "checked_at": "2026-06-22T13:27:28.574166+00:00",
+    "checked_at": "2026-06-22T13:29:35.297211+00:00",
     "status": "WATCH",
     "severity": "dashboard",
     "quota": 10000,
@@ -26112,8 +26112,8 @@
     "estimated_hourly_burn": 34.08,
     "hours_to_action_threshold": 3.9,
     "hours_to_urgent_threshold": 18.6,
-    "action_threshold_eta": "2026-06-22T17:21:36.495926+00:00",
-    "urgent_threshold_eta": "2026-06-23T08:01:48.231868+00:00",
+    "action_threshold_eta": "2026-06-22T17:23:43.218971+00:00",
+    "urgent_threshold_eta": "2026-06-23T08:03:54.954913+00:00",
     "burn_estimate_source": "CP209 major known active scheduled workflows estimate",
     "latest_execution_id": 8867,
     "latest_execution_started_at": "2026-06-22T13:25:25.062Z",
@@ -26133,8 +26133,8 @@
       "estimated_hourly_burn": 34.08,
       "hours_to_action_threshold": 3.9,
       "hours_to_urgent_threshold": 18.6,
-      "action_threshold_eta": "2026-06-22T17:21:36.495926+00:00",
-      "urgent_threshold_eta": "2026-06-23T08:01:48.231868+00:00",
+      "action_threshold_eta": "2026-06-22T17:23:43.218971+00:00",
+      "urgent_threshold_eta": "2026-06-23T08:03:54.954913+00:00",
       "source": "CP209 major known active scheduled workflows estimate"
     },
     "next_action": "Budget is high and may reach the action threshold within about 3.9h at the CP209 burn estimate. Keep checks lightweight; prepare to top up or approve Execution Saver Mode if it hits ACTION_REQUIRED.",
@@ -26156,11 +26156,11 @@
     "status": "PASS",
     "source": "foundation_v2/run_v2_monday_safe_observation.sh",
     "contract_source": "foundation_v2/v2_monday_safe_observation_wrapper_check.py",
-    "wrapper_source": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/run_v2_monday_safe_observation.sh",
-    "contract_source_path": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_wrapper_check.py",
+    "wrapper_source": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/run_v2_monday_safe_observation.sh",
+    "contract_source_path": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_wrapper_check.py",
     "wrapper_command": "bash foundation_v2/run_v2_monday_safe_observation.sh",
     "check_mode": "static_contract",
-    "checked_at": "2026-06-22T13:27:28.931615+00:00",
+    "checked_at": "2026-06-22T13:29:35.648533+00:00",
     "unsafe_args_refused": true,
     "safe_banner": true,
     "telegram_send_disabled": true,
@@ -26170,9 +26170,9 @@
       "label": "com.v2monday.safe-observation",
       "runner": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
       "local_runner": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
-      "runner_source": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
+      "runner_source": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
       "template": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/com.v2monday.safe-observation.plist.template",
-      "template_source": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/com.v2monday.safe-observation.plist.template",
+      "template_source": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/com.v2monday.safe-observation.plist.template",
       "installed_plist": "/Users/riipen/Library/LaunchAgents/com.v2monday.safe-observation.plist",
       "installed": false,
       "loaded": false,
@@ -26218,7 +26218,7 @@
   },
   "stock_expansion_readiness": {
     "status": "NOT_READY",
-    "checked_at": "2026-06-22T13:27:28.940199+00:00",
+    "checked_at": "2026-06-22T13:29:35.671028+00:00",
     "expansion_allowed": false,
     "ready_for_user_approval": false,
     "summary": "Expansion blocked: Volatility evidence complete: 0/30 closed; review_status=collecting_evidence; Post-fix stock latency proven: 0 clean / 0 post-fix stock rows; classes={'observation_pending': 0}; Monday live observation: pending until 2026-06-22T13:30:00Z; IBKR paper proof: No IBKR Gateway/TWS process or paper API port detected. Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.; User expansion approval: requires exact approved expansion packet",
@@ -27174,7 +27174,7 @@
       "action": "run_standby_packet",
       "message": "Pre-open boost window: run standby before bounded observation.",
       "phase": "PRE_OPEN",
-      "minutes_to_next_open": 3,
+      "minutes_to_next_open": 1,
       "preopen_boost_starts_at": "2026-06-22T13:15:00+00:00",
       "minutes_until_preopen_boost": 0,
       "next_command": "python3 foundation_v2/v2_monday_live_standby_packet.py --json",
@@ -27187,7 +27187,7 @@
     "required_approval_phrase": null
   },
   "monday_readiness_digest": {
-    "checked_at": "2026-06-22T13:27:28.943742+00:00",
+    "checked_at": "2026-06-22T13:29:35.677841+00:00",
     "mode": "published",
     "status": "FAIL",
     "next_safe_action": {
@@ -27217,7 +27217,7 @@
       "next_action": "latency proof is present; keep monitoring for failures and stale references"
     },
     "published_json": {
-      "generated_at": "2026-06-22T13:26:51.073907+00:00",
+      "generated_at": "2026-06-22T13:28:58.399811+00:00",
       "key_count": 36,
       "accounting_ok": true,
       "books_with_drift": 0
@@ -27261,7 +27261,7 @@
   },
   "monday_live_proof": {
     "status": "WAITING",
-    "checked_at": "2026-06-22T13:27:29.135602+00:00",
+    "checked_at": "2026-06-22T13:29:35.984246+00:00",
     "source": "published open_positions, closed_trades, latency, and monday_current_day_candidate",
     "monday_open_at": "2026-06-22T13:30:00Z",
     "official_baseline_key": "official_2026_06_22_monday_dashboard_zero_start",
@@ -27335,7 +27335,7 @@
     }
   },
   "monday_preopen_checklist": {
-    "checked_at": "2026-06-22T13:27:28.944037+00:00",
+    "checked_at": "2026-06-22T13:29:35.678426+00:00",
     "mode": "published",
     "status": "FAIL",
     "summary": {
@@ -27367,7 +27367,7 @@
       {
         "name": "published_json",
         "status": "PASS",
-        "detail": "assembled_keys_pre_checklist=39; missing_evidence=[]; generated_at=2026-06-22T13:26:51.073907+00:00; accounting_ok=True; books_with_drift=0",
+        "detail": "assembled_keys_pre_checklist=39; missing_evidence=[]; generated_at=2026-06-22T13:28:58.399811+00:00; accounting_ok=True; books_with_drift=0",
         "action": "Continue."
       },
       {
@@ -27415,7 +27415,7 @@
       {
         "name": "telegram_delivery_probe",
         "status": "PASS",
-        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-22T13:27:28.570898+00:00",
+        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-22T13:29:35.293959+00:00",
         "action": "Urgent Telegram path is configured for approved sends; no message sent."
       },
       {
@@ -27456,7 +27456,7 @@
     }
   },
   "monday_operator_runbook": {
-    "checked_at": "2026-06-22T13:27:28.944052+00:00",
+    "checked_at": "2026-06-22T13:29:35.678452+00:00",
     "status": "PASS",
     "mode": "read_only_operator_runbook",
     "primary_coordination_chat": "Understand GitHub and ledger updates",
@@ -27604,12 +27604,12 @@
     "status": "WATCH",
     "phase": "PRE_OPEN",
     "stock_market_open": false,
-    "checked_at": "2026-06-22T13:27:28.944057+00:00",
-    "current_utc": "2026-06-22T13:27:28.944057+00:00",
-    "current_et": "2026-06-22T09:27:28.944057-04:00",
-    "current_mdt": "2026-06-22T07:27:28.944057-06:00",
-    "current_et_label": "Mon Jun 22, 2026 9:27 AM ET",
-    "current_mdt_label": "Mon Jun 22, 2026 7:27 AM MDT",
+    "checked_at": "2026-06-22T13:29:35.678459+00:00",
+    "current_utc": "2026-06-22T13:29:35.678459+00:00",
+    "current_et": "2026-06-22T09:29:35.678459-04:00",
+    "current_mdt": "2026-06-22T07:29:35.678459-06:00",
+    "current_et_label": "Mon Jun 22, 2026 9:29 AM ET",
+    "current_mdt_label": "Mon Jun 22, 2026 7:29 AM MDT",
     "next_open_at": "2026-06-22T13:30:00+00:00",
     "next_open_et": "2026-06-22T09:30:00-04:00",
     "next_open_mdt": "2026-06-22T07:30:00-06:00",
@@ -27618,8 +27618,8 @@
     "next_close_et": "2026-06-22T16:00:00-04:00",
     "next_close_mdt": "2026-06-22T14:00:00-06:00",
     "next_close_label": "Mon Jun 22, 2026 4:00 PM ET",
-    "minutes_to_next_open": 3,
-    "minutes_to_next_close": 393,
+    "minutes_to_next_open": 1,
+    "minutes_to_next_close": 391,
     "preopen_boost_window_minutes": 15,
     "preopen_boost_starts_at": "2026-06-22T13:15:00+00:00",
     "preopen_boost_starts_et": "2026-06-22T09:15:00-04:00",
@@ -27646,7 +27646,7 @@
     "source": "publisher clock + DATA.monday_next_action + DATA.monday_preopen_checklist"
   },
   "monday_dashboard_reset_status": {
-    "checked_at": "2026-06-22T13:27:29.135527+00:00",
+    "checked_at": "2026-06-22T13:29:35.983941+00:00",
     "status": "PASS",
     "state": "applied",
     "operator_message": "Monday dashboard reset is applied. Official Operations should show the Monday baseline window.",
@@ -27691,7 +27691,7 @@
     }
   },
   "monday_first_command_packet": {
-    "checked_at": "2026-06-22T13:27:29.135557+00:00",
+    "checked_at": "2026-06-22T13:29:35.984064+00:00",
     "status": "FAIL",
     "operator_message": "Stop. Fix hard failures before Monday observation.",
     "first_command": "python3 foundation_v2/v2_monday_live_standby_packet.py --json",
@@ -27722,7 +27722,7 @@
       "execution_profile": "quality_first_premarket",
       "observation_cadence": "boost_near_open",
       "guidance": "Run the standby packet, then bounded observation and publisher refresh if safe; higher freshness is worth the executions.",
-      "minutes_to_next_open": 3
+      "minutes_to_next_open": 1
     },
     "stock_expansion_preflight": {
       "command": "python3 foundation_v2/v2_stock_expansion_preflight_bundle.py --json",
@@ -27785,7 +27785,7 @@
     },
     "published_evidence": {
       "data_path": "/tmp/data.v2.json",
-      "generated_at": "2026-06-22T13:26:51.073907+00:00",
+      "generated_at": "2026-06-22T13:28:58.399811+00:00",
       "key_count": 47,
       "health_status": "PASS",
       "preopen_status": "FAIL",
@@ -27844,7 +27844,7 @@
     }
   },
   "monday_operator_evidence_index": {
-    "checked_at": "2026-06-22T13:27:29.135593+00:00",
+    "checked_at": "2026-06-22T13:29:35.984206+00:00",
     "status": "FAIL",
     "summary": {
       "pass": 3,
@@ -27852,7 +27852,7 @@
       "fail": 1
     },
     "data_path": "/tmp/data.v2.json",
-    "generated_at": "2026-06-22T13:26:51.073907+00:00",
+    "generated_at": "2026-06-22T13:28:58.399811+00:00",
     "runbook_status": "PASS",
     "next_safe_action": {
       "status": "FAIL",
@@ -28004,6 +28004,37 @@
     }
   },
   "publisher_runs": [
+    {
+      "id": 557,
+      "run_id": "3dd0d7f5-bd50-4d68-ad63-39caf074aa22",
+      "source": "python_publisher",
+      "status": "success",
+      "started_at": "2026-06-22T13:26:50.798357+00:00",
+      "completed_at": "2026-06-22T13:27:29.152368+00:00",
+      "duration_ms": 38811,
+      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json",
+      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
+      "output_secondary_tmp": "/tmp/data.v2.json",
+      "generated_at": "2026-06-22T13:26:50.341188+00:00",
+      "key_count": 48,
+      "required_key_count": 24,
+      "missing_required_keys": [],
+      "bytes_written": 1124272,
+      "sha256": "d51b11462291026f72fea0ac8a3f829e693fcf932cf6eeea8b0716e6b1b23c56",
+      "accounting_ok": true,
+      "books_with_drift": 0,
+      "crypto_lab_trade_count": 11,
+      "crypto_lab_open_count": 1,
+      "crypto_lab_closed_count": 10,
+      "crypto_lab_account_count": 5,
+      "validation_passed": true,
+      "copied_dashboard": true,
+      "copied_tmp": true,
+      "error_message": null,
+      "metadata": {
+        "source": "python_publisher"
+      }
+    },
     {
       "id": 556,
       "run_id": "4b1c920e-b33e-48a6-893a-b373f38fb779",
@@ -28747,41 +28778,10 @@
       "metadata": {
         "source": "python_publisher"
       }
-    },
-    {
-      "id": 532,
-      "run_id": "7b9160d6-a2ff-4816-9253-70770c76f3d4",
-      "source": "python_publisher",
-      "status": "success",
-      "started_at": "2026-06-22T12:00:10.062371+00:00",
-      "completed_at": "2026-06-22T12:00:49.989436+00:00",
-      "duration_ms": 40523,
-      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json",
-      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
-      "output_secondary_tmp": "/tmp/data.v2.json",
-      "generated_at": "2026-06-22T12:00:09.465915+00:00",
-      "key_count": 48,
-      "required_key_count": 24,
-      "missing_required_keys": [],
-      "bytes_written": 1105451,
-      "sha256": "61cb40c4cae6ff97142d68511031b60f516d3b6b8913b5e2107791e38cddaee3",
-      "accounting_ok": true,
-      "books_with_drift": 0,
-      "crypto_lab_trade_count": 11,
-      "crypto_lab_open_count": 2,
-      "crypto_lab_closed_count": 9,
-      "crypto_lab_account_count": 5,
-      "validation_passed": true,
-      "copied_dashboard": true,
-      "copied_tmp": true,
-      "error_message": null,
-      "metadata": {
-        "source": "python_publisher"
-      }
     }
   ],
   "operator_attention": {
-    "checked_at": "2026-06-22T13:27:29.135444+00:00",
+    "checked_at": "2026-06-22T13:29:35.983633+00:00",
     "status": "ACTION_REQUIRED",
     "attention_required": true,
     "summary": {
@@ -28847,7 +28847,7 @@
     }
   },
   "codex_build_status": {
-    "last_updated": "2026-06-22T12:49:00+00:00",
+    "last_updated": "2026-06-22T13:29:35.985099+00:00",
     "checkpoint": "CP274",
     "title": "Pre-open standby respects quiet prep",
     "status": "WATCH",
@@ -28864,7 +28864,6 @@
       "x_api_call": false,
       "telegram_send": false
     },
-    "source_file": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/CODEX_DASHBOARD_STATUS.json",
-    "published_at": "2026-06-22T13:27:29.135870+00:00"
+    "load_error": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/CODEX_DASHBOARD_STATUS.json: [Errno 1] Operation not permitted: '/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/CODEX_DASHBOARD_STATUS.json'; /Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/CODEX_DASHBOARD_STATUS.json: [Errno 1] Operation not permitted: '/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/CODEX_DASHBOARD_STATUS.json'"
   }
 }
