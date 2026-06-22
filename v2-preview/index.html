@@ -1196,6 +1196,43 @@ function marketClockStrip(){
     <div class="small">Source: DATA.market_clock · ${esc(clock.regular_session||'09:30-16:00 ET')} · ${esc(clock.holiday_calendar||'market calendar')}</div>
   </div>`;
 }
+function operatorAttentionStrip(){
+  const attention=DATA?.operator_attention||{};
+  const status=String(attention.status||'PENDING').toUpperCase();
+  const summary=attention.summary||{};
+  const items=rows(attention.items);
+  const policy=attention.notification_policy||{};
+  const surfaces=attention.user_surfaces||{};
+  const urgent=Number(summary.urgent||0);
+  const action=Number(summary.action_required||0);
+  const watch=Number(summary.watch||0);
+  const visible=items.slice(0,5).map(item=>{
+    const s=String(item.status||'PENDING').toUpperCase();
+    const cls=s==='PASS'?'pass':s==='ACTION_REQUIRED'||s==='FAIL'?'fail':'watch';
+    const channels=rows(item.notify_channels).join(', ')||'dashboard';
+    return `<div class="checklist-row">
+      <div class="checklist-name">${esc(item.label||item.id||'Attention item')}</div>
+      <div class="checklist-status ${cls}">${esc(s)}</div>
+      <div class="checklist-detail">${esc(item.detail||'No detail.')} · ${esc(item.next_action||'No action.')} · Notify: ${esc(channels)}</div>
+    </div>`;
+  }).join('');
+  const badgeClass=status==='PASS'?'ready':status==='ACTION_REQUIRED'?'not-ready':'';
+  const main=action?`${fmtInt(action)} action needed`:`${fmtInt(urgent)} urgent · ${fmtInt(watch)} watch`;
+  return `<div class="next-action-card compact-boundary-card operator-attention-card">
+    <div class="next-action-head"><span>Operator Attention</span><span class="expansion-badge ${badgeClass}">${esc(status)}</span></div>
+    <div class="next-action-main">${esc(main)}</div>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">Action</div><div class="exp-value ${action?'neg-text':'pos-text'}">${fmtInt(action)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Urgent</div><div class="exp-value ${urgent?'neg-text':'pos-text'}">${fmtInt(urgent)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value ${watch?'warn-text':'pos-text'}">${fmtInt(watch)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">User Surface</div><div class="exp-value">Dashboard</div><div class="small">${esc(surfaces.urgent||'Telegram')} urgent · ${esc(surfaces.fallback||'email')} fallback</div></div>
+    </div>
+    <div class="checklist-mini">${visible||'<div class="empty">No operator attention items.</div>'}</div>
+    <div class="small">Budget watch includes n8n execution budget once quota evidence is wired.</div>
+    <div class="small">${esc(policy.telegram||'Telegram only for urgent operator blockers.')}</div>
+    <div class="small">Source: DATA.operator_attention · user does not need n8n/Supabase/backend access.</div>
+  </div>`;
+}
 function checklistItemByName(checklist,name){
   const found=rows(checklist.items).find(item=>item.name===name);
   return found||{};
@@ -1327,6 +1364,7 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
   html+=operationsGlance(bookOpen, bookClosed, b);
+  html+=operatorAttentionStrip();
   html+=marketClockStrip();
   html+=approvalBoundaryStrip();
   html+=preOpenChecklistStrip();
