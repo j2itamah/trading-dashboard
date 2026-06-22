@@ -1198,6 +1198,7 @@ function marketClockStrip(){
 }
 function operatorAttentionStrip(){
   const attention=DATA?.operator_attention||{};
+  const budget=DATA?.n8n_execution_budget||{};
   const status=String(attention.status||'PENDING').toUpperCase();
   const summary=attention.summary||{};
   const items=rows(attention.items);
@@ -1225,12 +1226,13 @@ function operatorAttentionStrip(){
       <div class="expansion-stat"><div class="exp-label">Action</div><div class="exp-value ${action?'neg-text':'pos-text'}">${fmtInt(action)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Urgent</div><div class="exp-value ${urgent?'neg-text':'pos-text'}">${fmtInt(urgent)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value ${watch?'warn-text':'pos-text'}">${fmtInt(watch)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">n8n Used</div><div class="exp-value ${budget.status==='ACTION_REQUIRED'?'neg-text':budget.status==='WATCH'?'warn-text':'pos-text'}">${budget.used_pct!=null?esc(budget.used_pct+'%'):'--'}</div><div class="small">${budget.remaining_estimate!=null?esc('~'+budget.remaining_estimate+' left'):'pending'}</div></div>
       <div class="expansion-stat"><div class="exp-label">User Surface</div><div class="exp-value">Dashboard</div><div class="small">${esc(surfaces.urgent||'Telegram')} urgent · ${esc(surfaces.fallback||'email')} fallback</div></div>
     </div>
     <div class="checklist-mini">${visible||'<div class="empty">No operator attention items.</div>'}</div>
-    <div class="small">Budget watch includes n8n execution budget once quota evidence is wired.</div>
+    <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')}.</div>
     <div class="small">${esc(policy.telegram||'Telegram only for urgent operator blockers.')}</div>
-    <div class="small">Source: DATA.operator_attention · user does not need n8n/Supabase/backend access.</div>
+    <div class="small">Source: DATA.operator_attention + DATA.n8n_execution_budget · user does not need n8n/Supabase/backend access.</div>
   </div>`;
 }
 function checklistItemByName(checklist,name){
