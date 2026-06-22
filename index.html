@@ -206,7 +206,7 @@
   .target-health-bars .tp{background:var(--green)}
   .target-health-bars .sl{background:var(--red)}
   .target-health-bars .time{background:var(--accent)}
-  .ops-glance{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;margin:0 0 18px}
+  .ops-glance{display:grid;grid-template-columns:1fr;gap:14px;margin:0 0 18px}
   .ops-glance-card{border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);padding:14px}
   .ops-glance-title{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.75px;color:var(--ink-soft);margin-bottom:10px}
   .ops-glance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -215,6 +215,9 @@
   .ops-glance-stat span{display:block;font:700 9.5px/1.25 'Spline Sans Mono',monospace;text-transform:uppercase;color:var(--ink-soft);letter-spacing:.45px;margin-top:4px}
   .ops-mini-bars{margin-top:12px}
   .ops-mini-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font:700 10.5px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.45px;margin-top:8px}
+  .ops-capital-line{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid rgba(35,31,26,.08);font:700 10.5px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.45px}
+  .ops-capital-line span{white-space:nowrap}
+  .ops-capital-line strong{color:var(--ink);font-weight:900}
   .ops-progress-track{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:5px;display:flex}
   .ops-progress-track .open{background:var(--green);height:100%}
   .ops-progress-track .closed{background:var(--accent);height:100%}
@@ -314,7 +317,6 @@
     .title-block h1{font-size:28px}
     .updated{text-align:left}
     .equity-summary,.grid,.three-grid{grid-template-columns:1fr}
-    .ops-glance{grid-template-columns:1fr}
     .ops-glance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .kpis{grid-template-columns:repeat(2,1fr)}
     .portfolio-toggle{border-radius:14px}
@@ -761,13 +763,8 @@ function operationsGlance(open, closed, book){
   const selectedDeployed=deployedCash(open);
   const freeCash=Number(display.free_cash ?? (start+s.realized-selectedDeployed));
   const markedEquity=Number(display.marked_equity ?? (start+selectedPnl));
-  const bookDeployed=Number(display.deployed ?? selectedDeployed);
-  const positionEquity=Number(display.position_equity ?? Math.max(0,markedEquity-freeCash));
   const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? selectedPnl);
   const realized=Number(s.realized||0);
-  const capitalNote=book?.shared_lifecycle_book
-    ? `${esc(LIFE_LABELS[book.lifecycle]||book.lifecycle)} reset-window rows are shown above. Backend shared-book history remains archived outside this view.`
-    : 'Capital below is the official reset-window view. Backend history remains archived outside this view.';
   return `<div class="ops-glance">
     <div class="ops-glance-card">
       <div class="ops-glance-title">Since reset · ${esc(LIFE_LABELS[book?.lifecycle]||book?.lifecycle||'selected')}</div>
@@ -780,18 +777,12 @@ function operationsGlance(open, closed, book){
         <div class="ops-glance-stat"><strong class="${signCls(realized)}">${realized>=0?'+':''}${fmtMoney(realized)}</strong><span>realized P/L</span></div>
       </div>
       ${topVisualBars(s)}
-    </div>
-    <div class="ops-glance-card">
-      <div class="ops-glance-title">Reset capital · official view</div>
-      <div class="ops-glance-grid">
-        <div class="ops-glance-stat"><strong>${fmtMoney(freeCash)}</strong><span>free cash</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(positionEquity)}</strong><span>in positions</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(markedEquity)}</strong><span>marked equity</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(bookDeployed)}</strong><span>reset deployed</span></div>
+      <div class="ops-capital-line">
+        <span>Cash <strong>${fmtMoney(freeCash)}</strong></span>
+        <span>Deployed <strong>${fmtMoney(selectedDeployed)}</strong></span>
+        <span>Equity <strong>${fmtMoney(markedEquity)}</strong></span>
       </div>
-      <div class="small" style="margin-top:10px">${capitalNote} Pre-reset trades remain archived.</div>
     </div>
-    ${targetHealthPanel(open.concat(closed), sel.model)}
   </div>`;
 }
 function modelPerformancePanel(){
