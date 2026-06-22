@@ -1414,10 +1414,10 @@ function renderOperations(){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
-  html+=operationsGlance(bookOpen, bookClosed, b);
   html+=operatorAttentionStrip();
-  html+=marketClockStrip();
   html+=mondayResetStatusStrip();
+  html+=marketClockStrip();
+  html+=operationsGlance(bookOpen, bookClosed, b);
   html+=approvalBoundaryStrip();
   html+=preOpenChecklistStrip();
   html+=operatorRunbookStrip();
