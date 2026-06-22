@@ -1296,8 +1296,8 @@ function operatorRunbookStrip(){
   const status=String(runbook.status||'PENDING').toUpperCase();
   const seq=rows(runbook.sequence);
   const phrases=runbook.approval_phrases||{};
-  const firstCommand=(seq[0]&&seq[0].command)||'python3 foundation_v2/v2_monday_live_standby_packet.py --json';
-  const order=seq.map(s=>s.name).filter(Boolean).join(' → ')||'standby_packet → bounded_observation → ibkr_paper_preflight';
+  const firstCommand=(seq[0]&&seq[0].command)||'python3 foundation_v2/v2_public_dashboard_cockpit_check.py';
+  const order=seq.map(s=>s.name).filter(Boolean).join(' → ')||'public_dashboard_cockpit → standby_packet → bounded_observation → ibkr_paper_preflight';
   const stepRows=seq.map(s=>`<div class="checklist-row">
     <div class="checklist-name">${fmtInt(s.step||0)} · ${esc(String(s.name||'step').replaceAll('_',' '))}</div>
     <div class="checklist-status ${s.approval_required?'watch':'pass'}">${s.approval_required?'APPROVAL':'READ'}</div>
@@ -1333,7 +1333,7 @@ function operatorEvidenceIndexStrip(){
     </div>`;
   }).join('');
   const blocked=idxRows.filter(r=>['BLOCKED','NOT_READY'].includes(String(r.source_status||'').toUpperCase())).length;
-  const first=(idxRows[0]&&idxRows[0].command)||'python3 foundation_v2/v2_monday_live_standby_packet.py --json';
+  const first=(idxRows[0]&&idxRows[0].command)||'python3 foundation_v2/v2_public_dashboard_cockpit_check.py';
   return `<div class="next-action-card compact-boundary-card operator-evidence-index-card">
     <div class="next-action-head"><span>Monday Operator Evidence Index</span><span class="expansion-badge ${status==='PASS'?'ready':status==='FAIL'?'not-ready':''}">${esc(status)}</span></div>
     <div class="runbook-summary">
