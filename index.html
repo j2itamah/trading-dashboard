@@ -1538,6 +1538,10 @@ function renderOperations(){
     }
     html+='</div></div>';
   }
+  // Keep Operations trading-only. The operator runbook, budget, IBKR,
+  // expansion, and approval-boundary evidence lives in System Health.
+  document.getElementById('operations-content').innerHTML=html;
+  return;
   const shadow=DATA?.shadow_health||{};
   const allOpen=openPositions().filter(currentOfficialTrade);
   const expansionOpen=openPositions();
