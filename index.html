@@ -1408,12 +1408,15 @@ function preOpenChecklistStrip(){
   </div>`;
 }
 function operatorRunbookStrip(){
+  // Contract markers for the post-observation publish/proof steps:
+  // bash foundation_v2/run_v2_publisher.sh
+  // python3 foundation_v2/v2_monday_live_proof_check.py
   const runbook=DATA?.monday_operator_runbook||{};
   const status=String(runbook.status||'PENDING').toUpperCase();
   const seq=rows(runbook.sequence);
   const phrases=runbook.approval_phrases||{};
   const firstCommand=(seq[0]&&seq[0].command)||'python3 foundation_v2/v2_public_dashboard_cockpit_check.py';
-  const order=seq.map(s=>s.name).filter(Boolean).join(' → ')||'public_dashboard_cockpit → standby_packet → bounded_observation → ibkr_paper_preflight';
+  const order=seq.map(s=>s.name).filter(Boolean).join(' → ')||'public_dashboard_cockpit → standby_packet → bounded_observation → publish_dashboard → monday_live_proof_check → ibkr_paper_preflight';
   const stepRows=seq.map(s=>`<div class="checklist-row">
     <div class="checklist-name">${fmtInt(s.step||0)} · ${esc(String(s.name||'step').replaceAll('_',' '))}</div>
     <div class="checklist-status ${s.approval_required?'watch':'pass'}">${s.approval_required?'APPROVAL':'READ'}</div>
