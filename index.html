@@ -105,7 +105,7 @@
   .pilot-tag{position:absolute;top:-8px;right:-6px;font:700 8px/1 'Spline Sans Mono',monospace;background:var(--purple);color:#fff;padding:3px 7px;border-radius:6px;letter-spacing:.4px}
   #active-label{text-align:center;font:12px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin:12px 0 22px}
   #active-label strong{font:700 14px/1.2 'Spline Sans',sans-serif;color:var(--ink)}
-  .pos-text{color:var(--green)} .neg-text{color:var(--red)} .zero-text{color:var(--ink-soft)}
+  .pos-text{color:var(--green)} .neg-text{color:var(--red)} .warn-text{color:#7a5610} .zero-text{color:var(--ink-soft)}
   .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
   .row:last-child{border-bottom:none}
   .name{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -1115,9 +1115,16 @@ function tradeRow(t){
   const closed=t.status==='CLOSED';
   const reasonClass=exitReasonClass(t.exit_reason);
   const spend=spendRuleInfo(t);
+  const sizingAudit=rows(DATA?.monday_sizing_audit?.sample_rows).find(r=>String(r.id)===String(t.id));
   const modelBadge=`<span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span>`;
   const brokerChip=brokerBadge(t);
-  const sizingLabel=spend.exact && spend.pct!=null ? `${spend.pct.toFixed(1)}% of cash` : '10% check pending';
+  const sizingOk=spend.exact && spend.ok && (!sizingAudit || sizingAudit.status!=='fail');
+  const sizingLabel=sizingAudit?.status==='fail'
+    ? 'Reset sizing fail'
+    : spend.exact && spend.pct!=null ? `${spend.pct.toFixed(1)}% of cash` : '10% check pending';
+  const sizingExplain=sizingAudit?.status==='fail'
+    ? `<span class="tag warn-text">Expected clean spend ${fmtMoney(sizingAudit.expected_clean_stake_amount)} from ${fmtMoney(sizingAudit.expected_clean_pre_trade_cash)}</span>`
+    : '';
   const adjMove=latencyAdjustedMove(lat);
   const timingBits=[];
   if(lat?.news_to_trade_seconds!=null) timingBits.push(`Timing ${secondsLabel(lat.news_to_trade_seconds)}`);
@@ -1125,7 +1132,7 @@ function tradeRow(t){
   const timingChip=timingBits.length?`<span class="tag">${esc(timingBits.join(' · '))}</span>`:'<span class="tag">Timing pending</span>';
   const meta=closed
     ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span>${timingChip}${brokerChip}</div>`
-    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${spend.exact && spend.ok?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta">${timingChip}${brokerChip}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}</div>`;
+    : `<div class="spend-line"><div><div class="spend-label">Spent</div><div class="spend-value">${fmtMoney(spend.spent)}</div></div><span class="rule-chip ${sizingOk?'':'warn'}">${esc(sizingLabel)}</span></div><div class="compact-meta">${sizingExplain}${timingChip}${brokerChip}${url?`<a class="article-chip" href="${esc(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Read article</a>`:''}</div>`;
   return `<div class="pos-row ${closed?'closed '+reasonClass:'open'}" data-trade-id="${t.id}" role="button" tabindex="0" aria-label="Open ${esc(t.asset)} ${esc(dir)} trade details" onclick="openTradeModal('${esc(t.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTradeModal('${esc(t.id)}')}">
     <div>
       <div class="asset-line"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span>${modelBadge}${closed?`<span class="badge">${esc(t.lifecycle||'')}</span>`:''}</div>
@@ -1778,6 +1785,8 @@ function renderResearch(){
   const clock=DATA?.market_clock||{};
   const ibkr=DATA?.ibkr_paper_preflight||{};
   const latency=DATA?.monday_readiness_digest?.latency||{};
+  const atrGap=DATA?.atr_gap_monitor||{};
+  const sizingAudit=DATA?.monday_sizing_audit||{};
   const panelStatus=(label,status,detail,action)=>{
     const s=String(status||'PENDING').toUpperCase();
     const cls=s==='PASS'||s==='OK'||s==='APPLIED'?'pass':s==='FAIL'||s==='ACTION_REQUIRED'?'fail':'watch';
@@ -1796,6 +1805,8 @@ function renderResearch(){
     panelStatus('Pre-open checklist',preopen.status||'WATCH',`${preopen.summary?.pass||0} pass · ${preopen.summary?.watch||0} watch · ${preopen.summary?.fail||0} fail`,preopen.decisions?.next_command||'Run gate first'),
     panelStatus('IBKR paper',ibkr.status||'WATCH',ibkr.next_action||'Paper port not proven','Required before paper mirror'),
     panelStatus('Latency proof',latency.status||'WATCH',`clean=${latency.classification_counts?.clean||0} · rows=${latency.rows_after_cutoff||0}`,'Keep monitoring new stock rows'),
+    panelStatus('Clean-reset sizing',sizingAudit.status||'WATCH',`${fmtInt(sizingAudit.reset_sizing_failure_count||0)} sizing fail · ${fmtInt(sizingAudit.duplicate_group_count||0)} duplicate groups`,sizingAudit.next_action||'Required before reset/expansion'),
+    panelStatus('ATR coverage',atrGap.status||'WATCH',`${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)} current-day symbols · ${fmtPct((atrGap.coverage_pct||0)/100)}`,atrGap.next_action||'Required before volatility expansion'),
     panelStatus('Stock expansion',expansion.status||'NOT_READY',expansion.summary||'Not ready','Blocked until all gates pass')
   ].join('');
   let html='';
@@ -1817,7 +1828,63 @@ function renderResearch(){
   }
   html+=mondayLiveProofStrip();
   html+=`<div class="panel"><h2>System Health</h2><div class="section-note">Green is okay. Yellow is watch/pending. Red means stop and fix or ask for attention.</div><div class="checklist-mini">${healthRows}</div></div>`;
-  html+=mondayResetStatusStrip();
+	  if(atrGap && Object.keys(atrGap).length){
+    const atrStatus=String(atrGap.status||'WATCH').toUpperCase();
+    const atrBadge=atrStatus==='PASS'?'ready':atrStatus==='FAIL'?'not-ready':'';
+    const missing=rows(atrGap.missing_symbols);
+    const stale=rows(atrGap.stale_symbols);
+    const notOk=rows(atrGap.not_ok_symbols);
+    const sample=rows(atrGap.symbols).slice(0,8).map(s=>`<div class="checklist-row">
+      <div class="checklist-name">${esc(s.symbol||'?')}</div>
+      <div class="checklist-status ${s.atr_status==='ok'?'pass':s.atr_status==='missing'||s.atr_status==='not_ok'?'fail':'watch'}">${esc(String(s.atr_status||'unknown').toUpperCase())}</div>
+      <div class="checklist-detail">${fmtInt(s.row_count||0)} rows · fixed ${fmtInt(s.fixed_count||0)} · vol ${fmtInt(s.volatility_count||0)} · ATR ${s.atr_pct!=null?fmtPct(Number(s.atr_pct)/100):'--'}</div>
+    </div>`).join('');
+	    html+=`<div class="panel">
+      <h2>ATR Coverage</h2>
+      <div class="section-note">This explains whether volatility can be created for today's stock symbols. Source: DATA.atr_gap_monitor.</div>
+      <div class="next-action-head"><span>Current-day ATR gap</span><span class="expansion-badge ${atrBadge}">${esc(atrStatus)}</span></div>
+      <div class="expansion-grid">
+        <div class="expansion-stat"><div class="exp-label">Covered</div><div class="exp-value ${atrStatus==='PASS'?'pos-text':'warn-text'}">${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Coverage</div><div class="exp-value">${fmtPct((atrGap.coverage_pct||0)/100)}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Missing</div><div class="exp-value ${missing.length?'neg-text':'pos-text'}">${fmtInt(missing.length)}</div></div>
+        <div class="expansion-stat"><div class="exp-label">Cache Rows</div><div class="exp-value">${fmtInt(atrGap.cache_ok_rows||0)} ok</div><div class="small">${fmtInt(atrGap.cache_rows||0)} total</div></div>
+      </div>
+      <div class="small">${esc(atrGap.next_action||'Keep monitoring ATR coverage.')}</div>
+      ${missing.length?`<div class="small"><strong>Missing:</strong> ${esc(missing.join(', '))}</div>`:''}
+      ${notOk.length?`<div class="small"><strong>Not OK:</strong> ${esc(notOk.join(', '))}</div>`:''}
+      ${stale.length?`<div class="small"><strong>Stale:</strong> ${esc(stale.join(', '))}</div>`:''}
+      <div class="checklist-mini">${sample}</div>
+	    </div>`;
+	  }
+	  if(sizingAudit && Object.keys(sizingAudit).length){
+	    const sizingStatus=String(sizingAudit.status||'WATCH').toUpperCase();
+	    const sizingBadge=sizingStatus==='PASS'?'ready':sizingStatus==='FAIL'?'not-ready':'';
+	    const sampleRows=rows(sizingAudit.sample_rows).filter(r=>r.status==='fail').slice(0,10).map(r=>`<div class="checklist-row">
+	      <div class="checklist-name">${esc(r.asset||'?')} · ${esc(r.target_model||'model')} · ${esc(r.direction||'')}</div>
+	      <div class="checklist-status fail">${fmtMoney(r.stake_amount)}</div>
+	      <div class="checklist-detail">expected ${fmtMoney(r.expected_clean_stake_amount)} from clean ${fmtMoney(r.expected_clean_pre_trade_cash)} · backend pre-cash ${fmtMoney(r.pre_trade_free_cash)}</div>
+	    </div>`).join('');
+	    const dupes=rows(sizingAudit.duplicate_groups).slice(0,6).map(g=>`<div class="checklist-row">
+	      <div class="checklist-name">${esc(g.asset||'?')} · ${esc(g.target_model||'model')}</div>
+	      <div class="checklist-status fail">${fmtInt(g.count)}x</div>
+	      <div class="checklist-detail">same signal ${esc(g.signal_id||'missing')} · ids ${esc(rows(g.ids).join(', '))}</div>
+	    </div>`).join('');
+	    html+=`<div class="panel">
+	      <h2>Clean Reset Sizing</h2>
+	      <div class="section-note">This checks whether Monday trades behave like fresh $10K books. It is stricter than the old "10% of stale backend cash" check.</div>
+	      <div class="next-action-head"><span>Monday sizing audit</span><span class="expansion-badge ${sizingBadge}">${esc(sizingStatus)}</span></div>
+	      <div class="expansion-grid">
+	        <div class="expansion-stat"><div class="exp-label">Rows checked</div><div class="exp-value">${fmtInt(sizingAudit.stock_row_count||0)}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Sizing failures</div><div class="exp-value ${sizingAudit.reset_sizing_failure_count?'neg-text':'pos-text'}">${fmtInt(sizingAudit.reset_sizing_failure_count||0)}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Duplicate groups</div><div class="exp-value ${sizingAudit.duplicate_group_count?'neg-text':'pos-text'}">${fmtInt(sizingAudit.duplicate_group_count||0)}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">Stale cash rows</div><div class="exp-value ${sizingAudit.stale_backend_cash_failure_count?'neg-text':'pos-text'}">${fmtInt(sizingAudit.stale_backend_cash_failure_count||0)}</div></div>
+	      </div>
+	      <div class="small">${esc(sizingAudit.next_action||'Keep monitoring clean-reset sizing.')}</div>
+	      ${sampleRows?`<h3 style="margin-top:14px">Spend Mismatches</h3><div class="checklist-mini">${sampleRows}</div>`:''}
+	      ${dupes?`<h3 style="margin-top:14px">Duplicate Same-Signal Groups</h3><div class="checklist-mini">${dupes}</div>`:''}
+	    </div>`;
+	  }
+	  html+=mondayResetStatusStrip();
   html+=marketClockStrip();
   html+=preOpenChecklistStrip();
   html+=approvalBoundaryStrip();
