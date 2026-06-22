@@ -1203,6 +1203,7 @@ function operatorAttentionStrip(){
   const summary=attention.summary||{};
   const items=rows(attention.items);
   const policy=attention.notification_policy||{};
+  const notificationState=attention.notification_state||{};
   const surfaces=attention.user_surfaces||{};
   const urgent=Number(summary.urgent||0);
   const action=Number(summary.action_required||0);
@@ -1228,12 +1229,13 @@ function operatorAttentionStrip(){
       <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value ${watch?'warn-text':'pos-text'}">${fmtInt(watch)}</div></div>
       <div class="expansion-stat"><div class="exp-label">n8n Used</div><div class="exp-value ${budget.status==='ACTION_REQUIRED'?'neg-text':budget.status==='WATCH'?'warn-text':'pos-text'}">${budget.used_pct!=null?esc(budget.used_pct+'%'):'--'}</div><div class="small">${budget.remaining_estimate!=null?esc('~'+budget.remaining_estimate+' left'):'pending'}</div></div>
       <div class="expansion-stat"><div class="exp-label">To Action</div><div class="exp-value ${Number(budget.remaining_to_action||0)<=0?'neg-text':Number(budget.remaining_to_action||0)<500?'warn-text':'pos-text'}">${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'--'}</div><div class="small">90% at ${budget.action_threshold_used!=null?fmtInt(budget.action_threshold_used):'--'} · urgent in ${budget.remaining_to_urgent!=null?fmtInt(budget.remaining_to_urgent):'--'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Notify</div><div class="exp-value ${notificationState.telegram_send_required?'neg-text':'pos-text'}">${notificationState.current_channel==='telegram_required'?'Telegram':'Dashboard'}</div><div class="small">${notificationState.telegram_action_items!=null?fmtInt(notificationState.telegram_action_items):0} Telegram items</div></div>
       <div class="expansion-stat"><div class="exp-label">User Surface</div><div class="exp-value">Dashboard</div><div class="small">${esc(surfaces.urgent||'Telegram')} urgent · ${esc(surfaces.fallback||'email')} fallback</div></div>
     </div>
     <div class="checklist-mini">${visible||'<div class="empty">No operator attention items.</div>'}</div>
     <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')} · action threshold remaining ${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'pending'}.</div>
     <div class="small">${esc(policy.telegram||'Telegram only for urgent operator blockers.')}</div>
-    <div class="small">Source: DATA.operator_attention + DATA.n8n_execution_budget · user does not need n8n/Supabase/backend access.</div>
+    <div class="small">Source: DATA.operator_attention.notification_state + DATA.n8n_execution_budget · user does not need n8n/Supabase/backend access.</div>
   </div>`;
 }
 function checklistItemByName(checklist,name){
