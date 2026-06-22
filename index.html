@@ -1313,6 +1313,47 @@ function operatorAttentionStrip(){
     <div class="small">Source: DATA.operator_attention.notification_state + DATA.n8n_execution_budget · user does not need n8n/Supabase/backend access.</div>
   </div>`;
 }
+function mondayLiveProofStrip(){
+  const proof=DATA?.monday_live_proof||{};
+  const status=String(proof.status||'WAITING').toUpperCase();
+  const counts=proof.counts||{};
+  const latency=proof.latency||{};
+  const latencyCounts=latency.classification_counts||{};
+  const latest=proof.latest_trade||{};
+  const gates=rows(proof.gates);
+  const cls=status==='PASS'?'ready':status==='FAIL'?'not-ready':'';
+  const statusCls=status==='PASS'?'pass':status==='FAIL'?'fail':'watch';
+  const gateRows=gates.map(g=>{
+    const s=String(g.status||'PENDING').toUpperCase();
+    const rowCls=s==='PASS'?'pass':s==='FAIL'?'fail':'watch';
+    return `<div class="checklist-row">
+      <div class="checklist-name">${esc(String(g.name||'gate').replaceAll('_',' '))}</div>
+      <div class="checklist-status ${rowCls}">${esc(s)}</div>
+      <div class="checklist-detail">${esc(g.detail||'Pending evidence.')}</div>
+    </div>`;
+  }).join('');
+  const latestText=latest.id
+    ? `${esc(latest.asset||'?')} ${esc(latest.direction||'')} · ${esc(latest.target_model||'model')} · ${esc(shortTime(latest.created_at))}`
+    : 'No Monday post-open stock trade yet';
+  const hardFailures=rows(proof.hard_failures);
+  return `<div class="next-action-card compact-boundary-card monday-live-proof-card">
+    <div class="next-action-head"><span>Monday Live Proof</span><span class="expansion-badge ${cls}">${esc(status)}</span></div>
+    <div class="section-note">First live trade proof after the Monday reset: trade flow, latency, ATR, marks, and safety gates.</div>
+    <div class="next-action-main">${esc(latestText)}</div>
+    <div class="expansion-grid">
+      <div class="expansion-stat"><div class="exp-label">Post-Open Trades</div><div class="exp-value ${counts.post_open_stock_trades?statusCls:'warn-text'}">${fmtInt(counts.post_open_stock_trades||0)}</div><div class="small">${fmtInt(counts.post_open_open||0)} open · ${fmtInt(counts.post_open_closed||0)} closed</div></div>
+      <div class="expansion-stat"><div class="exp-label">Fixed / Vol</div><div class="exp-value">${fmtInt(counts.fixed||0)} / ${fmtInt(counts.volatility||0)}</div><div class="small">stock trades only</div></div>
+      <div class="expansion-stat"><div class="exp-label">Latency</div><div class="exp-value ${Number(latencyCounts.clean||0)>0?'pos-text':'warn-text'}">${fmtInt(latencyCounts.clean||0)} clean</div><div class="small">${fmtInt(latency.post_open_rows||0)} rows · stale ${fmtInt(latencyCounts.stale||0)} · missing ${fmtInt(latencyCounts.missing||0)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Marks</div><div class="exp-value ${Number(counts.unmarked_open||0)>0?'warn-text':'pos-text'}">${fmtInt(counts.marked_open||0)}/${fmtInt(counts.post_open_open||0)}</div><div class="small">${fmtInt(counts.unmarked_open||0)} unmarked</div></div>
+      <div class="expansion-stat"><div class="exp-label">Vol ATR</div><div class="exp-value ${proof.volatility?.post_open_count?Number(proof.volatility?.with_atr_tp_sl||0)===Number(proof.volatility?.post_open_count||0)?'pos-text':'neg-text':'warn-text'}">${fmtInt(proof.volatility?.with_atr_tp_sl||0)}/${fmtInt(proof.volatility?.post_open_count||0)}</div><div class="small">ATR + TP/SL proof</div></div>
+      <div class="expansion-stat"><div class="exp-label">Safety</div><div class="exp-value ${hardFailures.length?'neg-text':'pos-text'}">${hardFailures.length?'STOP':'BLOCKED'}</div><div class="small">orders/expansion still require approval</div></div>
+    </div>
+    <div class="checklist-mini">${gateRows||'<div class="empty">No proof gates yet.</div>'}</div>
+    ${hardFailures.length?`<div class="small neg-text">Hard failures: ${esc(hardFailures.join(', '))}</div>`:''}
+    <div class="small">${esc(proof.next_action||'Wait for Monday live evidence.')}</div>
+    <div class="small">Source: DATA.monday_live_proof · ${esc(proof.source||'published rows')} · open ${esc(proof.monday_open_at||'pending')}</div>
+  </div>`;
+}
 function checklistItemByName(checklist,name){
   const found=rows(checklist.items).find(item=>item.name===name);
   return found||{};
@@ -1727,6 +1768,7 @@ function renderResearch(){
   let html='';
   html+=cockpitGuideStrip();
   html+=operatorAttentionStrip();
+  html+=mondayLiveProofStrip();
   html+=`<div class="panel"><h2>System Health</h2><div class="section-note">Green is okay. Yellow is watch/pending. Red means stop and fix or ask for attention.</div><div class="checklist-mini">${healthRows}</div></div>`;
   html+=mondayResetStatusStrip();
   html+=marketClockStrip();
