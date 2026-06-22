@@ -1294,6 +1294,7 @@ function cockpitGuideStrip(){
 function operatorAttentionStrip(){
   const attention=DATA?.operator_attention||{};
   const budget=DATA?.n8n_execution_budget||{};
+  const budgetProjection=budget.projection||{};
   const status=String(attention.status||'PENDING').toUpperCase();
   const summary=attention.summary||{};
   const items=rows(attention.items);
@@ -1326,6 +1327,7 @@ function operatorAttentionStrip(){
       <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value ${watch?'warn-text':'pos-text'}">${fmtInt(watch)}</div></div>
       <div class="expansion-stat"><div class="exp-label">n8n Used</div><div class="exp-value ${budget.status==='ACTION_REQUIRED'?'neg-text':budget.status==='WATCH'?'warn-text':'pos-text'}">${budget.used_pct!=null?esc(budget.used_pct+'%'):'--'}</div><div class="small">${budget.remaining_estimate!=null?esc('~'+budget.remaining_estimate+' left'):'pending'}</div></div>
       <div class="expansion-stat"><div class="exp-label">To Action</div><div class="exp-value ${Number(budget.remaining_to_action||0)<=0?'neg-text':Number(budget.remaining_to_action||0)<500?'warn-text':'pos-text'}">${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'--'}</div><div class="small">90% at ${budget.action_threshold_used!=null?fmtInt(budget.action_threshold_used):'--'} · urgent in ${budget.remaining_to_urgent!=null?fmtInt(budget.remaining_to_urgent):'--'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">ETA Action</div><div class="exp-value ${Number(budget.hours_to_action_threshold||999)<=0?'neg-text':Number(budget.hours_to_action_threshold||999)<=6?'warn-text':'pos-text'}">${budget.hours_to_action_threshold!=null?esc(budget.hours_to_action_threshold+'h'):'--'}</div><div class="small">${esc(budget.action_threshold_eta?shortTime(budget.action_threshold_eta):'pending')} · ${budget.estimated_hourly_burn!=null?esc(budget.estimated_hourly_burn+'/hr'):'no burn estimate'}</div></div>
       <div class="expansion-stat"><div class="exp-label">Notify</div><div class="exp-value ${notificationState.telegram_send_required?'neg-text':'pos-text'}">${notificationState.current_channel==='telegram_required'?'Telegram':'Dashboard'}</div><div class="small">${notificationState.telegram_action_items!=null?fmtInt(notificationState.telegram_action_items):0} Telegram items</div></div>
       <div class="expansion-stat"><div class="exp-label">User Surface</div><div class="exp-value">Dashboard</div><div class="small">${esc(surfaces.urgent||'Telegram')} urgent · ${esc(surfaces.fallback||'email')} fallback</div></div>
     </div>
@@ -1335,7 +1337,7 @@ function operatorAttentionStrip(){
       <div class="notify-step fallback"><strong>Email</strong><span>Fallback only if dashboard/Telegram cannot reach the user or the build cannot safely continue. Current rule: ${esc(emailFallback)}.</span></div>
     </div>
     <div class="checklist-mini">${visible||'<div class="empty">No operator attention items.</div>'}</div>
-    <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')} · action threshold remaining ${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'pending'}.</div>
+    <div class="small">n8n execution budget source: DATA.n8n_execution_budget · ${esc(budget.source||'pending')} · action threshold remaining ${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'pending'} · projection ${esc(budgetProjection.source||budget.burn_estimate_source||'pending')}.</div>
     <div class="small">${esc(policy.telegram||'Telegram only for urgent operator blockers.')}</div>
     <div class="small">Source: DATA.operator_attention.notification_state + DATA.n8n_execution_budget · user does not need n8n/Supabase/backend access.</div>
   </div>`;
