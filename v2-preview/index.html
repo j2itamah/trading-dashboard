@@ -975,8 +975,8 @@ function headerAttention(){
   const cls=action||urgent||status==='ACTION_REQUIRED'||status==='FAIL'||budgetStatus==='ACTION_REQUIRED'?'fail':watch||status==='WATCH'||budgetStatus==='WATCH'?'watch':'pass';
   btn.className=`header-attention ${cls}`;
   if(userAction) btn.textContent=`Your action · ${fmtInt(userAction)} needed`;
-  else if(codexAction||action) btn.textContent=`Codex action · ${fmtInt(codexAction||action)} repair`;
-  else if(urgent) btn.textContent=`Codex urgent · ${fmtInt(urgent)} item`;
+  else if(codexAction||action) btn.textContent=`Codex handling · ${fmtInt(codexAction||action)} repair`;
+  else if(urgent) btn.textContent=`Codex handling · ${fmtInt(urgent)} urgent`;
   else if(watch) btn.textContent=`Dashboard only · ${fmtInt(watch)} watch · n8n ${budget.used_pct!=null?budget.used_pct+'%':'watch'}`;
   else btn.textContent='All clear · System Health';
   btn.title='Click to open System Health and Operator Attention.';
@@ -1333,7 +1333,7 @@ function operatorAttentionStrip(){
   const main=userAction
     ? `${fmtInt(userAction)} user action needed`
     : codexAction
-      ? `${fmtInt(codexAction)} Codex repair action`
+      ? `${fmtInt(codexAction)} Codex repair · no user action`
       : action
         ? `${fmtInt(action)} system action`
         : `${fmtInt(urgent)} urgent · ${fmtInt(watch)} watch`;
