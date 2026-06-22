@@ -1170,6 +1170,9 @@ function marketClockStrip(){
   const minsClose=Number(clock.minutes_to_next_close);
   const hoursOpen=Number.isFinite(minsOpen)?`${Math.floor(minsOpen/60)}h ${minsOpen%60}m`:'pending';
   const hoursClose=Number.isFinite(minsClose)?`${Math.floor(minsClose/60)}h ${minsClose%60}m`:'pending';
+  const execMode=String(clock.execution_mode||clock.mode||'standby').replace(/_/g,' ').toUpperCase();
+  const execProfile=String(clock.execution_profile||'quality_first').replace(/_/g,' ');
+  const execGuidance=clock.execution_guidance||'Follow the standby packet and keep protected actions blocked.';
   const command=clock.next_command||nextAction.next_command||'RUNS=1 INTERVAL_SECONDS=0 JSON_OUTPUT=1 bash foundation_v2/run_v2_monday_safe_observation.sh';
   const blocked=[
     ['Paper',protectedActions.paper_order_allowed===true],
@@ -1185,10 +1188,11 @@ function marketClockStrip(){
       <div class="expansion-stat"><div class="exp-label">Current MDT</div><div class="exp-value">${esc(clock.current_mdt_label||'pending')}</div></div>
       <div class="expansion-stat"><div class="exp-label">Next Open</div><div class="exp-value">${esc(clock.next_open_label||'pending')}</div><div class="small">${esc(hoursOpen)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Next Close</div><div class="exp-value">${esc(clock.next_close_label||'pending')}</div><div class="small">${esc(hoursClose)}</div></div>
-      <div class="expansion-stat"><div class="exp-label">Mode</div><div class="exp-value ${safe?'pos-text':'warn-text'}">${safe?'SAFE OBSERVE':'STANDBY'}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Execution Mode</div><div class="exp-value ${marketOpen?'pos-text':safe?'warn-text':'warn-text'}">${esc(execMode)}</div><div class="small">${esc(execProfile)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Protected</div><div class="exp-value ${blocked.some(x=>x[1])?'neg-text':'pos-text'}">${blocked.filter(x=>x[1]).length?'CHECK':'BLOCKED'}</div><div class="small">${esc(blocked.map(([name,allowed])=>`${name}:${allowed?'allowed':'blocked'}`).join(' · '))}</div></div>
     </div>
     <code>${esc(command)}</code>
+    <div class="small">${esc(execGuidance)}</div>
     <div class="small">Source: DATA.market_clock · ${esc(clock.regular_session||'09:30-16:00 ET')} · ${esc(clock.holiday_calendar||'market calendar')}</div>
   </div>`;
 }
