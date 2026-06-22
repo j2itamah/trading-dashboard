@@ -139,6 +139,11 @@
   .rule-chip{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.45px;padding:6px 8px;border-radius:999px;border:1px solid #b8e2cc;background:var(--green-bg);color:var(--green);white-space:nowrap}
   .rule-chip.warn{border-color:#e7c46a;background:#fff8e5;color:#7a5610}
   .compact-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .ops-trade-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px;padding:6px;border:1px solid var(--line);border-radius:14px;background:#fbfaf6}
+  .ops-trade-tab{border:0;background:transparent;border-radius:10px;padding:10px 12px;font-weight:800;color:var(--ink-soft);cursor:pointer;display:flex;justify-content:center;gap:8px;align-items:center}
+  .ops-trade-tab.on{background:var(--accent);color:#fff}
+  .ops-trade-tab strong{font:800 13px/1 'Spline Sans Mono',monospace}
+  .trade-list-panel{margin-top:18px}
   .lab-closed-detail .lab-prices{display:flex;gap:16px;font:12px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-bottom:4px}
   .lab-closed-detail .lab-prices span{white-space:nowrap}
   .account-matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -463,6 +468,7 @@ let sel={
 };
 let OPEN_EXPANDED=false, CLOSED_EXPANDED=false;
 let OPEN_SEARCH='', CLOSED_SEARCH='';
+let OPS_TRADE_LIST=localStorage.getItem('v2_ops_trade_list') || 'open';
 let CURRENT_TRADE_ID=null;
 let LAB_FOCUS=localStorage.getItem('v2_lab_focus') || 'all';
 const VOL_PILOT1_START_AT='2026-06-19T00:50:22.324742+00:00';
@@ -1516,26 +1522,35 @@ function renderOperations(){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
-  html+=operationsGlance(bookOpen, bookClosed, b);
-  if(!bookOpen.length && !bookClosed.length){
-    html+=`<div class="panel"><h2>Waiting for first Monday trade</h2><div class="section-note">This reset-window book is clean: no open trades, no closed trades, and no deployed capital yet. Trade cards will appear here after the first official post-reset signal.</div></div>`;
-  } else {
-    html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
-    if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
-    else {
-      if(OPEN_EXPANDED) html+=`<input class="trade-search" id="open-search" placeholder="Search open positions..." value="${esc(OPEN_SEARCH)}">`;
-      html+=(OPEN_EXPANDED?openFiltered:bookOpen.slice(0,6)).map(tradeRow).join('');
-      if(bookOpen.length>6) html+=`<button class="closed-toggle" id="toggle-open"><span>${OPEN_EXPANDED?'Collapse':'Show all '+bookOpen.length+' positions'}</span><span>›</span></button>`;
-    }
-    html+=`</div><div class="panel closed-panel"><h2>Closed Trades</h2><div class="section-note">Resolved trades: close reason first, then where the exit landed against stop loss and target.</div>`;
-    if(!bookClosed.length) html+='<div class="empty">No closed trades for this selected book.</div>';
-    else {
-      if(CLOSED_EXPANDED) html+=`<input class="trade-search" id="closed-search" placeholder="Search closed trades..." value="${esc(CLOSED_SEARCH)}">`;
-      html+=(CLOSED_EXPANDED?closedFiltered:bookClosed.slice(0,6)).map(tradeRow).join('');
-      if(bookClosed.length>6) html+=`<button class="closed-toggle" id="toggle-closed"><span>${CLOSED_EXPANDED?'Collapse':'Show all '+bookClosed.length+' trades'}</span><span>›</span></button>`;
-    }
-    html+='</div></div>';
-  }
+	  html+=operationsGlance(bookOpen, bookClosed, b);
+	  if(!bookOpen.length && !bookClosed.length){
+	    html+=`<div class="panel"><h2>Waiting for first Monday trade</h2><div class="section-note">This reset-window book is clean: no open trades, no closed trades, and no deployed capital yet. Trade cards will appear here after the first official post-reset signal.</div></div>`;
+	  } else {
+	    if(OPS_TRADE_LIST!=='closed' || (!bookClosed.length && bookOpen.length)) OPS_TRADE_LIST='open';
+	    const activeList=OPS_TRADE_LIST==='closed'?'closed':'open';
+	    const isClosed=activeList==='closed';
+	    const listRows=isClosed?bookClosed:bookOpen;
+	    const filtered=isClosed?closedFiltered:openFiltered;
+	    const expanded=isClosed?CLOSED_EXPANDED:OPEN_EXPANDED;
+	    const searchValue=isClosed?CLOSED_SEARCH:OPEN_SEARCH;
+	    const searchId=isClosed?'closed-search':'open-search';
+	    const toggleId=isClosed?'toggle-closed':'toggle-open';
+	    const visibleRows=expanded?filtered:listRows.slice(0,8);
+	    html+=`<div class="panel ${isClosed?'closed-panel':'open-panel'} trade-list-panel">
+	      <h2>${isClosed?'Closed Trades':'Open Positions'}</h2>
+	      <div class="section-note">${isClosed?'Resolved trades: close reason, amount spent, article link, and exit against risk target.':'Live trades: amount spent, sizing status, article link, latency chip, and distance to SL/TP.'}</div>
+	      <div class="ops-trade-tabs">
+	        <button class="ops-trade-tab ${activeList==='open'?'on':''}" data-ops-list="open">Open <strong>${fmtInt(bookOpen.length)}</strong></button>
+	        <button class="ops-trade-tab ${activeList==='closed'?'on':''}" data-ops-list="closed">Closed <strong>${fmtInt(bookClosed.length)}</strong></button>
+	      </div>`;
+	    if(!listRows.length) html+=`<div class="empty">No ${isClosed?'closed trades':'open positions'} for this selected book.</div>`;
+	    else {
+	      if(expanded || listRows.length>8) html+=`<input class="trade-search" id="${searchId}" placeholder="Search ${isClosed?'closed trades':'open positions'}..." value="${esc(searchValue)}">`;
+	      html+=visibleRows.map(tradeRow).join('');
+	      if(listRows.length>8) html+=`<button class="closed-toggle" id="${toggleId}"><span>${expanded?'Collapse':'Show all '+listRows.length+' '+(isClosed?'trades':'positions')}</span><span>›</span></button>`;
+	    }
+	    html+='</div>';
+	  }
   // Keep Operations trading-only. The operator runbook, budget, IBKR,
   // expansion, and approval-boundary evidence lives in System Health.
   document.getElementById('operations-content').innerHTML=html;
@@ -1783,10 +1798,11 @@ function renderResearch(){
   const expansion=DATA?.stock_expansion_readiness||{};
   const preopen=DATA?.monday_preopen_checklist||{};
   const clock=DATA?.market_clock||{};
-  const ibkr=DATA?.ibkr_paper_preflight||{};
-  const latency=DATA?.monday_readiness_digest?.latency||{};
-  const atrGap=DATA?.atr_gap_monitor||{};
-  const sizingAudit=DATA?.monday_sizing_audit||{};
+	  const ibkr=DATA?.ibkr_paper_preflight||{};
+	  const latency=DATA?.monday_readiness_digest?.latency||{};
+	  const atrGap=DATA?.atr_gap_monitor||{};
+	  const atrTargetReview=atrGap?.volatility_target_review||{};
+	  const sizingAudit=DATA?.monday_sizing_audit||{};
   const panelStatus=(label,status,detail,action)=>{
     const s=String(status||'PENDING').toUpperCase();
     const cls=s==='PASS'||s==='OK'||s==='APPLIED'?'pass':s==='FAIL'||s==='ACTION_REQUIRED'?'fail':'watch';
@@ -1805,9 +1821,10 @@ function renderResearch(){
     panelStatus('Pre-open checklist',preopen.status||'WATCH',`${preopen.summary?.pass||0} pass · ${preopen.summary?.watch||0} watch · ${preopen.summary?.fail||0} fail`,preopen.decisions?.next_command||'Run gate first'),
     panelStatus('IBKR paper',ibkr.status||'WATCH',ibkr.next_action||'Paper port not proven','Required before paper mirror'),
     panelStatus('Latency proof',latency.status||'WATCH',`clean=${latency.classification_counts?.clean||0} · rows=${latency.rows_after_cutoff||0}`,'Keep monitoring new stock rows'),
-    panelStatus('Clean-reset sizing',sizingAudit.status||'WATCH',`${fmtInt(sizingAudit.reset_sizing_failure_count||0)} sizing fail · ${fmtInt(sizingAudit.duplicate_group_count||0)} duplicate groups`,sizingAudit.next_action||'Required before reset/expansion'),
-    panelStatus('ATR coverage',atrGap.status||'WATCH',`${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)} current-day symbols · ${fmtPct((atrGap.coverage_pct||0)/100)}`,atrGap.next_action||'Required before volatility expansion'),
-    panelStatus('Stock expansion',expansion.status||'NOT_READY',expansion.summary||'Not ready','Blocked until all gates pass')
+	    panelStatus('Clean-reset sizing',sizingAudit.status||'WATCH',`${fmtInt(sizingAudit.reset_sizing_failure_count||0)} sizing fail · ${fmtInt(sizingAudit.duplicate_group_count||0)} duplicate groups`,sizingAudit.next_action||'Required before reset/expansion'),
+	    panelStatus('ATR coverage',atrGap.status||'WATCH',`${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)} current-day symbols · ${fmtPct((atrGap.coverage_pct||0)/100)}`,atrGap.next_action||'Required before volatility expansion'),
+	    panelStatus('Vol target realism',atrTargetReview.status||'WATCH',`${fmtInt(atrTargetReview.target_cap_20_count||0)} cap-level 20% targets · max ${atrTargetReview.max_target_distance_pct!=null?fmtPct(atrTargetReview.max_target_distance_pct):'--'}`,atrTargetReview.note||'Review before volatility expansion'),
+	    panelStatus('Stock expansion',expansion.status||'NOT_READY',expansion.summary||'Not ready','Blocked until all gates pass')
   ].join('');
   let html='';
   html+=cockpitGuideStrip();
@@ -1846,9 +1863,9 @@ function renderResearch(){
       <div class="expansion-grid">
         <div class="expansion-stat"><div class="exp-label">Covered</div><div class="exp-value ${atrStatus==='PASS'?'pos-text':'warn-text'}">${fmtInt(atrGap.covered_symbol_count||0)} / ${fmtInt(atrGap.current_day_stock_symbol_count||0)}</div></div>
         <div class="expansion-stat"><div class="exp-label">Coverage</div><div class="exp-value">${fmtPct((atrGap.coverage_pct||0)/100)}</div></div>
-        <div class="expansion-stat"><div class="exp-label">Missing</div><div class="exp-value ${missing.length?'neg-text':'pos-text'}">${fmtInt(missing.length)}</div></div>
-        <div class="expansion-stat"><div class="exp-label">Cache Rows</div><div class="exp-value">${fmtInt(atrGap.cache_ok_rows||0)} ok</div><div class="small">${fmtInt(atrGap.cache_rows||0)} total</div></div>
-      </div>
+	        <div class="expansion-stat"><div class="exp-label">Missing</div><div class="exp-value ${missing.length?'neg-text':'pos-text'}">${fmtInt(missing.length)}</div></div>
+	        <div class="expansion-stat"><div class="exp-label">20% Targets</div><div class="exp-value ${atrGap.volatility_target_review?.target_cap_20_count?'warn-text':'pos-text'}">${fmtInt(atrGap.volatility_target_review?.target_cap_20_count||0)}</div><div class="small">max ${atrGap.volatility_target_review?.max_target_distance_pct!=null?fmtPct(atrGap.volatility_target_review.max_target_distance_pct):'--'}</div></div>
+	      </div>
       <div class="small">${esc(atrGap.next_action||'Keep monitoring ATR coverage.')}</div>
       ${missing.length?`<div class="small"><strong>Missing:</strong> ${esc(missing.join(', '))}</div>`:''}
       ${notOk.length?`<div class="small"><strong>Not OK:</strong> ${esc(notOk.join(', '))}</div>`:''}
@@ -2385,9 +2402,10 @@ function bind(){
   document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
   document.addEventListener('click',e=>{
-    const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
-    const lf=e.target.closest('[data-lab-focus]'); if(lf){LAB_FOCUS=lf.dataset.labFocus; localStorage.setItem('v2_lab_focus',LAB_FOCUS); renderCryptoLab(); return}
-    if(e.target.closest('a,button')) return;
+	    const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
+	    const lf=e.target.closest('[data-lab-focus]'); if(lf){LAB_FOCUS=lf.dataset.labFocus; localStorage.setItem('v2_lab_focus',LAB_FOCUS); renderCryptoLab(); return}
+	    const ol=e.target.closest('[data-ops-list]'); if(ol){OPS_TRADE_LIST=ol.dataset.opsList; localStorage.setItem('v2_ops_trade_list',OPS_TRADE_LIST); renderOperations(); return}
+	    if(e.target.closest('a,button')) return;
     const lr=e.target.closest('[data-lab-trade-id]'); if(lr){openLabTradeModal(lr.dataset.labTradeId); return}
     const tr=e.target.closest('[data-trade-id]'); if(tr){openTradeModal(tr.dataset.tradeId); return}
     if(e.target.closest('#toggle-open')){OPEN_EXPANDED=!OPEN_EXPANDED; renderOperations(); return}
