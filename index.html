@@ -967,12 +967,16 @@ function headerAttention(){
   if(!btn) return;
   const status=String(attention.status||'WATCH').toUpperCase();
   const action=Number(summary.action_required||0);
+  const userAction=Number(summary.user_action_required||0);
+  const codexAction=Number(summary.codex_action_required||0);
   const urgent=Number(summary.urgent||0);
   const watch=Number(summary.watch||0);
   const budgetStatus=String(budget.status||'').toUpperCase();
   const cls=action||urgent||status==='ACTION_REQUIRED'||status==='FAIL'||budgetStatus==='ACTION_REQUIRED'?'fail':watch||status==='WATCH'||budgetStatus==='WATCH'?'watch':'pass';
   btn.className=`header-attention ${cls}`;
-  if(action||urgent) btn.textContent=`Action needed · ${fmtInt(action)} action · ${fmtInt(urgent)} urgent`;
+  if(userAction) btn.textContent=`Your action · ${fmtInt(userAction)} needed`;
+  else if(codexAction||action) btn.textContent=`Codex action · ${fmtInt(codexAction||action)} repair`;
+  else if(urgent) btn.textContent=`Codex urgent · ${fmtInt(urgent)} item`;
   else if(watch) btn.textContent=`Dashboard only · ${fmtInt(watch)} watch · n8n ${budget.used_pct!=null?budget.used_pct+'%':'watch'}`;
   else btn.textContent='All clear · System Health';
   btn.title='Click to open System Health and Operator Attention.';
@@ -1275,7 +1279,7 @@ function cockpitGuideStrip(){
   const expansion=DATA?.stock_expansion_readiness||{};
   const budget=DATA?.n8n_execution_budget||{};
   const guideRows=[
-    ['Blockers / my attention','Operator Attention',attention.status||'WATCH',attention.attention_required?'Needs action':'Dashboard only'],
+    ['Blockers / my attention','Operator Attention',attention.status||'WATCH',attention.summary?.user_action_required?'Your action needed':attention.summary?.codex_action_required?'Codex repair needed':'Dashboard only'],
     ['Why not zero yet?','Monday Reset',reset.state||'prepared_not_executed',reset.approval_required===false?'Applied':'Approval needed'],
     ['Market timing','Market Clock',clock.phase||'PRE_OPEN',clock.next_open_label||'next open pending'],
     ['Execution budget','n8n Budget',budget.status||'WATCH',budget.used_pct!=null?`${budget.used_pct}% used`:'budget pending'],
@@ -1310,25 +1314,36 @@ function operatorAttentionStrip(){
   const emailFallback=String(notificationState.email_fallback||'only_if_dashboard_or_telegram_unreachable_or_build_blocked').replaceAll('_',' ');
   const urgent=Number(summary.urgent||0);
   const action=Number(summary.action_required||0);
+  const userAction=Number(summary.user_action_required||0);
+  const codexAction=Number(summary.codex_action_required||0);
   const watch=Number(summary.watch||0);
   const visible=items.slice(0,5).map(item=>{
     const s=String(item.status||'PENDING').toUpperCase();
     const cls=s==='PASS'?'pass':s==='ACTION_REQUIRED'||s==='FAIL'?'fail':'watch';
     const channels=rows(item.notify_channels).join(', ')||'dashboard';
+    const owner=item.owner_label||((item.owner||'codex')==='user'?'You':'Codex');
+    const ownerCls=(String(item.owner||'codex').toLowerCase()==='user')?'neg-text':'warn-text';
     return `<div class="checklist-row">
       <div class="checklist-name">${esc(item.label||item.id||'Attention item')}</div>
       <div class="checklist-status ${cls}">${esc(s)}</div>
-      <div class="checklist-detail">${esc(item.detail||'No detail.')} · ${esc(item.next_action||'No action.')} · Notify: ${esc(channels)}</div>
+      <div class="checklist-detail"><strong class="${ownerCls}">Owner: ${esc(owner)}</strong> · ${esc(item.detail||'No detail.')} · ${esc(item.next_action||'No action.')} · Notify: ${esc(channels)}</div>
     </div>`;
   }).join('');
   const badgeClass=status==='PASS'?'ready':status==='ACTION_REQUIRED'?'not-ready':'';
-  const main=action?`${fmtInt(action)} action needed`:`${fmtInt(urgent)} urgent · ${fmtInt(watch)} watch`;
+  const main=userAction
+    ? `${fmtInt(userAction)} user action needed`
+    : codexAction
+      ? `${fmtInt(codexAction)} Codex repair action`
+      : action
+        ? `${fmtInt(action)} system action`
+        : `${fmtInt(urgent)} urgent · ${fmtInt(watch)} watch`;
   return `<div class="next-action-card compact-boundary-card operator-attention-card">
     <div class="next-action-head"><span>Operator Attention</span><span class="expansion-badge ${badgeClass}">${esc(status)}</span></div>
     <div class="next-action-main">${esc(main)}</div>
     <div class="expansion-grid">
-      <div class="expansion-stat"><div class="exp-label">Action</div><div class="exp-value ${action?'neg-text':'pos-text'}">${fmtInt(action)}</div></div>
-      <div class="expansion-stat"><div class="exp-label">Urgent</div><div class="exp-value ${urgent?'neg-text':'pos-text'}">${fmtInt(urgent)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Your Action</div><div class="exp-value ${userAction?'neg-text':'pos-text'}">${fmtInt(userAction)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Codex Action</div><div class="exp-value ${codexAction?'warn-text':'pos-text'}">${fmtInt(codexAction)}</div></div>
+      <div class="expansion-stat"><div class="exp-label">Urgent</div><div class="exp-value ${urgent?'warn-text':'pos-text'}">${fmtInt(urgent)}</div></div>
       <div class="expansion-stat"><div class="exp-label">Watch</div><div class="exp-value ${watch?'warn-text':'pos-text'}">${fmtInt(watch)}</div></div>
       <div class="expansion-stat"><div class="exp-label">n8n Used</div><div class="exp-value ${budget.status==='ACTION_REQUIRED'?'neg-text':budget.status==='WATCH'?'warn-text':'pos-text'}">${budget.used_pct!=null?esc(budget.used_pct+'%'):'--'}</div><div class="small">${budget.remaining_estimate!=null?esc('~'+budget.remaining_estimate+' left'):'pending'}</div></div>
       <div class="expansion-stat"><div class="exp-label">To Action</div><div class="exp-value ${Number(budget.remaining_to_action||0)<=0?'neg-text':Number(budget.remaining_to_action||0)<500?'warn-text':'pos-text'}">${budget.remaining_to_action!=null?fmtInt(budget.remaining_to_action):'--'}</div><div class="small">90% at ${budget.action_threshold_used!=null?fmtInt(budget.action_threshold_used):'--'} · urgent in ${budget.remaining_to_urgent!=null?fmtInt(budget.remaining_to_urgent):'--'}</div></div>
