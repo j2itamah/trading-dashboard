@@ -1,6 +1,6 @@
 {
   "health": {
-    "checked_at": "2026-06-22T01:54:03.056234+00:00",
+    "checked_at": "2026-06-22T01:55:19.304465+00:00",
     "active_books": 2,
     "accounting_ok": true,
     "books_with_drift": 0
@@ -10384,7 +10384,7 @@
       "source_filter_status": "public_safe"
     }
   ],
-  "generated_at": "2026-06-22T01:54:03.056234+00:00",
+  "generated_at": "2026-06-22T01:55:19.304465+00:00",
   "prop_summary": {
     "account_count": 2,
     "reporting_date": "2026-06-21",
@@ -14776,7 +14776,7 @@
     }
   ],
   "shadow_health": {
-    "checked_at": "2026-06-22T01:54:03.056234+00:00",
+    "checked_at": "2026-06-22T01:55:19.304465+00:00",
     "audit_errors": 0,
     "audit_success": 300,
     "shadow_status": "OK",
@@ -21111,8 +21111,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 954.5,
-      "source_freshness_reason": "Newest source event age 954.5m > 120m",
+      "source_age_minutes": 955.8,
+      "source_freshness_reason": "Newest source event age 955.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -21149,8 +21149,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 1749.5,
-      "source_freshness_reason": "Newest source event age 1749.5m > 120m",
+      "source_age_minutes": 1750.8,
+      "source_freshness_reason": "Newest source event age 1750.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -21287,8 +21287,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 1794.5,
-      "source_freshness_reason": "Newest source event age 1794.5m > 120m",
+      "source_age_minutes": 1795.8,
+      "source_freshness_reason": "Newest source event age 1795.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -21400,8 +21400,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 4104.5,
-      "source_freshness_reason": "Newest source event age 4104.5m > 120m",
+      "source_age_minutes": 4105.8,
+      "source_freshness_reason": "Newest source event age 4105.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -21434,7 +21434,7 @@
   ],
   "cryptolab_source_hygiene": {
     "status": "PASS",
-    "checked_at": "2026-06-22T01:54:23.054552+00:00",
+    "checked_at": "2026-06-22T01:55:39.150523+00:00",
     "signal_scores_before": 50,
     "signal_scores_after": 14,
     "x_events_before": 100,
@@ -23984,7 +23984,7 @@
     ],
     "monitor": {
       "status": "PASS",
-      "checked_at": "2026-06-22T01:54:33.988517+00:00",
+      "checked_at": "2026-06-22T01:55:53.211868+00:00",
       "cp14_active": true,
       "cp14_schedule": "every 10 minutes",
       "latest_cp14_execution_id": "8470",
@@ -23994,13 +23994,13 @@
     },
     "health": {
       "status": "PASS",
-      "last_checked_at": "2026-06-22T01:54:33.988757+00:00",
+      "last_checked_at": "2026-06-22T01:55:53.212054+00:00",
       "open_trade_count": 2,
       "closed_trade_count": 9,
       "new_error_count": 0,
       "mark_freshness": {
         "status": "PASS",
-        "max_age_minutes": 4.5,
+        "max_age_minutes": 5.8,
         "threshold_minutes": 20
       },
       "reconciliation": {
@@ -24048,7 +24048,7 @@
     },
     "readiness": {
       "status": "NOT_READY",
-      "last_checked_at": "2026-06-22T01:54:33.988892+00:00",
+      "last_checked_at": "2026-06-22T01:55:53.212133+00:00",
       "summary": "Not ready: Trade sample size: 11 total / 9 closed (need 25 total / 20 closed); Observation window: 2.1 days (need 7 days); Health stability: unstable: streak 0/7 snapshots, 0.0/7 days",
       "thresholds": {
         "min_closed_trades": 20,
@@ -24109,7 +24109,7 @@
           "id": "mark_freshness",
           "label": "Mark freshness",
           "status": "PASS",
-          "actual": "4.5 min",
+          "actual": "5.8 min",
           "required": "<= 20 min",
           "notes": []
         },
@@ -24142,8 +24142,16 @@
         "snapshot_count": 50,
         "stable_pass_streak_snapshots": 0,
         "stable_pass_streak_days": 0.0,
-        "latest_snapshot_at": "2026-06-22T01:48:57.296921+00:00",
+        "latest_snapshot_at": "2026-06-22T01:54:35.557991+00:00",
         "recent": [
+          {
+            "captured_at": "2026-06-22T01:54:35.557991+00:00",
+            "overall_status": "NOT_READY",
+            "health_status": "PASS",
+            "blocker_count": 3,
+            "warning_count": 0,
+            "latest_execution_id": "8470"
+          },
           {
             "captured_at": "2026-06-22T01:48:57.296921+00:00",
             "overall_status": "NOT_READY",
@@ -24215,21 +24223,13 @@
             "blocker_count": 3,
             "warning_count": 0,
             "latest_execution_id": "8442"
-          },
-          {
-            "captured_at": "2026-06-22T00:59:29.426172+00:00",
-            "overall_status": "NOT_READY",
-            "health_status": "PASS",
-            "blocker_count": 3,
-            "warning_count": 0,
-            "latest_execution_id": "8436"
           }
         ]
       }
     }
   },
   "ibkr_paper_preflight": {
-    "checked_at": "2026-06-22T01:54:34.403395+00:00",
+    "checked_at": "2026-06-22T01:55:53.657906+00:00",
     "expected_account": "DUQ523641",
     "live_ports_open": [],
     "next_action": "Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.",
@@ -24257,17 +24257,17 @@
     "source": "foundation_v2/v2_telegram_delivery_probe.py",
     "exit_code": 0,
     "command": "/usr/bin/python3 /Users/riipen/.local/bin/v2_telegram_delivery_probe.py",
-    "checked_at": "2026-06-22T01:54:34.453160+00:00",
+    "checked_at": "2026-06-22T01:55:53.709241+00:00",
     "env_source": "/Users/riipen/.telegram_codex_relay_env",
     "telegram_env_present": true,
     "send_enabled": false,
     "delivery": "not_sent_dry_run",
     "reason": null,
     "expected_env_file": null,
-    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T01:54:34.453304+00:00",
+    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T01:55:53.709396+00:00",
     "next_action": "Local Telegram urgent-send path is configured; use --send only for an approved proof message.",
     "raw_status": "READY",
-    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-22T01:54:34.453160+00:00\nenv_source=/Users/riipen/.telegram_codex_relay_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=n8n_relay\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T01:54:34.453304+00:00\n",
+    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-22T01:55:53.709241+00:00\nenv_source=/Users/riipen/.telegram_codex_relay_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=n8n_relay\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-22T01:55:53.709396+00:00\n",
     "safety": {
       "send_enabled": false,
       "telegram_send": "not sent",
@@ -24282,11 +24282,11 @@
     "status": "PASS",
     "source": "foundation_v2/run_v2_monday_safe_observation.sh",
     "contract_source": "foundation_v2/v2_monday_safe_observation_wrapper_check.py",
-    "wrapper_source": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/run_v2_monday_safe_observation.sh",
-    "contract_source_path": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_wrapper_check.py",
+    "wrapper_source": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/run_v2_monday_safe_observation.sh",
+    "contract_source_path": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_wrapper_check.py",
     "wrapper_command": "bash foundation_v2/run_v2_monday_safe_observation.sh",
     "check_mode": "static_contract",
-    "checked_at": "2026-06-22T01:54:34.486142+00:00",
+    "checked_at": "2026-06-22T01:55:53.714761+00:00",
     "unsafe_args_refused": true,
     "safe_banner": true,
     "telegram_send_disabled": true,
@@ -24296,9 +24296,9 @@
       "label": "com.v2monday.safe-observation",
       "runner": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
       "local_runner": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
-      "runner_source": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
+      "runner_source": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/v2_monday_safe_observation_launchd_runner.sh",
       "template": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/com.v2monday.safe-observation.plist.template",
-      "template_source": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/com.v2monday.safe-observation.plist.template",
+      "template_source": "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/com.v2monday.safe-observation.plist.template",
       "installed_plist": "/Users/riipen/Library/LaunchAgents/com.v2monday.safe-observation.plist",
       "installed": false,
       "loaded": false,
@@ -24310,18 +24310,18 @@
     },
     "lock": {
       "lock_dir": "/tmp/v2_monday_safe_observation.lock",
-      "exists": true,
+      "exists": false,
       "pid_file": "/tmp/v2_monday_safe_observation.lock/pid",
-      "pid": 74323,
-      "pid_running": true,
+      "pid": null,
+      "pid_running": false,
       "auto_cleanup": false,
-      "status": "WATCH",
-      "state": "active",
-      "detail": "Observation lock is held by running pid 74323.",
-      "next_action": "Wait for the current observation cycle to finish; do not start another run."
+      "status": "PASS",
+      "state": "absent",
+      "detail": "No Monday safe-observation lock is present.",
+      "next_action": "Observation wrapper can acquire the lock when needed."
     },
     "latest_session": {
-      "recorded_at": "2026-06-22T00:36:22.124087+00:00",
+      "recorded_at": "2026-06-22T01:54:48.447094+00:00",
       "status": "WATCH",
       "gate_runs_this_cycle": 1,
       "safe_to_observe": true,
@@ -24344,7 +24344,7 @@
   },
   "stock_expansion_readiness": {
     "status": "NOT_READY",
-    "checked_at": "2026-06-22T01:54:34.492035+00:00",
+    "checked_at": "2026-06-22T01:55:53.722121+00:00",
     "expansion_allowed": false,
     "ready_for_user_approval": false,
     "summary": "Expansion blocked: Volatility evidence complete: 0/30 closed; review_status=collecting_evidence; Post-fix stock latency proven: 0 clean / 0 post-fix stock rows; classes={'observation_pending': 0}; Monday live observation: pending until 2026-06-22T13:30:00Z; IBKR paper proof: Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.; User expansion approval: requires exact approved expansion packet",
@@ -24446,6 +24446,34 @@
     "source": "python_publisher_read_only"
   },
   "monday_operator_runs": [
+    {
+      "exit_code": 0,
+      "expansion_blocking": 5,
+      "expansion_fail": 0,
+      "expansion_status": "NOT_READY",
+      "hard_failures": [],
+      "ibkr_live_ports_open": [],
+      "ibkr_next_action": "Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.",
+      "ibkr_paper_ports_open": [],
+      "ibkr_selected_port": null,
+      "ibkr_status": "WATCH",
+      "mirror_candidate_found": false,
+      "mirror_dry_run_completed": false,
+      "next_action": "continue observing; do not force candidates, paper orders, or expansion",
+      "open_at": "2026-06-22T13:30:00Z",
+      "paper_mirror_candidate_ready": false,
+      "paper_order_allowed": false,
+      "payload_reused": true,
+      "recorded_at": "2026-06-22T01:54:48.401344+00:00",
+      "rulebook_fail": 0,
+      "rulebook_pass": 53,
+      "rulebook_watch": 2,
+      "run_index": 1,
+      "safe_to_observe": true,
+      "source": "v2_monday_operator_watch",
+      "status": "WATCH",
+      "stock_expansion_allowed": false
+    },
     {
       "exit_code": 0,
       "expansion_blocking": 5,
@@ -25125,34 +25153,6 @@
       "source": "v2_monday_operator_watch",
       "status": "WATCH",
       "stock_expansion_allowed": false
-    },
-    {
-      "exit_code": 0,
-      "expansion_blocking": 6,
-      "expansion_fail": 0,
-      "expansion_status": "NOT_READY",
-      "hard_failures": [],
-      "ibkr_live_ports_open": [],
-      "ibkr_next_action": "Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.",
-      "ibkr_paper_ports_open": [],
-      "ibkr_selected_port": null,
-      "ibkr_status": "WATCH",
-      "mirror_candidate_found": false,
-      "mirror_dry_run_completed": false,
-      "next_action": "continue observing; do not force candidates, paper orders, or expansion",
-      "open_at": "2026-06-22T13:30:00Z",
-      "paper_mirror_candidate_ready": false,
-      "paper_order_allowed": false,
-      "payload_reused": true,
-      "recorded_at": "2026-06-21T13:26:42.500115+00:00",
-      "rulebook_fail": 0,
-      "rulebook_pass": 36,
-      "rulebook_watch": 2,
-      "run_index": 1,
-      "safe_to_observe": true,
-      "source": "v2_monday_operator_watch",
-      "status": "WATCH",
-      "stock_expansion_allowed": false
     }
   ],
   "monday_next_action": {
@@ -25160,7 +25160,7 @@
     "action": "continue_bounded_observation",
     "reason": "safe to observe; no current-day paper mirror candidate or expansion approval gate yet",
     "next_command": "bash foundation_v2/run_v2_monday_safe_observation.sh",
-    "recorded_at": "2026-06-22T00:36:22.076832+00:00",
+    "recorded_at": "2026-06-22T01:54:48.401344+00:00",
     "source": "DATA.monday_operator_runs + DATA.stock_expansion_readiness",
     "ignored_invalid_operator_rows": 1,
     "operator_status": "WATCH",
@@ -25171,7 +25171,7 @@
     "required_approval_phrase": null
   },
   "monday_readiness_digest": {
-    "checked_at": "2026-06-22T01:54:34.493798+00:00",
+    "checked_at": "2026-06-22T01:55:53.724782+00:00",
     "mode": "published",
     "status": "WATCH",
     "next_safe_action": {
@@ -25200,7 +25200,7 @@
       "next_action": "latency proof is present; keep monitoring for failures and stale references"
     },
     "published_json": {
-      "generated_at": "2026-06-22T01:54:03.056234+00:00",
+      "generated_at": "2026-06-22T01:55:19.304465+00:00",
       "key_count": 33,
       "accounting_ok": true,
       "books_with_drift": 0
@@ -25243,12 +25243,12 @@
     }
   },
   "monday_preopen_checklist": {
-    "checked_at": "2026-06-22T01:54:34.493892+00:00",
+    "checked_at": "2026-06-22T01:55:53.724888+00:00",
     "mode": "published",
     "status": "WATCH",
     "summary": {
-      "pass": 6,
-      "watch": 5,
+      "pass": 8,
+      "watch": 3,
       "fail": 0
     },
     "decisions": {
@@ -25274,7 +25274,7 @@
       {
         "name": "published_json",
         "status": "PASS",
-        "detail": "assembled_keys_pre_checklist=35; missing_evidence=[]; generated_at=2026-06-22T01:54:03.056234+00:00; accounting_ok=True; books_with_drift=0",
+        "detail": "assembled_keys_pre_checklist=35; missing_evidence=[]; generated_at=2026-06-22T01:55:19.304465+00:00; accounting_ok=True; books_with_drift=0",
         "action": "Continue."
       },
       {
@@ -25291,15 +25291,15 @@
       },
       {
         "name": "safe_observation_ready",
-        "status": "WATCH",
-        "detail": "status=PASS; scheduler_status=PASS; activation_allowed=False; lock_status=WATCH; lock_state=active",
-        "action": "Wait for the current observation cycle to finish; do not start another run."
+        "status": "PASS",
+        "detail": "status=PASS; scheduler_status=PASS; activation_allowed=False; lock_status=PASS; lock_state=absent",
+        "action": "Run manual bounded observation only."
       },
       {
         "name": "safe_observation_lock",
-        "status": "WATCH",
-        "detail": "status=WATCH; state=active; exists=True; pid=74323; pid_running=True; lock_dir=/tmp/v2_monday_safe_observation.lock",
-        "action": "Wait for the current observation cycle to finish; do not start another run."
+        "status": "PASS",
+        "detail": "status=PASS; state=absent; exists=False; pid=None; pid_running=False; lock_dir=/tmp/v2_monday_safe_observation.lock",
+        "action": "Observation wrapper can acquire the lock when needed."
       },
       {
         "name": "next_safe_action",
@@ -25310,7 +25310,7 @@
       {
         "name": "telegram_delivery_probe",
         "status": "PASS",
-        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-22T01:54:34.453160+00:00",
+        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-22T01:55:53.709241+00:00",
         "action": "Urgent Telegram path is configured for approved sends; no message sent."
       },
       {
@@ -25351,7 +25351,7 @@
     }
   },
   "monday_operator_runbook": {
-    "checked_at": "2026-06-22T01:54:34.493901+00:00",
+    "checked_at": "2026-06-22T01:55:53.724897+00:00",
     "status": "PASS",
     "mode": "read_only_operator_runbook",
     "primary_coordination_chat": "Understand GitHub and ledger updates",
@@ -25469,7 +25469,7 @@
     }
   },
   "monday_first_command_packet": {
-    "checked_at": "2026-06-22T01:54:34.493913+00:00",
+    "checked_at": "2026-06-22T01:55:53.724908+00:00",
     "status": "WATCH",
     "operator_message": "Run the first command, then continue observation-only if it says continue_bounded_observation.",
     "first_command": "python3 foundation_v2/v2_monday_live_standby_packet.py --json",
@@ -25535,7 +25535,7 @@
     },
     "published_evidence": {
       "data_path": "/tmp/data.v2.json",
-      "generated_at": "2026-06-22T01:54:03.056234+00:00",
+      "generated_at": "2026-06-22T01:55:19.304465+00:00",
       "key_count": 37,
       "health_status": "PASS",
       "preopen_status": "WATCH",
@@ -25591,7 +25591,7 @@
     }
   },
   "monday_operator_evidence_index": {
-    "checked_at": "2026-06-22T01:54:34.493941+00:00",
+    "checked_at": "2026-06-22T01:55:53.724936+00:00",
     "status": "WATCH",
     "summary": {
       "pass": 2,
@@ -25599,7 +25599,7 @@
       "fail": 0
     },
     "data_path": "/tmp/data.v2.json",
-    "generated_at": "2026-06-22T01:54:03.056234+00:00",
+    "generated_at": "2026-06-22T01:55:19.304465+00:00",
     "runbook_status": "PASS",
     "next_safe_action": {
       "status": "WATCH",
@@ -25721,12 +25721,12 @@
     "status": "WATCH",
     "phase": "CLOSED",
     "stock_market_open": false,
-    "checked_at": "2026-06-22T01:54:34.493945+00:00",
-    "current_utc": "2026-06-22T01:54:34.493945+00:00",
-    "current_et": "2026-06-21T21:54:34.493945-04:00",
-    "current_mdt": "2026-06-21T19:54:34.493945-06:00",
-    "current_et_label": "Sun Jun 21, 2026 9:54 PM ET",
-    "current_mdt_label": "Sun Jun 21, 2026 7:54 PM MDT",
+    "checked_at": "2026-06-22T01:55:53.724941+00:00",
+    "current_utc": "2026-06-22T01:55:53.724941+00:00",
+    "current_et": "2026-06-21T21:55:53.724941-04:00",
+    "current_mdt": "2026-06-21T19:55:53.724941-06:00",
+    "current_et_label": "Sun Jun 21, 2026 9:55 PM ET",
+    "current_mdt_label": "Sun Jun 21, 2026 7:55 PM MDT",
     "next_open_at": "2026-06-22T13:30:00+00:00",
     "next_open_et": "2026-06-22T09:30:00-04:00",
     "next_open_mdt": "2026-06-22T07:30:00-06:00",
@@ -25735,8 +25735,8 @@
     "next_close_et": "2026-06-22T16:00:00-04:00",
     "next_close_mdt": "2026-06-22T14:00:00-06:00",
     "next_close_label": "Mon Jun 22, 2026 4:00 PM ET",
-    "minutes_to_next_open": 696,
-    "minutes_to_next_close": 1086,
+    "minutes_to_next_open": 695,
+    "minutes_to_next_close": 1085,
     "regular_session": "09:30-16:00 ET",
     "holiday_calendar": "NYSE/Nasdaq 2026 full-day holiday approximation",
     "safe_to_observe": true,
@@ -25751,6 +25751,37 @@
     "source": "publisher clock + DATA.monday_next_action + DATA.monday_preopen_checklist"
   },
   "publisher_runs": [
+    {
+      "id": 383,
+      "run_id": "c68516e6-89b6-4632-a213-5c909d876f7b",
+      "source": "python_publisher",
+      "status": "success",
+      "started_at": "2026-06-22T01:54:02.617364+00:00",
+      "completed_at": "2026-06-22T01:54:34.871673+00:00",
+      "duration_ms": 32628,
+      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json",
+      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
+      "output_secondary_tmp": "/tmp/data.v2.json",
+      "generated_at": "2026-06-22T01:54:02.243442+00:00",
+      "key_count": 41,
+      "required_key_count": 19,
+      "missing_required_keys": [],
+      "bytes_written": 1029574,
+      "sha256": "a7d7b5d0690d016cddc694c7ad0b8ae095af83a961f156b4c686ace97256facd",
+      "accounting_ok": true,
+      "books_with_drift": 0,
+      "crypto_lab_trade_count": 11,
+      "crypto_lab_open_count": 2,
+      "crypto_lab_closed_count": 9,
+      "crypto_lab_account_count": 5,
+      "validation_passed": true,
+      "copied_dashboard": true,
+      "copied_tmp": true,
+      "error_message": null,
+      "metadata": {
+        "source": "python_publisher"
+      }
+    },
     {
       "id": 382,
       "run_id": "98833223-e89c-438b-a33e-a25f24a1efb3",
@@ -26481,37 +26512,6 @@
       "missing_required_keys": [],
       "bytes_written": 1022569,
       "sha256": "ffb62e69c46fc38e2e864cf5563c218b0de4521ecf24b1c37cae90ac5fa0e3ac",
-      "accounting_ok": true,
-      "books_with_drift": 0,
-      "crypto_lab_trade_count": 11,
-      "crypto_lab_open_count": 2,
-      "crypto_lab_closed_count": 9,
-      "crypto_lab_account_count": 5,
-      "validation_passed": true,
-      "copied_dashboard": true,
-      "copied_tmp": true,
-      "error_message": null,
-      "metadata": {
-        "source": "python_publisher"
-      }
-    },
-    {
-      "id": 358,
-      "run_id": "e4216e55-cf6c-40af-ad6a-2a3f33c67011",
-      "source": "python_publisher",
-      "status": "success",
-      "started_at": "2026-06-22T00:05:09.144909+00:00",
-      "completed_at": "2026-06-22T00:06:01.944822+00:00",
-      "duration_ms": 59272,
-      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json",
-      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
-      "output_secondary_tmp": "/tmp/data.v2.json",
-      "generated_at": "2026-06-22T00:05:02.672645+00:00",
-      "key_count": 41,
-      "required_key_count": 19,
-      "missing_required_keys": [],
-      "bytes_written": 1022380,
-      "sha256": "3ee78d865d27bf9ff9b44002a4f71afacc21d5098aa76a43bb418da312d997c5",
       "accounting_ok": true,
       "books_with_drift": 0,
       "crypto_lab_trade_count": 11,
