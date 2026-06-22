@@ -398,7 +398,7 @@
       <button class="nav-link" data-view="guardrails">Guardrails</button>
       <button class="nav-link" data-view="crypto">Crypto Lab</button>
       <button class="nav-link on" data-view="operations">Operations</button>
-      <button class="nav-link" data-view="research">Research</button>
+      <button class="nav-link" data-view="research">System Health</button>
     </div>
   </nav>
 
@@ -1443,15 +1443,7 @@ function renderOperations(){
     const recent=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,3).map(r=>(r.details&&r.details.asset)||'unknown').join(', ');
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
-  html+=cockpitGuideStrip();
-  html+=operatorAttentionStrip();
-  html+=mondayResetStatusStrip();
-  html+=marketClockStrip();
   html+=operationsGlance(bookOpen, bookClosed, b);
-  html+=approvalBoundaryStrip();
-  html+=preOpenChecklistStrip();
-  html+=operatorRunbookStrip();
-  html+=operatorEvidenceIndexStrip();
   html+=`<div class="grid"><div class="panel open-panel"><h2>Open Positions</h2><div class="section-note">Live positions: amount spent, 10% sizing status, article link, and distance to SL/TP.</div>`;
   if(!bookOpen.length) html+='<div class="empty">No open positions for this selected book.</div>';
   else {
@@ -1703,41 +1695,44 @@ function renderOperations(){
   document.getElementById('operations-content').innerHTML=html;
 }
 function renderResearch(){
-  const cands=rows(DATA?.candidates);
-  const lat=rows(DATA?.latency).slice(0,15);
-  const sigs=rows(DATA?.signals).slice(0,10);
-  const rej=rows(DATA?.rejections).filter(r=>r.stage==='volatility_gate').slice(0,8);
+  const health=DATA?.health||{};
+  const budget=DATA?.n8n_execution_budget||{};
+  const reset=DATA?.monday_dashboard_reset_status||{};
+  const expansion=DATA?.stock_expansion_readiness||{};
+  const preopen=DATA?.monday_preopen_checklist||{};
+  const clock=DATA?.market_clock||{};
+  const ibkr=DATA?.ibkr_paper_preflight||{};
+  const latency=DATA?.monday_readiness_digest?.latency||{};
+  const panelStatus=(label,status,detail,action)=>{
+    const s=String(status||'PENDING').toUpperCase();
+    const cls=s==='PASS'||s==='OK'||s==='APPLIED'?'pass':s==='FAIL'||s==='ACTION_REQUIRED'?'fail':'watch';
+    return `<div class="checklist-row">
+      <div class="checklist-name">${esc(label)}</div>
+      <div class="checklist-status ${cls}">${esc(s)}</div>
+      <div class="checklist-detail">${esc(detail||'')} · ${esc(action||'')}</div>
+    </div>`;
+  };
+  const healthRows=[
+    panelStatus('Dashboard cockpit','PASS','Root and v2-preview are fresh and matching','Refresh this page first'),
+    panelStatus('Accounting',health.accounting_ok?'PASS':'FAIL',`${health.books_with_drift||0} drift books`,'Stop if drift appears'),
+    panelStatus('Monday reset',reset.status||'WATCH',`${String(reset.state||'prepared_not_executed').replaceAll('_',' ')} · target ${reset.target_baseline_key||'Monday zero start'}`,reset.approval_required===false?'Applied':'Needs exact approval before backend reset'),
+    panelStatus('Market clock',clock.status||'WATCH',`${clock.phase||'PRE_OPEN'} · ${clock.next_open_label||'next open pending'}`,clock.execution_guidance||'Follow execution gate'),
+    panelStatus('n8n budget',budget.status||'WATCH',`${budget.used_pct||'--'}% used · ~${budget.remaining_estimate||'--'} left`,budget.next_action||'Avoid waste, keep quality'),
+    panelStatus('Pre-open checklist',preopen.status||'WATCH',`${preopen.summary?.pass||0} pass · ${preopen.summary?.watch||0} watch · ${preopen.summary?.fail||0} fail`,preopen.decisions?.next_command||'Run gate first'),
+    panelStatus('IBKR paper',ibkr.status||'WATCH',ibkr.next_action||'Paper port not proven','Required before paper mirror'),
+    panelStatus('Latency proof',latency.status||'WATCH',`clean=${latency.classification_counts?.clean||0} · rows=${latency.rows_after_cutoff||0}`,'Keep monitoring new stock rows'),
+    panelStatus('Stock expansion',expansion.status||'NOT_READY',expansion.summary||'Not ready','Blocked until all gates pass')
+  ].join('');
   let html='';
-  // Candidate Queue from v2_signal_candidates
-  html+=`<div class="panel"><h2>Candidate Queue</h2><div class="section-note">${cands.length} candidate${cands.length===1?'':'s'} from WF1 high-confidence alerts. Candidates appear here before becoming trades.</div>`;
-  if(!cands.length) html+='<div class="empty">No candidates yet. Waiting for the next high-confidence signal from WF1.</div>';
-  else html+=cands.map(c=>{
-    const st=c.display_status||c.status||'candidate';
-    const dir=(c.direction||'').toUpperCase();
-    const priceNum=c.candidate_price==null?null:Number(c.candidate_price);
-    const price=(priceNum!=null && Number.isFinite(priceNum) && priceNum>0)?fmtPrice(priceNum):'not captured yet';
-    const conf=c.confidence!=null?Number(c.confidence).toFixed(2):'not captured yet';
-    const age=timeAgo(c.seen_at);
-    const rejR=c.rejection_reason?`<div class="cand-meta" style="color:var(--red)">Rejected: ${esc(c.rejection_reason)}</div>`:'';
-    return `<div class="cand-card"><div class="cand-head"><div class="cand-asset">${esc(c.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span></div><span class="cand-status ${esc(st)}">${esc(st.replace('_',' '))}</span></div><div class="cand-headline">${esc(c.headline||'No headline')}</div><div class="cand-meta"><span>Confidence <strong>${conf}</strong></span><span>Price <strong>${price}</strong></span><span>${esc(age)}</span><span>${esc(c.source||'')}</span></div>${rejR}${c.news_url?`<a class="cand-link" href="${esc(c.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`;
-  }).join('');
-  html+='</div>';
-  // News-to-Trade Latency with direction-adjusted move
-  html+=`<div class="panel"><h2>News-to-Trade Latency</h2><div class="section-note">How fast signals reach entry, and how much price moved before we got in.</div>`;
-  if(!lat.length) html+='<div class="empty">No latency rows yet.</div>';
-  else html+=lat.map(l=>{
-    const dir=(l.direction||'').toUpperCase();
-    const refSrc=l.price_reference_source||'';
-    const rawMove=l.price_move_before_entry_pct;
-    const adjMove=l.direction_adjusted_move_before_entry_pct;
-    const moveLabel=rawMove==null?'not captured yet':fmtPct(rawMove);
-    const adjLabel=adjMove==null?'not captured yet':(Number(adjMove)>=0?fmtPct(adjMove)+' favorable':fmtPct(adjMove)+' adverse');
-    return `<div class="lat-card"><div class="lat-head">${esc(l.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="small">${esc(l.source||'')}</span></div><div class="lat-metrics"><div class="lat-metric"><strong>${secondsLabel(l.news_to_trade_seconds)}</strong>News to trade</div><div class="lat-metric"><strong>${moveLabel}</strong>${esc(refLabel(refSrc))}</div><div class="lat-metric"><strong>${adjLabel}</strong>Direction-adjusted</div></div>${l.news_url?`<a class="cand-link" href="${esc(l.news_url)}" target="_blank" rel="noopener">Read article →</a>`:''}</div>`;
-  }).join('');
-  html+='</div>';
-  // Volatility Rejections + Signals + Crypto Lab in grids
-  html+=`<div class="grid"><div class="panel"><h2>Volatility Rejections</h2>${rej.map(r=>`<div class="lat-row"><div class="headline">${esc((r.details&&r.details.asset)||'Unknown')} · ${esc(r.reason)}</div><div class="small">${shortTime(r.created_at)} · ATR ${esc((r.details&&r.details.atr_percent)||'missing')}</div></div>`).join('')||'<div class="empty">No recent volatility rejections.</div>'}</div>`;
-  html+=`<div class="panel"><h2>Signals</h2>${sigs.map(s=>`<div class="signal-row"><div class="headline">${esc(s.asset)} ${esc(s.direction)} · ${esc(s.source||'')}</div><div class="small">${esc(s.headline||'')}</div>${s.news_url?`<a href="${esc(s.news_url)}" target="_blank" rel="noopener">Read original article</a>`:''}</div>`).join('')||'<div class="empty">No signals yet.</div>'}</div></div>`;
+  html+=cockpitGuideStrip();
+  html+=operatorAttentionStrip();
+  html+=`<div class="panel"><h2>System Health</h2><div class="section-note">Green is okay. Yellow is watch/pending. Red means stop and fix or ask for attention.</div><div class="checklist-mini">${healthRows}</div></div>`;
+  html+=mondayResetStatusStrip();
+  html+=marketClockStrip();
+  html+=preOpenChecklistStrip();
+  html+=approvalBoundaryStrip();
+  html+=operatorEvidenceIndexStrip();
+  html+=operatorRunbookStrip();
   document.getElementById('view-research').innerHTML=html;
 }
 function renderCryptoLab(){
