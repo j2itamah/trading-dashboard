@@ -56,6 +56,19 @@
   body.ops-chrome-minimal .portfolio-toggle{margin-bottom:12px}
   body.ops-chrome-minimal .model-section{margin:12px 0}
   body.ops-chrome-minimal #active-label{display:none}
+  .expansion-checkpoint{margin:0 0 16px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:var(--shadow)}
+  .expansion-checkpoint-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+  .expansion-checkpoint-head h2{margin:0;font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
+  .expansion-checkpoint-progress{font:700 15px/1.2 'Fraunces',serif;margin-bottom:10px}
+  .expansion-checkpoint-bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden;margin:0 0 12px}
+  .expansion-checkpoint-bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),#3bbd8a)}
+  .expansion-checkpoint-gates{display:grid;gap:6px}
+  .expansion-gate{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;border:1px solid rgba(35,31,26,.06);background:#fbfaf6;font:600 12px/1.35 'Spline Sans',sans-serif}
+  .expansion-gate.pass{border-color:rgba(29,157,107,.22);background:var(--green-bg)}
+  .expansion-gate.watch{border-color:rgba(200,138,45,.28);background:#fff8e5}
+  .expansion-gate.fail{border-color:rgba(214,72,90,.28);background:var(--red-bg)}
+  .expansion-gate-label{font-weight:700;color:var(--ink)}
+  .expansion-gate-detail{font:500 11px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft);text-align:right;max-width:62%;overflow-wrap:anywhere}
   .build-state-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .build-chip{display:flex;flex-direction:column;gap:3px;min-width:0;padding:8px 9px;border-radius:10px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06)}
   .build-chip.wide{grid-column:1/-1}
@@ -859,6 +872,33 @@ function operationsGlance(open, closed, book){
     <div class="split-legend"><div><span class="k">Cash</span><span class="v">${fmtMoney(cash)}</span></div><div style="text-align:right"><span class="k">Deployed</span><span class="v">${fmtMoney(deployed)}</span></div></div>
   </div>`;
 }
+function expansionCheckpointCard(){
+  const exp=DATA?.stock_expansion_readiness||{};
+  const gates=rows(exp.gates);
+  if(!gates.length) return '';
+  const pass=gates.filter(g=>String(g.status||'').toUpperCase()==='PASS').length;
+  const total=gates.length;
+  const blocking=gates.filter(g=>g.blocks_expansion);
+  const ready=exp.expansion_allowed===true;
+  const pct=total?Math.round((pass/total)*100):0;
+  const volGate=gates.find(g=>/volatility evidence/i.test(String(g.label||'')));
+  const volMatch=String(volGate?.detail||'').match(/(\d+)\s*\/\s*(\d+)/);
+  const volLine=volMatch?`Volatility book needs ${volMatch[2]} closed trades (${volMatch[1]} now).`:'Volatility book needs 30 closed trades before expansion.';
+  const gateRows=blocking.slice(0,5).map(g=>{
+    const s=String(g.status||'WATCH').toLowerCase();
+    return `<div class="expansion-gate ${s}"><span class="expansion-gate-label">${esc(g.label||'Gate')}</span><span class="expansion-gate-detail">${esc(g.detail||'')}</span></div>`;
+  }).join('');
+  const headline=ready
+    ? 'All gates pass — ready for your expansion approval phrase.'
+    : `${blocking.length} gate${blocking.length===1?'':'s'} still blocking expansion.`;
+  return `<div class="expansion-checkpoint">
+    <div class="expansion-checkpoint-head"><h2>Expansion checkpoint</h2><span class="expansion-badge ${ready?'ready':'not-ready'}">${ready?'READY':'NOT READY'}</span></div>
+    <div class="expansion-checkpoint-progress">${pass}/${total} gates pass · ${headline}</div>
+    <div class="expansion-checkpoint-bar"><span style="width:${pct}%"></span></div>
+    <div class="expansion-checkpoint-gates">${gateRows||'<div class="small">No blockers listed.</div>'}</div>
+    <div class="expansion-footnote">${esc(volLine)} Enable macOS notifications for Terminal/Script Editor if you want launchd alerts every 10m during market hours.</div>
+  </div>`;
+}
 function modelPerformancePanel(){
   const baselineKey=String(DATA?.official_baseline?.baseline_key||'official reset').replace(/^official_/,'').replace(/_/g,' ');
   const rows=['fixed','volatility'].map(model=>{
@@ -1071,10 +1111,19 @@ function renderStatusStrip(){
   const monDot=monSkipped?'warn':monOk?'':'warn';
   const attentionLabel=userAction?'You · action':codexAction?'Codex · repair':'All clear';
   const attentionCls=userAction?'neg-text':codexAction?'warn-text':'';
+  const exp=DATA?.stock_expansion_readiness||{};
+  const expGates=rows(exp.gates);
+  const expPass=expGates.filter(g=>String(g.status||'').toUpperCase()==='PASS').length;
+  const expBlock=expGates.filter(g=>g.blocks_expansion).length;
+  const lastNote=hb.last_macos_notification||{};
+  const noteOk=Number(lastNote.exit_code||1)===0;
+  const noteLabel=lastNote.sent_at?(noteOk?'notify ok':'notify fail'):'notify never';
   el.innerHTML=`<span class="status-pill"><span class="status-dot ${marketLive?'':'warn'}"></span>${esc(market)}</span>
     <span class="status-pill">${esc(cp)}</span>
     <span class="status-pill"><span class="status-dot ${pubOk?'':'fail'}"></span>pub ${pubOk?'ok':'err'}</span>
     <span class="status-pill"><span class="status-dot ${monDot||'warn'}"></span>mon ${esc(monLabel)}</span>
+    <span class="status-pill ${exp.expansion_allowed?'':'warn-text'}">expand ${expPass}/${expGates.length||'?'}</span>
+    <span class="status-pill ${noteOk?'':'warn-text'}">${esc(noteLabel)}${lastNote.sent_at?' · '+timeAgo(lastNote.sent_at):''}</span>
     <span class="status-pill">${timeAgo(DATA?.generated_at)}</span>
     <span class="status-pill ${attentionCls}">${esc(attentionLabel)}</span>
     <button class="status-action" type="button" data-action="health">System health</button>
@@ -1092,7 +1141,7 @@ function renderStatusStrip(){
         <div class="loop-card ${monSkipped?'warn':monOk?'ok':'warn'}"><div class="loop-name">Market monitor</div><div class="loop-status"><span class="loop-dot"></span>${monSkipped?'Idle':monOk?'Healthy':'Audit open'}</div><div class="loop-detail">${mon.checked_at?timeAgo(mon.checked_at)+' · '+(mon.notification||monStatus||''):'No run yet'}</div></div>
         <div class="loop-card ok"><div class="loop-name">GitHub Pages</div><div class="loop-status"><span class="loop-dot"></span>Live</div><div class="loop-detail">${timeAgo(DATA?.generated_at)} · refresh 60s</div></div>
       </div>
-      <div class="small">Background jobs run via macOS launchd on your Mac — not Cursor Automations.</div>
+      <div class="small">Background jobs run via macOS launchd on your Mac — not Cursor Automations. If notify fail: System Settings → Notifications → allow Script Editor or Terminal.</div>
     </div></details>`;
   const sub=document.getElementById('build-subtitle');
   if(sub) sub.textContent=userAction?'You have dashboard actions · Codex on repairs':codexAction?'Codex repairing · nothing needed from you right now':'Clean baseline · patch proof window';
@@ -1683,6 +1732,7 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
 	  html+=operationsGlance(bookOpen, bookClosed, b);
+	  if(sel.portfolio==='news_only') html+=expansionCheckpointCard();
 	  if(!bookOpen.length && !bookClosed.length){
 	    html+=`<div class="panel"><h2>Waiting for first Monday trade</h2><div class="section-note">This reset-window book is clean: no open trades, no closed trades, and no deployed capital yet. Trade cards will appear here after the first official post-reset signal.</div></div>`;
 	  } else {
