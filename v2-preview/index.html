@@ -38,7 +38,21 @@
   .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:12px 14px;cursor:pointer;white-space:nowrap;width:100%;text-align:left}
   .nav-link:hover{color:var(--ink);background:rgba(0,0,0,.03)}
   .nav-link.on{background:var(--accent);color:#fff}
-  .build-state-bar{margin:0 0 16px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow)}
+  .build-state-bar{margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow)}
+  .automation-loops{margin:0 0 16px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow)}
+  .automation-loops-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .automation-loops-head h3{margin:0;font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
+  .automation-loops-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .loop-card{padding:10px 12px;border-radius:12px;border:1px solid rgba(35,31,26,.06);background:#fbfaf6;min-width:0}
+  .loop-card.ok{border-color:rgba(29,157,107,.25);background:var(--green-bg)}
+  .loop-card.warn{border-color:rgba(200,138,45,.35);background:#fff8e5}
+  .loop-card.fail{border-color:rgba(214,72,90,.35);background:var(--red-bg)}
+  .loop-name{font:700 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft)}
+  .loop-status{font:700 13px/1.35;margin-top:5px;display:flex;align-items:center;gap:6px}
+  .loop-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex:0 0 auto}
+  .loop-card.warn .loop-dot{background:var(--gold)}
+  .loop-card.fail .loop-dot{background:var(--red)}
+  .loop-detail{font:500 11px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:4px;overflow-wrap:anywhere}
   .build-state-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .build-chip{display:flex;flex-direction:column;gap:3px;min-width:0;padding:8px 9px;border-radius:10px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06)}
   .build-chip.wide{grid-column:1/-1}
@@ -70,6 +84,12 @@
   .panel.clickable{cursor:pointer}
   .panel.clickable:hover{border-color:rgba(55,91,121,.45);box-shadow:0 12px 32px rgba(55,91,121,.12)}
   .eq-card{padding:22px 24px}
+  .equity-hero{text-align:center;padding:28px 24px 22px;border:none;background:transparent;box-shadow:none}
+  .equity-hero .eq-label{text-align:center}
+  .equity-hero .eq-equity{font-size:clamp(36px,6vw,52px)}
+  .equity-hero .eq-growth{text-align:center;font-size:15px}
+  .equity-hero .split-bar{max-width:520px;margin:18px auto 10px}
+  .equity-hero .split-legend{max-width:520px;margin:0 auto;font-size:11px}
   .eq-label,.label,.panel h2{font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
   .eq-equity{font-family:'Fraunces',serif;font-size:clamp(30px,5vw,44px);font-weight:600;letter-spacing:-1px;line-height:1.05;margin-top:7px}
   .eq-growth{font:700 14px/1.4 'Spline Sans Mono',monospace;margin-top:8px}
@@ -132,7 +152,8 @@
   .pos-row.closed{align-items:start;border-left:3px solid #e8a0a8;padding-left:10px;border-radius:10px;background:rgba(251,234,236,.28);margin-bottom:4px}
   .pos-row.closed.take_profit{border-left-color:#b8e2cc;background:rgba(230,245,238,.35)}
   .pos-row.closed.time,.pos-row.closed.sell_eod{border-left-color:#bfd0dd;background:rgba(234,240,245,.42)}
-  .asset-line{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .asset-line{font-family:'Fraunces',serif;font-weight:600;font-size:22px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.3px}
+  .asset-line .badge,.asset-line .tag{font-family:'Spline Sans',sans-serif;font-size:10px;font-weight:700}
   .pos-meta{font:12px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:4px}
   .reason-line{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
   .reason-pill{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.45px;padding:6px 9px;border-radius:999px;border:1px solid var(--line);background:#f7f6f0;color:var(--ink-soft)}
@@ -327,6 +348,7 @@
     .updated{text-align:left}
     .equity-summary,.grid,.three-grid{grid-template-columns:1fr}
     .ops-glance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .automation-loops-grid{grid-template-columns:1fr}
     .kpis{grid-template-columns:repeat(2,1fr)}
     .portfolio-toggle{border-radius:14px}
     .toggle-btn{flex:1 1 30%;text-align:center;font-size:12px;padding:9px 8px}
@@ -418,6 +440,7 @@
   </nav>
 
   <div class="build-state-bar" id="build-state-bar" aria-live="polite"></div>
+  <div class="automation-loops" id="automation-loops" aria-live="polite"></div>
 
   <header>
     <div class="title-block">
@@ -806,34 +829,21 @@ function targetHealthPanel(trades, model){
   </div>`;
 }
 function operationsGlance(open, closed, book){
-  const s=targetStats(open.concat(closed));
-  const start=Number(book?.starting_balance||10000);
+  const reset=officialResetSummary();
   const display=bookDisplayStats(book);
-  const selectedPnl=s.realized+s.unrealized;
-  const totalPnl=Number(book?.official_since_baseline_pnl ?? book?.since_start_pnl ?? selectedPnl);
-  const selectedDeployed=deployedCash(open);
-  const freeCash=Number(display.free_cash ?? (start+s.realized-selectedDeployed));
-  const markedEquity=Number(display.marked_equity ?? (start+selectedPnl));
-  const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? selectedPnl);
-  const realized=Number(s.realized||0);
-  return `<div class="ops-glance">
-    <div class="ops-glance-card">
-      <div class="ops-glance-title">Since reset · ${esc(LIFE_LABELS[book?.lifecycle]||book?.lifecycle||'selected')}</div>
-      <div class="ops-glance-grid">
-        <div class="ops-glance-stat"><strong>${fmtInt(s.open)}</strong><span>open</span></div>
-        <div class="ops-glance-stat"><strong>${fmtInt(s.closed)}</strong><span>closed</span></div>
-        <div class="ops-glance-stat"><strong class="${signCls(todayPnl)}">${todayPnl>=0?'+':''}${fmtMoney(todayPnl)}</strong><span>today P/L</span></div>
-        <div class="ops-glance-stat"><strong class="${signCls(totalPnl)}">${totalPnl>=0?'+':''}${fmtMoney(totalPnl)}</strong><span>total P/L</span></div>
-        <div class="ops-glance-stat"><strong>${fmtMoney(selectedDeployed)}</strong><span>selected deployed</span></div>
-        <div class="ops-glance-stat"><strong class="${signCls(realized)}">${realized>=0?'+':''}${fmtMoney(realized)}</strong><span>realized P/L</span></div>
-      </div>
-      ${topVisualBars(s)}
-      <div class="ops-capital-line">
-        <span>Cash <strong>${fmtMoney(freeCash)}</strong></span>
-        <span>Deployed <strong>${fmtMoney(selectedDeployed)}</strong></span>
-        <span>Equity <strong>${fmtMoney(markedEquity)}</strong></span>
-      </div>
-    </div>
+  const todayPnl=Number(book?.today_marked_pnl_approx ?? book?.today_realized_pnl ?? 0);
+  const equity=Number(display.marked_equity ?? (reset.starting+reset.pnl));
+  const cash=Number(display.free_cash ?? reset.cash);
+  const deployed=Number(display.deployed ?? reset.deployed);
+  const cashPct=Math.max(0,Math.min(100,(cash/(cash+deployed||1))*100));
+  const invPct=Math.max(0,100-cashPct);
+  const todayPct=equity?((todayPnl/equity)*100):0;
+  return `<div class="eq-card equity-hero">
+    <div class="eq-label">Official Marked Equity · ${esc(LIFE_LABELS[book?.lifecycle]||book?.lifecycle||'selected')}</div>
+    <div class="eq-equity">${fmtMoney(equity)}</div>
+    <div class="eq-growth ${signCls(todayPnl)}">${todayPnl>=0?'+':''}${fmtMoney(todayPnl)} (${fmtPct(todayPct)}) today</div>
+    <div class="split-bar"><span class="cash" style="width:${cashPct}%"></span><span class="inv" style="width:${invPct}%"></span></div>
+    <div class="split-legend"><div><span class="k">Cash</span><span class="v">${fmtMoney(cash)}</span></div><div style="text-align:right"><span class="k">Deployed</span><span class="v">${fmtMoney(deployed)}</span></div></div>
   </div>`;
 }
 function modelPerformancePanel(){
@@ -1047,6 +1057,24 @@ function renderBuildStateBar(){
   const sub=document.getElementById('build-subtitle');
   if(sub) sub.textContent=userAction?'You have dashboard actions · Codex on repairs':codexAction?'Codex repairing · nothing needed from you right now':'Clean baseline · patch proof window';
 }
+function renderAutomationLoops(){
+  const el=document.getElementById('automation-loops');
+  if(!el) return;
+  const hb=DATA?.automation_heartbeat||{};
+  const pub=hb.publisher||{};
+  const mon=hb.market_monitor||{};
+  const pubOk=String(pub.status||'').toLowerCase()==='success';
+  const monSkipped=!!mon.skipped;
+  const monStatus=String(mon.status||'').toUpperCase();
+  const monOk=!monSkipped && monStatus!=='FAIL';
+  const pagesOk=!!DATA?.generated_at;
+  const loops=[
+    {name:'Publisher',cls:pubOk?'ok':pub.status?'fail':'warn',status:pubOk?'Healthy':(pub.status||'Unknown'),detail:`${timeAgo(pub.completed_at)} · every ${pub.interval_minutes||5}m · ${pub.copied_dashboard?'Pages synced':'awaiting deploy'}`},
+    {name:'Market monitor',cls:monSkipped?'warn':monOk?'ok':'fail',status:monSkipped?'Idle (market closed)':monOk?(monStatus||'Healthy'):(monStatus||'Check audit'),detail:mon.checked_at?`${timeAgo(mon.checked_at)} · every ${mon.interval_minutes||10}m${mon.audit_fix_status?' · '+mon.audit_fix_status:''}`:'Waiting for first launchd run'},
+    {name:'GitHub Pages',cls:pagesOk?'ok':'warn',status:pagesOk?'Live':'Stale',detail:pagesOk?`Data ${timeAgo(DATA.generated_at)} · auto-refresh 60s`:'No publish timestamp'},
+  ];
+  el.innerHTML=`<div class="automation-loops-head"><h3>Background loops</h3><span class="small">macOS launchd · not Cursor Automations</span></div><div class="automation-loops-grid">${loops.map(l=>`<div class="loop-card ${l.cls}"><div class="loop-name">${esc(l.name)}</div><div class="loop-status"><span class="loop-dot"></span>${esc(l.status)}</div><div class="loop-detail">${esc(l.detail)}</div></div>`).join('')}</div>`;
+}
 function headerAttention(){
   const attention=DATA?.operator_attention||{};
   const summary=attention.summary||{};
@@ -1084,17 +1112,12 @@ function equityBlock(summary){
   const pnl=reset.pnl;
   const cashPct=Math.max(0,Math.min(100,(cash/(cash+deployed||1))*100));
   const invPct=Math.max(0,Math.min(100,100-cashPct));
-  return `<div class="equity-summary">
-    <div class="eq-card">
-      <div class="eq-label">Official Marked Equity</div>
-      <div class="eq-equity">${fmtMoney(equity)}</div>
-      <div class="eq-growth ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)} total · ${fmtPct((pnl/(start||1))*100)}</div>
-    </div>
-    <div class="eq-card">
-      <div class="eq-label">Cash / Deployed</div>
-      <div class="split-bar"><span class="cash" style="width:${cashPct}%"></span><span class="inv" style="width:${invPct}%"></span></div>
-      <div class="split-legend"><div><span class="k">Available Cash</span><span class="v">${fmtMoney(cash)}</span></div><div style="text-align:right"><span class="k">Deployed</span><span class="v">${fmtMoney(deployed)}</span></div></div>
-    </div>
+  return `<div class="eq-card equity-hero">
+    <div class="eq-label">Official Marked Equity</div>
+    <div class="eq-equity">${fmtMoney(equity)}</div>
+    <div class="eq-growth ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)} total · ${fmtPct((pnl/(start||1))*100)}</div>
+    <div class="split-bar"><span class="cash" style="width:${cashPct}%"></span><span class="inv" style="width:${invPct}%"></span></div>
+    <div class="split-legend"><div><span class="k">Cash</span><span class="v">${fmtMoney(cash)}</span></div><div style="text-align:right"><span class="k">Deployed</span><span class="v">${fmtMoney(deployed)}</span></div></div>
   </div>`;
 }
 function renderOverview(){
@@ -2624,7 +2647,7 @@ function ensureValidSelection(){
   if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle && b.target_model===sel.model)) sel.model=books.find(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)?.target_model||'fixed';
 }
 function renderAll(){
-  freshness(); renderBuildStateBar(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
+  freshness(); renderBuildStateBar(); renderAutomationLoops(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
 }
 async function load(){
   const res=await fetch('data.v2.json?ts='+Date.now(),{cache:'no-store'});
