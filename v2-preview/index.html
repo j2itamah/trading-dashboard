@@ -19,10 +19,9 @@
   body{
     margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
     font-family:'Spline Sans',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    padding:28px 22px 70px;
-    background-image:radial-gradient(circle at 1px 1px,rgba(26,29,26,.025) 1px,transparent 0);
-    background-size:22px 22px;
+    padding:20px 18px 24px;
   }
+  body.ops-chrome-minimal{background:#f7f6f2;background-image:none;padding:16px 16px 8px}
   button,input{font:inherit}
   a{color:#2563eb;text-decoration:none}
   a:hover{text-decoration:underline}
@@ -39,7 +38,17 @@
   .nav-link:hover{color:var(--ink);background:rgba(0,0,0,.03)}
   .nav-link.on{background:var(--accent);color:#fff}
   .build-state-bar,.automation-loops{display:none}
-  .status-strip{margin:0 0 14px;padding:8px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font:600 11px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  .ops-footer{display:none;margin-top:28px;padding-top:4px;border-top:1px solid var(--line)}
+  body.ops-chrome-minimal .ops-footer{display:block}
+  .ops-footer-panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden}
+  .ops-footer-panel>summary{cursor:pointer;list-style:none;padding:12px 14px;font:700 12px/1.35 'Spline Sans',sans-serif;color:var(--ink-soft);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .ops-footer-panel>summary::-webkit-details-marker{display:none}
+  .ops-footer-panel>summary:after{content:'›';font-size:16px;color:var(--ink-soft);transform:rotate(90deg);transition:transform .15s ease}
+  .ops-footer-panel[open]>summary:after{transform:rotate(-90deg)}
+  .ops-footer-panel>summary strong{color:var(--ink);font-weight:800}
+  .ops-footer-body{padding:0 14px 14px;display:grid;gap:12px}
+  .status-strip{margin:0;padding:0;border:none;box-shadow:none;background:transparent;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font:600 11px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  body:not(.ops-chrome-minimal) .status-strip{margin:0 0 14px;padding:8px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)}
   .status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06);white-space:nowrap}
   .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex:0 0 auto}
   .status-dot.warn{background:var(--gold)}
@@ -51,12 +60,19 @@
   .status-details summary::-webkit-details-marker{display:none}
   .status-details-body{margin-top:8px;display:grid;gap:8px}
   body.ops-chrome-minimal header{display:none}
+  body.ops-chrome-minimal .status-strip-top{display:none}
   body.ops-chrome-minimal .status-details{display:none}
   body.ops-chrome-minimal .exit-switch-wrap{margin-top:0}
-  body.ops-chrome-minimal .portfolio-toggle{margin-bottom:12px}
-  body.ops-chrome-minimal .model-section{margin:12px 0}
+  body.ops-chrome-minimal .portfolio-toggle{margin:0 auto 10px;max-width:100%;padding:4px;border-radius:999px}
+  body.ops-chrome-minimal .model-section{margin:8px 0 4px}
+  body.ops-chrome-minimal .model-section-label{display:none}
   body.ops-chrome-minimal #active-label{display:none}
-  .expansion-checkpoint{margin:0 0 16px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:var(--shadow)}
+  body.ops-chrome-minimal .trade-list-panel .section-note{display:none}
+  body.ops-chrome-minimal .trade-list-panel h2{font-size:10px;margin-bottom:10px}
+  body.ops-chrome-minimal .equity-hero{padding:8px 0 16px;margin-bottom:4px}
+  body.ops-chrome-minimal .expansion-checkpoint{margin:0;border:none;box-shadow:none;padding:0;background:transparent}
+  body.ops-chrome-minimal .expansion-footnote{font-size:10px;line-height:1.4}
+  .expansion-checkpoint{margin:0;padding:0;border:none;background:transparent;box-shadow:none}
   .expansion-checkpoint-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
   .expansion-checkpoint-head h2{margin:0;font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
   .expansion-checkpoint-progress{font:700 15px/1.2 'Fraunces',serif;margin-bottom:10px}
@@ -464,7 +480,7 @@
     </div>
   </nav>
 
-  <div class="status-strip" id="status-strip" aria-live="polite"></div>
+  <div class="status-strip status-strip-top" id="status-strip-top" aria-live="polite"></div>
   <div class="build-state-bar" id="build-state-bar" aria-hidden="true"></div>
   <div class="automation-loops" id="automation-loops" aria-hidden="true"></div>
 
@@ -506,6 +522,16 @@
     <div id="active-label"></div>
     <div id="operations-content"><div class="empty">Loading V2 data...</div></div>
   </section>
+
+  <footer class="ops-footer" id="ops-footer" aria-label="System status">
+    <details class="ops-footer-panel" id="ops-status-details">
+      <summary id="ops-footer-summary">System status</summary>
+      <div class="ops-footer-body">
+        <div class="status-strip" id="status-strip" aria-live="polite"></div>
+        <div id="expansion-footer"></div>
+      </div>
+    </details>
+  </footer>
 </div>
 
 <div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()">
@@ -1083,7 +1109,8 @@ function baselineCp(){
 }
 function renderStatusStrip(){
   const el=document.getElementById('status-strip');
-  if(!el) return;
+  const topEl=document.getElementById('status-strip-top');
+  if(!el && !topEl) return;
   const baseline=DATA?.official_baseline||{};
   const attention=DATA?.operator_attention||{};
   const summary=attention.summary||{};
@@ -1114,11 +1141,10 @@ function renderStatusStrip(){
   const exp=DATA?.stock_expansion_readiness||{};
   const expGates=rows(exp.gates);
   const expPass=expGates.filter(g=>String(g.status||'').toUpperCase()==='PASS').length;
-  const expBlock=expGates.filter(g=>g.blocks_expansion).length;
   const lastNote=hb.last_macos_notification||{};
   const noteOk=Number(lastNote.exit_code||1)===0;
   const noteLabel=lastNote.sent_at?(noteOk?'notify ok':'notify fail'):'notify never';
-  el.innerHTML=`<span class="status-pill"><span class="status-dot ${marketLive?'':'warn'}"></span>${esc(market)}</span>
+  const stripHtml=`<span class="status-pill"><span class="status-dot ${marketLive?'':'warn'}"></span>${esc(market)}</span>
     <span class="status-pill">${esc(cp)}</span>
     <span class="status-pill"><span class="status-dot ${pubOk?'':'fail'}"></span>pub ${pubOk?'ok':'err'}</span>
     <span class="status-pill"><span class="status-dot ${monDot||'warn'}"></span>mon ${esc(monLabel)}</span>
@@ -1143,8 +1169,17 @@ function renderStatusStrip(){
       </div>
       <div class="small">Background jobs run via macOS launchd on your Mac — not Cursor Automations. If notify fail: System Settings → Notifications → allow Script Editor or Terminal.</div>
     </div></details>`;
+  if(el) el.innerHTML=stripHtml;
+  if(topEl) topEl.innerHTML=`<span class="status-pill"><span class="status-dot ${marketLive?'':'warn'}"></span>${esc(market)}</span><span class="status-pill">${esc(cp)}</span><span class="status-pill">${timeAgo(DATA?.generated_at)}</span><button class="status-action" type="button" data-action="health">System health</button>`;
+  const footerSummary=document.getElementById('ops-footer-summary');
+  if(footerSummary) footerSummary.innerHTML=`<span><strong>${esc(cp)}</strong> · ${esc(market)} · expand ${expPass}/${expGates.length||'?'} · ${timeAgo(DATA?.generated_at)}</span>`;
   const sub=document.getElementById('build-subtitle');
   if(sub) sub.textContent=userAction?'You have dashboard actions · Codex on repairs':codexAction?'Codex repairing · nothing needed from you right now':'Clean baseline · patch proof window';
+}
+function renderOpsFooter(){
+  const el=document.getElementById('expansion-footer');
+  if(!el) return;
+  el.innerHTML=sel.portfolio==='news_only'?expansionCheckpointCard():'';
 }
 function renderBuildStateBar(){
   renderStatusStrip();
@@ -1732,7 +1767,6 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
 	  html+=operationsGlance(bookOpen, bookClosed, b);
-	  if(sel.portfolio==='news_only') html+=expansionCheckpointCard();
 	  if(!bookOpen.length && !bookClosed.length){
 	    html+=`<div class="panel"><h2>Waiting for first Monday trade</h2><div class="section-note">This reset-window book is clean: no open trades, no closed trades, and no deployed capital yet. Trade cards will appear here after the first official post-reset signal.</div></div>`;
 	  } else {
@@ -1764,6 +1798,7 @@ function renderOperations(){
   // Keep Operations trading-only. The operator runbook, budget, IBKR,
   // expansion, and approval-boundary evidence lives in System Health.
   document.getElementById('operations-content').innerHTML=html;
+  renderOpsFooter();
   return;
   const shadow=DATA?.shadow_health||{};
   const allOpen=openPositions().filter(currentOfficialTrade);
@@ -2691,11 +2726,13 @@ function bind(){
     if(btn) btn.setAttribute('aria-expanded','false');
   });
   document.getElementById('refresh-btn')?.addEventListener('click',()=>load());
-  document.getElementById('status-strip')?.addEventListener('click',e=>{
+  const statusClick=e=>{
     const action=e.target.closest('[data-action]')?.dataset.action;
     if(action==='refresh') load();
     if(action==='health') showView('research');
-  });
+  };
+  document.getElementById('status-strip')?.addEventListener('click',statusClick);
+  document.getElementById('status-strip-top')?.addEventListener('click',statusClick);
   document.getElementById('header-attention').onclick=()=>showView('research');
   document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
