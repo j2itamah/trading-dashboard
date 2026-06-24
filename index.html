@@ -27,17 +27,24 @@
   a{color:#2563eb;text-decoration:none}
   a:hover{text-decoration:underline}
   .wrap{width:100%;max-width:1120px;margin:0 auto;min-width:0}
-  .site-nav{display:flex;gap:6px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:24px;justify-content:center;position:sticky;top:8px;z-index:20}
-  .nav-current{display:none;border:0;background:var(--accent);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:11px 14px;cursor:pointer;width:100%;justify-content:space-between;align-items:center}
+  .site-nav{position:relative;display:block;margin:0 0 10px;padding:0;background:transparent;border:none;box-shadow:none;z-index:25}
+  .nav-current{display:inline-flex;align-items:center;gap:10px;border:0;background:transparent;color:var(--ink);font-size:15px;font-weight:800;border-radius:10px;padding:8px 4px;cursor:pointer;width:auto;justify-content:flex-start}
   .nav-current-main{display:inline-flex;align-items:center;gap:10px}
-  .hamburger{display:inline-grid;gap:4px;width:18px}
+  .hamburger{display:inline-grid;gap:4px;width:18px;flex:0 0 auto}
   .hamburger i{display:block;height:2px;border-radius:999px;background:currentColor}
-  .nav-menu-word{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.8px;opacity:.78}
-  .nav-list{display:flex;gap:6px;justify-content:center;overflow-x:auto}
-  .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:10px 20px;cursor:pointer;white-space:nowrap}
-  .nav-link:hover{color:var(--ink)}
+  .nav-menu-word{font:800 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.8px;opacity:.55;color:var(--ink-soft)}
+  .nav-list{display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:min(100%,320px);flex-direction:column;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:var(--shadow);z-index:30}
+  .site-nav.open .nav-list{display:flex}
+  .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:12px 14px;cursor:pointer;white-space:nowrap;width:100%;text-align:left}
+  .nav-link:hover{color:var(--ink);background:rgba(0,0,0,.03)}
   .nav-link.on{background:var(--accent);color:#fff}
-  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .build-state-bar{margin:0 0 16px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow)}
+  .build-state-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .build-chip{display:flex;flex-direction:column;gap:3px;min-width:0;padding:8px 9px;border-radius:10px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06)}
+  .build-chip.wide{grid-column:1/-1}
+  .build-chip span{font:700 9px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.55px;color:var(--ink-soft)}
+  .build-chip strong{font:700 12px/1.35 'Spline Sans',sans-serif;color:var(--ink);overflow-wrap:anywhere}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
   .title-block h1{font-family:'Fraunces',serif;font-size:34px;font-weight:600;letter-spacing:-.5px;display:flex;gap:12px;align-items:center;margin:0}
   .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-bg)}
   .sub-h{font:500 13px/1.5 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:5px}
@@ -313,11 +320,8 @@
     body{padding:20px 14px 76px}
     .wrap,.view,.panel,.kpi,.eq-card{max-width:100%;min-width:0}
     table{max-width:100%}
-    .site-nav{top:8px;border-radius:16px;margin-bottom:18px;display:block}
-    .nav-current{display:flex}
-    .nav-list{display:none;margin-top:6px;overflow:visible;flex-direction:column}
-    .site-nav.open .nav-list{display:flex}
-    .nav-link{width:100%;text-align:left;padding:12px 14px}
+    .site-nav{top:0;margin-bottom:12px}
+    .nav-list{left:0;right:0;min-width:0}
     header{align-items:flex-start}
     .title-block h1{font-size:28px}
     .updated{text-align:left}
@@ -403,8 +407,8 @@
 <body>
 <div class="wrap">
   <nav class="site-nav" id="site-nav" aria-label="Dashboard views">
-    <button class="nav-current" id="nav-current" type="button"><span class="nav-current-main"><span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span id="nav-current-label">Operations</span></span><span class="nav-menu-word">Menu</span></button>
-    <div class="nav-list">
+    <button class="nav-current" id="nav-current" type="button" aria-expanded="false" aria-controls="nav-list"><span class="nav-current-main"><span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span id="nav-current-label">Operations</span></span></button>
+    <div class="nav-list" id="nav-list">
       <button class="nav-link" data-view="overview">Overview</button>
       <button class="nav-link" data-view="guardrails">Guardrails</button>
       <button class="nav-link" data-view="crypto">Crypto Lab</button>
@@ -413,10 +417,12 @@
     </div>
   </nav>
 
+  <div class="build-state-bar" id="build-state-bar" aria-live="polite"></div>
+
   <header>
     <div class="title-block">
       <h1><span class="dot"></span>Trading Analyst</h1>
-      <div class="sub-h">V2 ledger command view. Old dashboard feel, new ledger math.</div>
+      <div class="sub-h" id="build-subtitle">Clean baseline · patch proof window</div>
     </div>
     <div class="updated">
       <span>Last updated</span>
@@ -541,6 +547,7 @@ function activeBaselineMs(){
   const ms=ts?new Date(ts).getTime():NaN;
   return Number.isFinite(ms)?ms:null;
 }
+function officialBookKeys(){return new Set(officialBooks().map(b=>b.book_key).filter(Boolean))}
 function officialStartMsFor(t){
   const starts=[];
   const base=activeBaselineMs();
@@ -549,7 +556,12 @@ function officialStartMsFor(t){
   if(modelOf(t)==='volatility') starts.push(new Date(VOL_PILOT1_START_AT).getTime());
   return starts.length?Math.max(...starts.filter(Number.isFinite)):0;
 }
-function currentOfficialTrade(t){return String(t.asset_class||'').toLowerCase()==='stock' && tradeTs(t)>=officialStartMsFor(t)}
+function currentOfficialTrade(t){
+  if(String(t.asset_class||'').toLowerCase()!=='stock') return false;
+  const keys=officialBookKeys();
+  if(t.book_key && keys.size) return keys.has(t.book_key);
+  return tradeTs(t)>=officialStartMsFor(t);
+}
 function selectedBookTrades(b,status){
   const source=status==='OPEN'?openPositions():closedTrades();
   return source
@@ -729,8 +741,8 @@ function targetStats(trades){
   const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
   const timed=closed.filter(t=>['time','sell_eod'].includes(exitReasonClass(t.exit_reason))).length;
   const rate=closed.length?tp/closed.length*100:0;
-  const realized=closed.reduce((sum,t)=>sum+Number(t.realized_pnl||0),0);
-  const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
+  const realized=closed.reduce((sum,t)=>sum+Number(pnlOf(t)||0),0);
+  const unrealized=open.reduce((sum,t)=>sum+Number(pnlOf(t)||0),0);
   return {closed:closed.length,open:open.length,tp,sl,timed,rate,realized,unrealized};
 }
 function deployedCash(open){return open.reduce((sum,t)=>sum+Number(t.stake_amount||0),0)}
@@ -803,6 +815,7 @@ function operationsGlance(open, closed, book){
   </div>`;
 }
 function modelPerformancePanel(){
+  const baselineKey=String(DATA?.official_baseline?.baseline_key||'official reset').replace(/^official_/,'').replace(/_/g,' ');
   const rows=['fixed','volatility'].map(model=>{
     const rs=allTrades().filter(t=>modelOf(t)===model).filter(currentOfficialTrade);
     const open=rs.filter(t=>t.status==='OPEN');
@@ -810,20 +823,20 @@ function modelPerformancePanel(){
     const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
     const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
     const timed=closed.filter(t=>['time','sell_eod'].includes(exitReasonClass(t.exit_reason))).length;
-    const realized=closed.reduce((sum,t)=>sum+Number(t.realized_pnl||0),0);
-    const unrealized=open.reduce((sum,t)=>sum+Number(t.unrealized_pnl||0),0);
+    const realized=closed.reduce((sum,t)=>sum+Number(pnlOf(t)||0),0);
+    const unrealized=open.reduce((sum,t)=>sum+Number(pnlOf(t)||0),0);
     const tpRate=closed.length?tp/closed.length*100:0;
     const volRows=rs.filter(t=>model==='volatility' && t.atr_percent!=null);
     const avg=key=>volRows.length?volRows.reduce((sum,t)=>sum+Number(t[key]||0),0)/volRows.length:null;
     return {
       model,open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized,tpRate,slRate:0,
-      status:closed.length?'collecting_evidence':'reset',
+      status:!closed.length&&!open.length?'reset':!closed.length?'marks_only':closed.length<5?'early_sample':'collecting_evidence',
       atr:avg('atr_percent'),
       stopPct:avg('volatility_stop_percent'),
       targetPct:avg('volatility_target_percent')
     };
   });
-  const statusLabel=s=>({collecting_evidence:'Collecting evidence',review_target_distance:'Review target distance',underperforming:'Underperforming',ok:'On track'}[s]||s||'');
+  const statusLabel=s=>({reset:'Clean reset',marks_only:'Open marks only',early_sample:'Early sample',collecting_evidence:'Collecting evidence',review_target_distance:'Review target distance',underperforming:'Underperforming',ok:'On track'}[s]||s||'');
   const cards=rows.map(r=>{
     const net=Number(r.realized||0)+Number(r.unrealized||0);
     const modelClosed=allTrades().filter(t=>modelOf(t)===r.model).filter(currentOfficialTrade).filter(t=>t.status==='CLOSED');
@@ -832,10 +845,17 @@ function modelPerformancePanel(){
     const sampleLabel=r.model==='volatility'?'Sample progress':'Closed sample';
     const sampleColor=r.model==='volatility'?'var(--purple)':'var(--green)';
     const sampleBar=`<div style="margin:10px 0 4px"><div style="display:flex;justify-content:space-between;font:600 11px/1 'Spline Sans Mono',monospace;color:var(--ink-soft)"><span>${sampleLabel}</span><span>${fmtInt(r.closed)} / ${sampleGoal} closed</span></div><div style="height:6px;border-radius:3px;background:var(--line);margin-top:5px;overflow:hidden"><div style="height:100%;border-radius:3px;background:${sampleColor};width:${Math.min(100,r.closed/sampleGoal*100)}%"></div></div></div>`;
-    const atrRow=r.atr!=null?`<div style="margin-top:8px;padding:8px 10px;background:var(--purple-bg);border-radius:8px;font:500 11px/1.5 'Spline Sans Mono',monospace;color:var(--purple)">ATR ${fmtPct(r.atr)} · Stop ${fmtPct(r.stopPct)} · Target ${fmtPct(r.targetPct)}</div>`:'';
-    const winLine=winRate==null?'No closed wins/losses yet':`Win rate ${winRate.toFixed(0)}% · TP rate ${Number(r.tpRate||0).toFixed(0)}%`;
+    const atrRow=r.atr!=null?`<div style="margin-top:8px;padding:8px 10px;background:var(--purple-bg);border-radius:8px;font:500 11px/1.5 'Spline Sans Mono',monospace;color:var(--purple)">ATR ${fmtPct(r.atr)} · Stop ${fmtPct(r.stopPct)} · Target ${fmtPct(r.targetPct)} · wider targets can swing mark P/L more on the same news day</div>`:'';
+    const winLine=r.status==='marks_only'
+      ? `${fmtInt(r.open)} open positions · no closed outcomes yet · mark P/L only`
+      : winRate==null
+        ? 'No closed wins/losses yet'
+        : `Win rate ${winRate.toFixed(0)}% · TP rate ${Number(r.tpRate||0).toFixed(0)}%`;
+    const netBadge=r.status==='marks_only'||r.status==='early_sample'
+      ? `<span class="account-guard-status warn">${r.status==='marks_only'?'marks only':'early sample'}</span>`
+      : `<span class="account-guard-status ${net>=0?'':'bad'}">${net>=0?'ahead':'behind'}</span>`;
     return `<div class="account-guard">
-    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(statusLabel(r.status))}</div></div><span class="account-guard-status ${net>=0?'':'bad'}">${net>=0?'ahead':'behind'}</span></div>
+    <div class="account-guard-head"><div><div class="account-guard-title">${r.model==='fixed'?'Fixed Target':'Volatility Target'}</div><div class="small">${fmtInt(r.open)} open · ${fmtInt(r.closed)} closed · ${esc(statusLabel(r.status))}</div></div>${netBadge}</div>
     <div class="small" style="margin:-4px 0 10px">${esc(winLine)}</div>
     <div class="guard-grid">
       <div class="guard-mini"><strong class="${signCls(r.realized)}">${r.realized>=0?'+':''}${fmtMoney(r.realized)}</strong><span>realized</span></div>
@@ -847,7 +867,7 @@ function modelPerformancePanel(){
     <div class="guardrail-caption"><span>${fmtInt(r.tp)} TP</span><span>${fmtInt(r.sl)} SL</span><span>${fmtInt(r.timed)} time</span></div>
     ${sampleBar}${atrRow}
   </div>`}).join('');
-  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Official reset window only. Pre-reset sizing-bug evidence is archived and excluded from these cards.</div>${cards}</div>`;
+  return `<div class="panel"><h2>Fixed vs Volatility</h2><div class="section-note">Current official books only (${esc(baselineKey)}). Archived pre-reset books are excluded. Volatility uses ATR-based stops/targets — open mark P/L can look worse than fixed on the same day before any closes.</div>${cards}</div>`;
 }
 function confidencePerformancePanel(){
   const CONF_DATA=[
@@ -969,6 +989,41 @@ function freshness(){
   const warn=document.getElementById('snapshot-warning');
   if(age>20){warn.style.display='block'; warn.textContent=`Data is ${age}m old. Pull/refresh if publisher has not updated yet.`}
   else {warn.style.display='none'}
+}
+function renderBuildStateBar(){
+  const el=document.getElementById('build-state-bar');
+  if(!el) return;
+  const baseline=DATA?.official_baseline||{};
+  const build=DATA?.codex_build_status||{};
+  const attention=DATA?.operator_attention||{};
+  const summary=attention.summary||{};
+  const clock=DATA?.market_clock||{};
+  const checkpoint=build.checkpoint||baseline.baseline_key||'unknown';
+  const shortCheckpoint=String(checkpoint).replace(/^official_/,'').replace(/_/g,' ').slice(0,42);
+  const gen=DATA?.generated_at?new Date(DATA.generated_at).toLocaleString():'—';
+  const userAction=Number(summary.user_action_required||0);
+  const codexAction=Number(summary.codex_action_required||0);
+  const watchItems=rows(attention.items).filter(i=>{
+    const s=String(i.status||'').toUpperCase();
+    return s==='WATCH'||s==='ACTION_REQUIRED';
+  });
+  const knownBroken=watchItems.filter(i=>String(i.status||'').toUpperCase()==='ACTION_REQUIRED').slice(0,2);
+  const knownWatch=watchItems.filter(i=>String(i.status||'').toUpperCase()==='WATCH').slice(0,2);
+  const knownParts=[];
+  if(knownBroken.length) knownParts.push('Fixing: '+knownBroken.map(i=>i.label).join(' · '));
+  if(knownWatch.length) knownParts.push('Watching: '+knownWatch.map(i=>i.label).join(' · '));
+  const known=knownParts.length?knownParts.join(' | '):'Vol/latency patches deployed — awaiting first live trade proof';
+  const market=clock.execution_mode||clock.phase||'closed';
+  el.innerHTML=`<div class="build-state-grid">
+    <div class="build-chip"><span>Build</span><strong>${esc(shortCheckpoint)}</strong></div>
+    <div class="build-chip"><span>Published</span><strong>${esc(gen)}</strong></div>
+    <div class="build-chip"><span>Market</span><strong>${esc(String(market).replaceAll('_',' '))}</strong></div>
+    <div class="build-chip"><span>Your action</span><strong class="${userAction?'neg-text':'pos-text'}">${fmtInt(userAction)}</strong></div>
+    <div class="build-chip"><span>Codex action</span><strong class="${codexAction?'warn-text':'pos-text'}">${fmtInt(codexAction)}</strong></div>
+    <div class="build-chip wide"><span>Known state</span><strong>${esc(known)}</strong></div>
+  </div>`;
+  const sub=document.getElementById('build-subtitle');
+  if(sub) sub.textContent=userAction?'You have dashboard actions · Codex on repairs':codexAction?'Codex repairing · nothing needed from you right now':'Clean baseline · patch proof window';
 }
 function headerAttention(){
   const attention=DATA?.operator_attention||{};
@@ -1580,7 +1635,7 @@ function renderOperations(){
 	    else {
 	      if(expanded || listRows.length>8) html+=`<input class="trade-search" id="${searchId}" placeholder="Search ${isClosed?'closed trades':'open positions'}..." value="${esc(searchValue)}">`;
 	      html+=visibleRows.map(tradeRow).join('');
-	      if(listRows.length>8) html+=`<button class="closed-toggle" id="${toggleId}"><span>${expanded?'Collapse':'Show all '+listRows.length+' '+(isClosed?'trades':'positions')}</span><span>›</span></button>`;
+	      if(listRows.length>8) html+=`<button type="button" class="closed-toggle" id="${toggleId}"><span>${expanded?'Collapse':'Show all '+listRows.length+' '+(isClosed?'trades':'positions')}</span><span>›</span></button>`;
 	    }
 	    html+='</div>';
 	  }
@@ -2369,6 +2424,8 @@ function showView(v){
   const label=document.getElementById('nav-current-label');
   if(label && active) label.textContent=active.textContent;
   document.getElementById('site-nav')?.classList.remove('open');
+  const navBtn=document.getElementById('nav-current');
+  if(navBtn) navBtn.setAttribute('aria-expanded','false');
 }
 function openTradeModal(id){
   const t=allTrades().find(x=>String(x.id)===String(id)); if(!t) return;
@@ -2492,20 +2549,33 @@ function openLabTradeModal(id){
 }
 function bind(){
   document.querySelectorAll('.nav-link').forEach(b=>b.onclick=()=>showView(b.dataset.view));
-  document.getElementById('nav-current').onclick=()=>document.getElementById('site-nav').classList.toggle('open');
+  document.getElementById('nav-current').onclick=()=>{
+    const nav=document.getElementById('site-nav');
+    const btn=document.getElementById('nav-current');
+    nav.classList.toggle('open');
+    if(btn) btn.setAttribute('aria-expanded', nav.classList.contains('open')?'true':'false');
+  };
+  document.addEventListener('click',e=>{
+    const nav=document.getElementById('site-nav');
+    if(!nav?.classList.contains('open')) return;
+    if(e.target.closest('#site-nav')) return;
+    nav.classList.remove('open');
+    const btn=document.getElementById('nav-current');
+    if(btn) btn.setAttribute('aria-expanded','false');
+  });
   document.getElementById('refresh-btn').onclick=()=>load();
   document.getElementById('header-attention').onclick=()=>showView('research');
   document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
   document.addEventListener('click',e=>{
+	    if(e.target.closest('#toggle-open')){OPEN_EXPANDED=!OPEN_EXPANDED; renderOperations(); return}
+	    if(e.target.closest('#toggle-closed')){CLOSED_EXPANDED=!CLOSED_EXPANDED; renderOperations(); return}
 	    const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
 	    const lf=e.target.closest('[data-lab-focus]'); if(lf){LAB_FOCUS=lf.dataset.labFocus; localStorage.setItem('v2_lab_focus',LAB_FOCUS); renderCryptoLab(); return}
 	    const ol=e.target.closest('[data-ops-list]'); if(ol){OPS_TRADE_LIST=ol.dataset.opsList; localStorage.setItem('v2_ops_trade_list',OPS_TRADE_LIST); renderOperations(); return}
 	    if(e.target.closest('a,button')) return;
     const lr=e.target.closest('[data-lab-trade-id]'); if(lr){openLabTradeModal(lr.dataset.labTradeId); return}
     const tr=e.target.closest('[data-trade-id]'); if(tr){openTradeModal(tr.dataset.tradeId); return}
-    if(e.target.closest('#toggle-open')){OPEN_EXPANDED=!OPEN_EXPANDED; renderOperations(); return}
-    if(e.target.closest('#toggle-closed')){CLOSED_EXPANDED=!CLOSED_EXPANDED; renderOperations(); return}
   });
   document.addEventListener('input',e=>{if(e.target.id==='open-search'){OPEN_SEARCH=e.target.value; renderOperations()} if(e.target.id==='closed-search'){CLOSED_SEARCH=e.target.value; renderOperations()}});
   document.addEventListener('keydown',e=>{
@@ -2530,7 +2600,7 @@ function ensureValidSelection(){
   if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle && b.target_model===sel.model)) sel.model=books.find(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)?.target_model||'fixed';
 }
 function renderAll(){
-  freshness(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
+  freshness(); renderBuildStateBar(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
 }
 async function load(){
   const res=await fetch('data.v2.json?ts='+Date.now(),{cache:'no-store'});
