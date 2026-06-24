@@ -485,6 +485,12 @@ const fmtMoney=n=>{const v=Number(n||0);const s=Math.abs(v).toLocaleString('en-U
 const fmtMoneyDelta=n=>{const v=Number(n||0);return `${v<0?'-':'+'} ${fmtMoney(Math.abs(v))}`};
 const fmtPrice=n=>n==null?'—':'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:Math.abs(Number(n))<1?4:2,maximumFractionDigits:Math.abs(Number(n))<1?4:2});
 const fmtPct=n=>(Number(n||0)>0?'+':'')+Number(n||0).toFixed(2)+'%';
+function asPercentPoints(n){
+  if(n==null||!Number.isFinite(Number(n))) return null;
+  const v=Number(n);
+  return Math.abs(v)<=1.5?v*100:v;
+}
+function fmtMovePct(n){const p=asPercentPoints(n); return p==null?null:fmtPct(p);}
 const fmtInt=n=>Number(n||0).toLocaleString('en-US');
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const signCls=n=>Number(n||0)>0?'pos-text':(Number(n||0)<0?'neg-text':'zero-text');
@@ -675,6 +681,21 @@ function latencyHasDisplayFallback(l){return !latencyHasOfficialReference(l) && 
 function latencyReferencePrice(l){return l?.news_reference_price ?? l?.price_at_news ?? l?.display_news_reference_price ?? null}
 function latencyRawMove(l){return l?.price_move_before_entry_pct ?? l?.display_raw_move_before_entry_pct ?? null}
 function latencyAdjustedMove(l){return l?.direction_adjusted_move_before_entry_pct ?? l?.display_direction_adjusted_move_before_entry_pct ?? latencyRawMove(l)}
+function refEntryDisplay(l, tradePx){
+  const refPx=latencyReferencePrice(l);
+  const source=String(l?.price_reference_source||'');
+  if(refPx==null) return {text:'Missing', cls:'warn', note:'No reference price captured for this trade yet.'};
+  if(source==='candidate_observed_price'||String(l?.latency_price_status||'').includes('candidate_price_only')){
+    const entryMove=pctFromPrices(refPx, tradePx);
+    if(entryMove==null||Math.abs(entryMove)<0.05) return {text:'Not at news price', cls:'warn', note:'Reference is first-seen/candidate capture (≈ entry), not the price at article publish.'};
+  }
+  const raw=latencyRawMove(l);
+  const adj=latencyAdjustedMove(l);
+  const use=adj??raw??pctFromPrices(refPx, tradePx);
+  if(use==null) return {text:'Missing', cls:'warn', note:'Reference exists but move before entry was not computed.'};
+  const pct=asPercentPoints(use);
+  return {text:fmtPct(pct), cls:signCls(pct), note:''};
+}
 function latencySourceText(l){return String(l?.price_reference_source||l?.display_price_reference_source||l?.latency_price_status||'').replaceAll('_',' ') || 'not captured yet'}
 function latencyQuality(l){
   if(!l) return {label:'Timing not matched', detail:'No latency row matched this trade yet.', cls:'warn'};
@@ -690,7 +711,8 @@ function latencyQuality(l){
     return {label:'Publish time missing', detail:'No real article publish timestamp was available for this row.', cls:'warn'};
   }
   if(Number(seconds)>86400) return {label:'Stale article timing', detail:`Entry was ${durationLabel(seconds)} after the article timestamp. Treat this as stale source evidence, not fast news capture.`, cls:'warn'};
-  if(raw!=null && Math.abs(Number(raw))<0.005 && source==='news_time_quote') return {label:'Reference equals entry', detail:'Reference price is captured, but movement before entry is effectively zero.', cls:'warn'};
+  if(source==='candidate_observed_price'||String(status||'').includes('candidate_price_only')) return {label:'Not news-time ref', detail:'Reference is candidate/first-seen price, not the price at article publish. Ref→entry is not a true pre-move measure.', cls:'warn'};
+  if(raw!=null && Math.abs(asPercentPoints(raw)||0)<0.05 && source==='news_time_quote') return {label:'Reference equals entry', detail:'Reference price is captured, but movement before entry is effectively zero.', cls:'warn'};
   if(status.includes('ok')) return {label:'Timing captured', detail:`Entry was ${durationLabel(seconds)} after the news timestamp.`, cls:'good'};
   return {label:'Timing captured', detail:`Entry was ${durationLabel(seconds)} after the reference timestamp.`, cls:'good'};
 }
@@ -1209,7 +1231,7 @@ function tradeRow(t){
   const adjMove=latencyAdjustedMove(lat);
   const timingBits=[];
   if(lat?.news_to_trade_seconds!=null) timingBits.push(`Timing ${secondsLabel(lat.news_to_trade_seconds)}`);
-  if(adjMove!=null) timingBits.push(`${Number(adjMove)>=0?'+':''}${Number(adjMove).toFixed(2)}% before entry`);
+  if(adjMove!=null) timingBits.push(`${fmtMovePct(adjMove)} before entry`);
   const timingChip=timingBits.length?`<span class="tag">${esc(timingBits.join(' · '))}</span>`:'<span class="tag">Timing pending</span>';
   const meta=closed
     ? `<div class="reason-line"><span class="reason-pill ${reasonClass}">${esc(exitReasonLabel(t.exit_reason))}</span><span class="small">${shortTime(t.exit_time)}</span>${timingChip}${brokerChip}</div>`
@@ -2454,6 +2476,7 @@ function openTradeModal(id){
   const rawNowMove=pctFromPrices(refPx,markPx);
   const dirAdjNow=rawNowMove==null?null:(dir==='SELL'?-rawNowMove:rawNowMove);
   const refSourceLabel=latencyHasDisplayFallback(lat)?'Yahoo diagnostic':latencySourceText(lat);
+  const refEntry=refEntryDisplay(lat, tradePx);
   const html=`<div class="tm-head"><div><h3>${esc(t.asset)} <span class="badge ${dir==='BUY'?'long':'short'}">${esc(dir)}</span> <span class="badge ${modelOf(t)==='volatility'?'vol':''}">${esc(modelOf(t))}</span></h3><div class="tm-sub">${esc(t.portfolio||'')} · ${esc(t.lifecycle||'')} · ${esc(t.status||'')}</div></div><div class="tm-nav"><button class="tm-btn" onclick="openTradeModal('${esc(prevId)}')">← Prev</button><span class="tm-index">${tradeIdx+1}/${tradeCount}</span><button class="tm-btn" onclick="openTradeModal('${esc(nextId)}')">Next →</button><button class="tm-close" onclick="closeTradeModal()">×</button></div></div>
   <div class="tm-body">
     <div class="tm-pnl-banner ${signCls(pnl)}">${pnl>=0?'+':''}${fmtMoney(pnl)}<div class="small">${fmtPct(pct)}</div></div>
@@ -2463,11 +2486,12 @@ function openTradeModal(id){
         <div class="impact-metric"><span>Article time</span><strong>${lat?.news_event_time?shortTime(lat.news_event_time):'Missing'}</strong></div>
         <div class="impact-metric"><span>Trade placed</span><strong>${shortTime(t.entry_time)}</strong></div>
         <div class="impact-metric"><span>News → trade</span><strong>${durationLabel(lat?.news_to_trade_seconds)}</strong></div>
-        <div class="impact-metric"><span>Ref → entry</span><strong class="${signCls(rawEntryMove)}">${rawEntryMove==null?'Missing':fmtPct(rawEntryMove)}</strong></div>
+        <div class="impact-metric"><span>Ref → entry</span><strong class="${refEntry.cls}">${esc(refEntry.text)}</strong></div>
         <div class="impact-metric"><span>Ref price</span><strong>${refPx==null?'Missing':fmtPrice(refPx)}</strong></div>
         <div class="impact-metric"><span>Entry price</span><strong>${fmtPrice(t.entry_price)}</strong></div>
         <div class="impact-metric impact-wide"><span>Move since news/reference now</span><strong class="${signCls(dirAdjNow)}">${moveNowDisplay(refPx,markPx,rawNowMove,dirAdjNow,dir)}</strong></div>
       </div>
+      ${refEntry.note?`<div class="small" style="margin-top:7px;color:var(--gold,#d97706)">${esc(refEntry.note)}</div>`:''}
       <div class="small" style="margin-top:7px">Reference source: ${esc(refSourceLabel)}</div>
       <div class="small" style="margin-top:9px">${esc(latQ.detail)}</div>
       ${url?`<a class="cand-link" href="${esc(url)}" target="_blank" rel="noopener">Read original article →</a>`:''}
@@ -2486,7 +2510,7 @@ function openTradeModal(id){
       </div>
       <div>
         <div class="tm-section"><h4>Model</h4>${kv('Target model',modelOf(t)==='volatility'?'Volatility (ATR)':'Fixed')}${kv('ATR percent',t.atr_percent==null?'—':fmtPct(t.atr_percent))}${kv('Stop distance',t.volatility_stop_percent==null?'—':fmtPct(t.volatility_stop_percent))}${kv('Target distance',t.volatility_target_percent==null?'—':fmtPct(t.volatility_target_percent))}</div>
-        <div class="tm-section"><h4>Timing detail</h4>${kv('Read this as',latQ.label)}${kv('Reference source',refSourceLabel)}${kv('Direction-adjusted entry move',adjMove==null?'Not captured yet':fmtPct(adjMove))}${closed?kv('Exit time',shortTime(t.exit_time)):''}</div>
+        <div class="tm-section"><h4>Timing detail</h4>${kv('Read this as',latQ.label)}${kv('Reference source',refSourceLabel)}${kv('Direction-adjusted entry move',adjMove==null?'Not captured yet':fmtMovePct(adjMove))}${closed?kv('Exit time',shortTime(t.exit_time)):''}</div>
       </div>
     </div></div></details>
   </div>
