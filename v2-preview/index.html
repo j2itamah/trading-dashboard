@@ -38,11 +38,29 @@
   .nav-link{border:0;background:transparent;font-size:13px;font-weight:700;color:var(--ink-soft);border-radius:12px;padding:12px 14px;cursor:pointer;white-space:nowrap;width:100%;text-align:left}
   .nav-link:hover{color:var(--ink);background:rgba(0,0,0,.03)}
   .nav-link.on{background:var(--accent);color:#fff}
-  .build-state-bar{margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow)}
-  .automation-loops{margin:0 0 16px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:var(--shadow)}
-  .automation-loops-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-  .automation-loops-head h3{margin:0;font:700 11px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft)}
-  .automation-loops-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .build-state-bar,.automation-loops{display:none}
+  .status-strip{margin:0 0 14px;padding:8px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font:600 11px/1.35 'Spline Sans Mono',monospace;color:var(--ink-soft)}
+  .status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06);white-space:nowrap}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex:0 0 auto}
+  .status-dot.warn{background:var(--gold)}
+  .status-dot.fail{background:var(--red)}
+  .status-action{margin-left:auto;border:0;background:transparent;color:var(--accent);font:inherit;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:8px}
+  .status-action:hover{background:var(--accent-bg)}
+  .status-details{width:100%;margin-top:4px}
+  .status-details summary{cursor:pointer;font:700 10px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.55px;color:var(--ink-soft);list-style:none}
+  .status-details summary::-webkit-details-marker{display:none}
+  .status-details-body{margin-top:8px;display:grid;gap:8px}
+  body.ops-chrome-minimal header{display:none}
+  body.ops-chrome-minimal .status-details{display:none}
+  body.ops-chrome-minimal .exit-switch-wrap{margin-top:0}
+  body.ops-chrome-minimal .portfolio-toggle{margin-bottom:12px}
+  body.ops-chrome-minimal .model-section{margin:12px 0}
+  body.ops-chrome-minimal #active-label{display:none}
+  .build-state-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .build-chip{display:flex;flex-direction:column;gap:3px;min-width:0;padding:8px 9px;border-radius:10px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06)}
+  .build-chip.wide{grid-column:1/-1}
+  .build-chip span{font:700 9px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.55px;color:var(--ink-soft)}
+  .build-chip strong{font:700 12px/1.35 'Spline Sans',sans-serif;color:var(--ink);overflow-wrap:anywhere}
   .loop-card{padding:10px 12px;border-radius:12px;border:1px solid rgba(35,31,26,.06);background:#fbfaf6;min-width:0}
   .loop-card.ok{border-color:rgba(29,157,107,.25);background:var(--green-bg)}
   .loop-card.warn{border-color:rgba(200,138,45,.35);background:#fff8e5}
@@ -53,11 +71,6 @@
   .loop-card.warn .loop-dot{background:var(--gold)}
   .loop-card.fail .loop-dot{background:var(--red)}
   .loop-detail{font:500 11px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:4px;overflow-wrap:anywhere}
-  .build-state-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .build-chip{display:flex;flex-direction:column;gap:3px;min-width:0;padding:8px 9px;border-radius:10px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06)}
-  .build-chip.wide{grid-column:1/-1}
-  .build-chip span{font:700 9px/1 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.55px;color:var(--ink-soft)}
-  .build-chip strong{font:700 12px/1.35 'Spline Sans',sans-serif;color:var(--ink);overflow-wrap:anywhere}
   header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
   .title-block h1{font-family:'Fraunces',serif;font-size:34px;font-weight:600;letter-spacing:-.5px;display:flex;gap:12px;align-items:center;margin:0}
   .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-bg)}
@@ -347,7 +360,6 @@
     .title-block h1{font-size:28px}
     .updated{text-align:left}
     .equity-summary,.grid,.three-grid{grid-template-columns:1fr}
-    .ops-glance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .automation-loops-grid{grid-template-columns:1fr}
     .kpis{grid-template-columns:repeat(2,1fr)}
     .portfolio-toggle{border-radius:14px}
@@ -439,8 +451,9 @@
     </div>
   </nav>
 
-  <div class="build-state-bar" id="build-state-bar" aria-live="polite"></div>
-  <div class="automation-loops" id="automation-loops" aria-live="polite"></div>
+  <div class="status-strip" id="status-strip" aria-live="polite"></div>
+  <div class="build-state-bar" id="build-state-bar" aria-hidden="true"></div>
+  <div class="automation-loops" id="automation-loops" aria-hidden="true"></div>
 
   <header>
     <div class="title-block">
@@ -1022,44 +1035,19 @@ function freshness(){
   if(age>20){warn.style.display='block'; warn.textContent=`Data is ${age}m old. Pull/refresh if publisher has not updated yet.`}
   else {warn.style.display='none'}
 }
-function renderBuildStateBar(){
-  const el=document.getElementById('build-state-bar');
+function baselineCp(){
+  const key=String(DATA?.official_baseline?.baseline_key||'');
+  const m=key.match(/cp(\d+)/i);
+  if(m) return 'CP'+m[1];
+  return key.replace(/^official_/,'').replace(/_/g,' ').slice(0,28)||'—';
+}
+function renderStatusStrip(){
+  const el=document.getElementById('status-strip');
   if(!el) return;
   const baseline=DATA?.official_baseline||{};
-  const build=DATA?.codex_build_status||{};
   const attention=DATA?.operator_attention||{};
   const summary=attention.summary||{};
   const clock=DATA?.market_clock||{};
-  const checkpoint=build.checkpoint||baseline.baseline_key||'unknown';
-  const shortCheckpoint=String(checkpoint).replace(/^official_/,'').replace(/_/g,' ').slice(0,42);
-  const gen=DATA?.generated_at?new Date(DATA.generated_at).toLocaleString():'—';
-  const userAction=Number(summary.user_action_required||0);
-  const codexAction=Number(summary.codex_action_required||0);
-  const watchItems=rows(attention.items).filter(i=>{
-    const s=String(i.status||'').toUpperCase();
-    return s==='WATCH'||s==='ACTION_REQUIRED';
-  });
-  const knownBroken=watchItems.filter(i=>String(i.status||'').toUpperCase()==='ACTION_REQUIRED').slice(0,2);
-  const knownWatch=watchItems.filter(i=>String(i.status||'').toUpperCase()==='WATCH').slice(0,2);
-  const knownParts=[];
-  if(knownBroken.length) knownParts.push('Fixing: '+knownBroken.map(i=>i.label).join(' · '));
-  if(knownWatch.length) knownParts.push('Watching: '+knownWatch.map(i=>i.label).join(' · '));
-  const known=knownParts.length?knownParts.join(' | '):'Vol/latency patches deployed — awaiting first live trade proof';
-  const market=clock.execution_mode||clock.phase||'closed';
-  el.innerHTML=`<div class="build-state-grid">
-    <div class="build-chip"><span>Build</span><strong>${esc(shortCheckpoint)}</strong></div>
-    <div class="build-chip"><span>Published</span><strong>${esc(gen)}</strong></div>
-    <div class="build-chip"><span>Market</span><strong>${esc(String(market).replaceAll('_',' '))}</strong></div>
-    <div class="build-chip"><span>Your action</span><strong class="${userAction?'neg-text':'pos-text'}">${fmtInt(userAction)}</strong></div>
-    <div class="build-chip"><span>Codex action</span><strong class="${codexAction?'warn-text':'pos-text'}">${fmtInt(codexAction)}</strong></div>
-    <div class="build-chip wide"><span>Known state</span><strong>${esc(known)}</strong></div>
-  </div>`;
-  const sub=document.getElementById('build-subtitle');
-  if(sub) sub.textContent=userAction?'You have dashboard actions · Codex on repairs':codexAction?'Codex repairing · nothing needed from you right now':'Clean baseline · patch proof window';
-}
-function renderAutomationLoops(){
-  const el=document.getElementById('automation-loops');
-  if(!el) return;
   const hb=DATA?.automation_heartbeat||{};
   const pub=hb.publisher||{};
   const mon=hb.market_monitor||{};
@@ -1067,14 +1055,52 @@ function renderAutomationLoops(){
   const monSkipped=!!mon.skipped;
   const monStatus=String(mon.status||'').toUpperCase();
   const monOk=!monSkipped && monStatus!=='FAIL';
-  const pagesOk=!!DATA?.generated_at;
-  const loops=[
-    {name:'Publisher',cls:pubOk?'ok':pub.status?'fail':'warn',status:pubOk?'Healthy':(pub.status||'Unknown'),detail:`${timeAgo(pub.completed_at)} · every ${pub.interval_minutes||5}m · ${pub.copied_dashboard?'Pages synced':'awaiting deploy'}`},
-    {name:'Market monitor',cls:monSkipped?'warn':monOk?'ok':'fail',status:monSkipped?'Idle (market closed)':monOk?(monStatus||'Healthy'):(monStatus||'Check audit'),detail:mon.checked_at?`${timeAgo(mon.checked_at)} · every ${mon.interval_minutes||10}m${mon.audit_fix_status?' · '+mon.audit_fix_status:''}`:'Waiting for first launchd run'},
-    {name:'GitHub Pages',cls:pagesOk?'ok':'warn',status:pagesOk?'Live':'Stale',detail:pagesOk?`Data ${timeAgo(DATA.generated_at)} · auto-refresh 60s`:'No publish timestamp'},
-  ];
-  el.innerHTML=`<div class="automation-loops-head"><h3>Background loops</h3><span class="small">macOS launchd · not Cursor Automations</span></div><div class="automation-loops-grid">${loops.map(l=>`<div class="loop-card ${l.cls}"><div class="loop-name">${esc(l.name)}</div><div class="loop-status"><span class="loop-dot"></span>${esc(l.status)}</div><div class="loop-detail">${esc(l.detail)}</div></div>`).join('')}</div>`;
+  const market=String(clock.execution_mode||clock.phase||'closed').replaceAll('_',' ');
+  const marketLive=/live|open|regular/i.test(market);
+  const cp=baselineCp();
+  const userAction=Number(summary.user_action_required||0);
+  const codexAction=Number(summary.codex_action_required||0);
+  const watchItems=rows(attention.items).filter(i=>['WATCH','ACTION_REQUIRED'].includes(String(i.status||'').toUpperCase()));
+  const knownBroken=watchItems.filter(i=>String(i.status||'').toUpperCase()==='ACTION_REQUIRED').slice(0,2);
+  const knownWatch=watchItems.filter(i=>String(i.status||'').toUpperCase()==='WATCH').slice(0,2);
+  const knownParts=[];
+  if(knownBroken.length) knownParts.push('Fixing: '+knownBroken.map(i=>i.label).join(' · '));
+  if(knownWatch.length) knownParts.push('Watching: '+knownWatch.map(i=>i.label).join(' · '));
+  const known=knownParts.length?knownParts.join(' | '):'Awaiting first live trade proof';
+  const monLabel=monSkipped?'idle':monOk?'ok':'audit';
+  const monDot=monSkipped?'warn':monOk?'':'warn';
+  const attentionLabel=userAction?'You · action':codexAction?'Codex · repair':'All clear';
+  const attentionCls=userAction?'neg-text':codexAction?'warn-text':'';
+  el.innerHTML=`<span class="status-pill"><span class="status-dot ${marketLive?'':'warn'}"></span>${esc(market)}</span>
+    <span class="status-pill">${esc(cp)}</span>
+    <span class="status-pill"><span class="status-dot ${pubOk?'':'fail'}"></span>pub ${pubOk?'ok':'err'}</span>
+    <span class="status-pill"><span class="status-dot ${monDot||'warn'}"></span>mon ${esc(monLabel)}</span>
+    <span class="status-pill">${timeAgo(DATA?.generated_at)}</span>
+    <span class="status-pill ${attentionCls}">${esc(attentionLabel)}</span>
+    <button class="status-action" type="button" data-action="health">System health</button>
+    <button class="status-action" type="button" data-action="refresh" title="Refresh">↻</button>
+    <details class="status-details"><summary>Build & loops</summary><div class="status-details-body">
+      <div class="build-state-grid">
+        <div class="build-chip"><span>Baseline</span><strong>${esc(String(baseline.baseline_key||'—').replace(/^official_/,'').slice(0,42))}</strong></div>
+        <div class="build-chip"><span>Published</span><strong>${DATA?.generated_at?new Date(DATA.generated_at).toLocaleString():'—'}</strong></div>
+        <div class="build-chip"><span>Your action</span><strong class="${userAction?'neg-text':'pos-text'}">${fmtInt(userAction)}</strong></div>
+        <div class="build-chip"><span>Codex action</span><strong class="${codexAction?'warn-text':'pos-text'}">${fmtInt(codexAction)}</strong></div>
+        <div class="build-chip wide"><span>Known state</span><strong>${esc(known)}</strong></div>
+      </div>
+      <div class="automation-loops-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+        <div class="loop-card ${pubOk?'ok':'fail'}"><div class="loop-name">Publisher</div><div class="loop-status"><span class="loop-dot"></span>${pubOk?'Healthy':esc(pub.status||'Unknown')}</div><div class="loop-detail">${timeAgo(pub.completed_at)} · ${pub.interval_minutes||5}m</div></div>
+        <div class="loop-card ${monSkipped?'warn':monOk?'ok':'warn'}"><div class="loop-name">Market monitor</div><div class="loop-status"><span class="loop-dot"></span>${monSkipped?'Idle':monOk?'Healthy':'Audit open'}</div><div class="loop-detail">${mon.checked_at?timeAgo(mon.checked_at)+' · '+(mon.notification||monStatus||''):'No run yet'}</div></div>
+        <div class="loop-card ok"><div class="loop-name">GitHub Pages</div><div class="loop-status"><span class="loop-dot"></span>Live</div><div class="loop-detail">${timeAgo(DATA?.generated_at)} · refresh 60s</div></div>
+      </div>
+      <div class="small">Background jobs run via macOS launchd on your Mac — not Cursor Automations.</div>
+    </div></details>`;
+  const sub=document.getElementById('build-subtitle');
+  if(sub) sub.textContent=userAction?'You have dashboard actions · Codex on repairs':codexAction?'Codex repairing · nothing needed from you right now':'Clean baseline · patch proof window';
 }
+function renderBuildStateBar(){
+  renderStatusStrip();
+}
+function renderAutomationLoops(){}
 function headerAttention(){
   const attention=DATA?.operator_attention||{};
   const summary=attention.summary||{};
@@ -1643,7 +1669,8 @@ function renderOperations(){
     return;
   }
   const sharedNote=b.shared_lifecycle_book?` · shared ${esc(LIFE_LABELS[b.source_lifecycle]||b.source_lifecycle)} backend book`:'';
-  active.innerHTML=`<strong>${bookLabel(b)}</strong><div>${esc(b.book_key)} · ${esc(b.prop_status||b.official_status||'ok')}${sharedNote}</div>`;
+  active.innerHTML='';
+  active.style.display='none';
   const display=bookDisplayStats(b);
   const bookOpen=display.open;
   const bookClosed=display.closed.sort((a,b)=>new Date(b.exit_time||b.created_at||0)-new Date(a.exit_time||a.created_at||0));
@@ -2463,6 +2490,7 @@ function renderCryptoLab(){
 }
 function showView(v){
   CURRENT_VIEW=v; localStorage.setItem('v2_old_view',v);
+  document.body.classList.toggle('ops-chrome-minimal', v==='operations');
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='view-'+v));
   const active=document.querySelector(`.nav-link[data-view="${v}"]`);
@@ -2471,6 +2499,8 @@ function showView(v){
   document.getElementById('site-nav')?.classList.remove('open');
   const navBtn=document.getElementById('nav-current');
   if(navBtn) navBtn.setAttribute('aria-expanded','false');
+  const details=document.querySelector('.status-details');
+  if(details) details.open=v==='research';
 }
 function openTradeModal(id){
   const t=allTrades().find(x=>String(x.id)===String(id)); if(!t) return;
@@ -2610,7 +2640,12 @@ function bind(){
     const btn=document.getElementById('nav-current');
     if(btn) btn.setAttribute('aria-expanded','false');
   });
-  document.getElementById('refresh-btn').onclick=()=>load();
+  document.getElementById('refresh-btn')?.addEventListener('click',()=>load());
+  document.getElementById('status-strip')?.addEventListener('click',e=>{
+    const action=e.target.closest('[data-action]')?.dataset.action;
+    if(action==='refresh') load();
+    if(action==='health') showView('research');
+  });
   document.getElementById('header-attention').onclick=()=>showView('research');
   document.getElementById('exit-switch').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.lifecycle=b.dataset.rule; localStorage.setItem('v2_old_lifecycle',sel.lifecycle); renderOperations()};
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
