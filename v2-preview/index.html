@@ -119,6 +119,7 @@
   .lab-warning,.vol-warning{margin:0 0 18px;padding:12px 14px;border-radius:12px;font:600 12px/1.45 'Spline Sans Mono',monospace}
   .lab-warning{border:1px solid #d97706;background:#fffbeb;color:#92400e}
   .vol-warning{border:1px solid #ddd6fe;background:var(--purple-bg);color:var(--purple)}
+  .close-pending-warning{margin:0 0 14px;padding:12px 14px;border-radius:12px;border:1px solid #e7c46a;background:#fff8e5;color:#7a5610;font:600 12px/1.45 'Spline Sans',sans-serif}
   .view{display:none}
   .view.on{display:block}
   .equity-summary{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin:0 0 18px}
@@ -725,6 +726,24 @@ function exitReasonClass(reason){
   if(r.includes('eod')||r.includes('end')) return 'sell_eod';
   if(r.includes('time')) return 'time';
   return '';
+}
+function tpSlBreachedOpen(t){
+  const cp=t.current_price, sl=t.stop_loss_price, tp=t.take_profit_price;
+  if(cp==null||sl==null||tp==null) return null;
+  const px=Number(cp), stop=Number(sl), target=Number(tp);
+  if(!Number.isFinite(px)||!Number.isFinite(stop)||!Number.isFinite(target)) return null;
+  const d=String(t.direction||'').toUpperCase();
+  if(d==='BUY'){
+    if(px<=stop) return 'stop_loss';
+    if(px>=target) return 'take_profit';
+  }else if(d==='SELL'){
+    if(px>=stop) return 'stop_loss';
+    if(px<=target) return 'take_profit';
+  }
+  return null;
+}
+function tpSlBreachedOpens(trades){
+  return (trades||[]).map(t=>{const reason=tpSlBreachedOpen(t); return reason?{trade:t, reason}:null}).filter(Boolean);
 }
 function pricePathValue(t){
   const px=t.status==='CLOSED'?(t.exit_price??t.current_price):t.current_price;
@@ -1767,6 +1786,11 @@ function renderOperations(){
     html+=`<div class="vol-warning">Volatility is live, but this selected book has no open V2 positions yet. ATR-backed trades must show a real ATR source; missing ATR is rejected instead of falling back to fixed${recent?`. Recent ATR misses: ${esc(recent)}`:''}.</div>`;
   }
 	  html+=operationsGlance(bookOpen, bookClosed, b);
+	  const breached=tpSlBreachedOpens(bookOpen);
+	  if(breached.length){
+	    const sample=breached.slice(0,6).map(({trade,reason})=>`${trade.asset} (${reason.replace('_',' ')})`).join(', ');
+	    html+=`<div class="close-pending-warning">${fmtInt(breached.length)} open position${breached.length===1?'':'s'} already past ${breached.some(x=>x.reason==='take_profit')&&breached.some(x=>x.reason==='stop_loss')?'TP/SL':breached[0].reason==='take_profit'?'take profit':'stop loss'} but still marked OPEN — close workflow has not written them to closed_trades yet. ${esc(sample)}${breached.length>6?'…':''}</div>`;
+	  }
 	  if(!bookOpen.length && !bookClosed.length){
 	    html+=`<div class="panel"><h2>Waiting for first Monday trade</h2><div class="section-note">This reset-window book is clean: no open trades, no closed trades, and no deployed capital yet. Trade cards will appear here after the first official post-reset signal.</div></div>`;
 	  } else {
@@ -1782,12 +1806,12 @@ function renderOperations(){
 	    const visibleRows=expanded?filtered:listRows.slice(0,8);
 	    html+=`<div class="panel ${isClosed?'closed-panel':'open-panel'} trade-list-panel">
 	      <h2>${isClosed?'Closed Trades':'Open Positions'}</h2>
-	      <div class="section-note">${isClosed?'Resolved trades: close reason, amount spent, article link, and exit against risk target.':'Live trades: amount spent, sizing status, article link, latency chip, and distance to SL/TP.'}</div>
+	      <div class="section-note">${isClosed?(bookClosed.length?'Resolved trades: close reason, amount spent, article link, and exit against risk target.':`No closes on ${esc(baselineCp())} yet — this book reset ${DATA?.official_baseline?.captured_at?shortTime(DATA.official_baseline.captured_at):'after baseline'} and only counts trades on the current clean book key.${breached.length?` ${fmtInt(breached.length)} open still past TP/SL.`:' '}`):'Live trades: amount spent, sizing status, article link, latency chip, and distance to SL/TP.'}</div>
 	      <div class="ops-trade-tabs">
 	        <button class="ops-trade-tab ${activeList==='open'?'on':''}" data-ops-list="open">Open <strong>${fmtInt(bookOpen.length)}</strong></button>
 	        <button class="ops-trade-tab ${activeList==='closed'?'on':''}" data-ops-list="closed">Closed <strong>${fmtInt(bookClosed.length)}</strong></button>
 	      </div>`;
-	    if(!listRows.length) html+=`<div class="empty">No ${isClosed?'closed trades':'open positions'} for this selected book.</div>`;
+	    if(!listRows.length) html+=`<div class="empty">${isClosed?`No closed trades on this book since ${esc(baselineCp())}. Historical closes from pre-reset books are excluded.`:'No open positions for this selected book.'}</div>`;
 	    else {
 	      if(expanded || listRows.length>8) html+=`<input class="trade-search" id="${searchId}" placeholder="Search ${isClosed?'closed trades':'open positions'}..." value="${esc(searchValue)}">`;
 	      html+=visibleRows.map(tradeRow).join('');
