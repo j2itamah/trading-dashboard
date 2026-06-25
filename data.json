@@ -1,29 +1,29 @@
 {
-  "generated_at": "2026-06-25T22:30:11.228Z",
+  "generated_at": "2026-06-25T22:40:12.825Z",
   "model": "14 books (10 fixed production + 4 volatility pilot)",
   "totals": {
-    "equity": 92733.72,
+    "equity": 92032.5,
     "starting": 140000,
-    "pnl_dollars": -47266.28,
-    "pnl_pct": -33.76,
-    "open_positions": 140,
+    "pnl_dollars": -47967.5,
+    "pnl_pct": -34.26,
+    "open_positions": 148,
     "book_count": 14,
     "closed_trades": 1614
   },
   "production_totals": {
-    "equity": 67055.84,
+    "equity": 67051.62,
     "starting": 100000,
-    "pnl_dollars": -32944.16,
-    "pnl_pct": -32.94,
-    "open_positions": 89,
+    "pnl_dollars": -32948.38,
+    "pnl_pct": -32.95,
+    "open_positions": 95,
     "book_count": 10
   },
   "pilot_totals": {
-    "equity": 25677.88,
+    "equity": 24980.88,
     "starting": 40000,
-    "pnl_dollars": -14322.12,
-    "pnl_pct": -35.81,
-    "open_positions": 51,
+    "pnl_dollars": -15019.12,
+    "pnl_pct": -37.55,
+    "open_positions": 53,
     "book_count": 4
   },
   "lab_totals": {
@@ -36,7 +36,7 @@
   },
   "health": {
     "status": "healthy",
-    "generated_at": "2026-06-25T22:30:11.228Z",
+    "generated_at": "2026-06-25T22:40:12.825Z",
     "stale_prices": 0,
     "overdue_expiry": 0,
     "recent_24h_failures": 0,
@@ -44,21 +44,21 @@
     "workflows": [
       {
         "workflow_name": "Publisher",
-        "last_run_at": "2026-06-25T22:30:05.20041+00:00",
+        "last_run_at": "2026-06-25T22:40:05.168535+00:00",
         "last_status": "success",
-        "execution_id": "11090"
+        "execution_id": "11094"
       },
       {
         "workflow_name": "WF1",
-        "last_run_at": "2026-06-25T22:30:02.82061+00:00",
+        "last_run_at": "2026-06-25T22:40:02.837882+00:00",
         "last_status": "success",
-        "execution_id": "11089"
+        "execution_id": "11093"
       },
       {
         "workflow_name": "WF2",
-        "last_run_at": "2026-06-25T22:25:27.344421+00:00",
+        "last_run_at": "2026-06-25T22:35:27.315031+00:00",
         "last_status": "completed",
-        "execution_id": "11088"
+        "execution_id": "11092"
       },
       {
         "workflow_name": "WF3",
@@ -1771,14 +1771,14 @@
       "book_key": "news_only__hold_24hr__volatility",
       "classification": "pilot",
       "starting_balance": 10000,
-      "total_equity": 2223.04,
-      "growth_dollars": -7776.96,
-      "growth_pct": -77.77,
-      "free_cash": 1812.79,
-      "deployed_capital": 410.25,
-      "cash_pct": 81.55,
-      "invested_pct": 18.45,
-      "open_count": 33,
+      "total_equity": 1968.97,
+      "growth_dollars": -8031.03,
+      "growth_pct": -80.31,
+      "free_cash": 1377.58,
+      "deployed_capital": 591.39,
+      "cash_pct": 69.96,
+      "invested_pct": 30.04,
+      "open_count": 34,
       "analytics": {
         "OVERALL": {
           "total_closed": 37,
@@ -2299,14 +2299,14 @@
       "book_key": "news_only__hold_24hr",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 4189.92,
-      "growth_dollars": -5810.08,
-      "growth_pct": -58.1,
-      "free_cash": 2539.27,
-      "deployed_capital": 1650.65,
-      "cash_pct": 60.6,
-      "invested_pct": 39.4,
-      "open_count": 25,
+      "total_equity": 4189.33,
+      "growth_dollars": -5810.67,
+      "growth_pct": -58.11,
+      "free_cash": 2285.34,
+      "deployed_capital": 1903.99,
+      "cash_pct": 54.55,
+      "invested_pct": 45.45,
+      "open_count": 26,
       "analytics": {
         "OVERALL": {
           "total_closed": 343,
@@ -4420,665 +4420,18 @@
     {
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
-      "target_model": "volatility",
-      "book_key": "news_only__sell_eod__volatility",
-      "classification": "pilot",
-      "starting_balance": 10000,
-      "total_equity": 3454.84,
-      "growth_dollars": -6545.16,
-      "growth_pct": -65.45,
-      "free_cash": 3044.01,
-      "deployed_capital": 410.83,
-      "cash_pct": 88.11,
-      "invested_pct": 11.89,
-      "open_count": 18,
-      "analytics": {
-        "OVERALL": {
-          "total_closed": 52,
-          "wins": 41,
-          "losses": 11,
-          "win_rate_pct": 78.85,
-          "avg_win_pct": 3.48,
-          "avg_loss_pct": -6.9,
-          "reward_risk_ratio": 0.5,
-          "total_pnl_pct": 3.74,
-          "total_pnl_dollars": 373.8
-        },
-        "BY_ASSET": [
-          {
-            "key": "AEG",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.43,
-            "total_pnl_dollars": 2.52
-          },
-          {
-            "key": "AMN",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.43,
-            "total_pnl_dollars": 4.71
-          },
-          {
-            "key": "BHP",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.48,
-            "total_pnl_dollars": 5.06
-          },
-          {
-            "key": "BTC",
-            "count": 3,
-            "win_rate_pct": 66.67,
-            "total_pnl_pct": -2.15,
-            "total_pnl_dollars": -1.62
-          },
-          {
-            "key": "CCL",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.17,
-            "total_pnl_dollars": 7.31
-          },
-          {
-            "key": "CMI",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.81,
-            "total_pnl_dollars": 9.82
-          },
-          {
-            "key": "COIN",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.25,
-            "total_pnl_dollars": 4.51
-          },
-          {
-            "key": "DTSS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -73.19
-          },
-          {
-            "key": "ENPH",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.12,
-            "total_pnl_dollars": 4.98
-          },
-          {
-            "key": "EQNR",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.41,
-            "total_pnl_dollars": 2.32
-          },
-          {
-            "key": "ERAS",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.88,
-            "total_pnl_dollars": 15.83
-          },
-          {
-            "key": "ETH",
-            "count": 2,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.85,
-            "total_pnl_dollars": 13.04
-          },
-          {
-            "key": "EU",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -91.48
-          },
-          {
-            "key": "EWTX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.2,
-            "total_pnl_dollars": 6.82
-          },
-          {
-            "key": "GIC",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.8,
-            "total_pnl_dollars": 6.84
-          },
-          {
-            "key": "HIVE",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 20,
-            "total_pnl_dollars": 134.47
-          },
-          {
-            "key": "HOOD",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -50.23
-          },
-          {
-            "key": "ITA",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.25,
-            "total_pnl_dollars": 7.1
-          },
-          {
-            "key": "LLY",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -1.64,
-            "total_pnl_dollars": -7.4
-          },
-          {
-            "key": "LPRO",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.32,
-            "total_pnl_dollars": 0.75
-          },
-          {
-            "key": "MANH",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.88,
-            "total_pnl_dollars": 8.1
-          },
-          {
-            "key": "MASI",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
-          },
-          {
-            "key": "MTN",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.74,
-            "total_pnl_dollars": 14.32
-          },
-          {
-            "key": "MU",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.05,
-            "total_pnl_dollars": 5.73
-          },
-          {
-            "key": "NFE",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -68.62
-          },
-          {
-            "key": "NNOX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.05,
-            "total_pnl_dollars": 20.86
-          },
-          {
-            "key": "NRXP",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 7.95,
-            "total_pnl_dollars": 39.32
-          },
-          {
-            "key": "OM",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.71,
-            "total_pnl_dollars": 9.55
-          },
-          {
-            "key": "OSS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -31.62
-          },
-          {
-            "key": "OTLK",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 20,
-            "total_pnl_dollars": 200
-          },
-          {
-            "key": "PAVS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -9.97,
-            "total_pnl_dollars": -53.55
-          },
-          {
-            "key": "PCVX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.82,
-            "total_pnl_dollars": 8.04
-          },
-          {
-            "key": "PICS",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.28,
-            "total_pnl_dollars": 12.86
-          },
-          {
-            "key": "PRAX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.89,
-            "total_pnl_dollars": 17.51
-          },
-          {
-            "key": "QCOM",
-            "count": 2,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.94,
-            "total_pnl_dollars": 13.29
-          },
-          {
-            "key": "RIVN",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -6.42,
-            "total_pnl_dollars": -14.06
-          },
-          {
-            "key": "RRGCX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.12,
-            "total_pnl_dollars": 0.8
-          },
-          {
-            "key": "SDRL",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.68,
-            "total_pnl_dollars": 20.18
-          },
-          {
-            "key": "SLP",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 11.48,
-            "total_pnl_dollars": 89.66
-          },
-          {
-            "key": "SOL",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -2.96,
-            "total_pnl_dollars": -12.33
-          },
-          {
-            "key": "SPSC",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.21,
-            "total_pnl_dollars": 15.32
-          },
-          {
-            "key": "SRAD",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.02,
-            "total_pnl_dollars": 7.57
-          },
-          {
-            "key": "SST",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.34,
-            "total_pnl_dollars": 7.35
-          },
-          {
-            "key": "USO",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.86,
-            "total_pnl_dollars": 3.66
-          },
-          {
-            "key": "WDC",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 7.73,
-            "total_pnl_dollars": 31.07
-          },
-          {
-            "key": "WGS",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 5.07,
-            "total_pnl_dollars": 11.07
-          },
-          {
-            "key": "WISE",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.13,
-            "total_pnl_dollars": 6.49
-          },
-          {
-            "key": "XLM",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.44,
-            "total_pnl_dollars": 9.13
-          }
-        ],
-        "BY_SOURCE": [
-          {
-            "key": "AMBCrypto",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2.34,
-            "avg_pnl_usd": 7.35
-          },
-          {
-            "key": "Business Wire RSS",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 6.12,
-            "avg_pnl_usd": 26.09
-          },
-          {
-            "key": "CNBC",
-            "count": 3,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 1.98,
-            "avg_pnl_usd": 8.24
-          },
-          {
-            "key": "Cointelegraph RSS",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 20,
-            "avg_pnl_usd": 134.47
-          },
-          {
-            "key": "CryptoPotato",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2.56,
-            "avg_pnl_usd": 6.8
-          },
-          {
-            "key": "Decrypt",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -10,
-            "avg_pnl_usd": -50.23
-          },
-          {
-            "key": "NewsBTC",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": -0.26,
-            "avg_pnl_usd": -1.6
-          },
-          {
-            "key": "PR Newswire RSS",
-            "count": 10,
-            "win_rate_pct": 80,
-            "avg_pnl_pct": 1.18,
-            "avg_pnl_usd": 0.22
-          },
-          {
-            "key": "Seeking Alpha RSS",
-            "count": 18,
-            "win_rate_pct": 77.78,
-            "avg_pnl_pct": 1.01,
-            "avg_pnl_usd": 10.04
-          },
-          {
-            "key": "Yahoo Finance RSS",
-            "count": 11,
-            "win_rate_pct": 72.73,
-            "avg_pnl_pct": 0.01,
-            "avg_pnl_usd": 0.28
-          },
-          {
-            "key": "crypto.news",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2,
-            "avg_pnl_usd": 7.89
-          }
-        ],
-        "BY_CONFIDENCE": [
-          {
-            "key": "0.60-0.69",
-            "count": 39,
-            "win_rate_pct": 82.05,
-            "avg_pnl_pct": 1.36,
-            "avg_pnl_usd": 6.73
-          },
-          {
-            "key": "0.70-0.79",
-            "count": 13,
-            "win_rate_pct": 69.23,
-            "avg_pnl_pct": 1.04,
-            "avg_pnl_usd": 8.56
-          }
-        ],
-        "BY_EXIT_REASON": [
-          {
-            "key": "early_exit_crypto_threshold",
-            "count": 4,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2.43,
-            "avg_pnl_usd": 8.56
-          },
-          {
-            "key": "early_exit_stock_threshold",
-            "count": 25,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2.73,
-            "avg_pnl_usd": 13.88
-          },
-          {
-            "key": "stop_loss",
-            "count": 7,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -9.26,
-            "avg_pnl_usd": -54.72
-          },
-          {
-            "key": "take_profit",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 20,
-            "avg_pnl_usd": 167.24
-          },
-          {
-            "key": "time",
-            "count": 14,
-            "win_rate_pct": 71.43,
-            "avg_pnl_pct": 0.97,
-            "avg_pnl_usd": 2.94
-          }
-        ],
-        "BY_DIRECTION": [
-          {
-            "key": "BUY",
-            "count": 35,
-            "win_rate_pct": 77.14,
-            "avg_win_pct": 3.83,
-            "avg_loss_pct": -6.82
-          },
-          {
-            "key": "SELL",
-            "count": 17,
-            "win_rate_pct": 82.35,
-            "avg_win_pct": 2.79,
-            "avg_loss_pct": -7.1
-          }
-        ],
-        "BY_ALIGNMENT": [
-          {
-            "key": "aligned",
-            "count": 24,
-            "win_rate_pct": 79.17
-          },
-          {
-            "key": "conflict",
-            "count": 21,
-            "win_rate_pct": 76.19
-          },
-          {
-            "key": "neutral",
-            "count": 7,
-            "win_rate_pct": 85.71
-          }
-        ],
-        "BY_RSI_BAND": [
-          {
-            "key": "neutral (30-70)",
-            "count": 46,
-            "win_rate_pct": 80.43
-          },
-          {
-            "key": "overbought (>70)",
-            "count": 4,
-            "win_rate_pct": 75
-          },
-          {
-            "key": "oversold (<30)",
-            "count": 2,
-            "win_rate_pct": 50
-          }
-        ],
-        "BY_TREND": [
-          {
-            "key": "above_ma20 (uptrend)",
-            "count": 30,
-            "win_rate_pct": 76.67
-          },
-          {
-            "key": "below_ma20 (downtrend)",
-            "count": 22,
-            "win_rate_pct": 81.82
-          }
-        ],
-        "BY_HOUR": [
-          {
-            "key": "06:00 ET",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -4.86,
-            "avg_pnl_usd": -14.35
-          },
-          {
-            "key": "09:00 ET",
-            "count": 9,
-            "win_rate_pct": 77.78,
-            "avg_pnl_pct": 3.43,
-            "avg_pnl_usd": 29.15
-          },
-          {
-            "key": "10:00 ET",
-            "count": 8,
-            "win_rate_pct": 75,
-            "avg_pnl_pct": 0.11,
-            "avg_pnl_usd": -2.77
-          },
-          {
-            "key": "11:00 ET",
-            "count": 5,
-            "win_rate_pct": 60,
-            "avg_pnl_pct": -2.01,
-            "avg_pnl_usd": -8.33
-          },
-          {
-            "key": "12:00 ET",
-            "count": 8,
-            "win_rate_pct": 75,
-            "avg_pnl_pct": -0.29,
-            "avg_pnl_usd": -4.55
-          },
-          {
-            "key": "13:00 ET",
-            "count": 6,
-            "win_rate_pct": 83.33,
-            "avg_pnl_pct": 0.63,
-            "avg_pnl_usd": -2.59
-          },
-          {
-            "key": "14:00 ET",
-            "count": 8,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 4.81,
-            "avg_pnl_usd": 26.15
-          },
-          {
-            "key": "15:00 ET",
-            "count": 4,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2.04,
-            "avg_pnl_usd": 7.34
-          },
-          {
-            "key": "16:00 ET",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -2.96,
-            "avg_pnl_usd": -12.33
-          },
-          {
-            "key": "19:00 ET",
-            "count": 2,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 2.36,
-            "avg_pnl_usd": 7.69
-          }
-        ],
-        "AVG_HOLD_TIME": {
-          "avg_minutes": 2313.18,
-          "avg_win_minutes": 2403.59,
-          "avg_loss_minutes": 1998.83,
-          "n": 52
-        }
-      },
-      "closed": {
-        "count": 52,
-        "wins": 41,
-        "losses": 11,
-        "win_rate_pct": 78.85,
-        "total_pnl_dollars": 373.8,
-        "low_sample": false
-      }
-    },
-    {
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
       "target_model": "fixed",
       "book_key": "news_only__sell_eod",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 6237.95,
-      "growth_dollars": -3762.05,
-      "growth_pct": -37.62,
-      "free_cash": 4426.88,
-      "deployed_capital": 1811.07,
-      "cash_pct": 70.97,
-      "invested_pct": 29.03,
-      "open_count": 19,
+      "total_equity": 6236.73,
+      "growth_dollars": -3763.27,
+      "growth_pct": -37.63,
+      "free_cash": 3984.19,
+      "deployed_capital": 2252.54,
+      "cash_pct": 63.88,
+      "invested_pct": 36.12,
+      "open_count": 20,
       "analytics": {
         "OVERALL": {
           "total_closed": 349,
@@ -7225,20 +6578,667 @@
       }
     },
     {
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "target_model": "volatility",
+      "book_key": "news_only__sell_eod__volatility",
+      "classification": "pilot",
+      "starting_balance": 10000,
+      "total_equity": 3011.91,
+      "growth_dollars": -6988.09,
+      "growth_pct": -69.88,
+      "free_cash": 2296.92,
+      "deployed_capital": 714.99,
+      "cash_pct": 76.26,
+      "invested_pct": 23.74,
+      "open_count": 19,
+      "analytics": {
+        "OVERALL": {
+          "total_closed": 52,
+          "wins": 41,
+          "losses": 11,
+          "win_rate_pct": 78.85,
+          "avg_win_pct": 3.48,
+          "avg_loss_pct": -6.9,
+          "reward_risk_ratio": 0.5,
+          "total_pnl_pct": 3.74,
+          "total_pnl_dollars": 373.8
+        },
+        "BY_ASSET": [
+          {
+            "key": "AEG",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.43,
+            "total_pnl_dollars": 2.52
+          },
+          {
+            "key": "AMN",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.43,
+            "total_pnl_dollars": 4.71
+          },
+          {
+            "key": "BHP",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.48,
+            "total_pnl_dollars": 5.06
+          },
+          {
+            "key": "BTC",
+            "count": 3,
+            "win_rate_pct": 66.67,
+            "total_pnl_pct": -2.15,
+            "total_pnl_dollars": -1.62
+          },
+          {
+            "key": "CCL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.17,
+            "total_pnl_dollars": 7.31
+          },
+          {
+            "key": "CMI",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.81,
+            "total_pnl_dollars": 9.82
+          },
+          {
+            "key": "COIN",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.25,
+            "total_pnl_dollars": 4.51
+          },
+          {
+            "key": "DTSS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -73.19
+          },
+          {
+            "key": "ENPH",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.12,
+            "total_pnl_dollars": 4.98
+          },
+          {
+            "key": "EQNR",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.41,
+            "total_pnl_dollars": 2.32
+          },
+          {
+            "key": "ERAS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.88,
+            "total_pnl_dollars": 15.83
+          },
+          {
+            "key": "ETH",
+            "count": 2,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.85,
+            "total_pnl_dollars": 13.04
+          },
+          {
+            "key": "EU",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -91.48
+          },
+          {
+            "key": "EWTX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.2,
+            "total_pnl_dollars": 6.82
+          },
+          {
+            "key": "GIC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.8,
+            "total_pnl_dollars": 6.84
+          },
+          {
+            "key": "HIVE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 20,
+            "total_pnl_dollars": 134.47
+          },
+          {
+            "key": "HOOD",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -50.23
+          },
+          {
+            "key": "ITA",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.25,
+            "total_pnl_dollars": 7.1
+          },
+          {
+            "key": "LLY",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.64,
+            "total_pnl_dollars": -7.4
+          },
+          {
+            "key": "LPRO",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.32,
+            "total_pnl_dollars": 0.75
+          },
+          {
+            "key": "MANH",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.88,
+            "total_pnl_dollars": 8.1
+          },
+          {
+            "key": "MASI",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": 0,
+            "total_pnl_dollars": 0
+          },
+          {
+            "key": "MTN",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.74,
+            "total_pnl_dollars": 14.32
+          },
+          {
+            "key": "MU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.05,
+            "total_pnl_dollars": 5.73
+          },
+          {
+            "key": "NFE",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -68.62
+          },
+          {
+            "key": "NNOX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.05,
+            "total_pnl_dollars": 20.86
+          },
+          {
+            "key": "NRXP",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 7.95,
+            "total_pnl_dollars": 39.32
+          },
+          {
+            "key": "OM",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.71,
+            "total_pnl_dollars": 9.55
+          },
+          {
+            "key": "OSS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -31.62
+          },
+          {
+            "key": "OTLK",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 20,
+            "total_pnl_dollars": 200
+          },
+          {
+            "key": "PAVS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -9.97,
+            "total_pnl_dollars": -53.55
+          },
+          {
+            "key": "PCVX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.82,
+            "total_pnl_dollars": 8.04
+          },
+          {
+            "key": "PICS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.28,
+            "total_pnl_dollars": 12.86
+          },
+          {
+            "key": "PRAX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.89,
+            "total_pnl_dollars": 17.51
+          },
+          {
+            "key": "QCOM",
+            "count": 2,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.94,
+            "total_pnl_dollars": 13.29
+          },
+          {
+            "key": "RIVN",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -6.42,
+            "total_pnl_dollars": -14.06
+          },
+          {
+            "key": "RRGCX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.12,
+            "total_pnl_dollars": 0.8
+          },
+          {
+            "key": "SDRL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.68,
+            "total_pnl_dollars": 20.18
+          },
+          {
+            "key": "SLP",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 11.48,
+            "total_pnl_dollars": 89.66
+          },
+          {
+            "key": "SOL",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2.96,
+            "total_pnl_dollars": -12.33
+          },
+          {
+            "key": "SPSC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.21,
+            "total_pnl_dollars": 15.32
+          },
+          {
+            "key": "SRAD",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.02,
+            "total_pnl_dollars": 7.57
+          },
+          {
+            "key": "SST",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.34,
+            "total_pnl_dollars": 7.35
+          },
+          {
+            "key": "USO",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.86,
+            "total_pnl_dollars": 3.66
+          },
+          {
+            "key": "WDC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 7.73,
+            "total_pnl_dollars": 31.07
+          },
+          {
+            "key": "WGS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 5.07,
+            "total_pnl_dollars": 11.07
+          },
+          {
+            "key": "WISE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.13,
+            "total_pnl_dollars": 6.49
+          },
+          {
+            "key": "XLM",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.44,
+            "total_pnl_dollars": 9.13
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "AMBCrypto",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2.34,
+            "avg_pnl_usd": 7.35
+          },
+          {
+            "key": "Business Wire RSS",
+            "count": 2,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 6.12,
+            "avg_pnl_usd": 26.09
+          },
+          {
+            "key": "CNBC",
+            "count": 3,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 1.98,
+            "avg_pnl_usd": 8.24
+          },
+          {
+            "key": "Cointelegraph RSS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 20,
+            "avg_pnl_usd": 134.47
+          },
+          {
+            "key": "CryptoPotato",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2.56,
+            "avg_pnl_usd": 6.8
+          },
+          {
+            "key": "Decrypt",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -10,
+            "avg_pnl_usd": -50.23
+          },
+          {
+            "key": "NewsBTC",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -0.26,
+            "avg_pnl_usd": -1.6
+          },
+          {
+            "key": "PR Newswire RSS",
+            "count": 10,
+            "win_rate_pct": 80,
+            "avg_pnl_pct": 1.18,
+            "avg_pnl_usd": 0.22
+          },
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 18,
+            "win_rate_pct": 77.78,
+            "avg_pnl_pct": 1.01,
+            "avg_pnl_usd": 10.04
+          },
+          {
+            "key": "Yahoo Finance RSS",
+            "count": 11,
+            "win_rate_pct": 72.73,
+            "avg_pnl_pct": 0.01,
+            "avg_pnl_usd": 0.28
+          },
+          {
+            "key": "crypto.news",
+            "count": 2,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2,
+            "avg_pnl_usd": 7.89
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 39,
+            "win_rate_pct": 82.05,
+            "avg_pnl_pct": 1.36,
+            "avg_pnl_usd": 6.73
+          },
+          {
+            "key": "0.70-0.79",
+            "count": 13,
+            "win_rate_pct": 69.23,
+            "avg_pnl_pct": 1.04,
+            "avg_pnl_usd": 8.56
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "early_exit_crypto_threshold",
+            "count": 4,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2.43,
+            "avg_pnl_usd": 8.56
+          },
+          {
+            "key": "early_exit_stock_threshold",
+            "count": 25,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2.73,
+            "avg_pnl_usd": 13.88
+          },
+          {
+            "key": "stop_loss",
+            "count": 7,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -9.26,
+            "avg_pnl_usd": -54.72
+          },
+          {
+            "key": "take_profit",
+            "count": 2,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 20,
+            "avg_pnl_usd": 167.24
+          },
+          {
+            "key": "time",
+            "count": 14,
+            "win_rate_pct": 71.43,
+            "avg_pnl_pct": 0.97,
+            "avg_pnl_usd": 2.94
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 35,
+            "win_rate_pct": 77.14,
+            "avg_win_pct": 3.83,
+            "avg_loss_pct": -6.82
+          },
+          {
+            "key": "SELL",
+            "count": 17,
+            "win_rate_pct": 82.35,
+            "avg_win_pct": 2.79,
+            "avg_loss_pct": -7.1
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 24,
+            "win_rate_pct": 79.17
+          },
+          {
+            "key": "conflict",
+            "count": 21,
+            "win_rate_pct": 76.19
+          },
+          {
+            "key": "neutral",
+            "count": 7,
+            "win_rate_pct": 85.71
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 46,
+            "win_rate_pct": 80.43
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 4,
+            "win_rate_pct": 75
+          },
+          {
+            "key": "oversold (<30)",
+            "count": 2,
+            "win_rate_pct": 50
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 30,
+            "win_rate_pct": 76.67
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 22,
+            "win_rate_pct": 81.82
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "06:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -4.86,
+            "avg_pnl_usd": -14.35
+          },
+          {
+            "key": "09:00 ET",
+            "count": 9,
+            "win_rate_pct": 77.78,
+            "avg_pnl_pct": 3.43,
+            "avg_pnl_usd": 29.15
+          },
+          {
+            "key": "10:00 ET",
+            "count": 8,
+            "win_rate_pct": 75,
+            "avg_pnl_pct": 0.11,
+            "avg_pnl_usd": -2.77
+          },
+          {
+            "key": "11:00 ET",
+            "count": 5,
+            "win_rate_pct": 60,
+            "avg_pnl_pct": -2.01,
+            "avg_pnl_usd": -8.33
+          },
+          {
+            "key": "12:00 ET",
+            "count": 8,
+            "win_rate_pct": 75,
+            "avg_pnl_pct": -0.29,
+            "avg_pnl_usd": -4.55
+          },
+          {
+            "key": "13:00 ET",
+            "count": 6,
+            "win_rate_pct": 83.33,
+            "avg_pnl_pct": 0.63,
+            "avg_pnl_usd": -2.59
+          },
+          {
+            "key": "14:00 ET",
+            "count": 8,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 4.81,
+            "avg_pnl_usd": 26.15
+          },
+          {
+            "key": "15:00 ET",
+            "count": 4,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2.04,
+            "avg_pnl_usd": 7.34
+          },
+          {
+            "key": "16:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -2.96,
+            "avg_pnl_usd": -12.33
+          },
+          {
+            "key": "19:00 ET",
+            "count": 2,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 2.36,
+            "avg_pnl_usd": 7.69
+          }
+        ],
+        "AVG_HOLD_TIME": {
+          "avg_minutes": 2313.18,
+          "avg_win_minutes": 2403.59,
+          "avg_loss_minutes": 1998.83,
+          "n": 52
+        }
+      },
+      "closed": {
+        "count": 52,
+        "wins": 41,
+        "losses": 11,
+        "win_rate_pct": 78.85,
+        "total_pnl_dollars": 373.8,
+        "low_sample": false
+      }
+    },
+    {
       "portfolio": "news_plus_ta",
       "exit_rule": "hold_24hr",
       "target_model": "fixed",
       "book_key": "news_plus_ta__hold_24hr",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 4280.69,
-      "growth_dollars": -5719.31,
-      "growth_pct": -57.19,
-      "free_cash": 4280.69,
-      "deployed_capital": 5709.69,
-      "cash_pct": 42.85,
-      "invested_pct": 57.15,
-      "open_count": 11,
+      "total_equity": 4280.24,
+      "growth_dollars": -5719.76,
+      "growth_pct": -57.2,
+      "free_cash": 3852.62,
+      "deployed_capital": 427.62,
+      "cash_pct": 90.01,
+      "invested_pct": 9.99,
+      "open_count": 12,
       "analytics": {
         "OVERALL": {
           "total_closed": 198,
@@ -8664,14 +8664,14 @@
       "book_key": "news_plus_ta__sell_eod",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 4992.27,
-      "growth_dollars": -5007.73,
+      "total_equity": 4991.74,
+      "growth_dollars": -5008.26,
       "growth_pct": -50.08,
-      "free_cash": 4992.27,
-      "deployed_capital": 4948.49,
-      "cash_pct": 50.22,
-      "invested_pct": 49.78,
-      "open_count": 9,
+      "free_cash": 4493.04,
+      "deployed_capital": 498.71,
+      "cash_pct": 90.01,
+      "invested_pct": 9.99,
+      "open_count": 10,
       "analytics": {
         "OVERALL": {
           "total_closed": 200,
@@ -10111,14 +10111,14 @@
       "book_key": "trend_strict__hold_24hr",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 4912.1,
-      "growth_dollars": -5087.9,
-      "growth_pct": -50.88,
-      "free_cash": 4265.58,
-      "deployed_capital": 646.53,
-      "cash_pct": 86.84,
-      "invested_pct": 13.16,
-      "open_count": 12,
+      "total_equity": 4911.43,
+      "growth_dollars": -5088.57,
+      "growth_pct": -50.89,
+      "free_cash": 3839.02,
+      "deployed_capital": 1072.41,
+      "cash_pct": 78.16,
+      "invested_pct": 21.84,
+      "open_count": 13,
       "analytics": {
         "OVERALL": {
           "total_closed": 147,
@@ -11350,14 +11350,14 @@
       "book_key": "trend_strict__sell_eod",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 5748.28,
-      "growth_dollars": -4251.72,
+      "total_equity": 5747.52,
+      "growth_dollars": -4252.48,
       "growth_pct": -42.52,
-      "free_cash": 5091.82,
-      "deployed_capital": 656.45,
-      "cash_pct": 88.58,
-      "invested_pct": 11.42,
-      "open_count": 9,
+      "free_cash": 4582.64,
+      "deployed_capital": 1164.87,
+      "cash_pct": 79.73,
+      "invested_pct": 20.27,
+      "open_count": 10,
       "analytics": {
         "OVERALL": {
           "total_closed": 150,
@@ -12620,14 +12620,14 @@
         "book_key": "news_only__hold_24hr",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 4189.92,
-        "growth_dollars": -5810.08,
-        "growth_pct": -58.1,
-        "free_cash": 2539.27,
-        "deployed_capital": 1650.65,
-        "cash_pct": 60.6,
-        "invested_pct": 39.4,
-        "open_count": 25,
+        "total_equity": 4189.33,
+        "growth_dollars": -5810.67,
+        "growth_pct": -58.11,
+        "free_cash": 2285.34,
+        "deployed_capital": 1903.99,
+        "cash_pct": 54.55,
+        "invested_pct": 45.45,
+        "open_count": 26,
         "analytics": {
           "OVERALL": {
             "total_closed": 343,
@@ -14745,14 +14745,14 @@
         "book_key": "news_only__sell_eod",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 6237.95,
-        "growth_dollars": -3762.05,
-        "growth_pct": -37.62,
-        "free_cash": 4426.88,
-        "deployed_capital": 1811.07,
-        "cash_pct": 70.97,
-        "invested_pct": 29.03,
-        "open_count": 19,
+        "total_equity": 6236.73,
+        "growth_dollars": -3763.27,
+        "growth_pct": -37.63,
+        "free_cash": 3984.19,
+        "deployed_capital": 2252.54,
+        "cash_pct": 63.88,
+        "invested_pct": 36.12,
+        "open_count": 20,
         "analytics": {
           "OVERALL": {
             "total_closed": 349,
@@ -16907,14 +16907,14 @@
         "book_key": "news_plus_ta__hold_24hr",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 4280.69,
-        "growth_dollars": -5719.31,
-        "growth_pct": -57.19,
-        "free_cash": 4280.69,
-        "deployed_capital": 5709.69,
-        "cash_pct": 42.85,
-        "invested_pct": 57.15,
-        "open_count": 11,
+        "total_equity": 4280.24,
+        "growth_dollars": -5719.76,
+        "growth_pct": -57.2,
+        "free_cash": 3852.62,
+        "deployed_capital": 427.62,
+        "cash_pct": 90.01,
+        "invested_pct": 9.99,
+        "open_count": 12,
         "analytics": {
           "OVERALL": {
             "total_closed": 198,
@@ -18340,14 +18340,14 @@
         "book_key": "news_plus_ta__sell_eod",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 4992.27,
-        "growth_dollars": -5007.73,
+        "total_equity": 4991.74,
+        "growth_dollars": -5008.26,
         "growth_pct": -50.08,
-        "free_cash": 4992.27,
-        "deployed_capital": 4948.49,
-        "cash_pct": 50.22,
-        "invested_pct": 49.78,
-        "open_count": 9,
+        "free_cash": 4493.04,
+        "deployed_capital": 498.71,
+        "cash_pct": 90.01,
+        "invested_pct": 9.99,
+        "open_count": 10,
         "analytics": {
           "OVERALL": {
             "total_closed": 200,
@@ -21262,14 +21262,14 @@
         "book_key": "trend_strict__hold_24hr",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 4912.1,
-        "growth_dollars": -5087.9,
-        "growth_pct": -50.88,
-        "free_cash": 4265.58,
-        "deployed_capital": 646.53,
-        "cash_pct": 86.84,
-        "invested_pct": 13.16,
-        "open_count": 12,
+        "total_equity": 4911.43,
+        "growth_dollars": -5088.57,
+        "growth_pct": -50.89,
+        "free_cash": 3839.02,
+        "deployed_capital": 1072.41,
+        "cash_pct": 78.16,
+        "invested_pct": 21.84,
+        "open_count": 13,
         "analytics": {
           "OVERALL": {
             "total_closed": 147,
@@ -22501,14 +22501,14 @@
         "book_key": "trend_strict__sell_eod",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 5748.28,
-        "growth_dollars": -4251.72,
+        "total_equity": 5747.52,
+        "growth_dollars": -4252.48,
         "growth_pct": -42.52,
-        "free_cash": 5091.82,
-        "deployed_capital": 656.45,
-        "cash_pct": 88.58,
-        "invested_pct": 11.42,
-        "open_count": 9,
+        "free_cash": 4582.64,
+        "deployed_capital": 1164.87,
+        "cash_pct": 79.73,
+        "invested_pct": 20.27,
+        "open_count": 10,
         "analytics": {
           "OVERALL": {
             "total_closed": 150,
@@ -23988,14 +23988,14 @@
         "book_key": "news_only__hold_24hr__volatility",
         "classification": "pilot",
         "starting_balance": 10000,
-        "total_equity": 2223.04,
-        "growth_dollars": -7776.96,
-        "growth_pct": -77.77,
-        "free_cash": 1812.79,
-        "deployed_capital": 410.25,
-        "cash_pct": 81.55,
-        "invested_pct": 18.45,
-        "open_count": 33,
+        "total_equity": 1968.97,
+        "growth_dollars": -8031.03,
+        "growth_pct": -80.31,
+        "free_cash": 1377.58,
+        "deployed_capital": 591.39,
+        "cash_pct": 69.96,
+        "invested_pct": 30.04,
+        "open_count": 34,
         "analytics": {
           "OVERALL": {
             "total_closed": 37,
@@ -24516,14 +24516,14 @@
         "book_key": "news_only__sell_eod__volatility",
         "classification": "pilot",
         "starting_balance": 10000,
-        "total_equity": 3454.84,
-        "growth_dollars": -6545.16,
-        "growth_pct": -65.45,
-        "free_cash": 3044.01,
-        "deployed_capital": 410.83,
-        "cash_pct": 88.11,
-        "invested_pct": 11.89,
-        "open_count": 18,
+        "total_equity": 3011.91,
+        "growth_dollars": -6988.09,
+        "growth_pct": -69.88,
+        "free_cash": 2296.92,
+        "deployed_capital": 714.99,
+        "cash_pct": 76.26,
+        "invested_pct": 23.74,
+        "open_count": 19,
         "analytics": {
           "OVERALL": {
             "total_closed": 52,
@@ -25374,8 +25374,8 @@
       "status": "OPEN",
       "row_id": "3365",
       "asset_class": "crypto",
-      "current_price": 59768,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price": 59689,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 61273.915,
       "period_low": 58546.2,
       "rule_version": "v2_20260609_stop2pct",
@@ -25390,8 +25390,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": -8.05,
-      "unrealized_pnl_percent": -0.023702
+      "unrealized_pnl_dollars": -8.49,
+      "unrealized_pnl_percent": -0.024992
     },
     {
       "book_key": "trend_strict__sell_eod",
@@ -25959,8 +25959,8 @@
       "status": "OPEN",
       "row_id": "3366",
       "asset_class": "crypto",
-      "current_price": 59768,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price": 59689,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 61273.915,
       "period_low": 58560.165,
       "rule_version": "v2_20260609_stop2pct",
@@ -25975,8 +25975,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": -9.76,
-      "unrealized_pnl_percent": -0.023702
+      "unrealized_pnl_dollars": -10.29,
+      "unrealized_pnl_percent": -0.024992
     },
     {
       "book_key": "news_only__sell_eod",
@@ -26037,8 +26037,8 @@
       "status": "OPEN",
       "row_id": "3358",
       "asset_class": "crypto",
-      "current_price": 59768,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price": 59689,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 61824,
       "period_low": 58188,
       "rule_version": "v2_20260609_stop2pct",
@@ -26053,8 +26053,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": -7.65,
-      "unrealized_pnl_percent": -0.017394
+      "unrealized_pnl_dollars": -8.22,
+      "unrealized_pnl_percent": -0.018693
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -26389,7 +26389,7 @@
       "row_id": "3570",
       "asset_class": "crypto",
       "current_price": 1.038,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 1.0446,
       "period_low": 1.02275,
       "rule_version": "v2_20260609_stop2pct",
@@ -26895,8 +26895,8 @@
       "status": "OPEN",
       "row_id": "3589",
       "asset_class": "crypto",
-      "current_price": 0.143256,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price": 0.14332,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 0.14435,
       "period_low": 0.14061,
       "rule_version": "v2_20260609_stop2pct",
@@ -26911,8 +26911,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 1.08,
-      "unrealized_pnl_percent": 0.002805
+      "unrealized_pnl_dollars": 0.91,
+      "unrealized_pnl_percent": 0.00236
     },
     {
       "book_key": "trend_strict__hold_24hr",
@@ -27051,8 +27051,8 @@
       "status": "OPEN",
       "row_id": "3590",
       "asset_class": "crypto",
-      "current_price": 0.14325,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price": 0.1433,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 0.14435,
       "period_low": 0.14055,
       "rule_version": "v2_20260609_stop2pct",
@@ -27067,8 +27067,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 0.93,
-      "unrealized_pnl_percent": 0.002847
+      "unrealized_pnl_dollars": 0.82,
+      "unrealized_pnl_percent": 0.002499
     },
     {
       "book_key": "news_plus_ta__sell_eod",
@@ -27149,6 +27149,45 @@
       "unrealized_pnl_percent": -0.015323
     },
     {
+      "book_key": "news_only__sell_eod__volatility",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "target_model": "volatility",
+      "asset": "BNB",
+      "direction": "SHORT",
+      "stake_amount": 399.21,
+      "shares": 0.693061,
+      "entry_price": 576.01,
+      "entry_time": "2026-06-18T18:50:13.520Z",
+      "trade_id": "a5b407b8-5abb-43b7-9d55-e479552cc5f1",
+      "signal_id": "BNB|SELL|Binance Set to Lose EU Operating License as Greece Poised to Reject MiCA Application",
+      "title": "Binance Set to Lose EU Operating License as Greece Poised to Reject MiCA Application",
+      "source": "Yahoo Finance RSS",
+      "news_url": "https://finance.yahoo.com/markets/crypto/articles/binance-set-lose-eu-operating-085140834.html",
+      "confidence": 0.72,
+      "status": "OPEN",
+      "row_id": "2212",
+      "asset_class": "stock",
+      "current_price": 559.13,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 601.495,
+      "period_low": 544.945,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": -0.1147,
+      "stop_loss_pct": 0.0574,
+      "take_profit_price": 509.9186,
+      "stop_loss_price": 609.0557,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": null,
+      "atr_pct_at_entry": 3.8247,
+      "stop_distance_pct": 5.737,
+      "target_distance_pct": 11.474,
+      "experiment_phase": "volatility_pilot",
+      "unrealized_pnl_dollars": 11.7,
+      "unrealized_pnl_percent": 0.029305
+    },
+    {
       "book_key": "news_only__hold_24hr",
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
@@ -27186,45 +27225,6 @@
       "experiment_phase": null,
       "unrealized_pnl_dollars": 10.39,
       "unrealized_pnl_percent": 0.031757
-    },
-    {
-      "book_key": "news_only__sell_eod__volatility",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "target_model": "volatility",
-      "asset": "BNB",
-      "direction": "SHORT",
-      "stake_amount": 399.21,
-      "shares": 0.693061,
-      "entry_price": 576.01,
-      "entry_time": "2026-06-18T18:50:13.520Z",
-      "trade_id": "a5b407b8-5abb-43b7-9d55-e479552cc5f1",
-      "signal_id": "BNB|SELL|Binance Set to Lose EU Operating License as Greece Poised to Reject MiCA Application",
-      "title": "Binance Set to Lose EU Operating License as Greece Poised to Reject MiCA Application",
-      "source": "Yahoo Finance RSS",
-      "news_url": "https://finance.yahoo.com/markets/crypto/articles/binance-set-lose-eu-operating-085140834.html",
-      "confidence": 0.72,
-      "status": "OPEN",
-      "row_id": "2212",
-      "asset_class": "stock",
-      "current_price": 559.245,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 601.495,
-      "period_low": 544.945,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": -0.1147,
-      "stop_loss_pct": 0.0574,
-      "take_profit_price": 509.9186,
-      "stop_loss_price": 609.0557,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": null,
-      "atr_pct_at_entry": 3.8247,
-      "stop_distance_pct": 5.737,
-      "target_distance_pct": 11.474,
-      "experiment_phase": "volatility_pilot",
-      "unrealized_pnl_dollars": 11.62,
-      "unrealized_pnl_percent": 0.029105
     },
     {
       "book_key": "news_only__sell_eod__volatility",
@@ -27656,6 +27656,45 @@
       "unrealized_pnl_percent": -0.003556
     },
     {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
+      "asset": "XRP",
+      "direction": "LONG",
+      "stake_amount": 313.05,
+      "shares": 292.843779,
+      "entry_price": 1.069,
+      "entry_time": "2026-06-25T03:30:13.445Z",
+      "trade_id": "8c9810a0-b4e2-48bf-bd53-10b426c982e2",
+      "signal_id": "XRP|BUY|Ripple launches RLUSD stablecoin in Japan after regulatory approval",
+      "title": "Ripple launches RLUSD stablecoin in Japan after regulatory approval",
+      "source": "The Block",
+      "news_url": "https://www.theblock.co/post/406067/ripple-launches-rlusd-stablecoin-japan?utm_source=rss&utm_medium=rss",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3361",
+      "asset_class": "crypto",
+      "current_price": 1.0391,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 1.0879,
+      "period_low": 1.0209,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 1.1759,
+      "stop_loss_price": 1.01555,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-26T03:30:13.445Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -8.76,
+      "unrealized_pnl_percent": -0.02797
+    },
+    {
       "book_key": "news_only__sell_eod__volatility",
       "portfolio": "news_only",
       "exit_rule": "sell_eod",
@@ -27693,45 +27732,6 @@
       "experiment_phase": "volatility_pilot",
       "unrealized_pnl_dollars": -0.66,
       "unrealized_pnl_percent": -0.003386
-    },
-    {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "target_model": "fixed",
-      "asset": "XRP",
-      "direction": "LONG",
-      "stake_amount": 313.05,
-      "shares": 292.843779,
-      "entry_price": 1.069,
-      "entry_time": "2026-06-25T03:30:13.445Z",
-      "trade_id": "8c9810a0-b4e2-48bf-bd53-10b426c982e2",
-      "signal_id": "XRP|BUY|Ripple launches RLUSD stablecoin in Japan after regulatory approval",
-      "title": "Ripple launches RLUSD stablecoin in Japan after regulatory approval",
-      "source": "The Block",
-      "news_url": "https://www.theblock.co/post/406067/ripple-launches-rlusd-stablecoin-japan?utm_source=rss&utm_medium=rss",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "3361",
-      "asset_class": "crypto",
-      "current_price": 1.03795,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 1.0879,
-      "period_low": 1.0209,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.1,
-      "stop_loss_pct": 0.05,
-      "take_profit_price": 1.1759,
-      "stop_loss_price": 1.01555,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-26T03:30:13.445Z",
-      "atr_pct_at_entry": null,
-      "stop_distance_pct": null,
-      "target_distance_pct": null,
-      "experiment_phase": null,
-      "unrealized_pnl_dollars": -9.09,
-      "unrealized_pnl_percent": -0.029046
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -28358,45 +28358,6 @@
       "unrealized_pnl_percent": -0.013988
     },
     {
-      "book_key": "news_only__sell_eod",
-      "portfolio": "news_only",
-      "exit_rule": "sell_eod",
-      "target_model": "fixed",
-      "asset": "XRP",
-      "direction": "LONG",
-      "stake_amount": 429.02,
-      "shares": 401.328344,
-      "entry_price": 1.069,
-      "entry_time": "2026-06-25T03:30:13.445Z",
-      "trade_id": "8c9810a0-b4e2-48bf-bd53-10b426c982e2",
-      "signal_id": "XRP|BUY|Ripple launches RLUSD stablecoin in Japan after regulatory approval",
-      "title": "Ripple launches RLUSD stablecoin in Japan after regulatory approval",
-      "source": "The Block",
-      "news_url": "https://www.theblock.co/post/406067/ripple-launches-rlusd-stablecoin-japan?utm_source=rss&utm_medium=rss",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "3362",
-      "asset_class": "crypto",
-      "current_price": 1.03795,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 1.0879,
-      "period_low": 1.02165,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.1,
-      "stop_loss_pct": 0.05,
-      "take_profit_price": 1.1759,
-      "stop_loss_price": 1.01555,
-      "early_exit_threshold_pct": 0.02,
-      "effective_expiry_at": "2026-06-26T03:30:13.445Z",
-      "atr_pct_at_entry": null,
-      "stop_distance_pct": null,
-      "target_distance_pct": null,
-      "experiment_phase": null,
-      "unrealized_pnl_dollars": -12.46,
-      "unrealized_pnl_percent": -0.029046
-    },
-    {
       "book_key": "trend_strict__hold_24hr",
       "portfolio": "trend_strict",
       "exit_rule": "hold_24hr",
@@ -28434,6 +28395,45 @@
       "experiment_phase": null,
       "unrealized_pnl_dollars": 7.15,
       "unrealized_pnl_percent": 0.025814
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "target_model": "fixed",
+      "asset": "XRP",
+      "direction": "LONG",
+      "stake_amount": 429.02,
+      "shares": 401.328344,
+      "entry_price": 1.069,
+      "entry_time": "2026-06-25T03:30:13.445Z",
+      "trade_id": "8c9810a0-b4e2-48bf-bd53-10b426c982e2",
+      "signal_id": "XRP|BUY|Ripple launches RLUSD stablecoin in Japan after regulatory approval",
+      "title": "Ripple launches RLUSD stablecoin in Japan after regulatory approval",
+      "source": "The Block",
+      "news_url": "https://www.theblock.co/post/406067/ripple-launches-rlusd-stablecoin-japan?utm_source=rss&utm_medium=rss",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3362",
+      "asset_class": "crypto",
+      "current_price": 1.0391,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 1.0879,
+      "period_low": 1.02165,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 1.1759,
+      "stop_loss_price": 1.01555,
+      "early_exit_threshold_pct": 0.02,
+      "effective_expiry_at": "2026-06-26T03:30:13.445Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -12,
+      "unrealized_pnl_percent": -0.02797
     },
     {
       "book_key": "news_only__sell_eod__volatility",
@@ -29177,45 +29177,6 @@
       "unrealized_pnl_percent": 0.006055
     },
     {
-      "book_key": "news_only__hold_24hr",
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
-      "target_model": "fixed",
-      "asset": "BTC",
-      "direction": "LONG",
-      "stake_amount": 347.84,
-      "shares": 0.005719,
-      "entry_price": 60826,
-      "entry_time": "2026-06-24T23:10:27.051Z",
-      "trade_id": "4457c92e-130e-4e60-83d8-6a6a38f86d3d",
-      "signal_id": "BTC|BUY|U.S. factory job cuts worst since 2009, S&P Global PMI June 2026",
-      "title": "U.S. factory job cuts worst since 2009, S&P Global PMI June 2026",
-      "source": "Yahoo Finance RSS",
-      "news_url": "https://finance.yahoo.com/economy/articles/u-factory-job-cuts-worst-151956093.html",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "3357",
-      "asset_class": "crypto",
-      "current_price": 59755.585,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 61826.275,
-      "period_low": 58470.005,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.1,
-      "stop_loss_pct": 0.05,
-      "take_profit_price": 66908.6,
-      "stop_loss_price": 57784.7,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-25T23:10:27.051Z",
-      "atr_pct_at_entry": null,
-      "stop_distance_pct": null,
-      "target_distance_pct": null,
-      "experiment_phase": null,
-      "unrealized_pnl_dollars": -6.12,
-      "unrealized_pnl_percent": -0.017598
-    },
-    {
       "book_key": "news_plus_ta__hold_24hr",
       "portfolio": "news_plus_ta",
       "exit_rule": "hold_24hr",
@@ -29370,6 +29331,45 @@
       "experiment_phase": "volatility_pilot",
       "unrealized_pnl_dollars": -4.69,
       "unrealized_pnl_percent": -0.017577
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
+      "asset": "BTC",
+      "direction": "LONG",
+      "stake_amount": 347.84,
+      "shares": 0.005719,
+      "entry_price": 60826,
+      "entry_time": "2026-06-24T23:10:27.051Z",
+      "trade_id": "4457c92e-130e-4e60-83d8-6a6a38f86d3d",
+      "signal_id": "BTC|BUY|U.S. factory job cuts worst since 2009, S&P Global PMI June 2026",
+      "title": "U.S. factory job cuts worst since 2009, S&P Global PMI June 2026",
+      "source": "Yahoo Finance RSS",
+      "news_url": "https://finance.yahoo.com/economy/articles/u-factory-job-cuts-worst-151956093.html",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3357",
+      "asset_class": "crypto",
+      "current_price": 59691.425,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 61826.275,
+      "period_low": 58470.005,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 66908.6,
+      "stop_loss_price": 57784.7,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-25T23:10:27.051Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -6.49,
+      "unrealized_pnl_percent": -0.018653
     },
     {
       "book_key": "news_plus_ta__sell_eod",
@@ -29528,43 +29528,82 @@
       "unrealized_pnl_percent": -0.019684
     },
     {
-      "book_key": "news_only__hold_24hr",
+      "book_key": "news_only__hold_24hr__volatility",
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
-      "target_model": "fixed",
-      "asset": "XRP",
+      "target_model": "volatility",
+      "asset": "AAVE",
       "direction": "LONG",
-      "stake_amount": 286.12,
-      "shares": 276.95286,
-      "entry_price": 1.0331,
-      "entry_time": "2026-06-25T14:50:56.691Z",
-      "trade_id": "bc0cbfb2-2679-43fc-b480-216b94b3b661",
-      "signal_id": "XRP|BUY|Ripple Partner SBI Buys One of Japan's Biggest Exchanges",
-      "title": "Ripple Partner SBI Buys One of Japan's Biggest Exchanges",
-      "source": "U.Today",
-      "news_url": "https://u.today/ripple-partner-sbi-buys-one-of-japans-biggest-exchanges",
+      "stake_amount": 181.28,
+      "shares": 2.237748,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.030Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
       "confidence": 0.65,
       "status": "OPEN",
-      "row_id": "3569",
+      "row_id": "3723",
       "asset_class": "crypto",
-      "current_price": 1.03795,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 1.0446,
-      "period_low": 1.02275,
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
       "rule_version": "v2_20260609_stop2pct",
       "research_valid": true,
-      "take_profit_pct": 0.1,
-      "stop_loss_pct": 0.05,
-      "take_profit_price": 1.13641,
-      "stop_loss_price": 0.981445,
+      "take_profit_pct": 0.1806,
+      "stop_loss_pct": -0.0903,
+      "take_profit_price": 95.6443,
+      "stop_loss_price": 73.6929,
       "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-26T14:50:56.691Z",
-      "atr_pct_at_entry": null,
-      "stop_distance_pct": null,
-      "target_distance_pct": null,
-      "experiment_phase": null,
-      "unrealized_pnl_dollars": 1.34,
-      "unrealized_pnl_percent": 0.004695
+      "effective_expiry_at": null,
+      "atr_pct_at_entry": 6.0216,
+      "stop_distance_pct": 9.0324,
+      "target_distance_pct": 18.0648,
+      "experiment_phase": "volatility_pilot",
+      "unrealized_pnl_dollars": -0.19,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
+      "book_key": "news_only__sell_eod__volatility",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "target_model": "volatility",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 304.4,
+      "shares": 3.757561,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.030Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3724",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1806,
+      "stop_loss_pct": -0.0903,
+      "take_profit_price": 95.6443,
+      "stop_loss_price": 73.6929,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": null,
+      "atr_pct_at_entry": 6.0216,
+      "stop_distance_pct": 9.0324,
+      "target_distance_pct": 18.0648,
+      "experiment_phase": "volatility_pilot",
+      "unrealized_pnl_dollars": -0.32,
+      "unrealized_pnl_percent": -0.001049
     },
     {
       "book_key": "news_only__hold_24hr__volatility",
@@ -29649,6 +29688,162 @@
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
       "target_model": "fixed",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 253.93,
+      "shares": 3.134551,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.327Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3725",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 89.111,
+      "stop_loss_price": 76.9595,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-26T22:30:12.327Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -0.27,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
+      "book_key": "news_only__sell_eod",
+      "portfolio": "news_only",
+      "exit_rule": "sell_eod",
+      "target_model": "fixed",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 442.69,
+      "shares": 5.464634,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.327Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3726",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 89.111,
+      "stop_loss_price": 76.9595,
+      "early_exit_threshold_pct": 0.02,
+      "effective_expiry_at": "2026-06-26T22:30:12.327Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -0.46,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
+      "asset": "XRP",
+      "direction": "LONG",
+      "stake_amount": 286.12,
+      "shares": 276.95286,
+      "entry_price": 1.0331,
+      "entry_time": "2026-06-25T14:50:56.691Z",
+      "trade_id": "bc0cbfb2-2679-43fc-b480-216b94b3b661",
+      "signal_id": "XRP|BUY|Ripple Partner SBI Buys One of Japan's Biggest Exchanges",
+      "title": "Ripple Partner SBI Buys One of Japan's Biggest Exchanges",
+      "source": "U.Today",
+      "news_url": "https://u.today/ripple-partner-sbi-buys-one-of-japans-biggest-exchanges",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3569",
+      "asset_class": "crypto",
+      "current_price": 1.0391,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 1.0446,
+      "period_low": 1.02275,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 1.13641,
+      "stop_loss_price": 0.981445,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-26T14:50:56.691Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": 1.66,
+      "unrealized_pnl_percent": 0.005808
+    },
+    {
+      "book_key": "news_plus_ta__hold_24hr",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 428.07,
+      "shares": 5.284162,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.508Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3729",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 89.111,
+      "stop_loss_price": 76.9595,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-26T22:30:12.508Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -0.45,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
+      "book_key": "news_only__hold_24hr",
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
       "asset": "ACRFF",
       "direction": "SHORT",
       "stake_amount": 255.97,
@@ -29723,6 +29918,123 @@
       "unrealized_pnl_percent": 0.076363
     },
     {
+      "book_key": "news_plus_ta__sell_eod",
+      "portfolio": "news_plus_ta",
+      "exit_rule": "sell_eod",
+      "target_model": "fixed",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 499.23,
+      "shares": 6.162573,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.508Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3730",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 89.111,
+      "stop_loss_price": 76.9595,
+      "early_exit_threshold_pct": 0.02,
+      "effective_expiry_at": "2026-06-26T22:30:12.508Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -0.52,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
+      "book_key": "trend_strict__hold_24hr",
+      "portfolio": "trend_strict",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 426.56,
+      "shares": 5.265523,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.649Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3733",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 89.111,
+      "stop_loss_price": 76.9595,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-26T22:30:12.649Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -0.45,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "target_model": "fixed",
+      "asset": "AAVE",
+      "direction": "LONG",
+      "stake_amount": 509.18,
+      "shares": 6.285397,
+      "entry_price": 81.01,
+      "entry_time": "2026-06-25T22:30:12.649Z",
+      "trade_id": "6ea10cc9-35ef-4c0a-aa27-8516902f98de",
+      "signal_id": "AAVE|BUY|Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "title": "Aave Founder Stani Kulechov Denies Kraken Stake Sale Report, Confirms AAVE Buybacks",
+      "source": "BeInCrypto",
+      "news_url": "https://beincrypto.com/aave-denies-kraken-stake-sale/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3734",
+      "asset_class": "crypto",
+      "current_price": 80.925,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 81.01,
+      "period_low": 80.81,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 89.111,
+      "stop_loss_price": 76.9595,
+      "early_exit_threshold_pct": 0.02,
+      "effective_expiry_at": "2026-06-26T22:30:12.649Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": -0.53,
+      "unrealized_pnl_percent": -0.001049
+    },
+    {
       "book_key": "news_only__hold_24hr__volatility",
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
@@ -29742,8 +30054,8 @@
       "status": "OPEN",
       "row_id": "2211",
       "asset_class": "stock",
-      "current_price": 559.245,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
+      "current_price": 559.18,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
       "period_high": 601.375,
       "period_low": 545.5,
       "rule_version": "v2_20260609_stop2pct",
@@ -29758,8 +30070,8 @@
       "stop_distance_pct": 5.737,
       "target_distance_pct": 11.474,
       "experiment_phase": "volatility_pilot",
-      "unrealized_pnl_dollars": 11.6,
-      "unrealized_pnl_percent": 0.029105
+      "unrealized_pnl_dollars": 11.65,
+      "unrealized_pnl_percent": 0.029218
     },
     {
       "book_key": "news_only__hold_24hr__volatility",
@@ -30035,6 +30347,45 @@
       "unrealized_pnl_percent": -0.003386
     },
     {
+      "book_key": "trend_strict__hold_24hr",
+      "portfolio": "trend_strict",
+      "exit_rule": "hold_24hr",
+      "target_model": "fixed",
+      "asset": "ADA",
+      "direction": "SHORT",
+      "stake_amount": 644.69,
+      "shares": 4487.640872,
+      "entry_price": 0.143659,
+      "entry_time": "2026-06-25T16:11:36.035Z",
+      "trade_id": "53231757-2ca4-4c83-85b8-507330a5b0f2",
+      "signal_id": "ADA|SELL|Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
+      "title": "Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
+      "source": "AMBCrypto",
+      "news_url": "https://ambcrypto.com/cardano-wallet-exploit-secondfi-traces-attack-to-private-key-flaw-warns-users-not-to-restore-seed-phrases/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3594",
+      "asset_class": "crypto",
+      "current_price": 0.1433,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 0.14435,
+      "period_low": 0.14055,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 0.129293,
+      "stop_loss_price": 0.150842,
+      "early_exit_threshold_pct": null,
+      "effective_expiry_at": "2026-06-26T16:11:36.035Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": 1.61,
+      "unrealized_pnl_percent": 0.002499
+    },
+    {
       "book_key": "news_plus_ta__hold_24hr",
       "portfolio": "news_plus_ta",
       "exit_rule": "hold_24hr",
@@ -30072,45 +30423,6 @@
       "experiment_phase": null,
       "unrealized_pnl_dollars": 0,
       "unrealized_pnl_percent": 0
-    },
-    {
-      "book_key": "trend_strict__hold_24hr",
-      "portfolio": "trend_strict",
-      "exit_rule": "hold_24hr",
-      "target_model": "fixed",
-      "asset": "ADA",
-      "direction": "SHORT",
-      "stake_amount": 644.69,
-      "shares": 4487.640872,
-      "entry_price": 0.143659,
-      "entry_time": "2026-06-25T16:11:36.035Z",
-      "trade_id": "53231757-2ca4-4c83-85b8-507330a5b0f2",
-      "signal_id": "ADA|SELL|Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
-      "title": "Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
-      "source": "AMBCrypto",
-      "news_url": "https://ambcrypto.com/cardano-wallet-exploit-secondfi-traces-attack-to-private-key-flaw-warns-users-not-to-restore-seed-phrases/",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "3594",
-      "asset_class": "crypto",
-      "current_price": 0.14325,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 0.14435,
-      "period_low": 0.14055,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.1,
-      "stop_loss_pct": 0.05,
-      "take_profit_price": 0.129293,
-      "stop_loss_price": 0.150842,
-      "early_exit_threshold_pct": null,
-      "effective_expiry_at": "2026-06-26T16:11:36.035Z",
-      "atr_pct_at_entry": null,
-      "stop_distance_pct": null,
-      "target_distance_pct": null,
-      "experiment_phase": null,
-      "unrealized_pnl_dollars": 1.84,
-      "unrealized_pnl_percent": 0.002847
     },
     {
       "book_key": "trend_strict__sell_eod",
@@ -30152,45 +30464,6 @@
       "unrealized_pnl_percent": 0.006055
     },
     {
-      "book_key": "trend_strict__sell_eod",
-      "portfolio": "trend_strict",
-      "exit_rule": "sell_eod",
-      "target_model": "fixed",
-      "asset": "ADA",
-      "direction": "SHORT",
-      "stake_amount": 654.59,
-      "shares": 4556.554062,
-      "entry_price": 0.143659,
-      "entry_time": "2026-06-25T16:11:36.035Z",
-      "trade_id": "53231757-2ca4-4c83-85b8-507330a5b0f2",
-      "signal_id": "ADA|SELL|Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
-      "title": "Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
-      "source": "AMBCrypto",
-      "news_url": "https://ambcrypto.com/cardano-wallet-exploit-secondfi-traces-attack-to-private-key-flaw-warns-users-not-to-restore-seed-phrases/",
-      "confidence": 0.65,
-      "status": "OPEN",
-      "row_id": "3593",
-      "asset_class": "crypto",
-      "current_price": 0.14325,
-      "current_price_at": "2026-06-25T22:25:29.070Z",
-      "period_high": 0.14431,
-      "period_low": 0.14055,
-      "rule_version": "v2_20260609_stop2pct",
-      "research_valid": true,
-      "take_profit_pct": 0.1,
-      "stop_loss_pct": 0.05,
-      "take_profit_price": 0.129293,
-      "stop_loss_price": 0.150842,
-      "early_exit_threshold_pct": 0.02,
-      "effective_expiry_at": "2026-06-26T16:11:36.035Z",
-      "atr_pct_at_entry": null,
-      "stop_distance_pct": null,
-      "target_distance_pct": null,
-      "experiment_phase": null,
-      "unrealized_pnl_dollars": 1.86,
-      "unrealized_pnl_percent": 0.002847
-    },
-    {
       "book_key": "news_plus_ta__sell_eod",
       "portfolio": "news_plus_ta",
       "exit_rule": "sell_eod",
@@ -30228,6 +30501,45 @@
       "experiment_phase": null,
       "unrealized_pnl_dollars": -1.64,
       "unrealized_pnl_percent": -0.002805
+    },
+    {
+      "book_key": "trend_strict__sell_eod",
+      "portfolio": "trend_strict",
+      "exit_rule": "sell_eod",
+      "target_model": "fixed",
+      "asset": "ADA",
+      "direction": "SHORT",
+      "stake_amount": 654.59,
+      "shares": 4556.554062,
+      "entry_price": 0.143659,
+      "entry_time": "2026-06-25T16:11:36.035Z",
+      "trade_id": "53231757-2ca4-4c83-85b8-507330a5b0f2",
+      "signal_id": "ADA|SELL|Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
+      "title": "Cardano wallet exploit: SecondFi traces attack to private key flaw, warns users not to restore seed phrases",
+      "source": "AMBCrypto",
+      "news_url": "https://ambcrypto.com/cardano-wallet-exploit-secondfi-traces-attack-to-private-key-flaw-warns-users-not-to-restore-seed-phrases/",
+      "confidence": 0.65,
+      "status": "OPEN",
+      "row_id": "3593",
+      "asset_class": "crypto",
+      "current_price": 0.1433,
+      "current_price_at": "2026-06-25T22:35:29.918Z",
+      "period_high": 0.14431,
+      "period_low": 0.14055,
+      "rule_version": "v2_20260609_stop2pct",
+      "research_valid": true,
+      "take_profit_pct": 0.1,
+      "stop_loss_pct": 0.05,
+      "take_profit_price": 0.129293,
+      "stop_loss_price": 0.150842,
+      "early_exit_threshold_pct": 0.02,
+      "effective_expiry_at": "2026-06-26T16:11:36.035Z",
+      "atr_pct_at_entry": null,
+      "stop_distance_pct": null,
+      "target_distance_pct": null,
+      "experiment_phase": null,
+      "unrealized_pnl_dollars": 1.64,
+      "unrealized_pnl_percent": 0.002499
     },
     {
       "book_key": "trend_strict__hold_24hr",
