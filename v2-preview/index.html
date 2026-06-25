@@ -250,6 +250,39 @@ th{font:700 10px/1 var(--font-code);text-transform:uppercase;color:var(--text-3)
 .ops-latency-chip strong{display:block;font:700 18px/1.1 var(--font-outfit);margin-top:6px;color:var(--text);text-transform:none;letter-spacing:0}
 @media(max-width:760px){.tm-overlay{padding:0;align-items:stretch}.tm-modal{border-radius:0;min-height:100vh;max-width:100%}.tm-cols{grid-template-columns:1fr}.pos-row{grid-template-columns:1fr}}
 
+
+.ops-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.ops-preview-badge{font:700 9px/1 var(--font-code);text-transform:uppercase;letter-spacing:.6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(217,119,6,.35);background:#fffbeb;color:#92400e}
+.ops-reset-btn{font:700 11px/1 var(--font-outfit);padding:8px 14px;border-radius:10px;border:1px solid rgba(220,38,38,.25);background:#fef2f2;color:#b91c1c;cursor:pointer}
+.ops-reset-btn:hover{background:#fee2e2}
+.ops-glance{display:grid;grid-template-columns:1fr;gap:14px;margin:0 0 18px}
+.ops-glance-card{border:1px solid var(--border);border-radius:14px;background:#fff;box-shadow:var(--shadow);padding:14px}
+.ops-glance-title{font:800 10px/1 var(--font-code);text-transform:uppercase;letter-spacing:.75px;color:var(--text-3);margin-bottom:10px}
+.ops-glance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ops-glance-stat{border:1px solid var(--border-soft);border-radius:10px;background:#f8fafc;padding:10px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.ops-glance-stat:hover{border-color:rgba(8,145,178,.35);box-shadow:0 4px 14px rgba(15,23,42,.06)}
+.ops-glance-stat:focus-visible{outline:2px solid rgba(8,145,178,.45);outline-offset:2px}
+.ops-glance-stat strong{display:block;font:800 20px/1.05 var(--font-outfit);font-variant-numeric:tabular-nums}
+.ops-glance-stat span{display:block;font:700 9px/1 var(--font-code);text-transform:uppercase;color:var(--text-3);letter-spacing:.45px;margin-top:4px}
+.ops-mini-bars{margin-top:12px}
+.target-health-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.target-health-bars span{height:8px;border-radius:999px;background:#e2e8f0;display:block}
+.target-health-bars .tp{background:var(--green)}
+.target-health-bars .sl{background:var(--crimson)}
+.target-health-bars .time{background:var(--cyan)}
+.ops-mini-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font:700 10px/1 var(--font-code);color:var(--text-3);text-transform:uppercase;letter-spacing:.45px;margin-top:8px}
+.ops-progress-track{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:5px;display:flex}
+.ops-progress-track .open{background:var(--green);height:100%}
+.ops-progress-track .closed{background:var(--cyan);height:100%}
+.ops-capital-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:4px}
+@media(max-width:760px){.ops-glance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.reset-auth-note{font:600 11px/1.45 var(--font-inter);color:var(--text-2);margin:0 0 12px}
+.reset-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.reset-field label{font:700 9px/1 var(--font-code);text-transform:uppercase;color:var(--text-3);letter-spacing:.5px}
+.reset-field input{padding:10px 12px;border:1px solid var(--border);border-radius:10px;font:500 13px/1 var(--font-inter)}
+.reset-error{display:none;margin:8px 0 0;padding:8px 10px;border-radius:8px;background:#fef2f2;color:#b91c1c;font:600 12px/1.35 var(--font-inter)}
+.reset-error.show{display:block}
+
 .header.tab-scoped-only{display:none}
 @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.lab-grid,.ops-grid,.overview-detail-grid,.kpi-row,.guard-grid,.funnel-grid{grid-template-columns:1fr}}
 </style>
@@ -333,6 +366,14 @@ th{font:700 10px/1 var(--font-code);text-transform:uppercase;color:var(--text-3)
     </section>
 
     <section class="tab tab-content-start" id="tab-operations">
+      
+<div class="ops-toolbar" id="ops-toolbar">
+  <span class="ops-preview-badge" id="ops-preview-badge" hidden>Layout preview · sample trades</span>
+  <button type="button" class="ops-reset-btn" id="ops-reset-open">Protected reset…</button>
+</div>
+<div id="ops-glance-root"></div>
+<div class="tm-overlay" id="reset-overlay" onclick="if(event.target===this)closeResetModal()"><div class="tm-modal" id="reset-modal" role="dialog" aria-modal="true"></div></div>
+
       <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Live Trades</h3><span class="chart-card-subtitle">Click any row for latency, news impact, and SL/TP path · filtered by exit model above</span></div></div><div id="ops-latency-strip"></div><div id="ops-trade-list"></div></div>
       <div class="ops-grid" style="margin-bottom:16px">
         <div class="glass-card chart-card-large"><h3 class="chart-card-title">System Health</h3><div class="kv" id="ops-health"></div></div>
@@ -379,7 +420,7 @@ const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(Number(n||0));
 const fmtPct=n=>(Number(n||0)>=0?'+':'')+Number(n||0).toFixed(2)+'%';
 const todayUtc=()=>new Date().toISOString().slice(0,10);
-async function loadData(){const r=await fetch('data.v2.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('data.v2.json missing');DATA=await r.json();}
+async function loadData(){const r=await fetch('data.v2.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('data.v2.json missing');DATA=await r.json();applyLayoutPreviewOverlay();}
 function books(){return (DATA.book_metrics||DATA.official_books||[]).filter(Boolean);}
 function portfolio(b){return b.portfolio||'news_only';}
 function metaOf(p){return META[p]||{label:p,color:'#64748b',css:'news_only'};}
@@ -425,9 +466,9 @@ function renderLab(){const s=[...filt(exitMode)].sort((a,b)=>STRATEGY_ORDER.inde
 function buildAllocation(){const stats=filt(exitMode);const keys=bookKeysForMode();const positions=(DATA.open_positions||[]).filter(t=>keys.has(t.book_key));const dep={};positions.forEach(t=>{const a=t.asset||'?';dep[a]=(dep[a]||0)+Number(t.stake_amount||0);});const entries=Object.entries(dep).sort((a,b)=>b[1]-a[1]);const topN=6;const top=entries.slice(0,topN);const other=entries.slice(topN);const otherSum=other.reduce((s,[,v])=>s+v,0);const labels=[],vals=[],cols=[];stats.forEach(s=>{if(Number(s.cash)>0){labels.push('Cash · '+s.label.split(' (')[0]);vals.push(Number(s.cash));cols.push(s.color+'bb');}});top.forEach(([a,v])=>{labels.push(a);vals.push(v);cols.push('#94a3b8');});if(otherSum>0){labels.push(`Other (${other.length})`);vals.push(otherSum);cols.push('#e2e8f0');}return {labels,vals,cols,holdings:entries.length,positions};}
 function renderAllocation(){const {labels,vals,cols,holdings}=buildAllocation();$('holdings-count').textContent=String(holdings);const total=vals.reduce((s,v)=>s+Number(v||0),0)||1;destroy('alloc');charts.alloc=new Chart($('allocationChart').getContext('2d'),{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:cols,borderColor:'#fff',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label(ctx){const v=Number(ctx.raw||0);return `${ctx.label}: ${fmt(v)} (${(v/total*100).toFixed(1)}%)`;}}}}}});$('allocation-legend').innerHTML=labels.map((lab,i)=>`<div class="alloc-legend-item"><span class="alloc-legend-dot" style="background:${cols[i]}"></span><span>${lab}</span><strong>${(Number(vals[i])/total*100).toFixed(0)}%</strong></div>`).join('');}
 function renderOverviewCharts(){const stats=filt(exitMode);let mx=0;const ds=stats.map(s=>{mx=Math.max(mx,s.cv.length);return {label:s.label,data:s.cv,borderColor:s.color,borderWidth:2,tension:.15,pointRadius:1.5,fill:false};});destroy('eq');charts.eq=new Chart($('multiEquityChart').getContext('2d'),{type:'line',data:{labels:Array.from({length:mx},(_,i)=>i?'T'+i:'$0'),datasets:ds},options:chartOpts()});const lb=[...stats].sort((a,b)=>b.baselinePct-a.baselinePct);destroy('lb');charts.lb=new Chart($('leaderboardChart').getContext('2d'),{type:'bar',data:{labels:lb.map(s=>s.label.split(' (')[0]),datasets:[{label:'Since baseline %',data:lb.map(s=>s.baselinePct),backgroundColor:lb.map(s=>s.color+'99'),borderColor:lb.map(s=>s.color),borderWidth:1}]},options:chartOpts({indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>v+'%'}}}})});const sig=(DATA.signals||[]).filter(s=>(s.received_at||s.analyzed_at||'').slice(0,10)===todayUtc());$('sc-headlines').textContent=sig.length;$('sc-signals').textContent=sig.filter(s=>Number(s.confidence||0)>=0.7).length;$('sc-sources').textContent=new Set(sig.map(s=>s.source).filter(Boolean)).size;const b={};for(let h=0;h<24;h++)b[h]=0;sig.forEach(s=>{const t=s.received_at||s.analyzed_at;if(t)b[new Date(t).getUTCHours()]++;});destroy('scan');charts.scan=new Chart($('scannerActivityChart').getContext('2d'),{type:'line',data:{labels:Object.keys(b).map(h=>h+':00'),datasets:[{label:'Headlines',data:Object.values(b),borderColor:'#0891b2',backgroundColor:'rgba(8,145,178,.12)',fill:true,tension:.35,pointRadius:2}]},options:chartOpts({plugins:{legend:{display:false}}})});renderAllocation();}
-function renderOps(){const h=DATA.health||{},mc=DATA.market_clock||{},b=DATA.n8n_execution_budget||{},g=(DATA.cost_control||{}).stock_market_hours_gate||{},os=DATA.official_summary||{};$('ops-health').innerHTML=[['Accounting OK',h.accounting_ok===true?'Yes':'No'],['Active books',String(h.active_books??books().length)],['Drift books',String(h.books_with_drift??'—')],['Total open',String(os.total_open_count??'—')],['Checked',(h.checked_at||'').slice(0,19)]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-market').innerHTML=[['Phase',mc.phase||'—'],['Stock open',String(mc.stock_market_open??'—')],['Next open',mc.next_open_label||'—'],['Session',mc.session_label||g.timezone_label||'—']].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-budget').innerHTML=[['Status',b.status||'—'],['Used %',String(b.used_pct??'—')],['Daily burn',String(b.estimated_daily_burn??'—')],['Remaining',String(b.remaining_executions??'—')]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-gate').innerHTML=[['Gating active',String(g.gating_active??'—')],['WF2 mode',g.wf2_mode||'—'],['WF1 stock scan',String(g.stock_scan_allowed??'—')],['Crypto 24/7',String(g.crypto_24_7??'—')]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-cost').innerHTML=((DATA.cost_control||{}).cost_drivers||[]).map(d=>`<article class="cost-item"><strong>${d.label||d.id}</strong><div class="kv"><div><span>Enabled</span><strong>${d.effective_enabled!==false?'yes':'no'}</strong></div><div><span>Est/day</span><strong>${d.estimated_executions_per_day||d.estimated_calls_per_day||d.estimated_runs_per_day||'?'}</strong></div><div><span>Toggle</span><strong>${d.toggle_env||'—'}</strong></div></div></article>`).join('')||'<p>No cost drivers in payload.</p>';const rows=[...allStats()].sort((a,b)=>STRATEGY_ORDER.indexOf(a.pf)-STRATEGY_ORDER.indexOf(b.pf)||a.exit.localeCompare(b.exit));$('ops-books').innerHTML=rows.map(s=>`<tr><td>${metaOf(s.pf).label}</td><td>${s.exit==='volatility'?'ATR':'Fixed'}</td><td>${fmt(s.eq)}</td><td>${fmt(s.cash)}</td><td>${s.openN}</td><td>${s.n}</td><td class="${s.totalPnL>=0?'pos':'neg'}">${fmt(s.totalPnL)}</td><td class="${s.baselinePct>=0?'pos':'neg'}">${fmtPct(s.baselinePct)}</td></tr>`).join('')||'<tr><td colspan="8">No books in data.v2.json</td></tr>';const items=(DATA.operator_attention||{}).items||[];$('ops-attention').innerHTML=items.length?`<div class="table-wrap"><table><thead><tr><th>Status</th><th>Item</th><th>Detail</th></tr></thead><tbody>${items.slice(0,12).map(i=>`<tr><td>${i.status||i.severity||'—'}</td><td>${i.title||i.id||'—'}</td><td>${i.detail||i.message||i.summary||'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p>No attention items.</p>';renderOpsTrades();}
+function renderOps(){renderOpsGlance();updatePreviewBadge();const h=DATA.health||{},mc=DATA.market_clock||{},b=DATA.n8n_execution_budget||{},g=(DATA.cost_control||{}).stock_market_hours_gate||{},os=DATA.official_summary||{};$('ops-health').innerHTML=[['Accounting OK',h.accounting_ok===true?'Yes':'No'],['Active books',String(h.active_books??books().length)],['Drift books',String(h.books_with_drift??'—')],['Total open',String(os.total_open_count??'—')],['Checked',(h.checked_at||'').slice(0,19)]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-market').innerHTML=[['Phase',mc.phase||'—'],['Stock open',String(mc.stock_market_open??'—')],['Next open',mc.next_open_label||'—'],['Session',mc.session_label||g.timezone_label||'—']].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-budget').innerHTML=[['Status',b.status||'—'],['Used %',String(b.used_pct??'—')],['Daily burn',String(b.estimated_daily_burn??'—')],['Remaining',String(b.remaining_executions??'—')]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-gate').innerHTML=[['Gating active',String(g.gating_active??'—')],['WF2 mode',g.wf2_mode||'—'],['WF1 stock scan',String(g.stock_scan_allowed??'—')],['Crypto 24/7',String(g.crypto_24_7??'—')]].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');$('ops-cost').innerHTML=((DATA.cost_control||{}).cost_drivers||[]).map(d=>`<article class="cost-item"><strong>${d.label||d.id}</strong><div class="kv"><div><span>Enabled</span><strong>${d.effective_enabled!==false?'yes':'no'}</strong></div><div><span>Est/day</span><strong>${d.estimated_executions_per_day||d.estimated_calls_per_day||d.estimated_runs_per_day||'?'}</strong></div><div><span>Toggle</span><strong>${d.toggle_env||'—'}</strong></div></div></article>`).join('')||'<p>No cost drivers in payload.</p>';const rows=[...allStats()].sort((a,b)=>STRATEGY_ORDER.indexOf(a.pf)-STRATEGY_ORDER.indexOf(b.pf)||a.exit.localeCompare(b.exit));$('ops-books').innerHTML=rows.map(s=>`<tr><td>${metaOf(s.pf).label}</td><td>${s.exit==='volatility'?'ATR':'Fixed'}</td><td>${fmt(s.eq)}</td><td>${fmt(s.cash)}</td><td>${s.openN}</td><td>${s.n}</td><td class="${s.totalPnL>=0?'pos':'neg'}">${fmt(s.totalPnL)}</td><td class="${s.baselinePct>=0?'pos':'neg'}">${fmtPct(s.baselinePct)}</td></tr>`).join('')||'<tr><td colspan="8">No books in data.v2.json</td></tr>';const items=(DATA.operator_attention||{}).items||[];$('ops-attention').innerHTML=items.length?`<div class="table-wrap"><table><thead><tr><th>Status</th><th>Item</th><th>Detail</th></tr></thead><tbody>${items.slice(0,12).map(i=>`<tr><td>${i.status||i.severity||'—'}</td><td>${i.title||i.id||'—'}</td><td>${i.detail||i.message||i.summary||'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p>No attention items.</p>';renderOpsTrades();}
 function renderHeader(){const c=combined();$('hdr-books').textContent=String(c.books||books().length);$('hdr-books-sub').textContent=(c.books===5?'5 strategies · '+exitMode:'check book count');$('hdr-equity').textContent=fmt(c.eq);$('ov-equity').textContent=fmt(c.eq);$('hdr-cash').textContent=fmt(c.cash);$('hdr-open-pnl').textContent=fmt(c.op);const ch=$('hdr-change');ch.textContent=fmtPct(c.chg);ch.className='metric-change '+(c.chg>=0?'pos':'neg');const oc=$('ov-change');oc.textContent=fmtPct(c.chg);oc.className='equity-change '+(c.chg>=0?'pos':'neg');const mc=DATA.market_clock||{},open=mc.phase==='OPEN'||mc.stock_market_open===true,pill=$('market-pill');pill.className='market-status-pill '+(open?'open':'closed');$('ov-market').textContent=open?'MARKETS OPEN':'MARKETS CLOSED';$('sidebar-updated').textContent=(DATA.generated_at||'').replace('T',' ').slice(0,19);$('sidebar-checkpoint').textContent=(DATA.codex_build_status||{}).checkpoint||'CP340';$('sidebar-status').textContent=(open?'Session open':'Pre-market')+' · '+books().length+' books · '+(DATA.signals||[]).length+' signals';const att=DATA.operator_attention||{};if(att.attention_required){$('attention-banner').classList.add('show');$('banner-text').textContent=(att.items&&att.items[0]?.title)||att.summary?.action_required+' items need review'||'Review operator attention';}else $('attention-banner').classList.remove('show');}
-function setExit(mode){exitMode=mode;document.querySelectorAll('[data-exit]').forEach(b=>b.classList.toggle('active',b.dataset.exit===mode));renderHeader();renderCards();renderOverviewCharts();renderOverviewExtras();if($('tab-lab').classList.contains('active'))renderLab();if($('tab-operations').classList.contains('active')){renderOpsTrades();renderOps();}}
+function setExit(mode){exitMode=mode;document.querySelectorAll('[data-exit]').forEach(b=>b.classList.toggle('active',b.dataset.exit===mode));renderHeader();renderCards();renderOverviewCharts();renderOverviewExtras();if($('tab-lab').classList.contains('active'))renderLab();if($('tab-operations').classList.contains('active')){renderOpsGlance();renderOpsTrades();renderOps();}}
 
 let OPEN_EXPANDED=false,CLOSED_EXPANDED=false,POS_TAB='open',POS_SEARCH='',CURRENT_TRADE_ID=null;
 const TRADE_PREVIEW=8;
@@ -475,9 +516,204 @@ function openTradeModal(id){const t=allTradesList().find(x=>String(x.id)===Strin
 function closeTradeModal(){$('tm-overlay').classList.remove('open');document.body.style.overflow='';CURRENT_TRADE_ID=null;}
 function bindTradeEvents(){document.addEventListener('click',e=>{const tabBtn=e.target.closest('[data-pos-tab]');if(tabBtn){POS_TAB=tabBtn.dataset.posTab;renderOpsTrades();return;}const toggle=e.target.closest('[data-pos-toggle]');if(toggle){if(POS_TAB==='closed')CLOSED_EXPANDED=!CLOSED_EXPANDED;else OPEN_EXPANDED=!OPEN_EXPANDED;const onOverview=$('tab-overview')?.classList.contains('active');const onOps=$('tab-operations')?.classList.contains('active');if(onOverview)renderOverviewTrades();else if(onOps)renderOpsTrades();return;}if(e.target.closest('a,button,.tm-btn,.tm-close'))return;const tr=e.target.closest('[data-trade-id]');if(tr){openTradeModal(tr.dataset.tradeId);return;}});document.addEventListener('input',e=>{if(e.target.id==='ops-trade-list-search'||e.target.id==='pos-trade-list-search'){POS_SEARCH=e.target.value;renderOpsTrades();}});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTradeModal();if(!$('tm-overlay')?.classList.contains('open'))return;const list=allTradesList();const idx=list.findIndex(x=>String(x.id)===String(CURRENT_TRADE_ID));if(idx<0||!list.length)return;if(e.key==='ArrowLeft')openTradeModal(list[(idx-1+list.length)%list.length].id);if(e.key==='ArrowRight')openTradeModal(list[(idx+1)%list.length].id);});}
 
+
+const LAYOUT_PREVIEW_KEY='qp_layout_preview_state';
+const RESET_AUTH={user:'operator',pass:'qp-layout-reset'};
+const PREVIEW_BOOK_KEY='v2_news_only_hold_24hr_volatility_clean_20260624_cp327';
+const SAMPLE_ASSETS=['NVDA','AAPL','TSLA','AMD','META','MSFT','GOOGL','AMZN','COIN','PLTR','SOFI','RIVN','NIO','SMCI','ARM','AVGO','INTC','MU','QCOM','UBER','ABNB','SNAP','PYPL','SQ','HOOD','DKNG','PLUG','LCID','F','BAC','JPM','XOM','CVX','PFE','MRNA','BABA','NFLX','DIS','WMT','COST','SHOP'];
+function layoutPreviewEnabled(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('preview')==='0') return false;
+  if(q.get('preview')==='1') return true;
+  const st=localStorage.getItem(LAYOUT_PREVIEW_KEY);
+  if(st==='off') return false;
+  if(st==='sample'||st==='clean') return true;
+  const open=(DATA?.open_positions||[]).length, closed=(DATA?.closed_trades||[]).length;
+  return open+closed<3;
+}
+function todayIso(){return new Date().toISOString().slice(0,10);}
+function mkTrade(id,status,asset,dir,stake,pnl,reason){
+  const now=new Date(), entry=new Date(now.getTime()-(status==='OPEN'?3600000*(id%9+1):86400000*(id%3+1)));
+  const row={
+    id:'preview-'+id,book_key:PREVIEW_BOOK_KEY,status,asset,direction:dir,
+    stake_amount:stake,entry_price:100+id,current_price:100+id+(pnl/stake*100||0),
+    stop_loss_price:95+id,take_profit_price:110+id,entry_time:entry.toISOString(),
+    target_model:'volatility',lifecycle:'hold_24hr',book_starting_balance:10000,
+    computed_unrealized_pnl:status==='OPEN'?pnl:undefined,unrealized_pnl:status==='OPEN'?pnl:undefined,
+    realized_pnl:status==='CLOSED'?pnl:undefined,exit_reason:reason||null,
+    exit_time:status==='CLOSED'?now.toISOString():null,exit_price:status==='CLOSED'?100+id+(pnl/stake*100||0):null
+  };
+  return row;
+}
+function buildLayoutPreviewFixture(mode){
+  if(mode==='clean') return {open:[],closed:[],bookPatch:{marked_equity:10000,free_cash:10000,deployed_cost:0,starting_balance:10000,open_count:0,closed_count:0,realized_pnl:0,unrealized_pnl:0}};
+  const open=[], closed=[];
+  let oid=1;
+  for(let i=0;i<41;i++){
+    const asset=SAMPLE_ASSETS[i%SAMPLE_ASSETS.length];
+    const stake=Number((4000.63/41).toFixed(2));
+    const pnl=Number(((-35.52)/41).toFixed(4));
+    open.push(mkTrade(oid++,'OPEN',asset,i%2?'BUY':'SELL',stake,pnl,null));
+  }
+  for(let i=0;i<10;i++){
+    const asset=SAMPLE_ASSETS[(i+5)%SAMPLE_ASSETS.length];
+    const stake=400;
+    const pnl=Number((4.96/10).toFixed(4));
+    closed.push(mkTrade(oid++,'CLOSED',asset,i%2?'BUY':'SELL',stake,pnl,'time_exit'));
+  }
+  return {
+    open, closed,
+    bookPatch:{
+      marked_equity:10042.48,free_cash:341.33,deployed_cost:9732.71,starting_balance:10000,
+      open_count:41,closed_count:10,realized_pnl:4.96,unrealized_pnl:-35.52,
+      today_marked_pnl_approx:-31.56,official_since_baseline_pnl:-4.03,lifecycle:'hold_24hr'
+    }
+  };
+}
+function applyLayoutPreviewOverlay(){
+  if(!layoutPreviewEnabled()||!DATA) return;
+  const mode=localStorage.getItem(LAYOUT_PREVIEW_KEY)==='clean'?'clean':'sample';
+  const fx=buildLayoutPreviewFixture(mode);
+  const keys=new Set(books().map(b=>b.book_key));
+  DATA.open_positions=[...(DATA.open_positions||[]).filter(t=>!String(t.id||'').startsWith('preview-')),...fx.open];
+  DATA.closed_trades=[...(DATA.closed_trades||[]).filter(t=>!String(t.id||'').startsWith('preview-')),...fx.closed];
+  if(!keys.has(PREVIEW_BOOK_KEY)){
+    DATA.book_metrics=[...(DATA.book_metrics||[]),{
+      book_key:PREVIEW_BOOK_KEY,portfolio:'news_only',target_model:'volatility',classification:'production',
+      starting_balance:10000,...fx.bookPatch
+    }];
+  } else {
+    DATA.book_metrics=(DATA.book_metrics||[]).map(b=>b.book_key===PREVIEW_BOOK_KEY?{...b,...fx.bookPatch}:b);
+  }
+  DATA._layout_preview_active=true;
+  DATA._layout_preview_mode=mode;
+}
+function updatePreviewBadge(){
+  const el=$('ops-preview-badge');
+  if(!el) return;
+  if(DATA?._layout_preview_active){
+    el.hidden=false;
+    el.textContent=DATA._layout_preview_mode==='clean'?'Layout preview · clean slate':'Layout preview · sample trades (today)';
+  } else el.hidden=true;
+}
+function targetStatsForTrades(trades){
+  const closed=trades.filter(t=>t.status==='CLOSED');
+  const open=trades.filter(t=>t.status==='OPEN');
+  const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
+  const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
+  const timed=closed.filter(t=>['time','sell_eod','time_exit'].includes(exitReasonClass(t.exit_reason))||String(t.exit_reason||'').includes('time')).length;
+  const realized=closed.reduce((s,t)=>s+Number(t.realized_pnl||0),0);
+  const unrealized=open.reduce((s,t)=>s+Number(t.computed_unrealized_pnl??t.unrealized_pnl??0),0);
+  return {open:open.length,closed:closed.length,tp,sl,timed,realized,unrealized};
+}
+function deployedCashFor(open){return open.reduce((s,t)=>s+Number(t.stake_amount||0),0);}
+function topVisualBars(s){
+  const outcomeTotal=Math.max(1,s.tp+s.sl+s.timed);
+  const totalTrades=Math.max(1,s.open+s.closed);
+  const openPct=s.open/totalTrades*100, closedPct=s.closed/totalTrades*100;
+  return `<div class="ops-mini-bars">
+    <div class="target-health-bars"><span class="tp" style="opacity:${s.tp?Math.max(.28,s.tp/outcomeTotal):.10}"></span><span class="sl" style="opacity:${s.sl?Math.max(.28,s.sl/outcomeTotal):.10}"></span><span class="time" style="opacity:${s.timed?Math.max(.28,s.timed/outcomeTotal):.10}"></span></div>
+    <div class="guardrail-caption"><span>${s.tp} TP</span><span>${s.sl} SL</span><span>${s.timed} time</span></div>
+    <div class="ops-mini-row"><span>Open / closed</span><span>${s.open} open · ${s.closed} closed</span></div>
+    <div class="ops-progress-track"><span class="open" style="width:${openPct}%"></span><span class="closed" style="width:${closedPct}%"></span></div>
+    <div class="guardrail-caption"><span>${s.open} open</span><span>${s.closed} closed</span></div>
+  </div>`;
+}
+function opsSelectedBook(){
+  const rows=books();
+  return rows.find(b=>b.book_key===PREVIEW_BOOK_KEY)||rows.find(b=>exitOf(b)===exitMode)||rows[0]||null;
+}
+function opsBookTrades(book){
+  const k=book?.book_key;
+  if(!k) return {open:[],closed:[]};
+  const open=(DATA.open_positions||[]).filter(t=>t.book_key===k);
+  const closed=(DATA.closed_trades||[]).filter(t=>t.book_key===k);
+  return {open,closed};
+}
+function renderOpsGlance(){
+  const root=$('ops-glance-root');
+  if(!root) return;
+  const book=opsSelectedBook();
+  if(!book){root.innerHTML='';return;}
+  const {open,closed}=opsBookTrades(book);
+  const s=targetStatsForTrades(open.concat(closed));
+  const start=Number(book.starting_balance||10000);
+  const selectedPnl=s.realized+s.unrealized;
+  const totalPnl=Number(book.official_since_baseline_pnl??book.since_start_pnl??selectedPnl);
+  const todayPnl=Number(book.today_marked_pnl_approx??book.today_realized_pnl??selectedPnl);
+  const selectedDeployed=deployedCashFor(open);
+  const freeCash=Number(book.free_cash??(start+s.realized-selectedDeployed));
+  const markedEquity=Number(book.marked_equity??(start+selectedPnl));
+  const inPositions=open.reduce((sum,t)=>sum+Number(t.stake_amount||0)+Number(t.computed_unrealized_pnl??t.unrealized_pnl??0),0);
+  const bookDeployed=Number(book.deployed_cost??selectedDeployed);
+  const life=book.lifecycle||'hold_24hr';
+  const lifeLabel=life==='hold_24hr'?'24HR HOLD':String(life).replaceAll('_',' ').toUpperCase();
+  const stat=(key,label,val,cls='')=>`<div class="ops-glance-stat" data-ops-drill="${key}" role="button" tabindex="0" onclick="opsDrill('${key}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();opsDrill('${key}')}"><strong class="${cls}">${val}</strong><span>${label}</span></div>`;
+  root.innerHTML=`<div class="ops-glance">
+    <div class="ops-glance-card">
+      <div class="ops-glance-title">Since reset · ${lifeLabel}</div>
+      <div class="ops-glance-grid">
+        ${stat('open','open',s.open)}
+        ${stat('closed','closed',s.closed)}
+        ${stat('today',`today p/l`,(todayPnl>=0?'+':'')+fmt(todayPnl),todayPnl>=0?'pos-text':'neg-text')}
+        ${stat('total',`total p/l`,(totalPnl>=0?'+':'')+fmt(totalPnl),totalPnl>=0?'pos-text':'neg-text')}
+        ${stat('deployed','selected deployed',fmt(selectedDeployed))}
+        ${stat('realized','realized p/l',(s.realized>=0?'+':'')+fmt(s.realized),s.realized>=0?'pos-text':'neg-text')}
+      </div>
+      ${topVisualBars(s)}
+    </div>
+    <div class="ops-glance-card">
+      <div class="ops-glance-title">Book capital · shared account</div>
+      <div class="ops-capital-grid">
+        ${stat('cash','free cash',fmt(freeCash))}
+        ${stat('positions','in positions',fmt(inPositions))}
+        ${stat('equity','marked equity',fmt(markedEquity))}
+        ${stat('bookdep','book deployed',fmt(bookDeployed))}
+      </div>
+    </div>
+  </div>`;
+}
+function opsDrill(key){
+  if(key==='open'||key==='closed'){
+    POS_TAB=key==='closed'?'closed':'open';
+    renderOpsTrades();
+    $('ops-trade-list')?.scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  if(key==='equity'||key==='cash'||key==='positions'||key==='bookdep'){
+    openBookModal(opsSelectedBook()?.book_key||'');
+    return;
+  }
+  openBookModal(opsSelectedBook()?.book_key||'');
+}
+function openResetModal(){
+  $('reset-modal').innerHTML=`<div class="tm-head"><div><h3>Protected dashboard reset</h3><div class="tm-sub">Closes and removes displayed trades · layout preview only until backend hook is wired</div></div><button type="button" class="tm-close" onclick="closeResetModal()" aria-label="Close">×</button></div><div class="tm-body"><p class="reset-auth-note">Full reset returns books to a clean $10k slate with zero open/closed trades in this dashboard view. Sample reload restores today’s fixture trades for layout testing. Backend ledger is unchanged in preview mode.</p><div class="reset-field"><label for="reset-user">Username</label><input id="reset-user" autocomplete="username" placeholder="operator"></div><div class="reset-field"><label for="reset-pass">Password</label><input id="reset-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div><div class="reset-error" id="reset-error">Invalid username or password.</div></div><div class="tm-foot"><button type="button" class="tm-btn" onclick="submitProtectedReset('clean')">Full reset (clean slate)</button><button type="button" class="tm-btn" onclick="submitProtectedReset('sample')">Reload sample trades</button><button type="button" class="tm-btn" onclick="closeResetModal()">Cancel</button></div>`;
+  $('reset-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  $('reset-error').classList.remove('show');
+}
+function closeResetModal(){$('reset-overlay').classList.remove('open');if(!$('tm-overlay')?.classList.contains('open')&&!$('bm-overlay')?.classList.contains('open'))document.body.style.overflow='';}
+function submitProtectedReset(mode){
+  const user=($('reset-user')?.value||'').trim();
+  const pass=$('reset-pass')?.value||'';
+  if(user!==RESET_AUTH.user||pass!==RESET_AUTH.pass){$('reset-error')?.classList.add('show');return;}
+  localStorage.setItem(LAYOUT_PREVIEW_KEY,mode);
+  DATA.open_positions=(DATA.open_positions||[]).filter(t=>!String(t.id||'').startsWith('preview-'));
+  DATA.closed_trades=(DATA.closed_trades||[]).filter(t=>!String(t.id||'').startsWith('preview-'));
+  applyLayoutPreviewOverlay();
+  closeResetModal();
+  renderHeader();renderOpsGlance();renderOpsTrades();renderOps();renderCards();renderOverviewExtras();renderOverviewCharts();
+  if($('tab-overview').classList.contains('active'))renderOverviewTrades();
+  updatePreviewBadge();
+}
+function bindOpsPreviewEvents(){
+  $('ops-reset-open')?.addEventListener('click',openResetModal);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeResetModal();});
+}
+
 function bindNav(){const titles={operations:['Operations','Live trades · latency · system health'],overview:['Overview Dashboard','5 strategies · filtered by active exit model'],guardrails:['Prop Guardrails','Profit targets, daily loss caps, per-book buffers'],lab:['Strategy Lab','Head-to-head on the same news stream'],pipeline:['Pipeline Funnel','Scanner → signals → trades → rejections'],diagnostics:['Diagnostics & Health','Shadow health, ledger integrity, latency']};document.querySelectorAll('#nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));$('tab-'+btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'instant'});document.querySelector('.main')?.scrollTo?.({top:0});const t=titles[btn.dataset.tab]||['Dashboard',''];$('page-title').textContent=t[0];$('page-sub').textContent=t[1];updateHeaderScope(btn.dataset.tab);if(btn.dataset.tab==='lab')renderLab();if(btn.dataset.tab==='guardrails')renderGuardrails();if(btn.dataset.tab==='pipeline')renderPipeline();if(btn.dataset.tab==='diagnostics')renderDiagnostics();if(btn.dataset.tab==='operations')renderOps();if(btn.dataset.tab==='overview'){renderOverviewExtras();renderOverviewCharts();renderCards();}}));document.querySelectorAll('[data-exit]').forEach(b=>b.addEventListener('click',()=>setExit(b.dataset.exit)));}
-async function init(){const steps=[['load',async()=>{await loadData();}],['nav',()=>{bindNav();bindTradeEvents();bindBookEvents();}],['header',()=>{renderHeader();updateHeaderScope('overview');}],['ops',()=>renderOps()],['cards',()=>renderCards()],['overviewCharts',()=>renderOverviewCharts()],['overviewExtras',()=>renderOverviewExtras()],['guardrails',()=>renderGuardrails()],['pipeline',()=>renderPipeline()],['diagnostics',()=>renderDiagnostics()]];const errors=[];for(const [name,fn] of steps){try{await fn();}catch(e){errors.push(name+': '+e.message);console.error(name,e);}}if(errors.length){$('sidebar-status').textContent='Partial load: '+errors.join('; ');}else if(DATA){const open=(DATA.market_clock||{}).phase==='OPEN'||(DATA.market_clock||{}).stock_market_open===true;$('sidebar-status').textContent=(open?'Session open':'Pre-market')+' · '+books().length+' books · '+(DATA.signals||[]).length+' signals';}}
-init();setInterval(()=>loadData().then(()=>{renderHeader();if($('tab-overview').classList.contains('active')){renderOverviewExtras();renderOverviewCharts();renderCards();}if($('tab-operations').classList.contains('active')){renderOpsTrades();renderOps();}}).catch(()=>{}),60000);
+async function init(){const steps=[['load',async()=>{await loadData();}],['nav',()=>{bindNav();bindTradeEvents();bindBookEvents();bindOpsPreviewEvents();}],['header',()=>{renderHeader();updateHeaderScope('overview');}],['ops',()=>renderOps()],['cards',()=>renderCards()],['overviewCharts',()=>renderOverviewCharts()],['overviewExtras',()=>renderOverviewExtras()],['guardrails',()=>renderGuardrails()],['pipeline',()=>renderPipeline()],['diagnostics',()=>renderDiagnostics()]];const errors=[];for(const [name,fn] of steps){try{await fn();}catch(e){errors.push(name+': '+e.message);console.error(name,e);}}if(errors.length){$('sidebar-status').textContent='Partial load: '+errors.join('; ');}else if(DATA){const open=(DATA.market_clock||{}).phase==='OPEN'||(DATA.market_clock||{}).stock_market_open===true;$('sidebar-status').textContent=(open?'Session open':'Pre-market')+' · '+books().length+' books · '+(DATA.signals||[]).length+' signals';}}
+init();setInterval(()=>loadData().then(()=>{renderHeader();if($('tab-overview').classList.contains('active')){renderOverviewExtras();renderOverviewCharts();renderCards();}if($('tab-operations').classList.contains('active')){renderOpsGlance();updatePreviewBadge();renderOpsTrades();renderOps();}}).catch(()=>{}),60000);
 </script>
 </body>
 </html>
