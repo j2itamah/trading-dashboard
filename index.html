@@ -518,7 +518,7 @@ function bindTradeEvents(){document.addEventListener('click',e=>{const tabBtn=e.
 
 
 const LAYOUT_PREVIEW_KEY='qp_layout_preview_state';
-const RESET_AUTH={user:'operator',pass:'qp-layout-reset'};
+const RESET_AUTH={user:'admin',pass:'Contact123.'};
 const PREVIEW_BOOK_KEY='v2_news_only_hold_24hr_volatility_clean_20260624_cp327';
 const SAMPLE_ASSETS=['NVDA','AAPL','TSLA','AMD','META','MSFT','GOOGL','AMZN','COIN','PLTR','SOFI','RIVN','NIO','SMCI','ARM','AVGO','INTC','MU','QCOM','UBER','ABNB','SNAP','PYPL','SQ','HOOD','DKNG','PLUG','LCID','F','BAC','JPM','XOM','CVX','PFE','MRNA','BABA','NFLX','DIS','WMT','COST','SHOP'];
 function layoutPreviewEnabled(){
@@ -687,7 +687,7 @@ function opsDrill(key){
   openBookModal(opsSelectedBook()?.book_key||'');
 }
 function openResetModal(){
-  $('reset-modal').innerHTML=`<div class="tm-head"><div><h3>Protected dashboard reset</h3><div class="tm-sub">Closes and removes displayed trades · layout preview only until backend hook is wired</div></div><button type="button" class="tm-close" onclick="closeResetModal()" aria-label="Close">×</button></div><div class="tm-body"><p class="reset-auth-note">Full reset returns books to a clean $10k slate with zero open/closed trades in this dashboard view. Sample reload restores today’s fixture trades for layout testing. Backend ledger is unchanged in preview mode.</p><div class="reset-field"><label for="reset-user">Username</label><input id="reset-user" autocomplete="username" placeholder="operator"></div><div class="reset-field"><label for="reset-pass">Password</label><input id="reset-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div><div class="reset-error" id="reset-error">Invalid username or password.</div></div><div class="tm-foot"><button type="button" class="tm-btn" onclick="submitProtectedReset('clean')">Full reset (clean slate)</button><button type="button" class="tm-btn" onclick="submitProtectedReset('sample')">Reload sample trades</button><button type="button" class="tm-btn" onclick="closeResetModal()">Cancel</button></div>`;
+  $('reset-modal').innerHTML=`<div class="tm-head"><div><h3>Protected dashboard reset</h3><div class="tm-sub">Closes and removes displayed trades · layout preview only until backend hook is wired</div></div><button type="button" class="tm-close" onclick="closeResetModal()" aria-label="Close">×</button></div><div class="tm-body"><p class="reset-auth-note">Full reset returns books to a clean $10k slate with zero open/closed trades in this dashboard view. Sample reload restores today’s fixture trades for layout testing. Backend ledger is unchanged in preview mode.</p><div class="reset-field"><label for="reset-user">Username</label><input id="reset-user" autocomplete="username" placeholder="admin"></div><div class="reset-field"><label for="reset-pass">Password</label><input id="reset-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div><div class="reset-error" id="reset-error">Invalid username or password.</div></div><div class="tm-foot"><button type="button" class="tm-btn" onclick="submitProtectedReset('clean')">Full reset (clean slate)</button><button type="button" class="tm-btn" onclick="submitProtectedReset('sample')">Reload sample trades</button><button type="button" class="tm-btn" onclick="closeResetModal()">Cancel</button></div>`;
   $('reset-overlay').classList.add('open');
   document.body.style.overflow='hidden';
   $('reset-error').classList.remove('show');
