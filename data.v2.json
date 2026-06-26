@@ -1,6 +1,6 @@
 {
   "health": {
-    "checked_at": "2026-06-26T22:04:21.733638+00:00",
+    "checked_at": "2026-06-26T22:10:11.211753+00:00",
     "active_books": 20,
     "accounting_ok": true,
     "books_with_drift": 0
@@ -4778,7 +4778,7 @@
         "target_model": "paired",
         "price_at_news": "92.07",
         "news_time_quote": "92.07",
-        "source_trade_id": "e7e424e9-1d7a-438b-addb-aa489d78858a",
+        "source_trade_id": "a36d65b7-d2a4-493c-bda6-d6d181113c77",
         "confidence_floor": 0.5,
         "signal_timestamp": "2026-06-25T22:05:21+00:00",
         "source_signal_key": "CL|SELL|US Oil Plunges Below $70 as Ships Keep Crossing Strait of Hormuz",
@@ -5012,7 +5012,7 @@
           ],
           "realized_pnl_total": 0.0
         },
-        "source_trade_row_id": "e7e424e9-1d7a-438b-addb-aa489d78858a",
+        "source_trade_row_id": "a36d65b7-d2a4-493c-bda6-d6d181113c77",
         "atr_source_effective": "tra79_seed",
         "price_reference_source": "yahoo",
         "pre_trade_move_gate_mode": "shadow_log"
@@ -20685,6 +20685,67 @@
   ],
   "candidates": [
     {
+      "id": 1071,
+      "asset": "ASD",
+      "source": "CryptoPotato",
+      "status": "candidate",
+      "seen_at": "2026-06-26T22:10:11.186563+00:00",
+      "headline": "ZachXBT Warns AscendEX Users of Potential Liquidity Issues and Delayed Withdrawals",
+      "news_url": "https://cryptopotato.com/zachxbt-warns-ascendex-users-of-potential-liquidity-issues-and-delayed-withdrawals/",
+      "direction": "SELL",
+      "lifecycle": null,
+      "reasoning": "Fresh warning from credible on-chain analyst about liquidity crisis and withdrawal delays at AscendEX exchange suggests imminent solvency concerns that could trigger token price collapse and user exodus.",
+      "confidence": 0.65,
+      "updated_at": "2026-06-26T22:10:11.186563+00:00",
+      "asset_class": "stock",
+      "entry_price": null,
+      "exit_reason": null,
+      "raw_payload": {
+        "link": "https://cryptopotato.com/zachxbt-warns-ascendex-users-of-potential-liquidity-issues-and-delayed-withdrawals/",
+        "asset": "ASD",
+        "price": 26.538,
+        "title": "ZachXBT Warns AscendEX Users of Potential Liquidity Issues and Delayed Withdrawals",
+        "source": "CryptoPotato",
+        "status": "OPEN",
+        "pub_date": "Fri, 26 Jun 2026 22:04:47 +0000",
+        "direction": "SELL",
+        "reasoning": "Fresh warning from credible on-chain analyst about liquidity crisis and withdrawal delays at AscendEX exchange suggests imminent solvency concerns that could trigger token price collapse and user exodus.",
+        "asset_type": "stock",
+        "confidence": 0.65,
+        "entry_price": 26.538,
+        "parse_error": false,
+        "price_error": false,
+        "price_source": "yahoo_chart",
+        "published_at": "Fri, 26 Jun 2026 22:04:47 +0000",
+        "raw_response": "```json\n{\n  \"title\": \"ZachXBT Warns AscendEX Users of Potential Liquidity Issues and Delayed Withdrawals\",\n  \"asset\": \"ASD\",\n  \"direction\": \"SELL\",\n  \"confidence\": 0.65,\n  \"reasoning\": \"Fresh warning from credible on-chain analyst about liquidity crisis and withdrawal delays at AscendEX exchange suggests imminent solvency concerns that could trigger token price collapse and user exodus.\",\n  \"entry_price\": null,\n  \"status\": \"paper_trade\"\n}\n```",
+        "price_at_news": null,
+        "price_error_reason": "",
+        "price_reference_source": "candidate_observed_price",
+        "article_reference_error": "No valid Yahoo bar at or after article timestamp",
+        "candidate_observed_price": 26.538,
+        "price_at_news_captured_at": null,
+        "candidate_observed_price_at": "2026-06-26T22:10:09.756Z",
+        "article_reference_gap_seconds": null,
+        "candidate_price_reference_source": "candidate_observed_price"
+      },
+      "workflow_id": "yF3Qj0BICeSNnDYD",
+      "execution_id": "11684",
+      "realized_pnl": null,
+      "target_model": null,
+      "trade_status": null,
+      "v2_signal_id": null,
+      "candidate_key": "ASD|SELL|https://cryptopotato.com/zachxbt-warns-ascendex-users-of-potential-liquidity-issues-and-delayed-withdrawals/|26.538",
+      "display_status": "candidate",
+      "candidate_price": 26.538,
+      "rejection_reason": null,
+      "candidate_price_at": "2026-06-26T22:10:09.756+00:00",
+      "v2_trade_intent_id": null,
+      "broker_mirror_status": null,
+      "price_reference_source": "candidate_observed_price",
+      "price_move_to_entry_pct": null,
+      "direction_adjusted_move_to_entry_pct": null
+    },
+    {
       "id": 1065,
       "asset": "COIN",
       "source": "crypto.news",
@@ -20818,7 +20879,7 @@
       "lifecycle": null,
       "reasoning": "Oil prices falling below $70 indicates weakening demand or reduced geopolitical risk premium. Continued ship traffic through Strait of Hormuz suggests supply concerns are easing. Bearish momentum for crude oil.",
       "confidence": 0.65,
-      "updated_at": "2026-06-26T21:55:06.312804+00:00",
+      "updated_at": "2026-06-26T22:05:10.154536+00:00",
       "asset_class": "stock",
       "entry_price": null,
       "exit_reason": null,
@@ -23550,58 +23611,6 @@
       "v2_trade_intent_id": null,
       "broker_mirror_status": null,
       "price_reference_source": "candidate_observed_price",
-      "price_move_to_entry_pct": null,
-      "direction_adjusted_move_to_entry_pct": null
-    },
-    {
-      "id": 1007,
-      "asset": "CL",
-      "source": "Bloomberg Markets",
-      "status": "candidate",
-      "seen_at": "2026-06-26T17:02:10.163568+00:00",
-      "headline": "US Oil Plunges Below $70 as Ships Keep Crossing Strait of Hormuz",
-      "news_url": "https://www.bloomberg.com/news/articles/2026-06-25/latest-oil-market-news-and-analysis-for-june-26",
-      "direction": "SELL",
-      "lifecycle": null,
-      "reasoning": "Oil prices breaking below $70 indicates weakening demand or easing geopolitical tensions. Continued ship traffic through Strait of Hormuz suggests supply concerns are diminishing. Bearish momentum for crude oil futures.",
-      "confidence": 0.72,
-      "updated_at": "2026-06-26T17:02:10.163568+00:00",
-      "asset_class": "commodity",
-      "entry_price": null,
-      "exit_reason": null,
-      "raw_payload": {
-        "link": "https://www.bloomberg.com/news/articles/2026-06-25/latest-oil-market-news-and-analysis-for-june-26",
-        "asset": "CL",
-        "price": 91.225,
-        "title": "US Oil Plunges Below $70 as Ships Keep Crossing Strait of Hormuz",
-        "source": "Bloomberg Markets",
-        "status": "paper_trade",
-        "feed_id": "bloomberg",
-        "direction": "SELL",
-        "feed_tier": 1,
-        "reasoning": "Oil prices breaking below $70 indicates weakening demand or easing geopolitical tensions. Continued ship traffic through Strait of Hormuz suggests supply concerns are diminishing. Bearish momentum for crude oil futures.",
-        "confidence": 0.72,
-        "asset_class": "stock",
-        "entry_price": 91.225,
-        "route_scope": "production",
-        "price_source": "yahoo",
-        "published_at": "2026-06-25T22:05:21+00:00",
-        "signal_timestamp": "2026-06-25T22:05:21+00:00"
-      },
-      "workflow_id": "supabase-native",
-      "execution_id": "cp367",
-      "realized_pnl": null,
-      "target_model": null,
-      "trade_status": null,
-      "v2_signal_id": null,
-      "candidate_key": "CL|SELL|https://www.bloomberg.com/news/articles/2026-06-25/latest-oil-market-news-and-analysis-for-june-26|91.225",
-      "display_status": "candidate",
-      "candidate_price": 91.225,
-      "rejection_reason": null,
-      "candidate_price_at": "2026-06-26T17:02:10.163568+00:00",
-      "v2_trade_intent_id": null,
-      "broker_mirror_status": null,
-      "price_reference_source": "yahoo",
       "price_move_to_entry_pct": null,
       "direction_adjusted_move_to_entry_pct": null
     }
@@ -39460,23 +39469,6 @@
   ],
   "crypto_lab_x": [
     {
-      "raw_event_id": 8073,
-      "source_event_id": "2069121938144854070",
-      "event_time": "2026-06-22T18:14:47+00:00",
-      "observed_at": "2026-06-22T18:15:03.442744+00:00",
-      "author_handle": "RodryCryptoPT",
-      "detected_assets": [
-        "BTC"
-      ],
-      "text_preview": "#BTC is bullish, but CT is panicking over colored indicators. Clean charts don't lie. Do I need 100k followers or a blue check for you \"experts\" to open your eyes to real price action? Low profile here for a week, but th",
-      "source_quality_bucket": "unproven",
-      "quality_flags": [],
-      "keyword_categories": [],
-      "latency_seconds": 16,
-      "engagement_score": 0,
-      "source_filter_status": "public_safe"
-    },
-    {
       "raw_event_id": 8063,
       "source_event_id": "2069121948299538827",
       "event_time": "2026-06-22T18:14:49+00:00",
@@ -39511,6 +39503,23 @@
       "source_filter_status": "public_safe"
     },
     {
+      "raw_event_id": 8073,
+      "source_event_id": "2069121938144854070",
+      "event_time": "2026-06-22T18:14:47+00:00",
+      "observed_at": "2026-06-22T18:15:03.442744+00:00",
+      "author_handle": "RodryCryptoPT",
+      "detected_assets": [
+        "BTC"
+      ],
+      "text_preview": "#BTC is bullish, but CT is panicking over colored indicators. Clean charts don't lie. Do I need 100k followers or a blue check for you \"experts\" to open your eyes to real price action? Low profile here for a week, but th",
+      "source_quality_bucket": "unproven",
+      "quality_flags": [],
+      "keyword_categories": [],
+      "latency_seconds": 16,
+      "engagement_score": 0,
+      "source_filter_status": "public_safe"
+    },
+    {
       "raw_event_id": 8033,
       "source_event_id": "2069118176185422027",
       "event_time": "2026-06-22T17:59:50+00:00",
@@ -39524,23 +39533,6 @@
       "quality_flags": [],
       "keyword_categories": [],
       "latency_seconds": 13,
-      "engagement_score": 0,
-      "source_filter_status": "public_safe"
-    },
-    {
-      "raw_event_id": 8038,
-      "source_event_id": "2069118172901327339",
-      "event_time": "2026-06-22T17:59:49+00:00",
-      "observed_at": "2026-06-22T18:00:02.815843+00:00",
-      "author_handle": "AngelinaNw3552",
-      "detected_assets": [
-        "BTC"
-      ],
-      "text_preview": "$BTC Looking at historical data, July has generally been a green month for Bitcoin, averaging around 7\u20138% returns. If history repeats itself, there may still be room for upside in the weeks ahead, while August has often",
-      "source_quality_bucket": "unproven",
-      "quality_flags": [],
-      "keyword_categories": [],
-      "latency_seconds": 14,
       "engagement_score": 0,
       "source_filter_status": "public_safe"
     },
@@ -39559,6 +39551,23 @@
       "quality_flags": [],
       "keyword_categories": [],
       "latency_seconds": 16,
+      "engagement_score": 0,
+      "source_filter_status": "public_safe"
+    },
+    {
+      "raw_event_id": 8038,
+      "source_event_id": "2069118172901327339",
+      "event_time": "2026-06-22T17:59:49+00:00",
+      "observed_at": "2026-06-22T18:00:02.815843+00:00",
+      "author_handle": "AngelinaNw3552",
+      "detected_assets": [
+        "BTC"
+      ],
+      "text_preview": "$BTC Looking at historical data, July has generally been a green month for Bitcoin, averaging around 7\u20138% returns. If history repeats itself, there may still be room for upside in the weeks ahead, while August has often",
+      "source_quality_bucket": "unproven",
+      "quality_flags": [],
+      "keyword_categories": [],
+      "latency_seconds": 14,
       "engagement_score": 0,
       "source_filter_status": "public_safe"
     },
@@ -39593,6 +39602,23 @@
       "quality_flags": [],
       "keyword_categories": [],
       "latency_seconds": 13,
+      "engagement_score": 0,
+      "source_filter_status": "public_safe"
+    },
+    {
+      "raw_event_id": 8026,
+      "source_event_id": "2069114389865635904",
+      "event_time": "2026-06-22T17:44:47+00:00",
+      "observed_at": "2026-06-22T17:45:03.171716+00:00",
+      "author_handle": "CoonVoop93338",
+      "detected_assets": [
+        "BTC"
+      ],
+      "text_preview": "\ud83e\uddf1 No need for expensive machines anymore \u2014 Bitcell is revolutionizing Bitcoin mining! \u26a1\ufe0f You can now mine Bitcoin from your mobile phone with @bitcell_app in just ONE click! \ud83d\udd0b I just mined 12.00 $BTCL! \ud83d\udc49 Start mining now",
+      "source_quality_bucket": "unproven",
+      "quality_flags": [],
+      "keyword_categories": [],
+      "latency_seconds": 16,
       "engagement_score": 0,
       "source_filter_status": "public_safe"
     },
@@ -39638,40 +39664,6 @@
       "source_filter_status": "public_safe"
     },
     {
-      "raw_event_id": 8026,
-      "source_event_id": "2069114389865635904",
-      "event_time": "2026-06-22T17:44:47+00:00",
-      "observed_at": "2026-06-22T17:45:03.171716+00:00",
-      "author_handle": "CoonVoop93338",
-      "detected_assets": [
-        "BTC"
-      ],
-      "text_preview": "\ud83e\uddf1 No need for expensive machines anymore \u2014 Bitcell is revolutionizing Bitcoin mining! \u26a1\ufe0f You can now mine Bitcoin from your mobile phone with @bitcell_app in just ONE click! \ud83d\udd0b I just mined 12.00 $BTCL! \ud83d\udc49 Start mining now",
-      "source_quality_bucket": "unproven",
-      "quality_flags": [],
-      "keyword_categories": [],
-      "latency_seconds": 16,
-      "engagement_score": 0,
-      "source_filter_status": "public_safe"
-    },
-    {
-      "raw_event_id": 7991,
-      "source_event_id": "2069110618645569557",
-      "event_time": "2026-06-22T17:29:48+00:00",
-      "observed_at": "2026-06-22T17:30:02.42936+00:00",
-      "author_handle": "CrisbeeX",
-      "detected_assets": [
-        "SOL"
-      ],
-      "text_preview": "@Veilbornxyz @solana Gaming + Solana + ownership. Bullish combo",
-      "source_quality_bucket": "unproven",
-      "quality_flags": [],
-      "keyword_categories": [],
-      "latency_seconds": 14,
-      "engagement_score": 0,
-      "source_filter_status": "public_safe"
-    },
-    {
       "raw_event_id": 8001,
       "source_event_id": "2069110598189961333",
       "event_time": "2026-06-22T17:29:43+00:00",
@@ -39704,9 +39696,26 @@
       "latency_seconds": 16,
       "engagement_score": 0,
       "source_filter_status": "public_safe"
+    },
+    {
+      "raw_event_id": 7991,
+      "source_event_id": "2069110618645569557",
+      "event_time": "2026-06-22T17:29:48+00:00",
+      "observed_at": "2026-06-22T17:30:02.42936+00:00",
+      "author_handle": "CrisbeeX",
+      "detected_assets": [
+        "SOL"
+      ],
+      "text_preview": "@Veilbornxyz @solana Gaming + Solana + ownership. Bullish combo",
+      "source_quality_bucket": "unproven",
+      "quality_flags": [],
+      "keyword_categories": [],
+      "latency_seconds": 14,
+      "engagement_score": 0,
+      "source_filter_status": "public_safe"
     }
   ],
-  "generated_at": "2026-06-26T22:04:21.733638+00:00",
+  "generated_at": "2026-06-26T22:10:11.211753+00:00",
   "prop_summary": {
     "account_count": 30,
     "reporting_date": "2026-06-26",
@@ -64803,7 +64812,7 @@
     }
   ],
   "shadow_health": {
-    "checked_at": "2026-06-26T22:04:21.733638+00:00",
+    "checked_at": "2026-06-26T22:10:11.211753+00:00",
     "audit_errors": 0,
     "audit_success": 1196,
     "shadow_status": "OK",
@@ -66803,7 +66812,7 @@
       "active": true,
       "free_cash": 100000,
       "created_at": "2026-06-19T21:38:20.533531+00:00",
-      "updated_at": "2026-06-26T22:00:01.272467+00:00",
+      "updated_at": "2026-06-26T22:10:01.42854+00:00",
       "account_key": "crypto_news_only",
       "realized_pnl": 0,
       "target_model": "fixed",
@@ -66818,7 +66827,7 @@
       "active": false,
       "free_cash": 10000,
       "created_at": "2026-06-20T22:22:49.933651+00:00",
-      "updated_at": "2026-06-26T22:00:01.272467+00:00",
+      "updated_at": "2026-06-26T22:10:01.42854+00:00",
       "account_key": "crypto_trend_gate",
       "realized_pnl": 0,
       "target_model": "fixed",
@@ -66833,7 +66842,7 @@
       "active": false,
       "free_cash": 10000,
       "created_at": "2026-06-20T22:22:49.933651+00:00",
-      "updated_at": "2026-06-26T22:00:01.272467+00:00",
+      "updated_at": "2026-06-26T22:10:01.42854+00:00",
       "account_key": "crypto_trend_strict",
       "realized_pnl": 0,
       "target_model": "fixed",
@@ -66848,7 +66857,7 @@
       "active": false,
       "free_cash": 10000,
       "created_at": "2026-06-20T22:22:49.933651+00:00",
-      "updated_at": "2026-06-26T22:00:01.272467+00:00",
+      "updated_at": "2026-06-26T22:10:01.42854+00:00",
       "account_key": "crypto_mean_revert",
       "realized_pnl": 0,
       "target_model": "fixed",
@@ -66863,7 +66872,7 @@
       "active": false,
       "free_cash": 10000,
       "created_at": "2026-06-20T22:22:49.933651+00:00",
-      "updated_at": "2026-06-26T22:00:01.272467+00:00",
+      "updated_at": "2026-06-26T22:10:01.42854+00:00",
       "account_key": "crypto_full_confluence",
       "realized_pnl": 0,
       "target_model": "fixed",
@@ -69204,8 +69213,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 7924.9,
-      "source_freshness_reason": "Newest source event age 7924.9m > 120m",
+      "source_age_minutes": 7930.8,
+      "source_freshness_reason": "Newest source event age 7930.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -69242,8 +69251,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 8719.8,
-      "source_freshness_reason": "Newest source event age 8719.8m > 120m",
+      "source_age_minutes": 8725.8,
+      "source_freshness_reason": "Newest source event age 8725.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -69380,8 +69389,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 8764.9,
-      "source_freshness_reason": "Newest source event age 8764.9m > 120m",
+      "source_age_minutes": 8770.8,
+      "source_freshness_reason": "Newest source event age 8770.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -69493,8 +69502,8 @@
         }
       ],
       "source_freshness_status": "stale",
-      "source_age_minutes": 11074.9,
-      "source_freshness_reason": "Newest source event age 11074.9m > 120m",
+      "source_age_minutes": 11080.8,
+      "source_freshness_reason": "Newest source event age 11080.8m > 120m",
       "source_freshness_threshold_minutes": 120
     },
     {
@@ -69527,7 +69536,7 @@
   ],
   "cryptolab_source_hygiene": {
     "status": "PASS",
-    "checked_at": "2026-06-26T22:04:47.680819+00:00",
+    "checked_at": "2026-06-26T22:10:39.212447+00:00",
     "signal_scores_before": 50,
     "signal_scores_after": 6,
     "x_events_before": 100,
@@ -69548,7 +69557,7 @@
   },
   "latency_reference_display": {
     "status": "PASS",
-    "checked_at": "2026-06-26T22:04:47.682184+00:00",
+    "checked_at": "2026-06-26T22:10:39.216876+00:00",
     "source": "/Users/riipen/.local/share/v2_yahoo_latency_reference_cache.json",
     "cache_errors": [
       "/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/yahoo_latency_reference_cache.json: [Errno 1] Operation not permitted: '/Users/riipen/Documents/Codex/2026-05-31/trading-signal-data-ingestion/foundation_v2/yahoo_latency_reference_cache.json'"
@@ -72622,7 +72631,7 @@
     ],
     "monitor": {
       "status": "FAIL",
-      "checked_at": "2026-06-26T22:04:55.555694+00:00",
+      "checked_at": "2026-06-26T22:10:50.917017+00:00",
       "cp14_active": false,
       "cp14_schedule": "every 10 minutes",
       "latest_cp14_execution_id": "9036",
@@ -72632,7 +72641,7 @@
     },
     "health": {
       "status": "FAIL",
-      "last_checked_at": "2026-06-26T22:04:55.555894+00:00",
+      "last_checked_at": "2026-06-26T22:10:50.917149+00:00",
       "open_trade_count": 0,
       "closed_trade_count": 15,
       "new_error_count": 0,
@@ -72689,7 +72698,7 @@
     },
     "readiness": {
       "status": "NOT_READY",
-      "last_checked_at": "2026-06-26T22:04:55.556019+00:00",
+      "last_checked_at": "2026-06-26T22:10:50.917203+00:00",
       "summary": "Not ready: Trade sample size: 15 total / 15 closed (need 25 total / 20 closed); Observation window: 6.9 days (need 7 days); Current health: FAIL (need PASS); CP14 monitor: active=False, latest=ok, errors=0 (need active=True, latest=ok, errors=0); Reconciliation: $23.9885 drift (need <= $0.01 drift); Health stability: unstable: streak 0/7 snapshots, 0.0/7 days",
       "thresholds": {
         "min_closed_trades": 20,
@@ -72786,8 +72795,16 @@
         "snapshot_count": 50,
         "stable_pass_streak_snapshots": 0,
         "stable_pass_streak_days": 0.0,
-        "latest_snapshot_at": "2026-06-26T22:03:06.821436+00:00",
+        "latest_snapshot_at": "2026-06-26T22:04:57.395731+00:00",
         "recent": [
+          {
+            "captured_at": "2026-06-26T22:04:57.395731+00:00",
+            "overall_status": "NOT_READY",
+            "health_status": "FAIL",
+            "blocker_count": 6,
+            "warning_count": 0,
+            "latest_execution_id": "9036"
+          },
           {
             "captured_at": "2026-06-26T22:03:06.821436+00:00",
             "overall_status": "NOT_READY",
@@ -72859,21 +72876,13 @@
             "blocker_count": 6,
             "warning_count": 0,
             "latest_execution_id": "9036"
-          },
-          {
-            "captured_at": "2026-06-26T21:24:41.641397+00:00",
-            "overall_status": "NOT_READY",
-            "health_status": "FAIL",
-            "blocker_count": 6,
-            "warning_count": 0,
-            "latest_execution_id": "9036"
           }
         ]
       }
     }
   },
   "ibkr_paper_preflight": {
-    "checked_at": "2026-06-26T22:04:55.922879+00:00",
+    "checked_at": "2026-06-26T22:10:51.449644+00:00",
     "expected_account": "DUQ523641",
     "ibkr_app": {
       "process_count": 0,
@@ -72908,17 +72917,17 @@
     "source": "foundation_v2/v2_telegram_delivery_probe.py",
     "exit_code": 0,
     "command": "/usr/bin/python3 /Users/riipen/.local/bin/v2_telegram_delivery_probe.py",
-    "checked_at": "2026-06-26T22:04:55.973338+00:00",
+    "checked_at": "2026-06-26T22:10:51.500504+00:00",
     "env_source": "/Users/riipen/.telegram_codex_env",
     "telegram_env_present": true,
     "send_enabled": false,
     "delivery": "not_sent_dry_run",
     "reason": null,
     "expected_env_file": null,
-    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-26T22:04:55.973464+00:00",
+    "message_preview": "CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-26T22:10:51.500602+00:00",
     "next_action": "Local Telegram urgent-send path is configured; use --send only for an approved proof message.",
     "raw_status": "READY",
-    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-26T22:04:55.973338+00:00\nenv_source=/Users/riipen/.telegram_codex_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=direct_bot\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-26T22:04:55.973464+00:00\n",
+    "raw_tail": "Telegram Delivery Probe\n========================================================================\nchecked_at=2026-06-26T22:10:51.500504+00:00\nenv_source=/Users/riipen/.telegram_codex_env\ntelegram_env_present=true\nrelay_env_present=true\nmode=direct_bot\nsend_enabled=false\nstatus=READY\ndelivery=not_sent_dry_run\nmessage_preview=CP88 Telegram delivery proof. Codex rulebook alert path can send to this chat. Time: 2026-06-26T22:10:51.500602+00:00\n",
     "safety": {
       "send_enabled": false,
       "telegram_send": "not sent",
@@ -72930,26 +72939,26 @@
     }
   },
   "n8n_execution_budget": {
-    "checked_at": "2026-06-26T22:04:55.976742+00:00",
+    "checked_at": "2026-06-26T22:10:51.503382+00:00",
     "status": "PASS",
     "severity": "info",
     "quota": 50000,
-    "estimated_used": 11682,
-    "remaining_estimate": 38318,
+    "estimated_used": 11686,
+    "remaining_estimate": 38314,
     "action_threshold_used": 45000,
     "urgent_threshold_used": 47500,
-    "remaining_to_action": 33318,
-    "remaining_to_urgent": 35818,
+    "remaining_to_action": 33314,
+    "remaining_to_urgent": 35814,
     "used_pct": 23.4,
     "estimated_daily_burn": 818.0,
     "estimated_hourly_burn": 34.08,
-    "hours_to_action_threshold": 977.5,
-    "hours_to_urgent_threshold": 1050.9,
-    "action_threshold_eta": "2026-08-06T15:37:38.812928+00:00",
-    "urgent_threshold_eta": "2026-08-09T16:58:37.492634+00:00",
+    "hours_to_action_threshold": 977.4,
+    "hours_to_urgent_threshold": 1050.8,
+    "action_threshold_eta": "2026-08-06T15:36:31.845680+00:00",
+    "urgent_threshold_eta": "2026-08-09T16:57:30.525387+00:00",
     "burn_estimate_source": "CP209 major known active scheduled workflows estimate; X/CryptoLab nonessential schedules paused during stock-market focus",
-    "latest_execution_id": 11682,
-    "latest_execution_started_at": "2026-06-26T22:00:25.054Z",
+    "latest_execution_id": 11686,
+    "latest_execution_started_at": "2026-06-26T22:10:25.058Z",
     "user_reported_used": 9061,
     "user_reported_at": "2026-06-22",
     "source": "latest_execution_id_plus_user_email_report",
@@ -72967,10 +72976,10 @@
     "projection": {
       "estimated_daily_burn": 818.0,
       "estimated_hourly_burn": 34.08,
-      "hours_to_action_threshold": 977.5,
-      "hours_to_urgent_threshold": 1050.9,
-      "action_threshold_eta": "2026-08-06T15:37:38.812928+00:00",
-      "urgent_threshold_eta": "2026-08-09T16:58:37.492634+00:00",
+      "hours_to_action_threshold": 977.4,
+      "hours_to_urgent_threshold": 1050.8,
+      "action_threshold_eta": "2026-08-06T15:36:31.845680+00:00",
+      "urgent_threshold_eta": "2026-08-09T16:57:30.525387+00:00",
       "source": "CP209 major known active scheduled workflows estimate; X/CryptoLab nonessential schedules paused during stock-market focus"
     },
     "next_action": "No budget action needed.",
@@ -72996,7 +73005,7 @@
     "contract_source_path": "/Users/riipen/.local/share/v2_monday_safe_observation/foundation_v2/v2_monday_safe_observation_wrapper_check.py",
     "wrapper_command": "bash foundation_v2/run_v2_monday_safe_observation.sh",
     "check_mode": "static_contract",
-    "checked_at": "2026-06-26T22:04:56.316755+00:00",
+    "checked_at": "2026-06-26T22:10:51.960277+00:00",
     "unsafe_args_refused": true,
     "safe_banner": true,
     "telegram_send_disabled": true,
@@ -73053,7 +73062,7 @@
     }
   },
   "monday_dashboard_reset_status": {
-    "checked_at": "2026-06-26T22:04:56.907890+00:00",
+    "checked_at": "2026-06-26T22:10:52.693474+00:00",
     "status": "WATCH",
     "state": "prepared_not_executed",
     "operator_message": "Monday dashboard reset is prepared, but not executed. It needs the exact approval phrase before SQL is applied.",
@@ -73099,7 +73108,7 @@
   },
   "atr_gap_monitor": {
     "status": "PASS",
-    "checked_at": "2026-06-26T22:04:56.337218+00:00",
+    "checked_at": "2026-06-26T22:10:51.978593+00:00",
     "source": "DATA.open_positions + DATA.closed_trades + Supabase v2_atr_cache",
     "baseline_at": "2026-06-26T19:59:51.044441+00:00",
     "excluded_crypto_like_row_count": 0,
@@ -73130,7 +73139,7 @@
         "atr_source": "tra79_seed",
         "source_timestamp": "2026-06-18T00:00:00+00:00",
         "refreshed_at": "2026-06-26T14:50:54.176616+00:00",
-        "cache_age_days": 0.3,
+        "cache_age_days": 0.31,
         "cache_error": null
       }
     ],
@@ -73195,7 +73204,7 @@
   },
   "volatility_target_realism": {
     "status": "WATCH",
-    "checked_at": "2026-06-26T22:04:56.907973+00:00",
+    "checked_at": "2026-06-26T22:10:52.693555+00:00",
     "source": "foundation_v2/v2_volatility_target_realism_audit.py",
     "reset_baseline_at": "2026-06-26T19:59:51.044441+00:00",
     "row_count": 0,
@@ -73236,7 +73245,7 @@
   },
   "monday_sizing_audit": {
     "status": "FAIL",
-    "checked_at": "2026-06-26T22:04:56.674364+00:00",
+    "checked_at": "2026-06-26T22:10:52.344321+00:00",
     "source": "DATA.open_positions + DATA.closed_trades",
     "audit_start_at": "2026-06-26T19:59:51.044441+00:00",
     "reset_baseline_at": "2026-06-26T19:59:51.044441+00:00",
@@ -73421,8 +73430,8 @@
   },
   "monday_live_batch_trace": {
     "status": "WATCH",
-    "checked_at": "2026-06-26T22:04:56.680508+00:00",
-    "json_generated_at": "2026-06-26T22:04:21.733638+00:00",
+    "checked_at": "2026-06-26T22:10:52.352737+00:00",
+    "json_generated_at": "2026-06-26T22:10:11.211753+00:00",
     "selected_trade_count": 0,
     "available_current_day_stock_trades": 199,
     "available_filtered_stock_trades": 0,
@@ -73450,7 +73459,7 @@
   },
   "stock_expansion_readiness": {
     "status": "NOT_READY",
-    "checked_at": "2026-06-26T22:04:56.680560+00:00",
+    "checked_at": "2026-06-26T22:10:52.352816+00:00",
     "expansion_allowed": false,
     "ready_for_user_approval": false,
     "summary": "Expansion blocked: Volatility evidence complete: 0/30 closed; review_status=collecting_evidence; IBKR paper proof: No IBKR Gateway/TWS process or paper API port detected. Open IBKR Gateway/TWS paper, enable API socket, use paper port 4002 or 7497, then rerun this preflight.; User expansion approval: requires exact approved expansion packet",
@@ -73534,7 +73543,7 @@
     "mode": "shadow_log",
     "status": "ERROR",
     "error": "[Errno 2] No such file or directory: '/Users/riipen/.local/bin/v2_pre_trade_move_gate_report.py'",
-    "generated_at": "2026-06-26T22:04:56.682100+00:00"
+    "generated_at": "2026-06-26T22:10:52.354378+00:00"
   },
   "monday_operator_runs": [
     {
@@ -74295,12 +74304,12 @@
     "status": "WATCH",
     "phase": "AFTER_HOURS",
     "stock_market_open": false,
-    "checked_at": "2026-06-26T22:04:56.687604+00:00",
-    "current_utc": "2026-06-26T22:04:56.687604+00:00",
-    "current_et": "2026-06-26T18:04:56.687604-04:00",
-    "current_mdt": "2026-06-26T16:04:56.687604-06:00",
-    "current_et_label": "Fri Jun 26, 2026 6:04 PM ET",
-    "current_mdt_label": "Fri Jun 26, 2026 4:04 PM MDT",
+    "checked_at": "2026-06-26T22:10:52.363572+00:00",
+    "current_utc": "2026-06-26T22:10:52.363572+00:00",
+    "current_et": "2026-06-26T18:10:52.363572-04:00",
+    "current_mdt": "2026-06-26T16:10:52.363572-06:00",
+    "current_et_label": "Fri Jun 26, 2026 6:10 PM ET",
+    "current_mdt_label": "Fri Jun 26, 2026 4:10 PM MDT",
     "next_open_at": "2026-06-29T13:30:00+00:00",
     "next_open_et": "2026-06-29T09:30:00-04:00",
     "next_open_mdt": "2026-06-29T07:30:00-06:00",
@@ -74309,14 +74318,14 @@
     "next_close_et": "2026-06-29T16:00:00-04:00",
     "next_close_mdt": "2026-06-29T14:00:00-06:00",
     "next_close_label": "Mon Jun 29, 2026 4:00 PM ET",
-    "minutes_to_next_open": 3806,
-    "minutes_to_next_close": 4196,
+    "minutes_to_next_open": 3800,
+    "minutes_to_next_close": 4190,
     "preopen_boost_window_minutes": 15,
     "preopen_boost_starts_at": "2026-06-29T13:15:00+00:00",
     "preopen_boost_starts_et": "2026-06-29T09:15:00-04:00",
     "preopen_boost_starts_mdt": "2026-06-29T07:15:00-06:00",
     "preopen_boost_label": "Mon Jun 29, 2026 9:15 AM ET",
-    "minutes_until_preopen_boost": 3791,
+    "minutes_until_preopen_boost": 3785,
     "regular_session": "09:30-16:00 ET",
     "holiday_calendar": "NYSE/Nasdaq 2026 full-day holiday approximation",
     "safe_to_observe": false,
@@ -74353,9 +74362,9 @@
       "action": "stay_low_cost",
       "message": "Keep work low-cost until the pre-open boost or live market window.",
       "phase": "AFTER_HOURS",
-      "minutes_to_next_open": 3806,
+      "minutes_to_next_open": 3800,
       "preopen_boost_starts_at": "2026-06-29T13:15:00+00:00",
-      "minutes_until_preopen_boost": 3791,
+      "minutes_until_preopen_boost": 3785,
       "next_command": "python3 foundation_v2/v2_dashboard_deploy_hygiene_check.py --json",
       "run_standby_packet_now": false,
       "run_live_observation_now": false
@@ -74366,7 +74375,7 @@
     "required_approval_phrase": null
   },
   "monday_readiness_digest": {
-    "checked_at": "2026-06-26T22:04:56.685659+00:00",
+    "checked_at": "2026-06-26T22:10:52.360820+00:00",
     "mode": "published",
     "status": "ACTION_REQUIRED",
     "next_safe_action": {
@@ -74397,7 +74406,7 @@
       "next_action": "latency has watch-level rows (clean=78, watch=22); keep TRA-33 open"
     },
     "published_json": {
-      "generated_at": "2026-06-26T22:04:21.733638+00:00",
+      "generated_at": "2026-06-26T22:10:11.211753+00:00",
       "key_count": 43,
       "accounting_ok": true,
       "books_with_drift": 0
@@ -74440,7 +74449,7 @@
   },
   "monday_live_proof": {
     "status": "WATCH",
-    "checked_at": "2026-06-26T22:04:56.909421+00:00",
+    "checked_at": "2026-06-26T22:10:52.695354+00:00",
     "source": "published open_positions, closed_trades, latency, and monday_current_day_candidate",
     "monday_open_at": "2026-06-22T13:30:00Z",
     "official_baseline_key": "official_2026_06_26_permanent_run_v1_cp381",
@@ -74580,7 +74589,7 @@
     }
   },
   "monday_preopen_checklist": {
-    "checked_at": "2026-06-26T22:04:56.687561+00:00",
+    "checked_at": "2026-06-26T22:10:52.363535+00:00",
     "mode": "published",
     "status": "ACTION_REQUIRED",
     "summary": {
@@ -74613,7 +74622,7 @@
       {
         "name": "published_json",
         "status": "PASS",
-        "detail": "assembled_keys_pre_checklist=46; missing_evidence=[]; generated_at=2026-06-26T22:04:21.733638+00:00; accounting_ok=True; books_with_drift=0",
+        "detail": "assembled_keys_pre_checklist=46; missing_evidence=[]; generated_at=2026-06-26T22:10:11.211753+00:00; accounting_ok=True; books_with_drift=0",
         "action": "Continue."
       },
       {
@@ -74625,7 +74634,7 @@
       {
         "name": "n8n_execution_budget",
         "status": "PASS",
-        "detail": "status=PASS; estimated_used=11682; quota=50000; used_pct=23.4; remaining_estimate=38318; source=latest_execution_id_plus_user_email_report; api_status=ok",
+        "detail": "status=PASS; estimated_used=11686; quota=50000; used_pct=23.4; remaining_estimate=38314; source=latest_execution_id_plus_user_email_report; api_status=ok",
         "action": "No n8n budget action needed."
       },
       {
@@ -74661,7 +74670,7 @@
       {
         "name": "telegram_delivery_probe",
         "status": "PASS",
-        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-26T22:04:55.973338+00:00",
+        "detail": "status=PASS; delivery=not_sent_dry_run; send_enabled=False; telegram_env_present=True; checked_at=2026-06-26T22:10:51.500504+00:00",
         "action": "Urgent Telegram path is configured for approved sends; no message sent."
       },
       {
@@ -74702,7 +74711,7 @@
     }
   },
   "monday_operator_runbook": {
-    "checked_at": "2026-06-26T22:04:56.687588+00:00",
+    "checked_at": "2026-06-26T22:10:52.363565+00:00",
     "status": "PASS",
     "mode": "read_only_operator_runbook",
     "primary_coordination_chat": "Understand GitHub and ledger updates",
@@ -74847,7 +74856,7 @@
     }
   },
   "monday_first_command_packet": {
-    "checked_at": "2026-06-26T22:04:56.909179+00:00",
+    "checked_at": "2026-06-26T22:10:52.695025+00:00",
     "status": "ACTION_REQUIRED",
     "operator_message": "Operator attention is required before running nonessential observation.",
     "first_command": "python3 foundation_v2/v2_monday_sizing_audit.py --json-output",
@@ -74869,10 +74878,10 @@
     },
     "n8n_execution_budget": {
       "status": "PASS",
-      "estimated_used": 11682,
+      "estimated_used": 11686,
       "quota": 50000,
       "used_pct": 23.4,
-      "remaining_estimate": 38318
+      "remaining_estimate": 38314
     },
     "execution_mode": {
       "phase": "AFTER_HOURS",
@@ -74880,7 +74889,7 @@
       "execution_profile": "budget_smart_crypto_optional",
       "observation_cadence": "reduced_unless_testing",
       "guidance": "Prefer contracts, dashboard evidence, CryptoLab proofs, and safety rails; keep Telegram trade-representative only.",
-      "minutes_to_next_open": 3806
+      "minutes_to_next_open": 3800
     },
     "stock_expansion_preflight": {
       "command": "python3 foundation_v2/v2_stock_expansion_preflight_bundle.py --json",
@@ -74929,7 +74938,7 @@
     },
     "published_evidence": {
       "data_path": "/tmp/data.v2.json",
-      "generated_at": "2026-06-26T22:04:21.733638+00:00",
+      "generated_at": "2026-06-26T22:10:11.211753+00:00",
       "key_count": 53,
       "health_status": "PASS",
       "preopen_status": "ACTION_REQUIRED",
@@ -74985,7 +74994,7 @@
     }
   },
   "monday_operator_evidence_index": {
-    "checked_at": "2026-06-26T22:04:56.909381+00:00",
+    "checked_at": "2026-06-26T22:10:52.695300+00:00",
     "status": "WATCH",
     "summary": {
       "pass": 3,
@@ -74993,7 +75002,7 @@
       "fail": 0
     },
     "data_path": "/tmp/data.v2.json",
-    "generated_at": "2026-06-26T22:04:21.733638+00:00",
+    "generated_at": "2026-06-26T22:10:11.211753+00:00",
     "runbook_status": "PASS",
     "next_safe_action": {
       "status": "ACTION_REQUIRED",
@@ -75050,7 +75059,7 @@
         "approval_required": null,
         "continue_if": "Publisher exits cleanly, all dashboard JSON locations sync, and public dashboard data remains fresh.",
         "stop_if": "Publisher fails, JSON keys are missing, dashboard data is stale, or public/root/v2-preview artifacts diverge.",
-        "note": "Latest publisher run status=success key_count=76 copied_dashboard=False copied_tmp=False recent_success=True"
+        "note": "Latest publisher run status=success key_count=54 copied_dashboard=True copied_tmp=True recent_success=True"
       },
       {
         "step": 5,
@@ -75145,6 +75154,37 @@
     }
   },
   "publisher_runs": [
+    {
+      "id": 1776,
+      "run_id": "361a6228-9350-422b-b523-1ecd94bdac80",
+      "source": "python_publisher",
+      "status": "success",
+      "started_at": "2026-06-26T22:04:21.410209+00:00",
+      "completed_at": "2026-06-26T22:04:56.981302+00:00",
+      "duration_ms": 36183,
+      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json.candidate.21610",
+      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
+      "output_secondary_tmp": "/tmp/data.v2.json",
+      "generated_at": "2026-06-26T22:04:20.79727+00:00",
+      "key_count": 54,
+      "required_key_count": 29,
+      "missing_required_keys": [],
+      "bytes_written": 2748105,
+      "sha256": "c893ac39f137c61732cce3e72cdc90ec3df00ecf37880553b37d4a72fd5034b2",
+      "accounting_ok": false,
+      "books_with_drift": 0,
+      "crypto_lab_trade_count": 15,
+      "crypto_lab_open_count": 0,
+      "crypto_lab_closed_count": 15,
+      "crypto_lab_account_count": 5,
+      "validation_passed": true,
+      "copied_dashboard": true,
+      "copied_tmp": true,
+      "error_message": null,
+      "metadata": {
+        "source": "python_publisher"
+      }
+    },
     {
       "id": 1775,
       "run_id": "2129f08e-da99-4f2e-aae0-dc576691f6b8",
@@ -75888,45 +75928,14 @@
       "metadata": {
         "source": "python_publisher"
       }
-    },
-    {
-      "id": 1751,
-      "run_id": "eccc142a-4e6e-4302-9f82-14d4da023eb3",
-      "source": "python_publisher",
-      "status": "success",
-      "started_at": "2026-06-26T20:20:11.751328+00:00",
-      "completed_at": "2026-06-26T20:20:47.963964+00:00",
-      "duration_ms": 36717,
-      "output_primary": "/Users/riipen/trading-dashboard/v2-preview/data.v2.json.candidate.51909",
-      "output_secondary_dashboard": "/Users/riipen/trading-dashboard/data.v2.json",
-      "output_secondary_tmp": "/tmp/data.v2.json",
-      "generated_at": "2026-06-26T20:20:11.246349+00:00",
-      "key_count": 54,
-      "required_key_count": 29,
-      "missing_required_keys": [],
-      "bytes_written": 2738203,
-      "sha256": "c7378416b35a9545f919f8319b9446df914dc7d0da8d3858b981712e123a7122",
-      "accounting_ok": false,
-      "books_with_drift": 0,
-      "crypto_lab_trade_count": 15,
-      "crypto_lab_open_count": 0,
-      "crypto_lab_closed_count": 15,
-      "crypto_lab_account_count": 5,
-      "validation_passed": true,
-      "copied_dashboard": true,
-      "copied_tmp": true,
-      "error_message": null,
-      "metadata": {
-        "source": "python_publisher"
-      }
     }
   ],
   "automation_heartbeat": {
     "publisher": {
       "status": "success",
-      "completed_at": "2026-06-26T22:03:06.429113+00:00",
-      "copied_tmp": false,
-      "copied_dashboard": false,
+      "completed_at": "2026-06-26T22:04:56.981302+00:00",
+      "copied_tmp": true,
+      "copied_dashboard": true,
       "interval_minutes": 5
     },
     "market_monitor": {
@@ -75939,7 +75948,7 @@
       "audit_fix_status": "FAIL"
     },
     "dashboard_link": "https://j2itamah.github.io/trading-dashboard/",
-    "generated_at": "2026-06-26T22:04:21.733638+00:00",
+    "generated_at": "2026-06-26T22:10:11.211753+00:00",
     "last_macos_notification": {
       "sent_at": "2026-06-26T14:15:48.414332+00:00",
       "exit_code": 0,
@@ -75951,7 +75960,7 @@
     }
   },
   "operator_attention": {
-    "checked_at": "2026-06-26T22:04:56.907594+00:00",
+    "checked_at": "2026-06-26T22:10:52.693128+00:00",
     "status": "ACTION_REQUIRED",
     "attention_required": true,
     "summary": {
@@ -76015,7 +76024,7 @@
         "label": "n8n execution budget",
         "status": "PASS",
         "severity": "info",
-        "detail": "estimated_used=11682 / quota=50000 (23.4%); remaining\u224838318; source=latest_execution_id_plus_user_email_report",
+        "detail": "estimated_used=11686 / quota=50000 (23.4%); remaining\u224838314; source=latest_execution_id_plus_user_email_report",
         "next_action": "No budget action needed.",
         "notify_channels": [
           "dashboard",
@@ -76038,7 +76047,7 @@
     }
   },
   "codex_build_status": {
-    "last_updated": "2026-06-26T22:04:56.913259+00:00",
+    "last_updated": "2026-06-26T22:10:52.699417+00:00",
     "checkpoint": "CP285",
     "title": "ATR fill gate added",
     "status": "ACTION_REQUIRED",
