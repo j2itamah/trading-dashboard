@@ -452,7 +452,7 @@
     <div class="nav-list" id="nav-list">
       <button class="nav-link" data-view="overview">Overview</button>
       <button class="nav-link" data-view="guardrails">Guardrails</button>
-      <button class="nav-link" data-view="crypto">Crypto Lab</button>
+      <button class="nav-link" data-view="experiments">Specific Experiments</button>
       <button class="nav-link on" data-view="operations">Operations</button>
       <button class="nav-link" data-view="research">System Health</button>
     </div>
@@ -478,7 +478,8 @@
   <section id="view-overview" class="view"></section>
   <section id="view-research" class="view"></section>
   <section id="view-guardrails" class="view"></section>
-  <section id="view-crypto" class="view"></section>
+  <section id="view-experiments" class="view"></section>
+  <section id="view-crypto" class="view" hidden aria-hidden="true"></section>
   <section id="view-operations" class="view on">
     <div class="exit-switch-wrap">
       <div class="exit-switch" id="exit-switch">
@@ -522,6 +523,7 @@ let OPEN_SEARCH='', CLOSED_SEARCH='';
 let OPS_TRADE_LIST=localStorage.getItem('v2_ops_trade_list') || 'open';
 let CURRENT_TRADE_ID=null;
 let LAB_FOCUS=localStorage.getItem('v2_lab_focus') || 'all';
+let EXPERIMENT_LAB=localStorage.getItem('v2_experiment_lab') || 'cryptolab';
 const VOL_PILOT1_START_AT='2026-06-19T00:50:22.324742+00:00';
 
 const STRAT_LABELS={news_only:'News Only',news_plus_ta:'Trend Gate',mean_reversion:'Mean Revert',trend_strict:'Trend Strict',full_confluence:'Full Confluence',crypto_lab:'Crypto Lab'};
@@ -2363,6 +2365,50 @@ function renderResearch(){
   html+=operatorRunbookStrip();
   document.getElementById('view-research').innerHTML=html;
 }
+function renderExperiments(){
+  const exp=DATA?.specific_experiments||{};
+  const labs=exp.labs||{};
+  const feedIds=exp.feed_ids||{};
+  const keys=['cryptolab','ai_world','quantum_realm','political_books_lab'];
+  const labels={cryptolab:'CryptoLab',ai_world:'AI World',quantum_realm:'Quantum Realm',political_books_lab:'Political Books'};
+  const lab=labs[EXPERIMENT_LAB]||{};
+  const trades=rows(lab.trades);
+  const openTrades=trades.filter(t=>String(t.status||'').toUpperCase()==='OPEN');
+  const closedTrades=trades.filter(t=>String(t.status||'').toUpperCase()==='CLOSED');
+  const isPolitical=EXPERIMENT_LAB==='political_books_lab';
+  let html=`<div class="lab-warning">Specific Experiments are isolated research lanes. No routing into the core 20 books. No broker orders unless explicitly promoted.</div>`;
+  html+=`<div class="lab-focus-controls" aria-label="Experiment lab selector">${keys.map(k=>`<button class="lab-focus-btn ${EXPERIMENT_LAB===k?'on':''}" data-experiment-lab="${k}" type="button">${labels[k]}</button>`).join('')}</div>`;
+  html+=`<div class="panel" style="margin-bottom:18px;border-color:var(--purple);background:linear-gradient(180deg,#fff,#faf8ff)"><h2 style="margin-bottom:4px">${esc(labels[EXPERIMENT_LAB]||EXPERIMENT_LAB)}</h2>`;
+  html+=`<div class="section-note">${isPolitical?'Congressional PTR disclosure ingest — observational trade log, no simulated portfolio.':`Isolated simulated portfolio · route_scope ${esc(EXPERIMENT_LAB)} · equity session-gated where applicable.`}</div>`;
+  if(!isPolitical){
+    html+=`<div class="kpis" style="margin-bottom:12px">${kpi('Starting',fmtMoney(lab.starting_balance||10000),'','baseline')}${kpi('Free Cash',fmtMoney(lab.free_cash),'',fmtInt(openTrades.length)+' open')}${kpi('Deployed',fmtMoney(lab.deployed_cost),'','at risk')}${kpi('Equity',fmtMoney(lab.marked_equity),signCls(lab.pnl_vs_start),(lab.pnl_vs_start>=0?'+':'')+fmtMoney(lab.pnl_vs_start)+' vs start')}${kpi('Realized P/L',fmtMoney(lab.realized_pnl),signCls(lab.realized_pnl),fmtInt(closedTrades.length)+' closed')}${kpi('Open',fmtInt(openTrades.length),'',fmtInt(closedTrades.length)+' closed')}</div>`;
+  } else {
+    html+=`<div class="kpis" style="margin-bottom:12px">${kpi('Total Disclosures',fmtInt(lab.trade_count||trades.length),'','House '+fmtInt(lab.house_count||0)+' · Senate '+fmtInt(lab.senate_count||0))}${kpi('Updated',(lab.updated_at||'').slice(0,19).replace('T',' '),'','snapshot')}${kpi('Chamber Mix','House / Senate','',fmtInt(lab.house_count||0)+' / '+fmtInt(lab.senate_count||0))}</div>`;
+  }
+  const wired=(feedIds[EXPERIMENT_LAB]||[]).join(', ');
+  if(wired) html+=`<div class="compact-meta"><span class="rule-chip">Feeds: ${esc(wired)}</span></div>`;
+  html+=`</div>`;
+  html+=`<div class="panel"><h2>Trade Log</h2><div class="section-note">${isPolitical?'Recent congressional stock disclosures.':'Simulated lab trade intents — newest first.'}</div>`;
+  if(!trades.length){ html+=`<div class="empty">No ${esc(labels[EXPERIMENT_LAB])} trades yet.</div>`; }
+  else {
+    html+=`<div class="pos-list">`;
+    trades.slice(0,40).forEach(t=>{
+      if(isPolitical){
+        html+=`<div class="pos-row"><div class="name"><span>${esc(t.ticker||t.asset||'—')}</span><span class="badge">${esc(t.transaction_type_normalized||t.transaction_type||'')}</span></div><div class="small">${esc(t.member||'')} · ${esc(t.chamber||'')} · ${esc((t.transaction_date||t.disclosure_date||'').slice(0,10))}</div><div class="small">${esc(t.amount_range||'')}</div></div>`;
+      } else {
+        const dir=String(t.direction||'').toUpperCase();
+        const st=String(t.status||'').toUpperCase();
+        html+=`<div class="pos-row ${st==='OPEN'?'open':'closed'}"><div class="name"><span>${esc(t.asset)}</span><span class="badge ${dir==='BUY'?'long':'good'}">${esc(dir)}</span><span class="tag">${esc(st)}</span></div><div class="small">Stake ${fmtMoney(t.stake_amount)} · Entry ${fmtMoney(t.entry_price)} · ${esc((t.created_at||'').slice(0,19).replace('T',' '))}</div><div class="small">TP ${fmtMoney(t.take_profit_price)} · SL ${fmtMoney(t.stop_loss_price)}${t.realized_pnl!=null?' · P/L '+(Number(t.realized_pnl)>=0?'+':'')+fmtMoney(t.realized_pnl):''}</div></div>`;
+      }
+    });
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+  if(EXPERIMENT_LAB==='cryptolab'){
+    html+=`<div class="section-note" style="margin-top:12px">Full CryptoLab evidence panels remain available in publisher data under <code>cryptolab</code>.</div>`;
+  }
+  document.getElementById('view-experiments').innerHTML=html;
+}
 function renderCryptoLab(){
   const x=rows(DATA?.crypto_lab_x).slice(0,18);
   const labAccounts=rows(DATA?.crypto_lab_accounts);
@@ -2874,6 +2920,7 @@ function bind(){
   document.getElementById('model-cards').onclick=e=>{const b=e.target.closest('button'); if(!b) return; sel.model=b.dataset.model; localStorage.setItem('v2_old_model',sel.model); renderOperations()};
   document.addEventListener('click',e=>{
 	    const p=e.target.closest('[data-portfolio]'); if(p){sel.portfolio=p.dataset.portfolio; localStorage.setItem('v2_old_portfolio',sel.portfolio); renderOperations(); return}
+	    const el=e.target.closest('[data-experiment-lab]'); if(el){EXPERIMENT_LAB=el.dataset.experimentLab; localStorage.setItem('v2_experiment_lab',EXPERIMENT_LAB); renderExperiments(); return}
 	    const lf=e.target.closest('[data-lab-focus]'); if(lf){LAB_FOCUS=lf.dataset.labFocus; localStorage.setItem('v2_lab_focus',LAB_FOCUS); renderCryptoLab(); return}
 	    const ol=e.target.closest('[data-ops-list]'); if(ol){OPS_TRADE_LIST=ol.dataset.opsList; localStorage.setItem('v2_ops_trade_list',OPS_TRADE_LIST); renderOperations(); return}
 	    if(e.target.closest('a,button')) return;
@@ -2905,7 +2952,7 @@ function ensureValidSelection(){
   if(!books.some(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle && b.target_model===sel.model)) sel.model=books.find(b=>b.portfolio===sel.portfolio && b.lifecycle===sel.lifecycle)?.target_model||'fixed';
 }
 function renderAll(){
-  freshness(); renderBuildStateBar(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderOperations(); showView(CURRENT_VIEW);
+  freshness(); renderBuildStateBar(); headerAttention(); ensureValidSelection(); renderOverview(); renderGuardrails(); renderResearch(); renderCryptoLab(); renderExperiments(); renderOperations(); showView(CURRENT_VIEW);
 }
 async function load(){
   const res=await fetch('data.v2.json?ts='+Date.now(),{cache:'no-store'});
