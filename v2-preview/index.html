@@ -1130,7 +1130,24 @@ function isLabTrade(t){
   return p.includes('crypto')||p.includes('white_house')||bk.includes('crypto_lab')||bk.includes('white_house');
 }
 function coreProductionTrades(){return allTrades().filter(t=>!isLabTrade(t)).filter(currentOfficialTrade);}
+const SECTOR_LABEL={semiconductors:'Semiconductors',energy_oil:'Energy/Oil',healthcare_biotech:'Healthcare/Biotech',financials:'Financials',ev_auto:'EV/Auto',retail:'Retail',consumer:'Consumer',industrials:'Industrials'};
+const PAGE_LABEL={core:'Core/General',crypto:'CryptoLab',ai_world:'AI World',quantum:'Quantum Realm',finnhub:'Finnhub Signals',industry:'Industry Feeds'};
+function tradeTags(t){
+  const sig=signalForTrade(t)||{};
+  const rp=t.raw_payload||sig.raw_payload||{};
+  return {
+    feed_id:t.feed_id||rp.feed_id,
+    feed_page:t.feed_page||rp.feed_page,
+    feed_sector:t.feed_sector||rp.feed_sector,
+    source_tier:t.source_tier||rp.source_tier,
+    asset_type:t.asset_type||t.asset_class||rp.asset_type||rp.asset_class,
+    reference_price_source:t.reference_price_source||rp.price_source||rp.price_reference_source,
+    ideal_stake:t.ideal_stake, capped_stake:t.capped_stake, stake_amount:t.stake_amount,
+  };
+}
 function sectorOf(t){
+  const tags=tradeTags(t);
+  if(tags.feed_sector) return SECTOR_LABEL[tags.feed_sector]||tags.feed_sector;
   const a=String(t.asset||'').toUpperCase();
   if(String(t.asset_class||'').toLowerCase()==='crypto'||/^(BTC|ETH|SOL|XRP|DOGE|ADA|AVAX|LINK|DOT|MATIC|BNB|UNI|AAVE|SUI|ARB|OP|LTC|BCH|SHIB|PEPE)$/.test(a)) return 'Crypto';
   if(/^(USO|UNG|GLD|SLV|GDX|DBA|CORN|WEAT|UCO|BOIL|PALL|PPLT)$/.test(a)) return 'Commodity';
@@ -1149,6 +1166,8 @@ function newsSourceForTrade(t){
   return String(lat?.source||sig?.source||sig?.raw_payload?.source||'unknown').toLowerCase();
 }
 function feedTierForTrade(t){
+  const tags=tradeTags(t);
+  if(tags.source_tier!=null) return Number(tags.source_tier);
   const src=newsSourceForTrade(t).replace(/[^a-z0-9_]+/g,'_');
   const map=feedTierMap();
   for(const [k,v] of Object.entries(map)){
@@ -1313,6 +1332,7 @@ function filteredDrillTrades(){
   let list=DRILL.baseTrades||[];
   const f=DRILL.filters||{};
   if(f.sector) list=list.filter(t=>sectorOf(t)===f.sector);
+  if(f.page) list=list.filter(t=>(tradeTags(t).feed_page||'core')===f.page);
   if(f.tradeType) list=list.filter(t=>tradeTypeOf(t)===f.tradeType);
   if(f.bookKey) list=list.filter(t=>t.book_key===f.bookKey);
   if(f.source) list=list.filter(t=>newsSourceForTrade(t).includes(String(f.source).toLowerCase()));
@@ -1335,7 +1355,10 @@ function drillStats(trades){
   const avgLat=latencies.length?latencies.reduce((a,b)=>a+b,0)/latencies.length:null;
   const tickers=[...new Set(trades.map(t=>t.asset))];
   const books=[...new Set(trades.map(t=>bookForTrade(t)?.book_key).filter(Boolean))];
-  return {pnl,winRate,tp,sl,timed,avgLat,tickers,books,count:trades.length,closed:closed.length};
+  const sources=[...new Set(trades.map(t=>newsSourceForTrade(t)).filter(s=>s&&s!=='unknown'))];
+  const strategies=[...new Set(trades.map(t=>modelOf(t)))];
+  const pages=[...new Set(trades.map(t=>tradeTags(t).feed_page).filter(Boolean))];
+  return {pnl,winRate,tp,sl,timed,avgLat,tickers,books,sources,strategies,pages,count:trades.length,closed:closed.length};
 }
 function renderDrillOverlay(){
   const panel=document.getElementById('drill-panel');
@@ -1356,7 +1379,7 @@ function renderDrillOverlay(){
     <label>Model<select onchange="DRILL.filters.model=this.value||undefined;renderDrillOverlay()"><option value="">All</option><option value="fixed" ${f.model==='fixed'?'selected':''}>fixed</option><option value="volatility" ${f.model==='volatility'?'selected':''}>volatility</option></select></label>
   </div>`;
   const rows=trades.slice(0,120).map(t=>positionRow(t)).join('');
-  panel.innerHTML=`<div class="drill-head"><div><h3>${esc(DRILL.title||'Trades')}</h3><div class="small">${fmtInt(st.count)} trades · ${fmtInt(st.closed)} closed · tickers: ${st.tickers.slice(0,8).map(esc).join(', ')}${st.books.length?` · books: ${st.books.length}`:''}</div></div><button class="tm-close" onclick="closeDrillDown()">×</button></div>
+  panel.innerHTML=`<div class="drill-head"><div><h3>${esc(DRILL.title||'Trades')}</h3><div class="small">${fmtInt(st.count)} trades · ${fmtInt(st.closed)} closed · tickers: ${st.tickers.slice(0,8).map(esc).join(', ')}${st.books.length?` · books: ${st.books.length}`:''}${st.sources.length?` · sources: ${st.sources.slice(0,4).map(esc).join(', ')}`:''}${st.strategies.length?` · models: ${st.strategies.map(esc).join('/')}`:''}</div></div><button class="tm-close" onclick="closeDrillDown()">×</button></div>
   ${filters}
   <div class="drill-body">
     <div class="drill-stat-grid">
@@ -1370,6 +1393,40 @@ function renderDrillOverlay(){
   </div>`;
 }
 function openSectorDrill(sector){openDrillDown(`Sector · ${sector}`, coreProductionTrades().filter(t=>sectorOf(t)===sector), {sector});}
+function openPageDrill(page){
+  const label=PAGE_LABEL[page]||page;
+  openDrillDown(`Page · ${label}`, coreProductionTrades().filter(t=>(tradeTags(t).feed_page||'core')===page), {page});
+}
+function edgeRow(label, row, onclick){
+  const wr=row.win_rate==null?'—':`${Number(row.win_rate).toFixed(0)}%`;
+  const lat=row.avg_latency_seconds==null?'—':durationLabel(row.avg_latency_seconds);
+  return `<button type="button" class="type-row" onclick="${onclick}"><div><strong>${esc(label)}</strong><div class="small">${fmtInt(row.count)} trades · ${fmtInt(row.closed)} closed · avg lat ${lat}</div></div><div style="text-align:right"><div class="${signCls(row.pnl)}">${row.pnl>=0?'+':''}${fmtMoney(row.pnl)}</div><div class="small">Win ${wr}</div></div></button>`;
+}
+function renderEdgeFindingPanel(){
+  const ef=DATA?.edge_finding||{};
+  const trades=coreProductionTrades();
+  const latRows=ef.latency_vs_win_rate||[];
+  const exitRows=ef.exit_reason_breakdown||[];
+  const tierRows=ef.source_tier_performance||[];
+  const eodRows=ef.eod_vs_24h_scoreboard||[];
+  const premove=ef.pre_move_ab_scoreboard||DATA?.pre_trade_move_gate_report?.ab_scoreboard||[];
+  const pages=ef.feed_counts_by_page||{};
+  const pageChips=Object.entries(pages).map(([p,n])=>`<button type="button" class="book-chip" onclick="openPageDrill('${esc(p)}')">${esc(PAGE_LABEL[p]||p)} (${n})</button>`).join('');
+  const latBody=latRows.length?latRows.map(r=>edgeRow(r.key,r,`openMetricDrill('Latency ${esc(r.key)}', coreProductionTrades().filter(t=>latencyBucketFor(t)==='${esc(r.key)}'))`)).join(''):'<div class="empty">No latency buckets yet.</div>';
+  const exitBody=exitRows.length?exitRows.map(r=>edgeRow(r.key.replace('_',' '),r,`openDrillDown('Exit · ${esc(r.key)}', coreProductionTrades().filter(t=>t.status==='CLOSED'), {exitReason:'${esc(r.key==='time_24h'?'time':r.key==='sell_eod'?'sell_eod':r.key)}'})`)).join(''):'<div class="empty">No closed trades for exit breakdown.</div>';
+  const tierBody=tierRows.length?tierRows.map(r=>edgeRow(r.key,r,`openDrillDown('${esc(r.key)}', coreProductionTrades(), {tier:'${esc(String(r.key).replace('tier_',''))}'})`)).join(''):'<div class="empty">No tier performance yet.</div>';
+  const eodBody=eodRows.filter(r=>['sell_eod','time_24h'].includes(r.key)).map(r=>edgeRow(r.key==='sell_eod'?'EOD exit':'24h exit',r,`openDrillDown('${esc(r.key)}', coreProductionTrades().filter(t=>t.status==='CLOSED'), {exitReason:'${esc(r.key==='sell_eod'?'sell_eod':'time')}'})`)).join('')||'<div class="empty">No EOD vs 24h evidence yet.</div>';
+  const premBody=Array.isArray(premove)&&premove.length?premove.map(r=>`<div class="conf-row"><div class="conf-head"><span class="conf-bucket">${esc(r.variant||r.key||'variant')}</span></div><div class="small">${esc(JSON.stringify(r).slice(0,120))}</div></div>`).join(''):'<div class="empty">Pre-move A/B scoreboard publishes with gate report.</div>';
+  return `<div class="panel"><h2>Edge Finding · Measurement Layer</h2><div class="section-note">Unified 20-book matrix — filter by page/category, sector, source tier, latency, exit reason. Political Books excluded.</div>
+  <div class="section-note">Pages: ${pageChips||'—'}</div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px">
+    <div class="panel" style="margin:0"><h3>Latency vs Win-rate</h3>${latBody}</div>
+    <div class="panel" style="margin:0"><h3>Exit Reason (P/L + WR)</h3>${exitBody}</div>
+    <div class="panel" style="margin:0"><h3>Source Tier Performance</h3>${tierBody}</div>
+    <div class="panel" style="margin:0"><h3>EOD vs 24h</h3>${eodBody}</div>
+    <div class="panel" style="margin:0"><h3>Pre-move A/B</h3>${premBody}</div>
+  </div></div>`;
+}
 function openTradeTypeDrill(type){openDrillDown(`Trade type · ${type}`, coreProductionTrades().filter(t=>tradeTypeOf(t)===type), {tradeType:type});}
 function openBookDrill(bookKey){
   const b=officialBooks().find(x=>x.book_key===bookKey);
@@ -1401,6 +1458,7 @@ function renderOverview(){
     ${kpiClick('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`, `openMetricDrill('All official trades', coreProductionTrades())`)}
   </div>`;
   html+=`<div class="overview-grid">${renderMathologyPanel()}${renderSectorDonut()}</div>`;
+  html+=renderEdgeFindingPanel();
   html+=`<div class="grid">${renderTradeTypePanel()}${renderBookChipsPanel()}</div>`;
   html+=cockpitGuideStrip();
   html+=mondayResetStatusStrip();
