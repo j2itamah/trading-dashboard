@@ -1138,6 +1138,7 @@ function tradeTags(t){
   return {
     feed_id:t.feed_id||rp.feed_id,
     feed_page:t.feed_page||rp.feed_page,
+    page:t.page||rp.page||t.feed_page||rp.feed_page,
     feed_sector:t.feed_sector||rp.feed_sector,
     source_tier:t.source_tier||rp.source_tier,
     asset_type:t.asset_type||t.asset_class||rp.asset_type||rp.asset_class,
