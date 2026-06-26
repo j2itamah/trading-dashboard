@@ -273,6 +273,47 @@
   .tm-overlay{position:fixed;inset:0;background:rgba(20,22,28,.55);display:none;align-items:flex-start;justify-content:center;z-index:9999;overflow-y:auto;padding:40px 16px}
   .tm-overlay.open{display:flex}
   .tm-modal{background:var(--panel);border-radius:16px;max-width:720px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.28);overflow:hidden}
+  .status-strip{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0 0 18px;padding:12px 16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+  .live-badge{font:800 11px/1 'Spline Sans Mono',monospace;padding:6px 10px;border-radius:999px;letter-spacing:.6px;flex:0 0 auto}
+  .live-badge.live{background:var(--green-bg);color:var(--green);border:1px solid #b8e2cc}
+  .live-badge.stale{background:var(--red-bg);color:var(--red);border:1px solid #e8a0a8}
+  .live-badge.degraded{background:#fff8e5;color:#7a5610;border:1px solid #e7c46a}
+  .live-badge.unknown{background:var(--accent-bg);color:var(--accent);border:1px solid var(--line)}
+  .status-meta{font:500 12px/1.45 'Spline Sans Mono',monospace;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .status-meta strong{color:var(--ink);font-weight:700}
+  .status-issue{font:600 11px/1.4 'Spline Sans Mono',monospace;color:var(--red);margin-left:auto}
+  .overview-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;margin:0 0 18px}
+  .mathology-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .math-item{padding:8px 10px;border-radius:10px;background:#fbfaf6;border:1px solid rgba(35,31,26,.06);font:500 12px/1.45 'Spline Sans Mono',monospace}
+  .math-item strong{display:block;font:700 10px/1.2 'Spline Sans Mono',monospace;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:4px}
+  .donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .donut-ring{width:140px;height:140px;border-radius:50%;position:relative;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+  .donut-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 11px/1.3 'Spline Sans Mono',monospace;pointer-events:none;padding:8px}
+  .donut-legend{display:flex;flex-direction:column;gap:6px;min-width:160px;flex:1}
+  .donut-leg{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent;background:transparent;width:100%;text-align:left;font:inherit}
+  .donut-leg:hover{border-color:var(--line);background:#fbfaf6}
+  .donut-swatch{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
+  .type-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;background:transparent;border-left:none;border-right:none;border-top:none;width:100%;font:inherit;text-align:left}
+  .type-row:last-child{border-bottom:none}
+  .type-row:hover{background:#fbfaf6;margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:8px}
+  .kpi.clickable{cursor:pointer;transition:border-color .15s,box-shadow .15s}
+  .kpi.clickable:hover{border-color:rgba(55,91,121,.45);box-shadow:0 12px 32px rgba(55,91,121,.1)}
+  .drill-overlay{position:fixed;inset:0;background:rgba(20,22,28,.45);display:none;z-index:9998;overflow-y:auto;padding:32px 16px}
+  .drill-overlay.open{display:block}
+  .drill-panel{max-width:960px;margin:0 auto;background:var(--panel);border-radius:16px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.2);overflow:hidden}
+  .drill-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .drill-head h3{margin:0;font-size:20px}
+  .drill-filters{padding:12px 22px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;background:#fbfaf6;align-items:center}
+  .drill-filters select{font:600 11px/1 'Spline Sans Mono',monospace;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#fff}
+  .drill-filters label{font:600 10px/1 'Spline Sans Mono',monospace;color:var(--ink-soft);display:flex;flex-direction:column;gap:4px}
+  .drill-body{padding:14px 22px 22px;max-height:62vh;overflow-y:auto}
+  .drill-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+  .drill-stat{padding:10px;border-radius:10px;background:#fbfaf6;border:1px solid var(--line)}
+  .drill-stat strong{display:block;font-size:18px;margin-bottom:4px}
+  .drill-stat span{font:600 10px/1.2 'Spline Sans Mono',monospace;color:var(--ink-soft);text-transform:uppercase}
+  .book-chip-row{display:flex;flex-wrap:wrap;gap:6px}
+  .book-chip{font:700 11px/1 'Spline Sans Mono',monospace;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#fbfaf6;cursor:pointer}
+  .book-chip:hover{border-color:var(--accent);color:var(--accent)}
   .tm-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
   .tm-head h3{margin:0;font-size:24px;letter-spacing:-.01em}
   .tm-sub{font:12px/1.4 'Spline Sans Mono',monospace;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
@@ -461,6 +502,10 @@
 
 <div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()">
   <div class="tm-modal" id="tm-modal" role="dialog" aria-modal="true" aria-label="Trade details"></div>
+</div>
+
+<div class="drill-overlay" id="drill-overlay" onclick="if(event.target===this)closeDrillDown()">
+  <div class="drill-panel" id="drill-panel" role="dialog" aria-modal="true" aria-label="Trade drill-down"></div>
 </div>
 
 <script>
@@ -1061,6 +1106,276 @@ function equityBlock(summary){
     </div>
   </div>`;
 }
+function kpiClick(label,value,cls='',sub='',onclick=''){
+  const attr=onclick?` role="button" tabindex="0" onclick="${onclick}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${onclick}}"`:'' ;
+  return `<div class="kpi clickable"${attr}><div class="label">${label}</div><div class="value ${cls}">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`;
+}
+const TICKER_SECTOR={AAPL:'Technology',MSFT:'Technology',NVDA:'Technology',GOOGL:'Technology',GOOG:'Technology',META:'Technology',AMZN:'Consumer',TSLA:'Consumer',NFLX:'Consumer',DIS:'Consumer',JPM:'Financials',BAC:'Financials',GS:'Financials',MS:'Financials',WFC:'Financials',C:'Financials',XOM:'Energy',CVX:'Energy',COP:'Energy',SLB:'Energy',OXY:'Energy',PFE:'Healthcare',JNJ:'Healthcare',UNH:'Healthcare',MRK:'Healthcare',ABBV:'Healthcare',LLY:'Healthcare',WMT:'Consumer',HD:'Consumer',MCD:'Consumer',NKE:'Consumer',KO:'Consumer',PEP:'Consumer',INTC:'Technology',AMD:'Technology',AVGO:'Technology',QCOM:'Technology',CRM:'Technology',ORCL:'Technology',ADBE:'Technology',NOW:'Technology',UBER:'Consumer',ABNB:'Consumer',BA:'Industrials',CAT:'Industrials',GE:'Industrials',RTX:'Industrials',LMT:'Industrials',DE:'Industrials',USO:'Commodity',UNG:'Commodity',GLD:'Commodity',SLV:'Commodity',GDX:'Commodity',DBA:'Commodity',SPY:'ETF',QQQ:'ETF',IWM:'ETF',DIA:'ETF'};
+const SECTOR_COLORS=['#1d9d6b','#3a5a78','#c08a2d','#6d28d9','#d6485a','#0891b2','#64748b','#ea580c'];
+const PRE_MOVE_MAX_FRAC=0.015;
+function feedTierMap(){
+  if(window.__feedTierMap) return window.__feedTierMap;
+  const m={};
+  const reg=DATA?.feed_registry;
+  (reg?.feeds||[]).forEach(f=>{m[f.id]=f.tier; m[String(f.name||'').toLowerCase()]=f.tier;});
+  const defaults={bloomberg:1,wsj:1,sec:1,fed:1,cnbc:2,marketwatch:2,coindesk:2,cointelegraph:2,decrypt:2,yahoo_finance:2,benzinga:3,seeking_alpha:3,prnewswire:3,businesswire:3};
+  window.__feedTierMap={...defaults,...m};
+  return window.__feedTierMap;
+}
+function isLabTrade(t){
+  const p=String(t.portfolio||'').toLowerCase();
+  const bk=String(t.book_key||'').toLowerCase();
+  return p.includes('crypto')||p.includes('white_house')||bk.includes('crypto_lab')||bk.includes('white_house');
+}
+function coreProductionTrades(){return allTrades().filter(t=>!isLabTrade(t)).filter(currentOfficialTrade);}
+function sectorOf(t){
+  const a=String(t.asset||'').toUpperCase();
+  if(String(t.asset_class||'').toLowerCase()==='crypto'||/^(BTC|ETH|SOL|XRP|DOGE|ADA|AVAX|LINK|DOT|MATIC|BNB|UNI|AAVE|SUI|ARB|OP|LTC|BCH|SHIB|PEPE)$/.test(a)) return 'Crypto';
+  if(/^(USO|UNG|GLD|SLV|GDX|DBA|CORN|WEAT|UCO|BOIL|PALL|PPLT)$/.test(a)) return 'Commodity';
+  if(String(t.asset_class||'').toLowerCase()==='commodity') return 'Commodity';
+  return TICKER_SECTOR[a]||'Other Equity';
+}
+function tradeTypeOf(t){
+  const s=sectorOf(t);
+  if(s==='Crypto') return 'crypto';
+  if(s==='Commodity') return 'commodity';
+  return 'equity';
+}
+function newsSourceForTrade(t){
+  const lat=latencyFor(t);
+  const sig=signalForTrade(t);
+  return String(lat?.source||sig?.source||sig?.raw_payload?.source||'unknown').toLowerCase();
+}
+function feedTierForTrade(t){
+  const src=newsSourceForTrade(t).replace(/[^a-z0-9_]+/g,'_');
+  const map=feedTierMap();
+  for(const [k,v] of Object.entries(map)){
+    if(typeof v!=='number') continue;
+    if(src.includes(k)||k.includes(src)) return v;
+  }
+  return 2;
+}
+function latencyBucketFor(t){
+  const lat=latencyFor(t);
+  const s=Number(lat?.news_to_trade_seconds);
+  if(!Number.isFinite(s)) return 'unknown';
+  if(s<60) return '<60s';
+  if(s<=300) return '60-300s';
+  return '>300s';
+}
+function timeOfDayBucket(t){
+  const iso=t.entry_time||t.exit_time;
+  if(!iso) return 'unknown';
+  const d=new Date(iso);
+  const et=(d.getUTCHours()-4+24)%24;
+  if(et>=9&&et<12) return 'morning';
+  if(et>=12&&et<16) return 'afternoon';
+  return 'off-hours';
+}
+function premoveAbForTrade(t){
+  const lat=latencyFor(t);
+  const dir=(t.direction||'').toUpperCase();
+  const ref=Number(lat?.news_reference_price);
+  const entry=Number(t.entry_price);
+  let move=null, absMove=null;
+  if(Number.isFinite(ref)&&ref>0&&Number.isFinite(entry)){
+    const raw=(entry-ref)/ref;
+    absMove=Math.abs(raw);
+    move=dir==='SELL'?-raw:raw;
+  }else if(lat?.direction_adjusted_move_before_entry_pct!=null){
+    move=Number(lat.direction_adjusted_move_before_entry_pct)/100;
+    const rawMove=Number(lat.price_move_before_entry_pct??lat.direction_adjusted_move_before_entry_pct);
+    absMove=Math.abs(rawMove)/100;
+  }
+  if(move==null) return 'unknown';
+  const favorableReject=move>PRE_MOVE_MAX_FRAC;
+  const absoluteReject=absMove!=null&&absMove>PRE_MOVE_MAX_FRAC;
+  if(favorableReject) return 'favorable_blocked';
+  if(absoluteReject) return 'absolute_blocked';
+  return 'pass';
+}
+function inferPipelineStatus(){
+  const s=DATA?.system_status||{};
+  if(s.pipeline_status) return s.pipeline_status;
+  const gen=DATA?.generated_at;
+  if(!gen) return 'unknown';
+  const ageMin=(Date.now()-new Date(gen).getTime())/60000;
+  const rss=s.rss_live??ageMin<20;
+  const marks=s.marks_live??ageMin<20;
+  if(rss&&marks&&ageMin<20) return 'live';
+  if(ageMin>60) return 'stale';
+  return 'degraded';
+}
+function renderStatusStrip(){
+  const s=DATA?.system_status||{};
+  const status=inferPipelineStatus();
+  const badgeCls={live:'live',stale:'stale',degraded:'degraded',unknown:'unknown'}[status]||'unknown';
+  const badgeLabel={live:'LIVE',stale:'STALE',degraded:'DEGRADED',unknown:'UNKNOWN'}[status]||'UNKNOWN';
+  const cycleAt=s.last_cycle_at||DATA?.generated_at;
+  const deployAt=s.last_deploy_at||rows(DATA?.publisher_runs).find(r=>r.status==='success')?.finished_at;
+  const issue=s.open_issue?`<span class="status-issue">${esc(s.open_issue)}</span>`:'';
+  const feeds=DATA?.feed_registry?.feed_count;
+  return `<div class="status-strip">
+    <span class="live-badge ${badgeCls}">${badgeLabel}</span>
+    <div class="status-meta">
+      <span>RSS <strong>${s.rss_live?'fresh':'stale'}</strong></span>
+      <span>Marks <strong>${s.marks_live?'flowing':'stale'}</strong></span>
+      <span>Last cycle <strong>${cycleAt?shortTime(cycleAt):'—'}</strong></span>
+      <span>Last deploy <strong>${deployAt?shortTime(deployAt):'—'}</strong></span>
+      ${feeds?`<span>Feeds <strong>${feeds}</strong></span>`:''}
+    </div>
+    ${issue}
+  </div>`;
+}
+function renderMathologyPanel(){
+  return `<div class="panel"><h2>Mathology</h2><div class="section-note">Canonical 10-book rules — reference only (no logic changes here).</div>
+  <div class="mathology-grid">
+    <div class="math-item"><strong>Freshness</strong>15 min stocks · 30 min crypto</div>
+    <div class="math-item"><strong>Signal bar</strong>relevance ≥0.6 · sentiment ≥0.2 (tier-adjusted)</div>
+    <div class="math-item"><strong>Pre-move (shadow)</strong>&gt;1.5% favorable move logged · not enforced</div>
+    <div class="math-item"><strong>Sizing</strong>min(1% risk, 15% cap, free cash)</div>
+    <div class="math-item"><strong>Fixed exits</strong>+4% TP · −2% SL</div>
+    <div class="math-item"><strong>Vol exits</strong>3× / 1.5× ATR (cap 20% / 10%)</div>
+    <div class="math-item"><strong>Hold</strong>24h default lifecycle</div>
+    <div class="math-item"><strong>Kill-switch</strong>5% daily loss limit (ET)</div>
+  </div></div>`;
+}
+function aggregateSectorPnl(trades){
+  const by={};
+  trades.forEach(t=>{
+    const sec=sectorOf(t);
+    if(!by[sec]) by[sec]={pnl:0,count:0,wins:0,tickers:new Set(),books:new Set()};
+    const p=pnlOf(t);
+    by[sec].pnl+=p;
+    by[sec].count+=1;
+    if(p>0) by[sec].wins+=1;
+    by[sec].tickers.add(t.asset);
+    const b=bookForTrade(t);
+    if(b?.book_key) by[sec].books.add(b.book_key);
+  });
+  return Object.entries(by).map(([sector,v])=>({sector,...v,winRate:v.count?v.wins/v.count*100:0,tickers:[...v.tickers],books:[...v.books]})).sort((a,b)=>b.pnl-a.pnl);
+}
+function renderSectorDonut(){
+  const trades=coreProductionTrades();
+  const rows=aggregateSectorPnl(trades);
+  if(!rows.length) return `<div class="panel"><h2>Sector P/L</h2><div class="empty">No official trades yet for sector view.</div></div>`;
+  const total=rows.reduce((s,r)=>s+Math.abs(r.pnl),0)||1;
+  let angle=0;
+  const stops=rows.map((r,i)=>{
+    const pct=Math.abs(r.pnl)/total*100;
+    const c=SECTOR_COLORS[i%SECTOR_COLORS.length];
+    const start=angle;
+    angle+=pct;
+    return `${c} ${start}% ${angle}%`;
+  }).join(', ');
+  const top=rows[0];
+  const legend=rows.map((r,i)=>`<button type="button" class="donut-leg" onclick="openSectorDrill('${esc(r.sector)}')"><span style="display:flex;align-items:center;gap:8px"><span class="donut-swatch" style="background:${SECTOR_COLORS[i%SECTOR_COLORS.length]}"></span>${esc(r.sector)}</span><span class="${signCls(r.pnl)}">${r.pnl>=0?'+':''}${fmtMoney(r.pnl)}</span></button>`).join('');
+  return `<div class="panel clickable" onclick="openSectorDrill('${esc(top.sector)}')"><h2>Sector P/L</h2><div class="section-note">Realized + unrealized across all 10 official books. Click a sector to drill in.</div>
+  <div class="donut-wrap"><div class="donut-ring" style="background:conic-gradient(${stops})"><div class="donut-center"><strong class="${signCls(top.pnl)}">${top.pnl>=0?'+':''}${fmtMoney(top.pnl)}</strong><span>${esc(top.sector)}</span></div></div><div class="donut-legend">${legend}</div></div></div>`;
+}
+function aggregateTradeTypes(trades){
+  const by={};
+  trades.forEach(t=>{
+    const ty=tradeTypeOf(t);
+    if(!by[ty]) by[ty]={pnl:0,count:0,wins:0,closed:0};
+    const p=pnlOf(t);
+    by[ty].pnl+=p;
+    by[ty].count+=1;
+    if(t.status==='CLOSED') by[ty].closed+=1;
+    if(p>0) by[ty].wins+=1;
+  });
+  return Object.entries(by).map(([type,v])=>({type,...v,winRate:v.closed?v.wins/v.closed*100:(v.count?v.wins/v.count*100:0)})).sort((a,b)=>b.pnl-a.pnl);
+}
+function renderTradeTypePanel(){
+  const trades=coreProductionTrades();
+  const rows=aggregateTradeTypes(trades);
+  if(!rows.length) return `<div class="panel"><h2>Trade Types</h2><div class="empty">No trades yet.</div></div>`;
+  const labels={equity:'Equity',crypto:'Crypto',commodity:'Commodity'};
+  const body=rows.map(r=>`<button type="button" class="type-row" onclick="event.stopPropagation();openTradeTypeDrill('${esc(r.type)}')"><div><strong>${esc(labels[r.type]||r.type)}</strong><div class="small">${fmtInt(r.count)} trades · ${r.closed?fmtInt(r.closed)+' closed':''}</div></div><div style="text-align:right"><div class="${signCls(r.pnl)}">${r.pnl>=0?'+':''}${fmtMoney(r.pnl)}</div><div class="small">Win ${r.winRate.toFixed(0)}%</div></div></button>`).join('');
+  return `<div class="panel"><h2>Trade Types</h2><div class="section-note">P/L and win-rate by asset class. Labs excluded.</div>${body}</div>`;
+}
+function renderBookChipsPanel(){
+  const books=officialBooks();
+  if(!books.length) return '';
+  const chips=books.map(b=>`<button type="button" class="book-chip" onclick="openBookDrill('${esc(b.book_key)}')">${esc(bookLabel(b))}</button>`).join('');
+  return `<div class="panel"><h2>Books</h2><div class="section-note">Click a book for trade log, exit-reason split, latency, and win-rate.</div><div class="book-chip-row">${chips}</div></div>`;
+}
+let DRILL={title:'',baseTrades:[],filters:{}};
+function openDrillDown(title, trades, preset={}){
+  DRILL={title,baseTrades:[...trades],filters:{...preset}};
+  renderDrillOverlay();
+  document.getElementById('drill-overlay')?.classList.add('open');
+}
+function closeDrillDown(){document.getElementById('drill-overlay')?.classList.remove('open');}
+function filteredDrillTrades(){
+  let list=DRILL.baseTrades||[];
+  const f=DRILL.filters||{};
+  if(f.sector) list=list.filter(t=>sectorOf(t)===f.sector);
+  if(f.tradeType) list=list.filter(t=>tradeTypeOf(t)===f.tradeType);
+  if(f.bookKey) list=list.filter(t=>t.book_key===f.bookKey);
+  if(f.source) list=list.filter(t=>newsSourceForTrade(t).includes(String(f.source).toLowerCase()));
+  if(f.tier) list=list.filter(t=>String(feedTierForTrade(t))===String(f.tier));
+  if(f.latency) list=list.filter(t=>latencyBucketFor(t)===f.latency);
+  if(f.exitReason) list=list.filter(t=>exitReasonClass(t.exit_reason)===f.exitReason);
+  if(f.timeOfDay) list=list.filter(t=>timeOfDayBucket(t)===f.timeOfDay);
+  if(f.premove) list=list.filter(t=>premoveAbForTrade(t)===f.premove);
+  if(f.model) list=list.filter(t=>modelOf(t)===f.model);
+  return list;
+}
+function drillStats(trades){
+  const closed=trades.filter(t=>t.status==='CLOSED');
+  const tp=closed.filter(t=>exitReasonClass(t.exit_reason)==='take_profit').length;
+  const sl=closed.filter(t=>exitReasonClass(t.exit_reason)==='stop_loss').length;
+  const timed=closed.filter(t=>['time','sell_eod'].includes(exitReasonClass(t.exit_reason))).length;
+  const pnl=trades.reduce((s,t)=>s+pnlOf(t),0);
+  const winRate=closed.length?closed.filter(t=>pnlOf(t)>0).length/closed.length*100:0;
+  const latencies=trades.map(t=>Number(latencyFor(t)?.news_to_trade_seconds)).filter(Number.isFinite);
+  const avgLat=latencies.length?latencies.reduce((a,b)=>a+b,0)/latencies.length:null;
+  const tickers=[...new Set(trades.map(t=>t.asset))];
+  const books=[...new Set(trades.map(t=>bookForTrade(t)?.book_key).filter(Boolean))];
+  return {pnl,winRate,tp,sl,timed,avgLat,tickers,books,count:trades.length,closed:closed.length};
+}
+function renderDrillOverlay(){
+  const panel=document.getElementById('drill-panel');
+  if(!panel) return;
+  const trades=filteredDrillTrades();
+  const st=drillStats(trades);
+  const f=DRILL.filters||{};
+  const setFilter=(k,v)=>{DRILL.filters[k]=v||undefined;renderDrillOverlay();};
+  const filters=`<div class="drill-filters">
+    <label>Sector<select onchange="DRILL.filters.sector=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${[...new Set((DRILL.baseTrades||[]).map(sectorOf))].map(s=>`<option value="${esc(s)}" ${f.sector===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label>
+    <label>Type<select onchange="DRILL.filters.tradeType=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${['equity','crypto','commodity'].map(s=>`<option value="${s}" ${f.tradeType===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label>
+    <label>Book<select onchange="DRILL.filters.bookKey=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${officialBooks().map(b=>`<option value="${esc(b.book_key)}" ${f.bookKey===b.book_key?'selected':''}>${esc(bookLabel(b))}</option>`).join('')}</select></label>
+    <label>Tier<select onchange="DRILL.filters.tier=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${[1,2,3].map(t=>`<option value="${t}" ${String(f.tier)===String(t)?'selected':''}>Tier ${t}</option>`).join('')}</select></label>
+    <label>Latency<select onchange="DRILL.filters.latency=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${['<60s','60-300s','>300s','unknown'].map(s=>`<option value="${s}" ${f.latency===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label>
+    <label>Exit<select onchange="DRILL.filters.exitReason=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${['take_profit','stop_loss','time','sell_eod'].map(s=>`<option value="${s}" ${f.exitReason===s?'selected':''}>${esc(s.replace('_',' '))}</option>`).join('')}</select></label>
+    <label>Time<select onchange="DRILL.filters.timeOfDay=this.value||undefined;renderDrillOverlay()"><option value="">All</option>${['morning','afternoon','off-hours'].map(s=>`<option value="${s}" ${f.timeOfDay===s?'selected':''}>${esc(s)}</option>`).join('')}</select></label>
+    <label>Pre-move<select onchange="DRILL.filters.premove=this.value||undefined;renderDrillOverlay()"><option value="">All</option><option value="pass" ${f.premove==='pass'?'selected':''}>pass</option><option value="favorable_blocked" ${f.premove==='favorable_blocked'?'selected':''}>favorable-blocked</option><option value="absolute_blocked" ${f.premove==='absolute_blocked'?'selected':''}>absolute-blocked</option></select></label>
+    <label>Model<select onchange="DRILL.filters.model=this.value||undefined;renderDrillOverlay()"><option value="">All</option><option value="fixed" ${f.model==='fixed'?'selected':''}>fixed</option><option value="volatility" ${f.model==='volatility'?'selected':''}>volatility</option></select></label>
+  </div>`;
+  const rows=trades.slice(0,120).map(t=>positionRow(t)).join('');
+  panel.innerHTML=`<div class="drill-head"><div><h3>${esc(DRILL.title||'Trades')}</h3><div class="small">${fmtInt(st.count)} trades · ${fmtInt(st.closed)} closed · tickers: ${st.tickers.slice(0,8).map(esc).join(', ')}${st.books.length?` · books: ${st.books.length}`:''}</div></div><button class="tm-close" onclick="closeDrillDown()">×</button></div>
+  ${filters}
+  <div class="drill-body">
+    <div class="drill-stat-grid">
+      <div class="drill-stat"><strong class="${signCls(st.pnl)}">${st.pnl>=0?'+':''}${fmtMoney(st.pnl)}</strong><span>total P/L</span></div>
+      <div class="drill-stat"><strong>${st.winRate.toFixed(0)}%</strong><span>win rate</span></div>
+      <div class="drill-stat"><strong>${fmtInt(st.tp)} / ${fmtInt(st.sl)} / ${fmtInt(st.timed)}</strong><span>TP / SL / 24h</span></div>
+      <div class="drill-stat"><strong>${st.avgLat==null?'—':durationLabel(st.avgLat)}</strong><span>avg latency</span></div>
+    </div>
+    ${rows||'<div class="empty">No trades match these filters.</div>'}
+    ${trades.length>120?`<div class="small">Showing first 120 of ${trades.length} trades.</div>`:''}
+  </div>`;
+}
+function openSectorDrill(sector){openDrillDown(`Sector · ${sector}`, coreProductionTrades().filter(t=>sectorOf(t)===sector), {sector});}
+function openTradeTypeDrill(type){openDrillDown(`Trade type · ${type}`, coreProductionTrades().filter(t=>tradeTypeOf(t)===type), {tradeType:type});}
+function openBookDrill(bookKey){
+  const b=officialBooks().find(x=>x.book_key===bookKey);
+  if(!b) return;
+  const trades=selectedBookTrades(b,'OPEN').concat(selectedBookTrades(b,'CLOSED'));
+  openDrillDown(`Book · ${bookLabel(b)}`, trades, {bookKey});
+}
+function openMetricDrill(label, trades){openDrillDown(label, trades);}
 function renderOverview(){
   const s=DATA?.official_summary||DATA?.prop_summary||{};
   const reset=officialResetSummary();
@@ -1074,13 +1389,17 @@ function renderOverview(){
   const dailyLossUsed=Math.max(0,-today);
   const dailyLossPct=dailyLossLimit?Math.max(0,Math.min(100,(dailyLossUsed/dailyLossLimit)*100)):0;
   const dailyLossRemaining=Math.max(0,dailyLossLimit-dailyLossUsed);
-  let html=equityBlock(s);
+  const coreTrades=coreProductionTrades();
+  let html=renderStatusStrip();
+  html+=equityBlock(s);
   html+=`<div class="kpis">
-    ${kpi('Today P/L', `${today>=0?'+':''}${fmtMoney(today)}`, signCls(today), 'Marked approximation')}
-    ${kpi('Total P/L', `${total>=0?'+':''}${fmtMoney(total)}`, signCls(total), 'Since start/baseline')}
-    ${kpi('Open Trades', fmtInt(reset.open), '', `${fmtInt(reset.closed)} closed since reset`)}
-    ${kpi('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`)}
+    ${kpiClick('Today P/L', `${today>=0?'+':''}${fmtMoney(today)}`, signCls(today), 'Marked approximation', `openMetricDrill('Today P/L', coreProductionTrades())`)}
+    ${kpiClick('Total P/L', `${total>=0?'+':''}${fmtMoney(total)}`, signCls(total), 'Since start/baseline', `openMetricDrill('Total P/L', coreProductionTrades())`)}
+    ${kpiClick('Open Trades', fmtInt(reset.open), '', `${fmtInt(reset.closed)} closed since reset`, `openMetricDrill('Open trades', coreProductionTrades().filter(t=>t.status==='OPEN'))`)}
+    ${kpiClick('V2 Health', health.accounting_ok?'OK':'Check', health.accounting_ok?'pos-text':'neg-text', `${health.books_with_drift||0} drift books`, `openMetricDrill('All official trades', coreProductionTrades())`)}
   </div>`;
+  html+=`<div class="overview-grid">${renderMathologyPanel()}${renderSectorDonut()}</div>`;
+  html+=`<div class="grid">${renderTradeTypePanel()}${renderBookChipsPanel()}</div>`;
   html+=cockpitGuideStrip();
   html+=mondayResetStatusStrip();
   html+=rulebookStatusPanel();
@@ -2565,7 +2884,7 @@ function bind(){
   });
   document.addEventListener('input',e=>{if(e.target.id==='open-search'){OPEN_SEARCH=e.target.value; renderOperations()} if(e.target.id==='closed-search'){CLOSED_SEARCH=e.target.value; renderOperations()}});
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape') closeTradeModal();
+    if(e.key==='Escape'){closeDrillDown(); closeTradeModal();}
     if((e.key==='Enter'||e.key===' ') && !document.getElementById('tm-overlay').classList.contains('open')){
       const lr=e.target.closest?.('[data-lab-trade-id]'); if(lr){e.preventDefault(); openLabTradeModal(lr.dataset.labTradeId); return}
       const tr=e.target.closest?.('[data-trade-id]'); if(tr){e.preventDefault(); openTradeModal(tr.dataset.tradeId); return}
