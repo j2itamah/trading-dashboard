@@ -1,28 +1,28 @@
 {
-  "generated_at": "2026-06-27T03:20:14.375Z",
+  "generated_at": "2026-06-27T03:30:13.684Z",
   "model": "14 books (10 fixed production + 4 volatility pilot)",
   "totals": {
-    "equity": 124157.71,
+    "equity": 124147.92,
     "starting": 140000,
-    "pnl_dollars": -15842.29,
+    "pnl_dollars": -15852.08,
     "pnl_pct": -11.32,
     "open_positions": 62,
     "book_count": 14,
     "closed_trades": 1874
   },
   "production_totals": {
-    "equity": 86427.77,
+    "equity": 86430.93,
     "starting": 100000,
-    "pnl_dollars": -13572.23,
+    "pnl_dollars": -13569.07,
     "pnl_pct": -13.57,
     "open_positions": 46,
     "book_count": 10
   },
   "pilot_totals": {
-    "equity": 37729.95,
+    "equity": 37716.99,
     "starting": 40000,
-    "pnl_dollars": -2270.05,
-    "pnl_pct": -5.68,
+    "pnl_dollars": -2283.01,
+    "pnl_pct": -5.71,
     "open_positions": 16,
     "book_count": 4
   },
@@ -36,7 +36,7 @@
   },
   "health": {
     "status": "healthy",
-    "generated_at": "2026-06-27T03:20:14.375Z",
+    "generated_at": "2026-06-27T03:30:13.684Z",
     "stale_prices": 0,
     "overdue_expiry": 0,
     "recent_24h_failures": 0,
@@ -44,21 +44,21 @@
     "workflows": [
       {
         "workflow_name": "Publisher",
-        "last_run_at": "2026-06-27T03:20:05.168168+00:00",
+        "last_run_at": "2026-06-27T03:30:05.148705+00:00",
         "last_status": "success",
-        "execution_id": "11811"
+        "execution_id": "11815"
       },
       {
         "workflow_name": "WF1",
-        "last_run_at": "2026-06-27T03:20:02.659387+00:00",
+        "last_run_at": "2026-06-27T03:30:02.793497+00:00",
         "last_status": "success",
-        "execution_id": "11810"
+        "execution_id": "11814"
       },
       {
         "workflow_name": "WF2",
-        "last_run_at": "2026-06-27T03:15:27.264969+00:00",
+        "last_run_at": "2026-06-27T03:25:27.35055+00:00",
         "last_status": "completed",
-        "execution_id": "11809"
+        "execution_id": "11813"
       },
       {
         "workflow_name": "WF3",
@@ -1837,804 +1837,17 @@
     {
       "portfolio": "news_only",
       "exit_rule": "hold_24hr",
-      "target_model": "volatility",
-      "book_key": "news_only__hold_24hr__volatility",
-      "classification": "pilot",
-      "starting_balance": 10000,
-      "total_equity": 7104.41,
-      "growth_dollars": -2895.59,
-      "growth_pct": -28.96,
-      "free_cash": 4939.45,
-      "deployed_capital": 2164.96,
-      "cash_pct": 69.53,
-      "invested_pct": 30.47,
-      "open_count": 16,
-      "analytics": {
-        "OVERALL": {
-          "total_closed": 72,
-          "wins": 36,
-          "losses": 36,
-          "win_rate_pct": 50,
-          "avg_win_pct": 5.87,
-          "avg_loss_pct": -5.07,
-          "reward_risk_ratio": 1.16,
-          "total_pnl_pct": 2.4,
-          "total_pnl_dollars": 239.7
-        },
-        "BY_ASSET": [
-          {
-            "key": "AAVE",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 18.06,
-            "total_pnl_dollars": 32.75
-          },
-          {
-            "key": "AEG",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -0.71,
-            "total_pnl_dollars": -1.26
-          },
-          {
-            "key": "AMN",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.01,
-            "total_pnl_dollars": 13.08
-          },
-          {
-            "key": "BA",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -0.5,
-            "total_pnl_dollars": -1.23
-          },
-          {
-            "key": "BB",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 8.31,
-            "total_pnl_dollars": 17.6
-          },
-          {
-            "key": "BHP",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 7.64,
-            "total_pnl_dollars": 15.63
-          },
-          {
-            "key": "BNB",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.21,
-            "total_pnl_dollars": 16.79
-          },
-          {
-            "key": "BSX",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -0.19,
-            "total_pnl_dollars": -0.42
-          },
-          {
-            "key": "BTC",
-            "count": 3,
-            "win_rate_pct": 33.33,
-            "total_pnl_pct": -10.16,
-            "total_pnl_dollars": -41.04
-          },
-          {
-            "key": "CCL",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -0.35,
-            "total_pnl_dollars": -0.77
-          },
-          {
-            "key": "CMI",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.73,
-            "total_pnl_dollars": 9.66
-          },
-          {
-            "key": "COIN",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -35.88
-          },
-          {
-            "key": "DRI",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.33,
-            "total_pnl_dollars": 0.97
-          },
-          {
-            "key": "DTSS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -73.16
-          },
-          {
-            "key": "EADSY",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -0.29,
-            "total_pnl_dollars": -0.56
-          },
-          {
-            "key": "ENPH",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -44.29
-          },
-          {
-            "key": "EQNR",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.41,
-            "total_pnl_dollars": 2.31
-          },
-          {
-            "key": "ERAS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -2.77,
-            "total_pnl_dollars": -11.33
-          },
-          {
-            "key": "ETH",
-            "count": 2,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -14.61,
-            "total_pnl_dollars": -39.06
-          },
-          {
-            "key": "EU",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -91.34
-          },
-          {
-            "key": "EWTX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.44,
-            "total_pnl_dollars": 0.98
-          },
-          {
-            "key": "EXALF",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 9.96,
-            "total_pnl_dollars": 22.41
-          },
-          {
-            "key": "FRHC",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -5.07,
-            "total_pnl_dollars": -11.95
-          },
-          {
-            "key": "FTCO",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -1.43,
-            "total_pnl_dollars": -2.57
-          },
-          {
-            "key": "FUL",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -3.32,
-            "total_pnl_dollars": -7.03
-          },
-          {
-            "key": "GIC",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.8,
-            "total_pnl_dollars": 6.84
-          },
-          {
-            "key": "GOOGL",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.51,
-            "total_pnl_dollars": 3.37
-          },
-          {
-            "key": "HIVE",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 20,
-            "total_pnl_dollars": 134.28
-          },
-          {
-            "key": "HOOD",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -50.16
-          },
-          {
-            "key": "ITA",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.25,
-            "total_pnl_dollars": 7.05
-          },
-          {
-            "key": "KR",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -2.04,
-            "total_pnl_dollars": -4.79
-          },
-          {
-            "key": "LLY",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -1.63,
-            "total_pnl_dollars": -7.39
-          },
-          {
-            "key": "LPRO",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.32,
-            "total_pnl_dollars": 0.75
-          },
-          {
-            "key": "MANH",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.88,
-            "total_pnl_dollars": 8.12
-          },
-          {
-            "key": "MASI",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": 0,
-            "total_pnl_dollars": 0
-          },
-          {
-            "key": "MTN",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -6.12,
-            "total_pnl_dollars": -50.34
-          },
-          {
-            "key": "MU",
-            "count": 2,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -17.56,
-            "total_pnl_dollars": -46.36
-          },
-          {
-            "key": "NFE",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -68.48
-          },
-          {
-            "key": "NNOX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 20,
-            "total_pnl_dollars": 202.99
-          },
-          {
-            "key": "NOC",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -2.39,
-            "total_pnl_dollars": -4.73
-          },
-          {
-            "key": "NRXP",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.04,
-            "total_pnl_dollars": 7.48
-          },
-          {
-            "key": "NTRA",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -1.38,
-            "total_pnl_dollars": -2.64
-          },
-          {
-            "key": "OM",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -3.41,
-            "total_pnl_dollars": -19.24
-          },
-          {
-            "key": "OSS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -31.02
-          },
-          {
-            "key": "OTLK",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 20,
-            "total_pnl_dollars": 200
-          },
-          {
-            "key": "PAVS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -9.97,
-            "total_pnl_dollars": -53.49
-          },
-          {
-            "key": "PCVX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 3.98,
-            "total_pnl_dollars": 7.78
-          },
-          {
-            "key": "PEP",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -0.73,
-            "total_pnl_dollars": -1.38
-          },
-          {
-            "key": "PICS",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 5.61,
-            "total_pnl_dollars": 16.67
-          },
-          {
-            "key": "PRAX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 9.12,
-            "total_pnl_dollars": 24.44
-          },
-          {
-            "key": "QCOM",
-            "count": 2,
-            "win_rate_pct": 50,
-            "total_pnl_pct": -5.66,
-            "total_pnl_dollars": -15.76
-          },
-          {
-            "key": "RIVN",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -6.35,
-            "total_pnl_dollars": -13.7
-          },
-          {
-            "key": "RRGCX",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.12,
-            "total_pnl_dollars": 0.8
-          },
-          {
-            "key": "SDRL",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 0.29,
-            "total_pnl_dollars": 1.57
-          },
-          {
-            "key": "SLP",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 11.45,
-            "total_pnl_dollars": 89.77
-          },
-          {
-            "key": "SMMT",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -1.53,
-            "total_pnl_dollars": -2.7
-          },
-          {
-            "key": "SOL",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -3.04,
-            "total_pnl_dollars": -6.01
-          },
-          {
-            "key": "SPSC",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.34,
-            "total_pnl_dollars": 5.72
-          },
-          {
-            "key": "SRAD",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.02,
-            "total_pnl_dollars": 7.59
-          },
-          {
-            "key": "SST",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 13.69,
-            "total_pnl_dollars": 43.09
-          },
-          {
-            "key": "TTEK",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 2.59,
-            "total_pnl_dollars": 6.79
-          },
-          {
-            "key": "USO",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.84,
-            "total_pnl_dollars": 9.53
-          },
-          {
-            "key": "UUUU",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 1.04,
-            "total_pnl_dollars": 2.09
-          },
-          {
-            "key": "WDC",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 7.59,
-            "total_pnl_dollars": 30.23
-          },
-          {
-            "key": "WGS",
-            "count": 1,
-            "win_rate_pct": 0,
-            "total_pnl_pct": -10,
-            "total_pnl_dollars": -21.87
-          },
-          {
-            "key": "WISE",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 7.75,
-            "total_pnl_dollars": 44.52
-          },
-          {
-            "key": "XLM",
-            "count": 1,
-            "win_rate_pct": 100,
-            "total_pnl_pct": 4.49,
-            "total_pnl_dollars": 8
-          }
-        ],
-        "BY_SOURCE": [
-          {
-            "key": "AMBCrypto",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 13.69,
-            "avg_pnl_usd": 43.09
-          },
-          {
-            "key": "BeInCrypto",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 18.06,
-            "avg_pnl_usd": 32.75
-          },
-          {
-            "key": "Business Wire RSS",
-            "count": 6,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 0.41,
-            "avg_pnl_usd": 1.56
-          },
-          {
-            "key": "CNBC",
-            "count": 4,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": -1.78,
-            "avg_pnl_usd": -9.48
-          },
-          {
-            "key": "Cointelegraph RSS",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 9.29,
-            "avg_pnl_usd": 65.85
-          },
-          {
-            "key": "CryptoPotato",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -6.7,
-            "avg_pnl_usd": -17.81
-          },
-          {
-            "key": "Decrypt",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -10,
-            "avg_pnl_usd": -50.16
-          },
-          {
-            "key": "NewsBTC",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 0.73,
-            "avg_pnl_usd": 1
-          },
-          {
-            "key": "PR Newswire RSS",
-            "count": 11,
-            "win_rate_pct": 63.64,
-            "avg_pnl_pct": 2.47,
-            "avg_pnl_usd": 17.55
-          },
-          {
-            "key": "Seeking Alpha RSS",
-            "count": 24,
-            "win_rate_pct": 41.67,
-            "avg_pnl_pct": -0.87,
-            "avg_pnl_usd": -0.29
-          },
-          {
-            "key": "Yahoo Finance RSS",
-            "count": 17,
-            "win_rate_pct": 58.82,
-            "avg_pnl_pct": 0.19,
-            "avg_pnl_usd": -1.11
-          },
-          {
-            "key": "crypto.news",
-            "count": 2,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -5.66,
-            "avg_pnl_usd": -20.25
-          }
-        ],
-        "BY_CONFIDENCE": [
-          {
-            "key": "0.60-0.69",
-            "count": 56,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 0.49,
-            "avg_pnl_usd": 3.5
-          },
-          {
-            "key": "0.70-0.79",
-            "count": 16,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 0.08,
-            "avg_pnl_usd": 2.73
-          }
-        ],
-        "BY_EXIT_REASON": [
-          {
-            "key": "sell_eod_crypto",
-            "count": 33,
-            "win_rate_pct": 54.55,
-            "avg_pnl_pct": 1.06,
-            "avg_pnl_usd": 3.48
-          },
-          {
-            "key": "stop_loss",
-            "count": 15,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -8.74,
-            "avg_pnl_usd": -41.66
-          },
-          {
-            "key": "take_profit",
-            "count": 5,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 17.61,
-            "avg_pnl_usd": 118.48
-          },
-          {
-            "key": "time",
-            "count": 19,
-            "win_rate_pct": 68.42,
-            "avg_pnl_pct": 1.94,
-            "avg_pnl_usd": 8.27
-          }
-        ],
-        "BY_DIRECTION": [
-          {
-            "key": "BUY",
-            "count": 48,
-            "win_rate_pct": 45.83,
-            "avg_win_pct": 6.6,
-            "avg_loss_pct": -5.48
-          },
-          {
-            "key": "SELL",
-            "count": 24,
-            "win_rate_pct": 58.33,
-            "avg_win_pct": 4.71,
-            "avg_loss_pct": -4.01
-          }
-        ],
-        "BY_ALIGNMENT": [
-          {
-            "key": "aligned",
-            "count": 36,
-            "win_rate_pct": 61.11
-          },
-          {
-            "key": "conflict",
-            "count": 27,
-            "win_rate_pct": 40.74
-          },
-          {
-            "key": "neutral",
-            "count": 9,
-            "win_rate_pct": 33.33
-          }
-        ],
-        "BY_RSI_BAND": [
-          {
-            "key": "neutral (30-70)",
-            "count": 58,
-            "win_rate_pct": 48.28
-          },
-          {
-            "key": "overbought (>70)",
-            "count": 8,
-            "win_rate_pct": 62.5
-          },
-          {
-            "key": "oversold (<30)",
-            "count": 6,
-            "win_rate_pct": 50
-          }
-        ],
-        "BY_TREND": [
-          {
-            "key": "above_ma20 (uptrend)",
-            "count": 38,
-            "win_rate_pct": 55.26
-          },
-          {
-            "key": "below_ma20 (downtrend)",
-            "count": 34,
-            "win_rate_pct": 44.12
-          }
-        ],
-        "BY_HOUR": [
-          {
-            "key": "06:00 ET",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -4.86,
-            "avg_pnl_usd": -14.36
-          },
-          {
-            "key": "09:00 ET",
-            "count": 15,
-            "win_rate_pct": 46.67,
-            "avg_pnl_pct": 0.71,
-            "avg_pnl_usd": 12.5
-          },
-          {
-            "key": "10:00 ET",
-            "count": 13,
-            "win_rate_pct": 38.46,
-            "avg_pnl_pct": -1.17,
-            "avg_pnl_usd": -6.53
-          },
-          {
-            "key": "11:00 ET",
-            "count": 6,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": -1.82,
-            "avg_pnl_usd": -7.2
-          },
-          {
-            "key": "12:00 ET",
-            "count": 8,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": 1.94,
-            "avg_pnl_usd": 11.99
-          },
-          {
-            "key": "13:00 ET",
-            "count": 6,
-            "win_rate_pct": 66.67,
-            "avg_pnl_pct": -0.39,
-            "avg_pnl_usd": -8.54
-          },
-          {
-            "key": "14:00 ET",
-            "count": 11,
-            "win_rate_pct": 63.64,
-            "avg_pnl_pct": 2.29,
-            "avg_pnl_usd": 13.08
-          },
-          {
-            "key": "15:00 ET",
-            "count": 8,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": -0.13,
-            "avg_pnl_usd": -0.92
-          },
-          {
-            "key": "16:00 ET",
-            "count": 1,
-            "win_rate_pct": 0,
-            "avg_pnl_pct": -3.04,
-            "avg_pnl_usd": -6.01
-          },
-          {
-            "key": "18:00 ET",
-            "count": 1,
-            "win_rate_pct": 100,
-            "avg_pnl_pct": 18.06,
-            "avg_pnl_usd": 32.75
-          },
-          {
-            "key": "19:00 ET",
-            "count": 2,
-            "win_rate_pct": 50,
-            "avg_pnl_pct": -1.71,
-            "avg_pnl_usd": -6.63
-          }
-        ],
-        "AVG_HOLD_TIME": {
-          "avg_minutes": 3868.99,
-          "avg_win_minutes": 3863.79,
-          "avg_loss_minutes": 3934.88,
-          "n": 72
-        }
-      },
-      "closed": {
-        "count": 72,
-        "wins": 36,
-        "losses": 36,
-        "win_rate_pct": 50,
-        "total_pnl_dollars": 239.7,
-        "low_sample": false
-      }
-    },
-    {
-      "portfolio": "news_only",
-      "exit_rule": "hold_24hr",
       "target_model": "fixed",
       "book_key": "news_only__hold_24hr",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 5036.26,
-      "growth_dollars": -4963.74,
-      "growth_pct": -49.64,
+      "total_equity": 5039.75,
+      "growth_dollars": -4960.25,
+      "growth_pct": -49.6,
       "free_cash": 3257.38,
-      "deployed_capital": 1778.88,
-      "cash_pct": 64.68,
-      "invested_pct": 35.32,
+      "deployed_capital": 1782.37,
+      "cash_pct": 64.63,
+      "invested_pct": 35.37,
       "open_count": 22,
       "analytics": {
         "OVERALL": {
@@ -4890,6 +4103,793 @@
         "losses": 211,
         "win_rate_pct": 44.47,
         "total_pnl_dollars": 64.1,
+        "low_sample": false
+      }
+    },
+    {
+      "portfolio": "news_only",
+      "exit_rule": "hold_24hr",
+      "target_model": "volatility",
+      "book_key": "news_only__hold_24hr__volatility",
+      "classification": "pilot",
+      "starting_balance": 10000,
+      "total_equity": 7091.46,
+      "growth_dollars": -2908.54,
+      "growth_pct": -29.09,
+      "free_cash": 4939.45,
+      "deployed_capital": 2152.01,
+      "cash_pct": 69.65,
+      "invested_pct": 30.35,
+      "open_count": 16,
+      "analytics": {
+        "OVERALL": {
+          "total_closed": 72,
+          "wins": 36,
+          "losses": 36,
+          "win_rate_pct": 50,
+          "avg_win_pct": 5.87,
+          "avg_loss_pct": -5.07,
+          "reward_risk_ratio": 1.16,
+          "total_pnl_pct": 2.4,
+          "total_pnl_dollars": 239.7
+        },
+        "BY_ASSET": [
+          {
+            "key": "AAVE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 18.06,
+            "total_pnl_dollars": 32.75
+          },
+          {
+            "key": "AEG",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.71,
+            "total_pnl_dollars": -1.26
+          },
+          {
+            "key": "AMN",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.01,
+            "total_pnl_dollars": 13.08
+          },
+          {
+            "key": "BA",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.5,
+            "total_pnl_dollars": -1.23
+          },
+          {
+            "key": "BB",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 8.31,
+            "total_pnl_dollars": 17.6
+          },
+          {
+            "key": "BHP",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 7.64,
+            "total_pnl_dollars": 15.63
+          },
+          {
+            "key": "BNB",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.21,
+            "total_pnl_dollars": 16.79
+          },
+          {
+            "key": "BSX",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.19,
+            "total_pnl_dollars": -0.42
+          },
+          {
+            "key": "BTC",
+            "count": 3,
+            "win_rate_pct": 33.33,
+            "total_pnl_pct": -10.16,
+            "total_pnl_dollars": -41.04
+          },
+          {
+            "key": "CCL",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.35,
+            "total_pnl_dollars": -0.77
+          },
+          {
+            "key": "CMI",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.73,
+            "total_pnl_dollars": 9.66
+          },
+          {
+            "key": "COIN",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -35.88
+          },
+          {
+            "key": "DRI",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.33,
+            "total_pnl_dollars": 0.97
+          },
+          {
+            "key": "DTSS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -73.16
+          },
+          {
+            "key": "EADSY",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.29,
+            "total_pnl_dollars": -0.56
+          },
+          {
+            "key": "ENPH",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -44.29
+          },
+          {
+            "key": "EQNR",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.41,
+            "total_pnl_dollars": 2.31
+          },
+          {
+            "key": "ERAS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2.77,
+            "total_pnl_dollars": -11.33
+          },
+          {
+            "key": "ETH",
+            "count": 2,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -14.61,
+            "total_pnl_dollars": -39.06
+          },
+          {
+            "key": "EU",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -91.34
+          },
+          {
+            "key": "EWTX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.44,
+            "total_pnl_dollars": 0.98
+          },
+          {
+            "key": "EXALF",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 9.96,
+            "total_pnl_dollars": 22.41
+          },
+          {
+            "key": "FRHC",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -5.07,
+            "total_pnl_dollars": -11.95
+          },
+          {
+            "key": "FTCO",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.43,
+            "total_pnl_dollars": -2.57
+          },
+          {
+            "key": "FUL",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -3.32,
+            "total_pnl_dollars": -7.03
+          },
+          {
+            "key": "GIC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.8,
+            "total_pnl_dollars": 6.84
+          },
+          {
+            "key": "GOOGL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.51,
+            "total_pnl_dollars": 3.37
+          },
+          {
+            "key": "HIVE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 20,
+            "total_pnl_dollars": 134.28
+          },
+          {
+            "key": "HOOD",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -50.16
+          },
+          {
+            "key": "ITA",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.25,
+            "total_pnl_dollars": 7.05
+          },
+          {
+            "key": "KR",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2.04,
+            "total_pnl_dollars": -4.79
+          },
+          {
+            "key": "LLY",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.63,
+            "total_pnl_dollars": -7.39
+          },
+          {
+            "key": "LPRO",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.32,
+            "total_pnl_dollars": 0.75
+          },
+          {
+            "key": "MANH",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.88,
+            "total_pnl_dollars": 8.12
+          },
+          {
+            "key": "MASI",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": 0,
+            "total_pnl_dollars": 0
+          },
+          {
+            "key": "MTN",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -6.12,
+            "total_pnl_dollars": -50.34
+          },
+          {
+            "key": "MU",
+            "count": 2,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -17.56,
+            "total_pnl_dollars": -46.36
+          },
+          {
+            "key": "NFE",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -68.48
+          },
+          {
+            "key": "NNOX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 20,
+            "total_pnl_dollars": 202.99
+          },
+          {
+            "key": "NOC",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -2.39,
+            "total_pnl_dollars": -4.73
+          },
+          {
+            "key": "NRXP",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.04,
+            "total_pnl_dollars": 7.48
+          },
+          {
+            "key": "NTRA",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.38,
+            "total_pnl_dollars": -2.64
+          },
+          {
+            "key": "OM",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -3.41,
+            "total_pnl_dollars": -19.24
+          },
+          {
+            "key": "OSS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -31.02
+          },
+          {
+            "key": "OTLK",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 20,
+            "total_pnl_dollars": 200
+          },
+          {
+            "key": "PAVS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -9.97,
+            "total_pnl_dollars": -53.49
+          },
+          {
+            "key": "PCVX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 3.98,
+            "total_pnl_dollars": 7.78
+          },
+          {
+            "key": "PEP",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -0.73,
+            "total_pnl_dollars": -1.38
+          },
+          {
+            "key": "PICS",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 5.61,
+            "total_pnl_dollars": 16.67
+          },
+          {
+            "key": "PRAX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 9.12,
+            "total_pnl_dollars": 24.44
+          },
+          {
+            "key": "QCOM",
+            "count": 2,
+            "win_rate_pct": 50,
+            "total_pnl_pct": -5.66,
+            "total_pnl_dollars": -15.76
+          },
+          {
+            "key": "RIVN",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -6.35,
+            "total_pnl_dollars": -13.7
+          },
+          {
+            "key": "RRGCX",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.12,
+            "total_pnl_dollars": 0.8
+          },
+          {
+            "key": "SDRL",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 0.29,
+            "total_pnl_dollars": 1.57
+          },
+          {
+            "key": "SLP",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 11.45,
+            "total_pnl_dollars": 89.77
+          },
+          {
+            "key": "SMMT",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -1.53,
+            "total_pnl_dollars": -2.7
+          },
+          {
+            "key": "SOL",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -3.04,
+            "total_pnl_dollars": -6.01
+          },
+          {
+            "key": "SPSC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.34,
+            "total_pnl_dollars": 5.72
+          },
+          {
+            "key": "SRAD",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.02,
+            "total_pnl_dollars": 7.59
+          },
+          {
+            "key": "SST",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 13.69,
+            "total_pnl_dollars": 43.09
+          },
+          {
+            "key": "TTEK",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 2.59,
+            "total_pnl_dollars": 6.79
+          },
+          {
+            "key": "USO",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.84,
+            "total_pnl_dollars": 9.53
+          },
+          {
+            "key": "UUUU",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 1.04,
+            "total_pnl_dollars": 2.09
+          },
+          {
+            "key": "WDC",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 7.59,
+            "total_pnl_dollars": 30.23
+          },
+          {
+            "key": "WGS",
+            "count": 1,
+            "win_rate_pct": 0,
+            "total_pnl_pct": -10,
+            "total_pnl_dollars": -21.87
+          },
+          {
+            "key": "WISE",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 7.75,
+            "total_pnl_dollars": 44.52
+          },
+          {
+            "key": "XLM",
+            "count": 1,
+            "win_rate_pct": 100,
+            "total_pnl_pct": 4.49,
+            "total_pnl_dollars": 8
+          }
+        ],
+        "BY_SOURCE": [
+          {
+            "key": "AMBCrypto",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 13.69,
+            "avg_pnl_usd": 43.09
+          },
+          {
+            "key": "BeInCrypto",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 18.06,
+            "avg_pnl_usd": 32.75
+          },
+          {
+            "key": "Business Wire RSS",
+            "count": 6,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.41,
+            "avg_pnl_usd": 1.56
+          },
+          {
+            "key": "CNBC",
+            "count": 4,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -1.78,
+            "avg_pnl_usd": -9.48
+          },
+          {
+            "key": "Cointelegraph RSS",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 9.29,
+            "avg_pnl_usd": 65.85
+          },
+          {
+            "key": "CryptoPotato",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -6.7,
+            "avg_pnl_usd": -17.81
+          },
+          {
+            "key": "Decrypt",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -10,
+            "avg_pnl_usd": -50.16
+          },
+          {
+            "key": "NewsBTC",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.73,
+            "avg_pnl_usd": 1
+          },
+          {
+            "key": "PR Newswire RSS",
+            "count": 11,
+            "win_rate_pct": 63.64,
+            "avg_pnl_pct": 2.47,
+            "avg_pnl_usd": 17.55
+          },
+          {
+            "key": "Seeking Alpha RSS",
+            "count": 24,
+            "win_rate_pct": 41.67,
+            "avg_pnl_pct": -0.87,
+            "avg_pnl_usd": -0.29
+          },
+          {
+            "key": "Yahoo Finance RSS",
+            "count": 17,
+            "win_rate_pct": 58.82,
+            "avg_pnl_pct": 0.19,
+            "avg_pnl_usd": -1.11
+          },
+          {
+            "key": "crypto.news",
+            "count": 2,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -5.66,
+            "avg_pnl_usd": -20.25
+          }
+        ],
+        "BY_CONFIDENCE": [
+          {
+            "key": "0.60-0.69",
+            "count": 56,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.49,
+            "avg_pnl_usd": 3.5
+          },
+          {
+            "key": "0.70-0.79",
+            "count": 16,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 0.08,
+            "avg_pnl_usd": 2.73
+          }
+        ],
+        "BY_EXIT_REASON": [
+          {
+            "key": "sell_eod_crypto",
+            "count": 33,
+            "win_rate_pct": 54.55,
+            "avg_pnl_pct": 1.06,
+            "avg_pnl_usd": 3.48
+          },
+          {
+            "key": "stop_loss",
+            "count": 15,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -8.74,
+            "avg_pnl_usd": -41.66
+          },
+          {
+            "key": "take_profit",
+            "count": 5,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 17.61,
+            "avg_pnl_usd": 118.48
+          },
+          {
+            "key": "time",
+            "count": 19,
+            "win_rate_pct": 68.42,
+            "avg_pnl_pct": 1.94,
+            "avg_pnl_usd": 8.27
+          }
+        ],
+        "BY_DIRECTION": [
+          {
+            "key": "BUY",
+            "count": 48,
+            "win_rate_pct": 45.83,
+            "avg_win_pct": 6.6,
+            "avg_loss_pct": -5.48
+          },
+          {
+            "key": "SELL",
+            "count": 24,
+            "win_rate_pct": 58.33,
+            "avg_win_pct": 4.71,
+            "avg_loss_pct": -4.01
+          }
+        ],
+        "BY_ALIGNMENT": [
+          {
+            "key": "aligned",
+            "count": 36,
+            "win_rate_pct": 61.11
+          },
+          {
+            "key": "conflict",
+            "count": 27,
+            "win_rate_pct": 40.74
+          },
+          {
+            "key": "neutral",
+            "count": 9,
+            "win_rate_pct": 33.33
+          }
+        ],
+        "BY_RSI_BAND": [
+          {
+            "key": "neutral (30-70)",
+            "count": 58,
+            "win_rate_pct": 48.28
+          },
+          {
+            "key": "overbought (>70)",
+            "count": 8,
+            "win_rate_pct": 62.5
+          },
+          {
+            "key": "oversold (<30)",
+            "count": 6,
+            "win_rate_pct": 50
+          }
+        ],
+        "BY_TREND": [
+          {
+            "key": "above_ma20 (uptrend)",
+            "count": 38,
+            "win_rate_pct": 55.26
+          },
+          {
+            "key": "below_ma20 (downtrend)",
+            "count": 34,
+            "win_rate_pct": 44.12
+          }
+        ],
+        "BY_HOUR": [
+          {
+            "key": "06:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -4.86,
+            "avg_pnl_usd": -14.36
+          },
+          {
+            "key": "09:00 ET",
+            "count": 15,
+            "win_rate_pct": 46.67,
+            "avg_pnl_pct": 0.71,
+            "avg_pnl_usd": 12.5
+          },
+          {
+            "key": "10:00 ET",
+            "count": 13,
+            "win_rate_pct": 38.46,
+            "avg_pnl_pct": -1.17,
+            "avg_pnl_usd": -6.53
+          },
+          {
+            "key": "11:00 ET",
+            "count": 6,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -1.82,
+            "avg_pnl_usd": -7.2
+          },
+          {
+            "key": "12:00 ET",
+            "count": 8,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": 1.94,
+            "avg_pnl_usd": 11.99
+          },
+          {
+            "key": "13:00 ET",
+            "count": 6,
+            "win_rate_pct": 66.67,
+            "avg_pnl_pct": -0.39,
+            "avg_pnl_usd": -8.54
+          },
+          {
+            "key": "14:00 ET",
+            "count": 11,
+            "win_rate_pct": 63.64,
+            "avg_pnl_pct": 2.29,
+            "avg_pnl_usd": 13.08
+          },
+          {
+            "key": "15:00 ET",
+            "count": 8,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -0.13,
+            "avg_pnl_usd": -0.92
+          },
+          {
+            "key": "16:00 ET",
+            "count": 1,
+            "win_rate_pct": 0,
+            "avg_pnl_pct": -3.04,
+            "avg_pnl_usd": -6.01
+          },
+          {
+            "key": "18:00 ET",
+            "count": 1,
+            "win_rate_pct": 100,
+            "avg_pnl_pct": 18.06,
+            "avg_pnl_usd": 32.75
+          },
+          {
+            "key": "19:00 ET",
+            "count": 2,
+            "win_rate_pct": 50,
+            "avg_pnl_pct": -1.71,
+            "avg_pnl_usd": -6.63
+          }
+        ],
+        "AVG_HOLD_TIME": {
+          "avg_minutes": 3868.99,
+          "avg_win_minutes": 3863.79,
+          "avg_loss_minutes": 3934.88,
+          "n": 72
+        }
+      },
+      "closed": {
+        "count": 72,
+        "wins": 36,
+        "losses": 36,
+        "win_rate_pct": 50,
+        "total_pnl_dollars": 239.7,
         "low_sample": false
       }
     },
@@ -8155,13 +8155,13 @@
       "book_key": "news_plus_ta__hold_24hr",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 6863.54,
-      "growth_dollars": -3136.46,
+      "total_equity": 6864.49,
+      "growth_dollars": -3135.51,
       "growth_pct": -31.36,
       "free_cash": 5558.33,
-      "deployed_capital": 1305.22,
-      "cash_pct": 80.98,
-      "invested_pct": 19.02,
+      "deployed_capital": 1306.16,
+      "cash_pct": 80.97,
+      "invested_pct": 19.03,
       "open_count": 10,
       "analytics": {
         "OVERALL": {
@@ -11301,13 +11301,13 @@
       "book_key": "trend_strict__hold_24hr",
       "classification": "production",
       "starting_balance": 10000,
-      "total_equity": 6841.66,
-      "growth_dollars": -3158.34,
-      "growth_pct": -31.58,
+      "total_equity": 6840.38,
+      "growth_dollars": -3159.62,
+      "growth_pct": -31.6,
       "free_cash": 5851.61,
-      "deployed_capital": 990.05,
-      "cash_pct": 85.53,
-      "invested_pct": 14.47,
+      "deployed_capital": 988.77,
+      "cash_pct": 85.55,
+      "invested_pct": 14.45,
       "open_count": 10,
       "analytics": {
         "OVERALL": {
@@ -14034,13 +14034,13 @@
         "book_key": "news_only__hold_24hr",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 5036.26,
-        "growth_dollars": -4963.74,
-        "growth_pct": -49.64,
+        "total_equity": 5039.75,
+        "growth_dollars": -4960.25,
+        "growth_pct": -49.6,
         "free_cash": 3257.38,
-        "deployed_capital": 1778.88,
-        "cash_pct": 64.68,
-        "invested_pct": 35.32,
+        "deployed_capital": 1782.37,
+        "cash_pct": 64.63,
+        "invested_pct": 35.37,
         "open_count": 22,
         "analytics": {
           "OVERALL": {
@@ -18664,13 +18664,13 @@
         "book_key": "news_plus_ta__hold_24hr",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 6863.54,
-        "growth_dollars": -3136.46,
+        "total_equity": 6864.49,
+        "growth_dollars": -3135.51,
         "growth_pct": -31.36,
         "free_cash": 5558.33,
-        "deployed_capital": 1305.22,
-        "cash_pct": 80.98,
-        "invested_pct": 19.02,
+        "deployed_capital": 1306.16,
+        "cash_pct": 80.97,
+        "invested_pct": 19.03,
         "open_count": 10,
         "analytics": {
           "OVERALL": {
@@ -23355,13 +23355,13 @@
         "book_key": "trend_strict__hold_24hr",
         "classification": "production",
         "starting_balance": 10000,
-        "total_equity": 6841.66,
-        "growth_dollars": -3158.34,
-        "growth_pct": -31.58,
+        "total_equity": 6840.38,
+        "growth_dollars": -3159.62,
+        "growth_pct": -31.6,
         "free_cash": 5851.61,
-        "deployed_capital": 990.05,
-        "cash_pct": 85.53,
-        "invested_pct": 14.47,
+        "deployed_capital": 988.77,
+        "cash_pct": 85.55,
+        "invested_pct": 14.45,
         "open_count": 10,
         "analytics": {
           "OVERALL": {
@@ -26305,13 +26305,13 @@
         "book_key": "news_only__hold_24hr__volatility",
         "classification": "pilot",
         "starting_balance": 10000,
-        "total_equity": 7104.41,
-        "growth_dollars": -2895.59,
-        "growth_pct": -28.96,
+        "total_equity": 7091.46,
+        "growth_dollars": -2908.54,
+        "growth_pct": -29.09,
         "free_cash": 4939.45,
-        "deployed_capital": 2164.96,
-        "cash_pct": 69.53,
-        "invested_pct": 30.47,
+        "deployed_capital": 2152.01,
+        "cash_pct": 69.65,
+        "invested_pct": 30.35,
         "open_count": 16,
         "analytics": {
           "OVERALL": {
@@ -28241,8 +28241,8 @@
       "status": "OPEN",
       "row_id": "4013",
       "asset_class": "stock",
-      "current_price": 565.66,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.15,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.77,
       "period_low": 564.03,
       "rule_version": "v2_20260609_stop2pct",
@@ -28257,8 +28257,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 0.86,
-      "unrealized_pnl_percent": 0.002856
+      "unrealized_pnl_dollars": 0.6,
+      "unrealized_pnl_percent": 0.001992
     },
     {
       "book_key": "trend_strict__hold_24hr",
@@ -28319,8 +28319,8 @@
       "status": "OPEN",
       "row_id": "3901",
       "asset_class": "stock",
-      "current_price": 565.66,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.15,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.77,
       "period_low": 558.93,
       "rule_version": "v2_20260609_stop2pct",
@@ -28335,8 +28335,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": -1.84,
-      "unrealized_pnl_percent": -0.005564
+      "unrealized_pnl_dollars": -2.13,
+      "unrealized_pnl_percent": -0.006435
     },
     {
       "book_key": "mean_reversion__hold_24hr",
@@ -28397,8 +28397,8 @@
       "status": "OPEN",
       "row_id": "3765",
       "asset_class": "crypto",
-      "current_price": 95.47,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 94.64,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 97.51,
       "period_low": 85.86,
       "rule_version": "v2_20260609_stop2pct",
@@ -28413,8 +28413,8 @@
       "stop_distance_pct": 9.1273,
       "target_distance_pct": 18.2545,
       "experiment_phase": "volatility_pilot",
-      "unrealized_pnl_dollars": 50.34,
-      "unrealized_pnl_percent": 0.09146
+      "unrealized_pnl_dollars": 45.12,
+      "unrealized_pnl_percent": 0.081971
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -28436,8 +28436,8 @@
       "status": "OPEN",
       "row_id": "3887",
       "asset_class": "stock",
-      "current_price": 565.66,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.15,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.77,
       "period_low": 559.005,
       "rule_version": "v2_20260609_stop2pct",
@@ -28452,8 +28452,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": -1.55,
-      "unrealized_pnl_percent": -0.005564
+      "unrealized_pnl_dollars": -1.79,
+      "unrealized_pnl_percent": -0.006435
     },
     {
       "book_key": "trend_strict__hold_24hr",
@@ -28982,8 +28982,8 @@
       "status": "OPEN",
       "row_id": "3783",
       "asset_class": "crypto",
-      "current_price": 60098,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 60193,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 60401.565,
       "period_low": 58963.51,
       "rule_version": "v2_20260609_stop2pct",
@@ -28998,8 +28998,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 5.06,
-      "unrealized_pnl_percent": 0.019241
+      "unrealized_pnl_dollars": 5.48,
+      "unrealized_pnl_percent": 0.020852
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -29216,8 +29216,8 @@
       "status": "OPEN",
       "row_id": "3739",
       "asset_class": "crypto",
-      "current_price": 95.35,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 93.945,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 97.825,
       "period_low": 83.585,
       "rule_version": "v2_20260609_stop2pct",
@@ -29232,8 +29232,8 @@
       "stop_distance_pct": 8.8047,
       "target_distance_pct": 17.6094,
       "experiment_phase": "volatility_pilot",
-      "unrealized_pnl_dollars": 70.79,
-      "unrealized_pnl_percent": 0.104739
+      "unrealized_pnl_dollars": 59.79,
+      "unrealized_pnl_percent": 0.08846
     },
     {
       "book_key": "trend_strict__hold_24hr",
@@ -29333,8 +29333,8 @@
       "status": "OPEN",
       "row_id": "3753",
       "asset_class": "crypto",
-      "current_price": 71.735,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 72.175,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 73.73,
       "period_low": 68.425,
       "rule_version": "v2_20260609_stop2pct",
@@ -29349,8 +29349,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 4.84,
-      "unrealized_pnl_percent": 0.018384
+      "unrealized_pnl_dollars": 6.48,
+      "unrealized_pnl_percent": 0.024631
     },
     {
       "book_key": "news_only__hold_24hr__volatility",
@@ -29528,8 +29528,8 @@
       "status": "OPEN",
       "row_id": "3749",
       "asset_class": "crypto",
-      "current_price": 71.735,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 72.175,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 73.79,
       "period_low": 68.425,
       "rule_version": "v2_20260609_stop2pct",
@@ -29544,8 +29544,8 @@
       "stop_distance_pct": 7.9033,
       "target_distance_pct": 15.8066,
       "experiment_phase": "volatility_pilot",
-      "unrealized_pnl_dollars": 10.65,
-      "unrealized_pnl_percent": 0.018384
+      "unrealized_pnl_dollars": 14.26,
+      "unrealized_pnl_percent": 0.024631
     },
     {
       "book_key": "mean_reversion__hold_24hr",
@@ -29645,8 +29645,8 @@
       "status": "OPEN",
       "row_id": "4018",
       "asset_class": "stock",
-      "current_price": 565.26,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.115,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.89,
       "period_low": 563.72,
       "rule_version": "v2_20260609_stop2pct",
@@ -29661,8 +29661,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 2.15,
-      "unrealized_pnl_percent": 0.003561
+      "unrealized_pnl_dollars": 1.24,
+      "unrealized_pnl_percent": 0.002054
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -29723,8 +29723,8 @@
       "status": "OPEN",
       "row_id": "3895",
       "asset_class": "stock",
-      "current_price": 565.26,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.115,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.89,
       "period_low": 559.025,
       "rule_version": "v2_20260609_stop2pct",
@@ -29739,8 +29739,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": -1.49,
-      "unrealized_pnl_percent": -0.004853
+      "unrealized_pnl_dollars": -1.96,
+      "unrealized_pnl_percent": -0.006373
     },
     {
       "book_key": "trend_strict__hold_24hr",
@@ -29918,8 +29918,8 @@
       "status": "OPEN",
       "row_id": "3995",
       "asset_class": "crypto",
-      "current_price": 60073.895,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 60220.695,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 60247.975,
       "period_low": 59518.68,
       "rule_version": "v2_20260609_stop2pct",
@@ -29934,8 +29934,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 0.93,
-      "unrealized_pnl_percent": 0.002702
+      "unrealized_pnl_dollars": 1.77,
+      "unrealized_pnl_percent": 0.005152
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -30074,8 +30074,8 @@
       "status": "OPEN",
       "row_id": "3879",
       "asset_class": "stock",
-      "current_price": 565.26,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.115,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.89,
       "period_low": 559.085,
       "rule_version": "v2_20260609_stop2pct",
@@ -30090,8 +30090,8 @@
       "stop_distance_pct": 4.936,
       "target_distance_pct": 9.8719,
       "experiment_phase": "volatility_pilot",
-      "unrealized_pnl_dollars": -1.11,
-      "unrealized_pnl_percent": -0.004853
+      "unrealized_pnl_dollars": -1.46,
+      "unrealized_pnl_percent": -0.006373
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -30152,8 +30152,8 @@
       "status": "OPEN",
       "row_id": "3757",
       "asset_class": "crypto",
-      "current_price": 71.75,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 72.175,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 73.67,
       "period_low": 68.425,
       "rule_version": "v2_20260609_stop2pct",
@@ -30168,8 +30168,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 7.16,
-      "unrealized_pnl_percent": 0.018597
+      "unrealized_pnl_dollars": 9.49,
+      "unrealized_pnl_percent": 0.024631
     },
     {
       "book_key": "news_only__hold_24hr",
@@ -30230,8 +30230,8 @@
       "status": "OPEN",
       "row_id": "4022",
       "asset_class": "stock",
-      "current_price": 565.26,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 566.115,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 567.89,
       "period_low": 563.72,
       "rule_version": "v2_20260609_stop2pct",
@@ -30246,8 +30246,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 2.34,
-      "unrealized_pnl_percent": 0.003561
+      "unrealized_pnl_dollars": 1.35,
+      "unrealized_pnl_percent": 0.002054
     },
     {
       "book_key": "news_plus_ta__hold_24hr",
@@ -30347,8 +30347,8 @@
       "status": "OPEN",
       "row_id": "3973",
       "asset_class": "crypto",
-      "current_price": 1.05675,
-      "current_price_at": "2026-06-27T03:15:28.902Z",
+      "current_price": 1.06035,
+      "current_price_at": "2026-06-27T03:25:28.958Z",
       "period_high": 1.06475,
       "period_low": 1.0374,
       "rule_version": "v2_20260609_stop2pct",
@@ -30363,8 +30363,8 @@
       "stop_distance_pct": null,
       "target_distance_pct": null,
       "experiment_phase": null,
-      "unrealized_pnl_dollars": 3.27,
-      "unrealized_pnl_percent": 0.010326
+      "unrealized_pnl_dollars": 4.35,
+      "unrealized_pnl_percent": 0.013767
     },
     {
       "book_key": "news_only__hold_24hr__volatility",
