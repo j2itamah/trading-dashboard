@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>System Health — Trading Analyst V2</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0f0f0f;
+      --border: #1f1f1f;
+      --text: #e5e5e5;
+      --muted: #737373;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --line: #262626;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #111 0%, var(--bg) 55%);
+      color: var(--text);
+      font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+    header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 0.02em; }
+    .meta { color: var(--muted); font-size: 12px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--panel); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .dot.green { background: var(--green); box-shadow: 0 0 10px rgba(34,197,94,.45); }
+    .dot.amber { background: var(--amber); box-shadow: 0 0 10px rgba(245,158,11,.35); }
+    .dot.red { background: var(--red); box-shadow: 0 0 10px rgba(239,68,68,.45); }
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .node {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 12px 12px;
+      min-height: 132px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .node::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: var(--line);
+      display: block;
+    }
+    .node:last-child::after { display: none; }
+    @media (max-width: 900px) { .node::after { display: none; } }
+    .node-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .node-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #fafafa; }
+    .status-pill {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 3px 7px; border-radius: 999px; border: 1px solid transparent;
+    }
+    .status-pill.green { color: var(--green); border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.08); }
+    .status-pill.amber { color: var(--amber); border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.08); }
+    .status-pill.red { color: var(--red); border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08); }
+    .summary { color: var(--muted); font-size: 11px; flex: 1; }
+    button.more {
+      align-self: flex-start;
+      background: transparent;
+      color: #a3a3a3;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    button.more:hover { color: #fff; border-color: #404040; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .card .value { font-size: 18px; font-weight: 600; }
+    .err { color: var(--red); margin-top: 12px; }
+    dialog {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #0a0a0a;
+      color: var(--text);
+      width: min(720px, calc(100vw - 24px));
+      padding: 0;
+    }
+    dialog::backdrop { background: rgba(0,0,0,.72); }
+    .modal-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .modal-head h3 { margin: 0; font-size: 15px; }
+    .modal-body { padding: 14px 16px 18px; max-height: 60vh; overflow: auto; }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #d4d4d4;
+    }
+    .close-btn {
+      background: transparent; border: 0; color: var(--muted); font-size: 20px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>System Health</h1>
+        <div class="meta">Live pipeline feed · read-only · polls Supabase RPC</div>
+      </div>
+      <div class="badge" id="overallBadge"><span class="dot" id="overallDot"></span><span id="overallText">loading</span></div>
+    </header>
+
+    <div class="pipeline" id="pipeline"></div>
+
+    <div class="cards">
+      <div class="card"><h2>Last updated</h2><div class="value" id="generatedAt">—</div></div>
+      <div class="card"><h2>Market session</h2><div class="value" id="marketSession">—</div></div>
+      <div class="card"><h2>Accounting</h2><div class="value" id="accounting">—</div></div>
+      <div class="card"><h2>Telegram</h2><div class="value" id="telegram">—</div></div>
+    </div>
+
+    <div class="err" id="error" hidden></div>
+  </div>
+
+  <dialog id="detailModal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Node details</h3>
+      <button class="close-btn" id="modalClose" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body"><pre id="modalBody"></pre></div>
+  </dialog>
+
+  <script>
+    const SUPABASE_URL = "https://alxtkdebryheweqbqlts.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_NHWa8EN8tJwhHvJnejvaZQ_PvbejkOL";
+    const POLL_MS = 5000;
+
+    const pipelineEl = document.getElementById("pipeline");
+    const overallBadge = document.getElementById("overallBadge");
+    const overallDot = document.getElementById("overallDot");
+    const overallText = document.getElementById("overallText");
+    const generatedAtEl = document.getElementById("generatedAt");
+    const marketSessionEl = document.getElementById("marketSession");
+    const accountingEl = document.getElementById("accounting");
+    const telegramEl = document.getElementById("telegram");
+    const errorEl = document.getElementById("error");
+    const modal = document.getElementById("detailModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+    document.getElementById("modalClose").onclick = () => modal.close();
+
+    let latestFeed = null;
+
+    function fmtTime(iso) {
+      if (!iso) return "—";
+      try { return new Date(iso).toLocaleString(); } catch { return iso; }
+    }
+
+    function renderOverall(status) {
+      overallDot.className = "dot " + (status || "amber");
+      overallText.textContent = (status || "unknown") + " overall";
+    }
+
+    function renderNode(node) {
+      const el = document.createElement("article");
+      el.className = "node";
+      el.innerHTML = `
+        <div class="node-head">
+          <div class="node-label">${node.label || node.id}</div>
+          <span class="status-pill ${node.status}">${node.status}</span>
+        </div>
+        <div class="summary">${node.summary || ""}</div>
+        <button class="more" type="button">More info</button>
+      `;
+      el.querySelector(".more").onclick = () => openDetail(node);
+      return el;
+    }
+
+    function openDetail(node) {
+      modalTitle.textContent = node.label || node.id;
+      modalBody.textContent = JSON.stringify({
+        id: node.id,
+        label: node.label,
+        status: node.status,
+        summary: node.summary,
+        signals: node.signals || {},
+      }, null, 2);
+      modal.showModal();
+    }
+
+    function renderFeed(data) {
+      latestFeed = data;
+      errorEl.hidden = true;
+      renderOverall(data.overall);
+      generatedAtEl.textContent = fmtTime(data.generated_at);
+      const market = data.market || {};
+      marketSessionEl.textContent = market.in_us_cash_session ? "US cash open" : "Off session";
+      const acct = data.accounting || {};
+      accountingEl.textContent = acct.accounting_ok ? "OK" : "Check";
+      const tg = data.telegram || {};
+      telegramEl.textContent = tg.on ? "On" : "Off";
+
+      pipelineEl.replaceChildren();
+      (data.pipeline || []).forEach((node) => pipelineEl.appendChild(renderNode(node)));
+    }
+
+    async function fetchFeed() {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/v2_system_health_feed`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: "{}",
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`RPC ${res.status}: ${text.slice(0, 240)}`);
+      }
+      const data = await res.json();
+      if (!data || data.read_only !== true) {
+        throw new Error("Unexpected feed payload");
+      }
+      renderFeed(data);
+    }
+
+    async function tick() {
+      try {
+        await fetchFeed();
+      } catch (err) {
+        errorEl.hidden = false;
+        errorEl.textContent = String(err.message || err);
+      }
+    }
+
+    tick();
+    setInterval(tick, POLL_MS);
+  </script>
+</body>
+</html>
