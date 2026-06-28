@@ -145,7 +145,10 @@
       <div class="card"><h2>Accounting</h2><div class="value" id="accounting">—</div></div>
       <div class="card"><h2>Telegram</h2><div class="value" id="telegram">—</div></div>
       <div class="card"><h2>Leader</h2><div class="value" id="perfLeader">—</div><div class="meta" id="perfLeaderSub">—</div></div>
+      <div class="card"><h2>Last trade</h2><div class="value" id="lastTradeAsset">—</div><div class="meta" id="lastTradeSub">—</div></div>
+      <div class="card"><h2>Matrix opens</h2><div class="value" id="matrixOpenCount">—</div></div>
       <div class="card"><h2>CryptoLab opens</h2><div class="value" id="cryptoOpenCount">—</div></div>
+      <div class="card"><h2>Total opens</h2><div class="value" id="totalOpenCount">—</div></div>
     </div>
 
     <section style="margin-top:24px">
@@ -162,6 +165,26 @@
             </tr>
           </thead>
           <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section style="margin-top:24px">
+      <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px">Matrix20 open positions (stock books 23–42)</h2>
+      <div class="table-wrap" style="overflow:auto;max-height:320px;border:1px solid var(--border);border-radius:12px">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:#111;position:sticky;top:0">
+              <th style="text-align:left;padding:8px 10px">Asset</th>
+              <th style="text-align:left;padding:8px 10px">Side</th>
+              <th style="text-align:right;padding:8px 10px">Stake</th>
+              <th style="text-align:right;padding:8px 10px">Entry</th>
+              <th style="text-align:right;padding:8px 10px">Now</th>
+              <th style="text-align:right;padding:8px 10px">U/P</th>
+              <th style="text-align:left;padding:8px 10px">Book</th>
+            </tr>
+          </thead>
+          <tbody id="matrixPositionsBody"></tbody>
         </table>
       </div>
     </section>
@@ -212,8 +235,13 @@
     const telegramEl = document.getElementById("telegram");
     const perfLeaderEl = document.getElementById("perfLeader");
     const perfLeaderSubEl = document.getElementById("perfLeaderSub");
+    const lastTradeAssetEl = document.getElementById("lastTradeAsset");
+    const lastTradeSubEl = document.getElementById("lastTradeSub");
+    const matrixOpenCountEl = document.getElementById("matrixOpenCount");
     const cryptoOpenCountEl = document.getElementById("cryptoOpenCount");
+    const totalOpenCountEl = document.getElementById("totalOpenCount");
     const leaderboardBody = document.getElementById("leaderboardBody");
+    const matrixPositionsBody = document.getElementById("matrixPositionsBody");
     const positionsBody = document.getElementById("positionsBody");
     const errorEl = document.getElementById("error");
     const modal = document.getElementById("detailModal");
@@ -291,10 +319,8 @@
         </tr>`).join("") || `<tr><td colspan="5" style="padding:12px;color:var(--muted)">No leaderboard rows</td></tr>`;
     }
 
-    function renderPositions(block) {
-      const positions = (block && block.positions) || [];
-      cryptoOpenCountEl.textContent = String(block?.open_count ?? positions.length ?? 0);
-      positionsBody.innerHTML = positions.slice(0, 100).map((p) => `
+    function renderPositionRows(positions, emptyLabel) {
+      return (positions || []).slice(0, 100).map((p) => `
         <tr style="border-top:1px solid var(--line)">
           <td style="padding:8px 10px">${p.asset || "—"}</td>
           <td style="padding:8px 10px">${p.side || p.direction || "—"}</td>
@@ -302,8 +328,35 @@
           <td style="padding:8px 10px;text-align:right">${fmtUsd(p.entry_price)}</td>
           <td style="padding:8px 10px;text-align:right">${fmtUsd(p.current_price)}</td>
           <td style="padding:8px 10px;text-align:right;color:${Number(p.unrealized_pnl) >= 0 ? "var(--green)" : "var(--red)"}">${fmtUsd(p.unrealized_pnl)}</td>
-          <td style="padding:8px 10px">${p.account_key || "—"}</td>
-        </tr>`).join("") || `<tr><td colspan="7" style="padding:12px;color:var(--muted)">No open CryptoLab positions</td></tr>`;
+          <td style="padding:8px 10px">${p.portfolio || p.book_key || p.account_key || "—"}</td>
+        </tr>`).join("") || `<tr><td colspan="7" style="padding:12px;color:var(--muted)">${emptyLabel}</td></tr>`;
+    }
+
+    function renderLastTrade(lastTrade) {
+      const lt = lastTrade || {};
+      if (!lt.at) {
+        lastTradeAssetEl.textContent = "—";
+        lastTradeSubEl.textContent = "No trade events";
+        return;
+      }
+      const book = lt.portfolio || lt.book_key || lt.account_key || "—";
+      lastTradeAssetEl.textContent = `${lt.asset || "—"} ${lt.side || lt.direction || ""}`.trim();
+      const pnl = Number(lt.realized_pnl);
+      const pnlText = Number.isFinite(pnl) ? fmtUsd(pnl) : "—";
+      lastTradeSubEl.textContent = `${book} · ${lt.status || "—"} · ${pnlText} · ${fmtTime(lt.at)}`;
+    }
+
+    function renderPositions(block, matrixBlock, openBlock) {
+      const matrixPositions = (matrixBlock && matrixBlock.positions) || [];
+      const cryptoPositions = (block && block.positions) || [];
+      const combined = (openBlock && openBlock.positions) || matrixPositions.concat(cryptoPositions);
+
+      matrixOpenCountEl.textContent = String(matrixBlock?.open_count ?? matrixPositions.length ?? 0);
+      cryptoOpenCountEl.textContent = String(block?.open_count ?? cryptoPositions.length ?? 0);
+      totalOpenCountEl.textContent = String(openBlock?.open_count ?? combined.length ?? 0);
+
+      matrixPositionsBody.innerHTML = renderPositionRows(matrixPositions, "No open Matrix20 positions");
+      positionsBody.innerHTML = renderPositionRows(cryptoPositions, "No open CryptoLab positions");
     }
 
     function renderFeed(data) {
@@ -323,7 +376,8 @@
         data.performance_leader,
         data.performance_epoch?.epoch_date
       );
-      renderPositions(data.cryptolab_positions);
+      renderLastTrade(data.last_trade);
+      renderPositions(data.cryptolab_positions, data.matrix_positions, data.open_positions);
 
       pipelineEl.replaceChildren();
       (data.pipeline || []).forEach((node) => pipelineEl.appendChild(renderNode(node)));
