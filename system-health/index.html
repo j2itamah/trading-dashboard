@@ -144,7 +144,47 @@
       <div class="card"><h2>Market session</h2><div class="value" id="marketSession">—</div></div>
       <div class="card"><h2>Accounting</h2><div class="value" id="accounting">—</div></div>
       <div class="card"><h2>Telegram</h2><div class="value" id="telegram">—</div></div>
+      <div class="card"><h2>Leader</h2><div class="value" id="perfLeader">—</div><div class="meta" id="perfLeaderSub">—</div></div>
+      <div class="card"><h2>CryptoLab opens</h2><div class="value" id="cryptoOpenCount">—</div></div>
     </div>
+
+    <section style="margin-top:24px">
+      <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px">Performance leaderboard · % since epoch open</h2>
+      <div class="table-wrap" style="overflow:auto;border:1px solid var(--border);border-radius:12px">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:#111">
+              <th style="text-align:left;padding:8px 10px">#</th>
+              <th style="text-align:left;padding:8px 10px">Book</th>
+              <th style="text-align:right;padding:8px 10px">Return %</th>
+              <th style="text-align:right;padding:8px 10px">Return $</th>
+              <th style="text-align:left;padding:8px 10px">Build</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section style="margin-top:24px">
+      <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px">CryptoLab open positions</h2>
+      <div class="table-wrap" style="overflow:auto;max-height:420px;border:1px solid var(--border);border-radius:12px">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:#111;position:sticky;top:0">
+              <th style="text-align:left;padding:8px 10px">Asset</th>
+              <th style="text-align:left;padding:8px 10px">Side</th>
+              <th style="text-align:right;padding:8px 10px">Stake</th>
+              <th style="text-align:right;padding:8px 10px">Entry</th>
+              <th style="text-align:right;padding:8px 10px">Now</th>
+              <th style="text-align:right;padding:8px 10px">U/P</th>
+              <th style="text-align:left;padding:8px 10px">Account</th>
+            </tr>
+          </thead>
+          <tbody id="positionsBody"></tbody>
+        </table>
+      </div>
+    </section>
 
     <div class="err" id="error" hidden></div>
   </div>
@@ -170,6 +210,11 @@
     const marketSessionEl = document.getElementById("marketSession");
     const accountingEl = document.getElementById("accounting");
     const telegramEl = document.getElementById("telegram");
+    const perfLeaderEl = document.getElementById("perfLeader");
+    const perfLeaderSubEl = document.getElementById("perfLeaderSub");
+    const cryptoOpenCountEl = document.getElementById("cryptoOpenCount");
+    const leaderboardBody = document.getElementById("leaderboardBody");
+    const positionsBody = document.getElementById("positionsBody");
     const errorEl = document.getElementById("error");
     const modal = document.getElementById("detailModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -215,6 +260,52 @@
       modal.showModal();
     }
 
+    function fmtUsd(n) {
+      const v = Number(n);
+      if (!Number.isFinite(v)) return "—";
+      return v.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+    }
+
+    function fmtPct(n) {
+      const v = Number(n);
+      if (!Number.isFinite(v)) return "—";
+      return (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
+    }
+
+    function renderLeaderboard(rows, leader, epoch) {
+      const top = leader && leader.book_key ? leader : (rows && rows[0]);
+      if (top) {
+        perfLeaderEl.textContent = top.label || top.book_key || "—";
+        perfLeaderSubEl.textContent = `${fmtPct(top.return_pct)} · ${fmtUsd(top.return_usd)} · epoch ${epoch || "—"}`;
+      } else {
+        perfLeaderEl.textContent = "—";
+        perfLeaderSubEl.textContent = "—";
+      }
+      leaderboardBody.innerHTML = (rows || []).slice(0, 30).map((r) => `
+        <tr style="border-top:1px solid var(--line)">
+          <td style="padding:8px 10px">${r.rank ?? "—"}</td>
+          <td style="padding:8px 10px">${r.label || r.book_key || "—"}</td>
+          <td style="padding:8px 10px;text-align:right;color:${Number(r.return_pct) >= 0 ? "var(--green)" : "var(--red)"}">${fmtPct(r.return_pct)}</td>
+          <td style="padding:8px 10px;text-align:right">${fmtUsd(r.return_usd)}</td>
+          <td style="padding:8px 10px">${r.build_group || "—"}</td>
+        </tr>`).join("") || `<tr><td colspan="5" style="padding:12px;color:var(--muted)">No leaderboard rows</td></tr>`;
+    }
+
+    function renderPositions(block) {
+      const positions = (block && block.positions) || [];
+      cryptoOpenCountEl.textContent = String(block?.open_count ?? positions.length ?? 0);
+      positionsBody.innerHTML = positions.slice(0, 100).map((p) => `
+        <tr style="border-top:1px solid var(--line)">
+          <td style="padding:8px 10px">${p.asset || "—"}</td>
+          <td style="padding:8px 10px">${p.side || p.direction || "—"}</td>
+          <td style="padding:8px 10px;text-align:right">${fmtUsd(p.stake_amount)}</td>
+          <td style="padding:8px 10px;text-align:right">${fmtUsd(p.entry_price)}</td>
+          <td style="padding:8px 10px;text-align:right">${fmtUsd(p.current_price)}</td>
+          <td style="padding:8px 10px;text-align:right;color:${Number(p.unrealized_pnl) >= 0 ? "var(--green)" : "var(--red)"}">${fmtUsd(p.unrealized_pnl)}</td>
+          <td style="padding:8px 10px">${p.account_key || "—"}</td>
+        </tr>`).join("") || `<tr><td colspan="7" style="padding:12px;color:var(--muted)">No open CryptoLab positions</td></tr>`;
+    }
+
     function renderFeed(data) {
       latestFeed = data;
       errorEl.hidden = true;
@@ -226,6 +317,13 @@
       accountingEl.textContent = acct.accounting_ok ? "OK" : "Check";
       const tg = data.telegram || {};
       telegramEl.textContent = tg.on ? "On" : "Off";
+
+      renderLeaderboard(
+        data.performance_leaderboard,
+        data.performance_leader,
+        data.performance_epoch?.epoch_date
+      );
+      renderPositions(data.cryptolab_positions);
 
       pipelineEl.replaceChildren();
       (data.pipeline || []).forEach((node) => pipelineEl.appendChild(renderNode(node)));
