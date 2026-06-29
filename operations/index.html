@@ -1600,11 +1600,10 @@ document.addEventListener('keydown',function(e){
   if(open && e.key==='Tab'){var m=document.getElementById('tm-modal');var fc=m.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])');if(fc.length){var f=fc[0],l=fc[fc.length-1];if(e.shiftKey){if(document.activeElement===f){e.preventDefault();l.focus();}}else{if(document.activeElement===l){e.preventDefault();f.focus();}}}}
 });
 
-// TRA-94: Confidence vs Success scorecard (cross-build, from Supabase view)
+// TRA-94: Confidence vs Success scorecard — side-by-side CryptoLab vs Matrix
 (function(){
   var CONF_URL=SB_URL+'/rest/v1/v2_confidence_scorecard?select=*';
   var BANDS=['<0.6','0.6-0.7','0.7-0.8','>=0.8'];
-  var ICONS={cryptolab:'🧪',matrix:'📊'};
   var VICONS={crypto:'🪙',equities:'📈',ai:'🤖',quantum:'⚛️',political:'🏛️',tech:'💻'};
   function money(v){return '$'+Math.abs(v).toLocaleString(undefined,{maximumFractionDigits:0});}
   function load(){
@@ -1615,43 +1614,90 @@ document.addEventListener('keydown',function(e){
   function render(rows){
     var box=document.getElementById('conf-scorecard');if(!box)return;
     if(!rows||!rows.length){box.innerHTML='<span style="color:var(--ink-soft)">No confidence data yet</span>';return;}
-    var builds={};
-    rows.forEach(function(r){var k=r.build+'|'+r.vertical;if(!builds[k])builds[k]=[];builds[k].push(r);});
-    var h='<table style="width:100%;border-collapse:collapse;font-size:13px;line-height:1.6">';
-    h+='<thead><tr style="border-bottom:2px solid var(--line);color:var(--ink-soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px">';
-    h+='<th style="text-align:left;padding:6px 10px">Build / Vertical</th>';
-    h+='<th style="text-align:left;padding:6px 8px">Band</th>';
-    h+='<th style="text-align:right;padding:6px 8px">Trades</th>';
-    h+='<th style="text-align:right;padding:6px 8px">W / L</th>';
-    h+='<th style="text-align:right;padding:6px 8px">Win%</th>';
-    h+='<th style="text-align:right;padding:6px 8px">Avg P&L</th>';
-    h+='<th style="text-align:right;padding:6px 8px">Total P&L</th>';
-    h+='</tr></thead><tbody>';
-    Object.keys(builds).sort().forEach(function(key){
-      var parts=key.split('|'),bld=parts[0],vert=parts[1];
-      var bandMap={};builds[key].forEach(function(r){bandMap[r.confidence_band]=r;});
-      var first=true;
+    // Aggregate by build (all verticals combined)
+    var agg={};
+    rows.forEach(function(r){
+      var k=r.build+'|'+r.confidence_band;
+      if(!agg[k]) agg[k]={build:r.build,band:r.confidence_band,trades:0,wins:0,losses:0,flat:0,total_pnl:0};
+      var a=agg[k];
+      a.trades+=parseInt(r.trades)||0;
+      a.wins+=parseInt(r.wins)||0;
+      a.losses+=parseInt(r.losses)||0;
+      a.flat+=parseInt(r.flat)||0;
+      a.total_pnl+=parseFloat(r.total_pnl)||0;
+    });
+    // Matrix per-vertical detail
+    var vertDetail={};
+    rows.forEach(function(r){
+      if(r.build!=='matrix') return;
+      var k=r.vertical+'|'+r.confidence_band;
+      if(!vertDetail[k]) vertDetail[k]={vertical:r.vertical,band:r.confidence_band,trades:0,wins:0,losses:0,total_pnl:0};
+      var d=vertDetail[k];
+      d.trades+=parseInt(r.trades)||0;
+      d.wins+=parseInt(r.wins)||0;
+      d.losses+=parseInt(r.losses)||0;
+      d.total_pnl+=parseFloat(r.total_pnl)||0;
+    });
+
+    function bandCard(title,icon,buildKey,note){
+      var h='<div style="flex:1;min-width:300px">';
+      h+='<div style="font:600 14px \'Spline Sans\',sans-serif;margin-bottom:10px">'+icon+' '+title+'</div>';
+      h+='<table style="width:100%;border-collapse:collapse;font-size:13px;line-height:1.6">';
+      h+='<thead><tr style="border-bottom:2px solid var(--line);color:var(--ink-soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px">';
+      h+='<th style="text-align:left;padding:6px 8px">Band</th>';
+      h+='<th style="text-align:right;padding:6px 8px">Trades</th>';
+      h+='<th style="text-align:right;padding:6px 8px">W/L</th>';
+      h+='<th style="text-align:right;padding:6px 8px">Win%</th>';
+      h+='<th style="text-align:right;padding:6px 8px">Avg P&L</th>';
+      h+='<th style="text-align:right;padding:6px 8px">Total</th>';
+      h+='</tr></thead><tbody>';
+      var totalTrades=0,totalPnl=0;
       BANDS.forEach(function(band){
-        var r=bandMap[band];if(!r)return;
-        var pnl=parseFloat(r.total_pnl)||0;
-        var avg=parseFloat(r.avg_pnl)||0;
-        var wr=parseFloat(r.win_rate_pct)||0;
-        var pCls=pnl>=0?'pos-text':'neg-text';
-        var aCls=avg>=0?'pos-text':'neg-text';
+        var a=agg[buildKey+'|'+band];
+        if(!a||!a.trades) return;
+        var wr=(a.wins+a.losses)>0?100*a.wins/(a.wins+a.losses):0;
+        var avg=a.total_pnl/a.trades;
+        totalTrades+=a.trades; totalPnl+=a.total_pnl;
         h+='<tr style="border-bottom:1px solid var(--line)">';
-        if(first){h+='<td style="padding:6px 10px;font-weight:600">'+(ICONS[bld]||'')+' '+bld+' · '+(VICONS[vert]||'')+' '+vert+'</td>';first=false;}
-        else{h+='<td style="padding:6px 10px"></td>';}
         h+='<td style="padding:6px 8px;font-family:\'Spline Sans Mono\',monospace;font-size:12px">'+band+'</td>';
-        h+='<td style="text-align:right;padding:6px 8px">'+r.trades+'</td>';
-        h+='<td style="text-align:right;padding:6px 8px">'+r.wins+'/'+r.losses+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px;font-weight:600">'+a.trades+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px">'+a.wins+'/'+a.losses+'</td>';
         h+='<td style="text-align:right;padding:6px 8px;font-weight:600;'+(wr>=55?'color:var(--green)':wr<45?'color:var(--red)':'')+'">'+wr.toFixed(1)+'%</td>';
-        h+='<td style="text-align:right;padding:6px 8px" class="'+aCls+'">'+(avg>=0?'+':'-')+money(avg)+'</td>';
-        h+='<td style="text-align:right;padding:6px 8px;font-weight:600" class="'+pCls+'">'+(pnl>=0?'+':'-')+money(pnl)+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px;'+(avg>=0?'color:var(--green)':'color:var(--red)')+'">'+(avg>=0?'+':'-')+money(avg)+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px;font-weight:600;'+(a.total_pnl>=0?'color:var(--green)':'color:var(--red)')+'">'+(a.total_pnl>=0?'+':'-')+money(a.total_pnl)+'</td>';
         h+='</tr>';
       });
-    });
-    h+='</tbody></table>';
-    h+='<div style="margin-top:8px;font-size:11px;color:var(--ink-soft)">Excludes test/cleanup trades. CryptoLab confidence from raw_payload; matrix from v2_signals.</div>';
+      h+='<tr style="border-top:2px solid var(--line);font-weight:700">';
+      h+='<td style="padding:6px 8px">ALL</td>';
+      h+='<td style="text-align:right;padding:6px 8px">'+totalTrades+'</td>';
+      h+='<td colspan="2"></td><td></td>';
+      h+='<td style="text-align:right;padding:6px 8px;'+(totalPnl>=0?'color:var(--green)':'color:var(--red)')+'">'+(totalPnl>=0?'+':'-')+money(totalPnl)+'</td>';
+      h+='</tr>';
+      h+='</tbody></table>';
+      if(note) h+='<div style="margin-top:6px;font-size:11px;color:var(--ink-soft)">'+note+'</div>';
+      h+='</div>';
+      return h;
+    }
+
+    var h='<div style="display:flex;gap:28px;flex-wrap:wrap">';
+    h+=bandCard('CryptoLab','🧪','cryptolab','Confidence from raw_payload.');
+    h+=bandCard('Matrix (all 20 books)','📊','matrix','Confidence from v2_signals. Excludes test/cleanup.');
+    h+='</div>';
+
+    // Matrix vertical breakdown
+    var verts=[];
+    Object.keys(vertDetail).forEach(function(k){var d=vertDetail[k]; if(verts.indexOf(d.vertical)<0) verts.push(d.vertical);});
+    if(verts.length>0){
+      h+='<div style="margin-top:10px;font-size:11px;color:var(--ink-soft)"><b>Matrix by vertical:</b> ';
+      verts.sort().forEach(function(v,i){
+        var tot=0,w=0,l=0,pnl=0;
+        BANDS.forEach(function(b){var d=vertDetail[v+'|'+b];if(d){tot+=d.trades;w+=d.wins;l+=d.losses;pnl+=d.total_pnl;}});
+        var wr=(w+l)>0?(100*w/(w+l)).toFixed(0)+'%':'—';
+        if(i>0) h+=' · ';
+        h+=(VICONS[v]||'')+' '+v+': '+tot+' trades, '+wr+' win, '+(pnl>=0?'+':'-')+money(pnl);
+      });
+      h+='</div>';
+    }
     box.innerHTML=h;
   }
   load();setInterval(load,60000);
