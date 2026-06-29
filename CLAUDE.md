@@ -24,6 +24,10 @@
 13. **Prevention parity across BOTH builds.** The root fix AND its preventative measure go to Build A and Build B (and all matrix books) — TRA-129 explicitly includes the prevention, not just the patch.
 14. **Fix-on-sight during click-throughs/audits.** When clicking through screens or auditing, proactively FIX issues you notice — don't just log them — **especially on the Health/Diagnostics pages** (false green/red, empty/0/undefined panels, "Invalid Date"). If a fix genuinely needs review first, file it AND flag it immediately; never leave a noticed defect unaddressed.
 
+### Standing behavior (TRA-155)
+
+15. **Linear is the durable error queue.** Every session/loop, list open Linear issues labeled "watchdog" and work them per rules 12-14 (root-cause → fix → prevent, both builds). The watchdog auto-logs system errors to Linear; agents always check for open watchdog issues before starting other work.
+
 ### The goal (what every change serves)
 
 11. Prove a **measurable, net-of-cost edge per vertical** (Crypto/Political/AI/Quantum) on both builds → **prop-firm-ready** (TRA-138 thresholds: profit factor >1.3, positive net expectancy, drawdown within prop limits, sufficient sample). Honest measurement above all.
