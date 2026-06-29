@@ -504,6 +504,10 @@
   <div id="today-feed"></div>
   <div id="signal-quality" class="sq-wrap"></div>
   <div id="fc-gate-panel"></div>
+  <div id="conf-scorecard-wrap" style="margin-top:20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 24px;box-shadow:var(--shadow);">
+    <h2 style="font:600 14px 'Spline Sans',sans-serif;color:var(--ink);margin:0 0 12px">Confidence vs Success <span style="font-weight:400;color:var(--ink-soft);font-size:11px">· TRA-94</span></h2>
+    <div id="conf-scorecard">Loading…</div>
+  </div>
 </div>
 
 <script>
@@ -1595,6 +1599,63 @@ document.addEventListener('keydown',function(e){
   if(open && e.key==='ArrowRight') tmNav(1);
   if(open && e.key==='Tab'){var m=document.getElementById('tm-modal');var fc=m.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])');if(fc.length){var f=fc[0],l=fc[fc.length-1];if(e.shiftKey){if(document.activeElement===f){e.preventDefault();l.focus();}}else{if(document.activeElement===l){e.preventDefault();f.focus();}}}}
 });
+
+// TRA-94: Confidence vs Success scorecard (cross-build, from Supabase view)
+(function(){
+  var CONF_URL=SB_URL+'/rest/v1/v2_confidence_scorecard?select=*';
+  var BANDS=['<0.6','0.6-0.7','0.7-0.8','>=0.8'];
+  var ICONS={cryptolab:'🧪',matrix:'📊'};
+  var VICONS={crypto:'🪙',equities:'📈',ai:'🤖',quantum:'⚛️',political:'🏛️',tech:'💻'};
+  function money(v){return '$'+Math.abs(v).toLocaleString(undefined,{maximumFractionDigits:0});}
+  function load(){
+    fetch(CONF_URL,{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}})
+    .then(function(r){return r.ok?r.json():[];})
+    .then(render).catch(function(){render([]);});
+  }
+  function render(rows){
+    var box=document.getElementById('conf-scorecard');if(!box)return;
+    if(!rows||!rows.length){box.innerHTML='<span style="color:var(--ink-soft)">No confidence data yet</span>';return;}
+    var builds={};
+    rows.forEach(function(r){var k=r.build+'|'+r.vertical;if(!builds[k])builds[k]=[];builds[k].push(r);});
+    var h='<table style="width:100%;border-collapse:collapse;font-size:13px;line-height:1.6">';
+    h+='<thead><tr style="border-bottom:2px solid var(--line);color:var(--ink-soft);font-size:11px;text-transform:uppercase;letter-spacing:.5px">';
+    h+='<th style="text-align:left;padding:6px 10px">Build / Vertical</th>';
+    h+='<th style="text-align:left;padding:6px 8px">Band</th>';
+    h+='<th style="text-align:right;padding:6px 8px">Trades</th>';
+    h+='<th style="text-align:right;padding:6px 8px">W / L</th>';
+    h+='<th style="text-align:right;padding:6px 8px">Win%</th>';
+    h+='<th style="text-align:right;padding:6px 8px">Avg P&L</th>';
+    h+='<th style="text-align:right;padding:6px 8px">Total P&L</th>';
+    h+='</tr></thead><tbody>';
+    Object.keys(builds).sort().forEach(function(key){
+      var parts=key.split('|'),bld=parts[0],vert=parts[1];
+      var bandMap={};builds[key].forEach(function(r){bandMap[r.confidence_band]=r;});
+      var first=true;
+      BANDS.forEach(function(band){
+        var r=bandMap[band];if(!r)return;
+        var pnl=parseFloat(r.total_pnl)||0;
+        var avg=parseFloat(r.avg_pnl)||0;
+        var wr=parseFloat(r.win_rate_pct)||0;
+        var pCls=pnl>=0?'pos-text':'neg-text';
+        var aCls=avg>=0?'pos-text':'neg-text';
+        h+='<tr style="border-bottom:1px solid var(--line)">';
+        if(first){h+='<td style="padding:6px 10px;font-weight:600">'+(ICONS[bld]||'')+' '+bld+' · '+(VICONS[vert]||'')+' '+vert+'</td>';first=false;}
+        else{h+='<td style="padding:6px 10px"></td>';}
+        h+='<td style="padding:6px 8px;font-family:\'Spline Sans Mono\',monospace;font-size:12px">'+band+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px">'+r.trades+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px">'+r.wins+'/'+r.losses+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px;font-weight:600;'+(wr>=55?'color:var(--green)':wr<45?'color:var(--red)':'')+'">'+wr.toFixed(1)+'%</td>';
+        h+='<td style="text-align:right;padding:6px 8px" class="'+aCls+'">'+(avg>=0?'+':'')+money(avg)+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px;font-weight:600" class="'+pCls+'">'+(pnl>=0?'+':'')+money(pnl)+'</td>';
+        h+='</tr>';
+      });
+    });
+    h+='</tbody></table>';
+    h+='<div style="margin-top:8px;font-size:11px;color:var(--ink-soft)">Excludes test/cleanup trades. CryptoLab confidence from raw_payload; matrix from v2_signals.</div>';
+    box.innerHTML=h;
+  }
+  load();setInterval(load,60000);
+})();
 </script>
 
 <div class="tm-overlay" id="tm-overlay" onclick="if(event.target===this)closeTradeModal()"><div class="tm-modal" id="tm-modal" role="dialog" aria-modal="true" aria-label="Trade details"></div></div>
