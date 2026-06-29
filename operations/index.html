@@ -1645,8 +1645,8 @@ document.addEventListener('keydown',function(e){
         h+='<td style="text-align:right;padding:6px 8px">'+r.trades+'</td>';
         h+='<td style="text-align:right;padding:6px 8px">'+r.wins+'/'+r.losses+'</td>';
         h+='<td style="text-align:right;padding:6px 8px;font-weight:600;'+(wr>=55?'color:var(--green)':wr<45?'color:var(--red)':'')+'">'+wr.toFixed(1)+'%</td>';
-        h+='<td style="text-align:right;padding:6px 8px" class="'+aCls+'">'+(avg>=0?'+':'')+money(avg)+'</td>';
-        h+='<td style="text-align:right;padding:6px 8px;font-weight:600" class="'+pCls+'">'+(pnl>=0?'+':'')+money(pnl)+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px" class="'+aCls+'">'+(avg>=0?'+':'-')+money(avg)+'</td>';
+        h+='<td style="text-align:right;padding:6px 8px;font-weight:600" class="'+pCls+'">'+(pnl>=0?'+':'-')+money(pnl)+'</td>';
         h+='</tr>';
       });
     });
