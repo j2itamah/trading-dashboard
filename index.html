@@ -441,12 +441,16 @@ th{font:700 10px/1 var(--font-code);text-transform:uppercase;color:var(--text-3)
     <section class="tab tab-content-start" id="tab-direction">
       <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Direction Performance (LONG vs SHORT)</h3><span class="chart-card-subtitle">TRA-172 · P&L by direction · clean trades only</span></div></div>
         <div id="dir-summary-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px"></div></div>
+      <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Build A vs Build B — Side by Side</h3><span class="chart-card-subtitle">Cross-build direction consistency · A=BUY/SELL, B=LONG/SHORT (normalised)</span></div></div>
+        <div id="dir-engine-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px"></div></div>
       <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Direction Summary Table</h3><span class="chart-card-subtitle">Trades, win%, avg win/loss, R:R, net, PF, expectancy</span></div></div>
         <div class="table-wrap"><table><thead><tr><th>Direction</th><th>Trades</th><th>Win%</th><th>Avg Win</th><th>Avg Loss</th><th>R:R</th><th>Net P&L</th><th>PF</th><th>Expectancy</th></tr></thead><tbody id="dir-summary-rows"></tbody></table></div></div>
       <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Direction × Exit Reason</h3><span class="chart-card-subtitle">Breakdown by how trades closed</span></div></div>
         <div class="table-wrap"><table><thead><tr><th>Direction</th><th>Exit Reason</th><th>Trades</th><th>Win%</th><th>Net P&L</th></tr></thead><tbody id="dir-exit-rows"></tbody></table></div></div>
-      <div class="glass-card chart-card-large"><div class="chart-card-header"><div><h3 class="chart-card-title">Direction × Ticker (Top Movers)</h3><span class="chart-card-subtitle">Top 20 ticker/direction combos by trade count</span></div></div>
+      <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Direction × Ticker (Top Movers)</h3><span class="chart-card-subtitle">Top 20 ticker/direction combos by trade count</span></div></div>
         <div class="table-wrap"><table><thead><tr><th>Direction</th><th>Ticker</th><th>Trades</th><th>Win%</th><th>Net P&L</th><th>Expectancy</th></tr></thead><tbody id="dir-ticker-rows"></tbody></table></div></div>
+      <div class="glass-card chart-card-large"><div class="chart-card-header"><div><h3 class="chart-card-title">Direction × News Source</h3><span class="chart-card-subtitle">Per-feed / source-tier split within direction · measurable new-feed effect</span></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Direction</th><th>Source</th><th>Tier</th><th>Trades</th><th>Win%</th><th>Net P&L</th><th>Expectancy</th></tr></thead><tbody id="dir-source-rows"></tbody></table></div></div>
     </section>
 
     <section class="tab tab-content-start" id="tab-edgeproof">
@@ -815,20 +819,40 @@ function bindOpsPreviewEvents(){
 
 const REAL_EXIT_REASONS=new Set(['time','stop_loss','take_profit','take_profit_hit','early_exit','TIMEOUT','LOSS','PROFIT','EOD_PROFIT_TAKE']);
 function isRealTrade(t){const er=t.exit_reason||t.status||'';return REAL_EXIT_REASONS.has(er);}
-const DIR_API='https://news-trading-system-production.up.railway.app/api/direction-stats?engine=A';
+const DIR_API='https://news-trading-system-production.up.railway.app/api/direction-stats';
+function _normDir(d){return(d==='BUY'||d==='LONG')?'LONG':'SHORT';}
+function _dirCard(d,label){const nc=d.net>=0?'var(--green)':'var(--crimson)';const pc=d.pf>=1.3?'var(--green)':d.pf>=1?'var(--gold)':'var(--crimson)';return `<div class="glass-card" style="padding:16px;border-left:3px solid ${nc}"><div style="font:700 15px/1.2 var(--font-outfit)">${esc(label)}</div><div style="font:800 24px/1.1 var(--font-outfit);color:${nc};margin:8px 0">${fmt(d.net)}</div><div style="font:600 12px/1 var(--font-code);color:var(--text-2)">${d.trades} trades | ${d.winPct}% win | PF <span style="color:${pc}">${d.pf}</span> | R:R ${d.rr}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div style="font-size:12px"><span style="color:var(--text-3)">Avg Win</span><br><strong class="pos-text">${fmt(d.avgWin)}</strong></div><div style="font-size:12px"><span style="color:var(--text-3)">Avg Loss</span><br><strong class="neg-text">-${fmt(d.avgLoss)}</strong></div><div style="font-size:12px"><span style="color:var(--text-3)">Expectancy</span><br><strong style="color:${nc}">${fmt(d.expectancy)}/trade</strong></div></div></div>`;}
+function _parseDir(d){const net=parseFloat(d.net_pnl||0);const pf=parseFloat(d.profit_factor||0);const rr=d.avg_win&&d.avg_loss?Math.abs(d.avg_win/d.avg_loss).toFixed(2):'—';return{direction:d.direction,trades:d.trades,winPct:d.win_pct,avgWin:parseFloat(d.avg_win||0),avgLoss:Math.abs(parseFloat(d.avg_loss||0)),rr,net,pf,expectancy:parseFloat(d.expectancy||0)};}
 async function renderDirection(){
-  const cardsEl=$('dir-summary-cards');const rowsEl=$('dir-summary-rows');const exitEl=$('dir-exit-rows');const tickerEl=$('dir-ticker-rows');
+  const cardsEl=$('dir-summary-cards');const rowsEl=$('dir-summary-rows');const exitEl=$('dir-exit-rows');const tickerEl=$('dir-ticker-rows');const engineEl=$('dir-engine-cards');const srcEl=$('dir-source-rows');
   if(cardsEl)cardsEl.innerHTML='<div style="text-align:center;padding:24px;color:var(--text-3)">Loading direction stats from API…</div>';
   try{
-    const r=await fetch(DIR_API,{cache:'no-store'});const data=await r.json();
+    const r=await fetch(DIR_API+'?nocache='+Date.now(),{cache:'no-store'});const data=await r.json();
     if(data.error){if(cardsEl)cardsEl.innerHTML='<div class="trade-list-empty">API error: '+esc(data.error)+'</div>';return;}
-    const dirs=(data.direction_summary||[]).map(d=>{const net=parseFloat(d.net_pnl||0);const pf=parseFloat(d.profit_factor||0);const rr=d.avg_win&&d.avg_loss?Math.abs(d.avg_win/d.avg_loss).toFixed(2):'—';return{direction:d.direction,trades:d.trades,winPct:d.win_pct,avgWin:parseFloat(d.avg_win||0),avgLoss:Math.abs(parseFloat(d.avg_loss||0)),rr,net,pf,expectancy:parseFloat(d.expectancy||0)};});
-    if(cardsEl)cardsEl.innerHTML=dirs.map(d=>{const nc=d.net>=0?'var(--green)':'var(--crimson)';const pc=d.pf>=1.3?'var(--green)':d.pf>=1?'var(--gold)':'var(--crimson)';const label=d.direction==='BUY'?'LONG (BUY)':'SHORT (SELL)';return `<div class="glass-card" style="padding:16px;border-left:3px solid ${nc}"><div style="font:700 15px/1.2 var(--font-outfit)">${label}</div><div style="font:800 24px/1.1 var(--font-outfit);color:${nc};margin:8px 0">${fmt(d.net)}</div><div style="font:600 12px/1 var(--font-code);color:var(--text-2)">${d.trades} trades | ${d.winPct}% win | PF <span style="color:${pc}">${d.pf}</span> | R:R ${d.rr}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div style="font-size:12px"><span style="color:var(--text-3)">Avg Win</span><br><strong class="pos-text">${fmt(d.avgWin)}</strong></div><div style="font-size:12px"><span style="color:var(--text-3)">Avg Loss</span><br><strong class="neg-text">-${fmt(d.avgLoss)}</strong></div><div style="font-size:12px"><span style="color:var(--text-3)">Expectancy</span><br><strong style="color:${nc}">${fmt(d.expectancy)}/trade</strong></div></div></div>`;}).join('')||'<div class="trade-list-empty">No direction data from API.</div>';
-    if(rowsEl)rowsEl.innerHTML=dirs.map(d=>{const nc=d.net>=0?'pos-text':'neg-text';return `<tr><td style="font-weight:700">${d.direction==='BUY'?'LONG':'SHORT'}</td><td>${d.trades}</td><td>${d.winPct}%</td><td class="pos-text">${fmt(d.avgWin)}</td><td class="neg-text">-${fmt(d.avgLoss)}</td><td>${d.rr}</td><td class="${nc}" style="font-weight:700">${fmt(d.net)}</td><td>${d.pf}</td><td class="${nc}">${fmt(d.expectancy)}</td></tr>`;}).join('');
+    const dirs=(data.direction_summary||[]).map(_parseDir);
+    if(cardsEl)cardsEl.innerHTML=dirs.map(d=>_dirCard(d,_normDir(d.direction)+' ('+d.direction+')')).join('')||'<div class="trade-list-empty">No direction data from API.</div>';
+    if(rowsEl)rowsEl.innerHTML=dirs.map(d=>{const nc=d.net>=0?'pos-text':'neg-text';return `<tr><td style="font-weight:700">${_normDir(d.direction)}</td><td>${d.trades}</td><td>${d.winPct}%</td><td class="pos-text">${fmt(d.avgWin)}</td><td class="neg-text">-${fmt(d.avgLoss)}</td><td>${d.rr}</td><td class="${nc}" style="font-weight:700">${fmt(d.net)}</td><td>${d.pf}</td><td class="${nc}">${fmt(d.expectancy)}</td></tr>`;}).join('');
+    // Build A vs Build B side-by-side
+    if(engineEl){
+      const byEng=data.by_engine||[];
+      const engines={A:{},B:{}};
+      byEng.forEach(r=>{const nd=_normDir(r.direction);const key=r.engine+'_'+nd;engines[r.engine]=engines[r.engine]||{};engines[r.engine][nd]=_parseDir(r);});
+      let h='';
+      ['LONG','SHORT'].forEach(nd=>{
+        h+='<div style="grid-column:1/-1;font:700 13px/1 var(--font-outfit);color:var(--text-2);margin-top:8px;border-bottom:1px solid var(--border);padding-bottom:6px">'+nd+'</div>';
+        const a=engines.A?.[nd];const b=engines.B?.[nd];
+        h+=a?_dirCard(a,'Build A · '+nd+' ('+a.direction+')'):'<div class="glass-card" style="padding:16px;color:var(--text-3)">Build A · '+nd+' — no data</div>';
+        h+=b?_dirCard(b,'Build B · '+nd+' ('+b.direction+')'):'<div class="glass-card" style="padding:16px;color:var(--text-3)">Build B · '+nd+' — no data</div>';
+      });
+      engineEl.innerHTML=h;
+    }
     const exitData=data.by_exit_reason||[];
-    if(exitEl)exitEl.innerHTML=exitData.map(d=>{const nc=parseFloat(d.net_pnl||0)>=0?'pos-text':'neg-text';return `<tr><td>${d.direction==='BUY'?'LONG':'SHORT'}</td><td>${d.exit_reason}</td><td>${d.trades}</td><td>${d.win_pct}%</td><td class="${nc}">${fmt(d.net_pnl)}</td></tr>`;}).join('');
+    if(exitEl)exitEl.innerHTML=exitData.map(d=>{const nc=parseFloat(d.net_pnl||0)>=0?'pos-text':'neg-text';return `<tr><td>${_normDir(d.direction)}</td><td>${d.exit_reason}</td><td>${d.trades}</td><td>${d.win_pct}%</td><td class="${nc}">${fmt(d.net_pnl)}</td></tr>`;}).join('');
     const tickerData=(data.by_ticker||[]).slice(0,20);
-    if(tickerEl)tickerEl.innerHTML=tickerData.map(d=>{const nc=parseFloat(d.net_pnl||0)>=0?'pos-text':'neg-text';return `<tr><td>${d.direction==='BUY'?'LONG':'SHORT'}</td><td style="font-weight:600">${esc(d.asset)}</td><td>${d.trades}</td><td>${d.win_pct}%</td><td class="${nc}">${fmt(d.net_pnl)}</td><td class="${nc}">${fmt(d.expectancy)}</td></tr>`;}).join('');
+    if(tickerEl)tickerEl.innerHTML=tickerData.map(d=>{const nc=parseFloat(d.net_pnl||0)>=0?'pos-text':'neg-text';return `<tr><td>${_normDir(d.direction)}</td><td style="font-weight:600">${esc(d.asset)}</td><td>${d.trades}</td><td>${d.win_pct}%</td><td class="${nc}">${fmt(d.net_pnl)}</td><td class="${nc}">${fmt(d.expectancy)}</td></tr>`;}).join('');
+    // Per-source split
+    const srcData=data.by_source||[];
+    if(srcEl)srcEl.innerHTML=srcData.map(d=>{const nc=parseFloat(d.net_pnl||0)>=0?'pos-text':'neg-text';return `<tr><td>${_normDir(d.direction)}</td><td style="font-weight:600">${esc(d.source)}</td><td>${d.tier}</td><td>${d.trades}</td><td>${d.win_pct}%</td><td class="${nc}">${fmt(d.net_pnl)}</td><td class="${nc}">${fmt(d.expectancy)}</td></tr>`;}).join('')||'<tr><td colspan="7" style="color:var(--text-3)">No source data</td></tr>';
   }catch(e){console.error('renderDirection',e);if(cardsEl)cardsEl.innerHTML='<div class="trade-list-empty">Failed to load direction stats: '+esc(e.message)+'</div>';}
 }
 const EP_SB_URL='https://alxtkdebryheweqbqlts.supabase.co/rest/v1/';
