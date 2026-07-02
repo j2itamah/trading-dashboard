@@ -121,7 +121,17 @@ html,body{min-height:100%;background:var(--bg);background-image:var(--bg-grad);c
 .alloc-legend-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-2)}
 .alloc-legend-item strong{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--text);font-size:10px}
 @media(max-width:600px){.alloc-legend{grid-template-columns:1fr;max-height:120px}.doughnut-wrap{height:220px}}
-.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.lab-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1400px){.lab-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
+.lab-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);transition:border-color .2s}
+.lab-card:hover{border-color:var(--cyan)}
+.lab-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.lab-card-title{font:700 14px/1.2 var(--font-outfit);display:flex;align-items:center;gap:6px}
+.lab-card-equity{font:800 20px/1 var(--font-outfit);font-variant-numeric:tabular-nums;margin-bottom:8px}
+.lab-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px}
+.lab-card-stats .stat-label{font:700 9px/1 var(--font-code);text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)}
+.lab-card-stats .stat-val{font:600 13px/1 var(--font-outfit);font-variant-numeric:tabular-nums;margin-top:2px}
 .ops-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .kv{display:grid;gap:0;font-size:13px}.kv div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--border-soft)}
 .kv strong{font-variant-numeric:tabular-nums}
@@ -314,6 +324,7 @@ th{font:700 10px/1 var(--font-code);text-transform:uppercase;color:var(--text-3)
       <button data-tab="guardrails">🛡️ Guardrails</button>
       <button data-tab="lab">⚖️ Strategy Lab</button>
       <button data-tab="research">🧪 CryptoLab &amp; Tags</button>
+      <button data-tab="labspace">🔬 Lab Space</button>
       <button data-tab="pipeline">🌪️ Pipeline</button>
       <button data-tab="diary">📓 Trader's Diary</button>
       <button data-tab="direction">📐 Direction</button>
@@ -431,6 +442,12 @@ th{font:700 10px/1 var(--font-code);text-transform:uppercase;color:var(--text-3)
       <div class="glass-card chart-card-large"><div class="chart-card-header"><div><h3 class="chart-card-title">20-Book Production Matrix</h3><span class="chart-card-subtitle">All canonical production books including matrix20 EOD legs</span></div></div><div class="table-wrap"><table><thead><tr><th>Strategy</th><th>Lifecycle</th><th>Exit</th><th>Equity</th><th>Open</th><th>Closed</th><th>P/L</th></tr></thead><tbody id="research-matrix-books"></tbody></table></div></div>
     </section>
 
+    <section class="tab tab-content-start" id="tab-labspace">
+      <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Industry Lab Space</h3><span class="chart-card-subtitle">7 isolated vertical labs + CryptoLab · $10k each · news_only gate · ticker + keyword routing</span></div></div><div class="lab-grid" id="labspace-cards"></div></div>
+      <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Lab Positions</h3><span class="chart-card-subtitle">All open + recent closed trades across labs</span></div></div><div id="labspace-trades"></div></div>
+      <div class="glass-card chart-card-large"><div class="chart-card-header"><div><h3 class="chart-card-title">Ticker Routing Map</h3><span class="chart-card-subtitle">Which tickers route to which lab</span></div></div><div class="table-wrap"><table><thead><tr><th>Lab</th><th>Tickers</th><th>Count</th></tr></thead><tbody id="labspace-routing"></tbody></table></div></div>
+    </section>
+
     <section class="tab tab-content-start" id="tab-diary">
       <div class="glass-card chart-card-large" style="margin-bottom:16px"><div class="chart-card-header"><div><h3 class="chart-card-title">Trader's Diary</h3><span class="chart-card-subtitle">Accepted opens vs rejected gate events · read-only</span></div>
         <div class="exit-btn-group" id="diary-toggle"><button class="active" data-diary="accepted">Accepted</button><button data-diary="rejected">Rejected</button></div></div>
@@ -499,7 +516,7 @@ const fmtPct=n=>(Number(n||0)>=0?'+':'')+Number(n||0).toFixed(2)+'%';
 const todayUtc=()=>new Date().toISOString().slice(0,10);
 function isMarketOpenNow(){const d=new Date(),wd=d.getUTCDay();if(wd===0||wd===6)return false;const m=d.getUTCHours()*60+d.getUTCMinutes();return m>=810&&m<1200;}
 function deriveComputedKeys(){
-  if(!DATA.cryptolab){const accts=DATA.crypto_lab_accounts||[];const trades=DATA.crypto_lab_trade_intents||[];const acct=accts.find(a=>a.account_key==='crypto_x_only')||accts[0]||{};if(acct.account_key||trades.length){DATA.cryptolab={account:acct,trades:trades};}else if(DATA.build_b_cryptolab){const bb=DATA.build_b_cryptolab;DATA.cryptolab={account:{account_key:'crypto_x_only',free_cash:bb.portfolio.cash||0,deployed_cost:bb.portfolio.equity-(bb.portfolio.cash||0),unrealized_pnl:bb.portfolio.open_pnl||0,starting_balance:bb.portfolio.initial_cash||100000,marked_equity:bb.portfolio.equity||0},trades:[...(bb.positions||[]).map(p=>({...p,status:'OPEN',asset:p.ticker})),...(bb.closed_trades||[]).map(t=>({...t,status:'CLOSED',asset:t.ticker}))]};}else{DATA.cryptolab={account:acct,trades:trades};}}
+  if(!DATA.cryptolab){const accts=DATA.crypto_lab_accounts||[];const trades=DATA.crypto_lab_trade_intents||[];const acct=accts.find(a=>a.account_key==='crypto_news_only'&&String(a.active)!=='false')||accts.find(a=>String(a.active)!=='false')||accts[0]||{};if(acct.account_key||trades.length){DATA.cryptolab={account:acct,trades:trades};}else if(DATA.build_b_cryptolab){const bb=DATA.build_b_cryptolab;DATA.cryptolab={account:{account_key:'crypto_x_only',free_cash:bb.portfolio.cash||0,deployed_cost:bb.portfolio.equity-(bb.portfolio.cash||0),unrealized_pnl:bb.portfolio.open_pnl||0,starting_balance:bb.portfolio.initial_cash||100000,marked_equity:bb.portfolio.equity||0},trades:[...(bb.positions||[]).map(p=>({...p,status:'OPEN',asset:p.ticker})),...(bb.closed_trades||[]).map(t=>({...t,status:'CLOSED',asset:t.ticker}))]};}else{DATA.cryptolab={account:acct,trades:trades};}}
   if(!DATA.matrix20_fanout){const bm=DATA.book_metrics||[];const matrix=bm.filter(b=>b.classification!=='archive'&&b.experiment_phase!=='archive');const routed=matrix.filter(b=>(b.open_count||0)>0||(b.closed_count||0)>0).length;DATA.matrix20_fanout={ok:routed>=matrix.length*0.8,partial_today:matrix.length-routed,books_routed:routed,expected_books:matrix.length};}
   if(!DATA.experiment_labs){const trades=DATA.closed_trades||[];const aiTrades=trades.filter(t=>(t.industry_vertical||'').toLowerCase()==='ai');const qTrades=trades.filter(t=>(t.industry_vertical||'').toLowerCase()==='quantum');DATA.experiment_labs={ai_world:{active:aiTrades.length>0,trade_count:aiTrades.length},quantum_realm:{active:qTrades.length>0,trade_count:qTrades.length}};}
   if(!DATA.political_books_lab){const trades=DATA.closed_trades||[];const pol=trades.filter(t=>(t.industry_vertical||'').toLowerCase()==='political');DATA.political_books_lab={trades:pol,trade_count:pol.length,generated_at:DATA.generated_at};}
@@ -509,7 +526,7 @@ function deriveComputedKeys(){
 }
 async function loadData(){const r=await fetch(EP_SB_URL+'v2_dashboard_cache?select=data,generated_at&id=eq.1',{headers:EP_HDR,cache:'no-store'});if(!r.ok)throw new Error('cache fetch failed ('+r.status+')');const rows=await r.json();if(!rows.length)throw new Error('cache empty');DATA=rows[0].data||{};DATA.generated_at=rows[0].generated_at;deriveComputedKeys();const el=$('data-age');if(el){const age=dataAgeMinutes();el.textContent=age!=null?age+'m ago':'—';}applyLayoutPreviewOverlay();}
 let LIVE_OK=false,LIVE_TS=null;
-async function loadLiveData(){try{const f=(u,o)=>fetch(EP_SB_URL+u,{headers:EP_HDR,cache:'no-store'}).then(r=>r.ok?r.json():null);const[bk,sm,ps,hl,sh,op,cl]=await Promise.all([f('v2_official_book_metrics?select=*'),f('v2_official_account_summary?select=*'),f('v2_prop_account_summary?select=*'),f('v2_health?select=*'),f('v2_shadow_health?select=*'),f('v2_dashboard_trades?status=eq.OPEN&exit_time=is.null&select=*'),f('v2_dashboard_trades?status=eq.CLOSED&order=exit_time.desc&limit=50&select=*')]);if(bk){DATA.official_books=bk;DATA.book_metrics=bk;DATA.prop_books=bk;}if(sm&&sm[0])DATA.official_summary=sm[0];if(ps&&ps[0])DATA.prop_summary=ps[0];if(hl&&hl[0])DATA.health=hl[0];if(sh&&sh[0])DATA.shadow_health=sh[0];if(op)DATA.open_positions=op;if(cl)DATA.closed_trades=cl;LIVE_OK=true;LIVE_TS=new Date().toISOString().slice(11,19);deriveComputedKeys();const el=$('live-badge');if(el)el.textContent='LIVE '+LIVE_TS;return true;}catch(e){console.warn('Live fetch failed:',e.message);LIVE_OK=false;return false;}}
+async function loadLiveData(){try{const f=(u,o)=>fetch(EP_SB_URL+u,{headers:EP_HDR,cache:'no-store'}).then(r=>r.ok?r.json():null);const[bk,sm,ps,hl,sh,op,cl,labSum,labTrades,labMap]=await Promise.all([f('v2_official_book_metrics?select=*'),f('v2_official_account_summary?select=*'),f('v2_prop_account_summary?select=*'),f('v2_health?select=*'),f('v2_shadow_health?select=*'),f('v2_dashboard_trades?status=eq.OPEN&exit_time=is.null&select=*'),f('v2_dashboard_trades?status=eq.CLOSED&order=exit_time.desc&limit=50&select=*'),f('v2_lab_space_summary?select=*'),f('v2_experiment_lab_trade_intents?select=*&order=created_at.desc&limit=100'),f('v2_lab_ticker_map?select=*')]);if(bk){DATA.official_books=bk;DATA.book_metrics=bk;DATA.prop_books=bk;}if(sm&&sm[0])DATA.official_summary=sm[0];if(ps&&ps[0])DATA.prop_summary=ps[0];if(hl&&hl[0])DATA.health=hl[0];if(sh&&sh[0])DATA.shadow_health=sh[0];if(op)DATA.open_positions=op;if(cl)DATA.closed_trades=cl;if(labSum)DATA.lab_space=labSum;if(labTrades)DATA.lab_trades=labTrades;if(labMap)DATA.lab_ticker_map=labMap;LIVE_OK=true;LIVE_TS=new Date().toISOString().slice(11,19);deriveComputedKeys();const el=$('live-badge');if(el)el.textContent='LIVE '+LIVE_TS;return true;}catch(e){console.warn('Live fetch failed:',e.message);LIVE_OK=false;return false;}}
 function refreshUI(){renderHeader();renderCards();renderOverviewExtras();renderOverviewCharts();if($('tab-operations')?.classList.contains('active')){renderOpsGlance();updatePreviewBadge();renderOpsTrades();renderOps();}if($('tab-overview')?.classList.contains('active'))renderOverviewTrades();}
 function isArchiveBook(b){const cls=String(b?.classification||'').toLowerCase(),phase=String(b?.experiment_phase||'').toLowerCase();return cls==='archive'||phase==='archive';}
 function isProductionBook(b){const cls=String(b?.classification||'').toLowerCase();if(cls==='production')return true;const k=String(b?.book_key||'');return k.includes('_expansion_20260625_cp340')||k.includes('_clean_20260624_cp327');}
@@ -950,7 +967,71 @@ async function renderEdgeProof(){
     } else if(cc){cc.innerHTML='<p>No confidence calibration data yet.</p>';}
   }catch(e){console.error('renderEdgeProof',e);const vs=$('ep-vertical-summary');if(vs)vs.innerHTML='<p>Error loading edge-proof data.</p>';}
 }
-function bindNav(){const titles={operations:['Operations','Live trades · latency · system health'],overview:['Overview Dashboard','5 strategies · filtered by active exit model'],guardrails:['Prop Guardrails','Profit targets, daily loss caps, per-book buffers'],lab:['Strategy Lab','Head-to-head on the same news stream'],research:['CryptoLab & Research Tags','CryptoLab · Political · Matrix20 · AI/Quantum'],pipeline:['Pipeline Funnel','Scanner → signals → trades → rejections'],diary:['Trader\'s Diary','Accepted opens vs rejected gate events'],direction:['Direction Performance','LONG vs SHORT · P&L, win%, R:R, expectancy · clean trades only'],edgeproof:['Edge-Proof & Prop-Firm Readiness','TRA-138 · Per vertical & book metrics · live from Supabase'],diagnostics:['Diagnostics & Health','Shadow health, ledger integrity, latency']};document.querySelectorAll('#nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));$('tab-'+btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'instant'});document.querySelector('.main')?.scrollTo?.({top:0});const t=titles[btn.dataset.tab]||['Dashboard',''];$('page-title').textContent=t[0];$('page-sub').textContent=t[1];updateHeaderScope(btn.dataset.tab);if(btn.dataset.tab==='lab')renderLab();if(btn.dataset.tab==='guardrails')renderGuardrails();if(btn.dataset.tab==='pipeline')renderPipeline();if(btn.dataset.tab==='direction')renderDirection();if(btn.dataset.tab==='edgeproof')renderEdgeProof();if(btn.dataset.tab==='diagnostics')renderDiagnostics();if(btn.dataset.tab==='research')renderResearch();if(btn.dataset.tab==='diary')renderDiary();if(btn.dataset.tab==='operations')renderOps();if(btn.dataset.tab==='overview'){renderOverviewExtras();renderOverviewCharts();renderCards();}}));document.querySelectorAll('[data-exit]').forEach(b=>b.addEventListener('click',()=>setExit(b.dataset.exit)));document.querySelectorAll('[data-diary]').forEach(b=>b.addEventListener('click',()=>{DIARY_MODE=b.dataset.diary;document.querySelectorAll('[data-diary]').forEach(x=>x.classList.toggle('active',x.dataset.diary===DIARY_MODE));renderDiary();}));}
+function renderLabSpace(){
+  const labs=DATA.lab_space||[];const trades=DATA.lab_trades||[];const tmap=DATA.lab_ticker_map||[];
+  const icons={ai_world:'🤖',quantum_realm:'⚛️',political:'🏛️',biotech:'🧬',energy:'⚡',defense:'🛡️',semiconductors:'💾',crypto_news_only:'🪙'};
+  const names={ai_world:'AI World',quantum_realm:'Quantum Realm',political:'Political',biotech:'Biotech',energy:'Energy',defense:'Defense',semiconductors:'Semiconductors',crypto_news_only:'CryptoLab'};
+  const cc=$('labspace-cards');
+  if(cc){
+    let h='';
+    const sorted=[...labs].sort((a,b)=>(a.lab_key||'').localeCompare(b.lab_key||''));
+    sorted.forEach(lab=>{
+      const k=lab.lab_key||'';const eq=Number(lab.equity||lab.initial_capital||10000);
+      const init=Number(lab.initial_capital||10000);const ret=Number(lab.return_pct||0);
+      const oc=Number(lab.open_count||0);const cc2=Number(lab.closed_count||0);
+      const wins=Number(lab.wins||0);const wr=cc2>0?(100*wins/cc2).toFixed(1):'—';
+      const pnl=Number(lab.total_realized||0);
+      const retColor=ret>=0?'var(--green)':'var(--crimson)';
+      const pnlColor=pnl>=0?'var(--green)':'var(--crimson)';
+      h+='<div class="lab-card">';
+      h+='<div class="lab-card-head"><span class="lab-card-title">'+(icons[k]||'🔬')+' '+(names[k]||k)+'</span>';
+      h+='<span class="chip '+(lab.active!==false?'ok':'fail')+'">'+((lab.active!==false)?'ACTIVE':'OFF')+'</span></div>';
+      h+='<div class="lab-card-equity" style="color:'+retColor+'">$'+fmt(eq)+'</div>';
+      h+='<div class="lab-card-stats">';
+      h+='<div><span class="stat-label">Open</span><div class="stat-val">'+oc+'</div></div>';
+      h+='<div><span class="stat-label">Closed</span><div class="stat-val">'+cc2+'</div></div>';
+      h+='<div><span class="stat-label">Win%</span><div class="stat-val">'+wr+'%</div></div>';
+      h+='<div><span class="stat-label">P&L</span><div class="stat-val" style="color:'+pnlColor+'">'+(pnl>=0?'+':'')+fmt(pnl)+'</div></div>';
+      h+='<div><span class="stat-label">Return</span><div class="stat-val" style="color:'+retColor+'">'+(ret>=0?'+':'')+ret.toFixed(2)+'%</div></div>';
+      h+='<div><span class="stat-label">Tickers</span><div class="stat-val">'+(Number(lab.ticker_count)||0)+'</div></div>';
+      h+='</div></div>';
+    });
+    if(!sorted.length) h='<p style="color:var(--text-2)">No lab accounts found. Waiting for data…</p>';
+    cc.innerHTML=h;
+  }
+  const tc=$('labspace-trades');
+  if(tc){
+    if(trades.length){
+      let h='<div class="table-wrap"><table><thead><tr><th>Lab</th><th>Time</th><th>Asset</th><th>Dir</th><th>Qty</th><th>Entry</th><th>Status</th><th>P&L</th></tr></thead><tbody>';
+      trades.slice(0,50).forEach(t=>{
+        const pnl=Number(t.realized_pnl||0);const st=t.status||'OPEN';
+        const pnlStr=st==='CLOSED'?((pnl>=0?'+':'')+fmt(pnl)):'—';
+        const pnlCol=pnl>=0?'var(--green)':'var(--crimson)';
+        const ts=t.created_at?(new Date(t.created_at)).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+        h+='<tr><td>'+(icons[t.lab_key]||'🔬')+' '+(names[t.lab_key]||t.lab_key||'—')+'</td>';
+        h+='<td>'+ts+'</td><td style="font-family:var(--font-code);font-weight:600">'+(t.asset||'—')+'</td>';
+        h+='<td>'+(t.direction||t.side||'—')+'</td><td>'+(t.shares||t.quantity||'—')+'</td>';
+        h+='<td>$'+(Number(t.entry_price||0).toFixed(2))+'</td>';
+        h+='<td><span class="chip '+(st==='OPEN'?'ok':st==='CLOSED'?'watch':'')+'">'+st+'</span></td>';
+        h+='<td style="font-weight:600;color:'+pnlCol+'">'+pnlStr+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+      tc.innerHTML=h;
+    } else {
+      tc.innerHTML='<p style="color:var(--text-2)">No lab trades yet. Waiting for first signal…</p>';
+    }
+  }
+  const rc=$('labspace-routing');
+  if(rc&&tmap.length){
+    const byLab={};tmap.forEach(r=>{const k=r.lab_key||'';if(!byLab[k])byLab[k]=[];byLab[k].push(r.ticker);});
+    let h='';Object.keys(byLab).sort().forEach(k=>{
+      const tickers=byLab[k].sort();
+      h+='<tr><td>'+(icons[k]||'🔬')+' '+(names[k]||k)+'</td><td style="font-family:var(--font-code);font-size:11px">'+tickers.join(', ')+'</td><td style="font-weight:600">'+tickers.length+'</td></tr>';
+    });
+    rc.innerHTML=h;
+  }
+}
+function bindNav(){const titles={operations:['Operations','Live trades · latency · system health'],overview:['Overview Dashboard','5 strategies · filtered by active exit model'],guardrails:['Prop Guardrails','Profit targets, daily loss caps, per-book buffers'],lab:['Strategy Lab','Head-to-head on the same news stream'],research:['CryptoLab & Research Tags','CryptoLab · Political · Matrix20 · AI/Quantum'],labspace:['Lab Space','7 industry vertical labs · isolated $10k accounts · ticker routing'],pipeline:['Pipeline Funnel','Scanner → signals → trades → rejections'],diary:['Trader\'s Diary','Accepted opens vs rejected gate events'],direction:['Direction Performance','LONG vs SHORT · P&L, win%, R:R, expectancy · clean trades only'],edgeproof:['Edge-Proof & Prop-Firm Readiness','TRA-138 · Per vertical & book metrics · live from Supabase'],diagnostics:['Diagnostics & Health','Shadow health, ledger integrity, latency']};document.querySelectorAll('#nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));$('tab-'+btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'instant'});document.querySelector('.main')?.scrollTo?.({top:0});const t=titles[btn.dataset.tab]||['Dashboard',''];$('page-title').textContent=t[0];$('page-sub').textContent=t[1];updateHeaderScope(btn.dataset.tab);if(btn.dataset.tab==='lab')renderLab();if(btn.dataset.tab==='guardrails')renderGuardrails();if(btn.dataset.tab==='pipeline')renderPipeline();if(btn.dataset.tab==='direction')renderDirection();if(btn.dataset.tab==='edgeproof')renderEdgeProof();if(btn.dataset.tab==='diagnostics')renderDiagnostics();if(btn.dataset.tab==='research')renderResearch();if(btn.dataset.tab==='diary')renderDiary();if(btn.dataset.tab==='labspace')renderLabSpace();if(btn.dataset.tab==='operations')renderOps();if(btn.dataset.tab==='overview'){renderOverviewExtras();renderOverviewCharts();renderCards();}}));document.querySelectorAll('[data-exit]').forEach(b=>b.addEventListener('click',()=>setExit(b.dataset.exit)));document.querySelectorAll('[data-diary]').forEach(b=>b.addEventListener('click',()=>{DIARY_MODE=b.dataset.diary;document.querySelectorAll('[data-diary]').forEach(x=>x.classList.toggle('active',x.dataset.diary===DIARY_MODE));renderDiary();}));}
 async function init(){const steps=[['load',async()=>{await loadData();}],['nav',()=>{bindNav();bindTradeEvents();bindBookEvents();bindOpsPreviewEvents();}],['header',()=>{renderHeader();updateHeaderScope('overview');}],['ops',()=>renderOps()],['cards',()=>renderCards()],['overviewCharts',()=>renderOverviewCharts()],['overviewExtras',()=>renderOverviewExtras()],['guardrails',()=>renderGuardrails()],['pipeline',()=>renderPipeline()],['research',()=>renderResearch()],['diary',()=>renderDiary()],['diagnostics',()=>renderDiagnostics()],['live',async()=>{await loadLiveData();refreshUI();}]];const errors=[];for(const [name,fn] of steps){try{await fn();}catch(e){errors.push(name+': '+e.message);console.error(name,e);}}if(errors.length){$('sidebar-status').textContent='Partial load: '+errors.join('; ');}else if(DATA){const open=isMarketOpenNow();$('sidebar-status').textContent=(open?'Session open':'Pre-market')+' · '+books().length+' books · '+allOpenPositions().length+' opens'+(LIVE_OK?' · LIVE · Supabase':'· Supabase');}}
 init();setInterval(()=>loadLiveData().then(ok=>{if(ok)refreshUI();}).catch(()=>{}),30000);setInterval(()=>loadData().then(()=>refreshUI()).catch(()=>{}),120000);
 </script>
